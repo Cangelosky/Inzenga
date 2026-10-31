@@ -460,11 +460,44 @@ img.ic-img { width: 108px; height: 108px; object-fit: cover; border-radius: 10px
 #spPlot { width: 100%; height: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
 .st-filter { margin: 4px 0 12px; } .st-filter input { width: min(100%, 460px); }
 .no-row { display: flex; gap: 8px; flex-wrap: wrap; } .no-row input { flex: 1 1 260px; }
-.re-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.re-card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 15px; }
-.re-card h4 { margin: 0 0 4px; font: 700 17px/1.2 var(--f-display); }
-.re-card p { margin: 0 0 6px; } .re-c { color: var(--muted); font-size: 14px; }
-.re-card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.rv-box { display: grid; gap: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 12px 0; }
+.rv-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 8px 12px; align-items: center; }
+.rv-l { font-weight: 700; font-size: 14px; }
+.rv-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.rv-chips button { font: 600 14px/1 var(--f-body); color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 999px; padding: 0 13px; min-height: 38px; cursor: pointer; }
+.rv-chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.rv-row input { font: inherit; font-size: 15px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 10px; min-width: 0; width: min(100%, 560px); }
+@media (max-width: 640px) { .rv-row { grid-template-columns: minmax(0, 1fr); } }
+.rv-count { margin: 4px 0 8px; color: var(--muted); font-size: 14px; }
+#rvGen:empty { display: none; }
+.rv-gen { background: var(--accent-soft); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; font-size: 15px; }
+.rv-gen h4 { margin: 0 0 6px; font: 700 17px/1.2 var(--f-display); }
+.rv-gen ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.rv-gen a { color: var(--accent); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.rv-list { display: grid; gap: 10px; }
+.rv-card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.rv-card > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 12px 14px; }
+.rv-card > summary::-webkit-details-marker { display: none; }
+.rv-card > summary::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: rotate(45deg); transition: transform .2s; flex: none; }
+.rv-card[open] > summary::after { transform: rotate(-135deg); }
+.rv-card[open] > summary { border-bottom: 1px solid var(--line); }
+.rv-card > summary:hover { background: var(--accent-soft); }
+.rv-n { display: grid; gap: 1px; min-width: 0; flex: 1 1 220px; }
+.rv-n b { font: 700 17px/1.2 var(--f-display); }
+.rv-n small { color: var(--muted); font-size: 13.5px; }
+.rv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.rv-t { font-size: 12.5px; font-weight: 700; border: 1px solid var(--line2, var(--line)); border-radius: 999px; padding: 3px 10px; background: var(--surface); }
+.rv-b { padding: 12px 14px 14px; font-size: 15px; display: grid; gap: 4px; }
+.rv-b h5 { margin: 8px 0 0; font: 700 13px/1.2 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.rv-b p { margin: 0; max-width: 78ch; } .rv-b ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.rv-u { font-size: 16px; }
+.rv-warn { color: var(--ink); border-left: 3px solid var(--ochre); padding-left: 10px; }
+.rv-m { color: var(--muted); font-size: 14px; }
+.rv-kit { margin: 14px 0 6px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface); }
+.rv-kit > summary { cursor: pointer; padding: 12px 14px; font-weight: 700; color: var(--accent); }
+.rv-kitb { padding: 0 14px 14px; display: grid; gap: 4px; font-size: 15px; }
+.rv-kitb h5 { margin: 8px 0 0; font: 700 13px/1.2 var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.rv-kitb p { margin: 0; max-width: 78ch; } .rv-kitb ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
 .spo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 .spo { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
 .spo-sw { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--line2); box-shadow: inset 0 0 0 6px rgba(255,255,255,.15); }
@@ -891,7 +924,7 @@ body.pg-lab .pban-bib, body.pg-bib .pban-lab { display: none; }
     <div id="st-strumenti">
       <div class="tav-intro">
         <h2>Strumenti scientifici</h2>
-        <p>Strumenti di lavoro per chi determina: scheda di raccolta, colore della sporata, nomenclatura, misura delle spore e prontuario dei reagenti. Tocca una scheda per aprirla. Sono pensati per il lunedì sera in sede e per lo studio a casa.</p>
+        <p>Strumenti di lavoro per chi determina: scheda di raccolta, colore della sporata, nomenclatura, misura delle spore e prontuario dei reagenti, con ricerca per genere e per tipo di prova. Tocca una scheda per aprirla. Sono pensati per il lunedì sera in sede e per lo studio a casa.</p>
         <p class="bk-warn" style="display:inline-block">Bozza per il comitato scientifico: contenuti da rivedere prima della pubblicazione.</p>
       </div>
 
@@ -961,12 +994,54 @@ body.pg-lab .pban-bib, body.pg-bib .pban-lab { display: none; }
         </div>
       </details>
       <details class="st-tool" id="st-reagenti">
-        <summary><span class="st-t"><b>Prontuario dei reagenti</b><small>A cosa servono, come si usano e cosa si osserva</small></span><span class="st-chev" aria-hidden="true"></span></summary>
+        <summary><span class="st-t"><b>Prontuario dei reagenti</b><small>Cerca il reagente giusto: cosa vuoi osservare, in quale genere, come si usa e cosa si vede</small></span><span class="st-chev" aria-hidden="true"></span></summary>
         <div class="st-body">
-        <p>I reagenti più usati in determinazione: a cosa servono, come si usano e cosa si osserva. Una goccia sulla carne, sulla cuticola o sul vetrino può separare due specie simili.</p>
-        <div class="st-filter"><input id="reQ" type="search" placeholder="Cerca un reagente o un genere: Melzer, Russula, amiloide…" aria-label="Cerca nei reagenti" autocomplete="off"></div>
-        <div class="re-grid" id="reList"></div>
-        <p class="tav-note">Sicurezza: guanti e occhiali, lontano dai bambini. Il Melzer contiene idrato di cloralio, sostanza a vendita regolamentata in diversi Paesi: informati presso un fornitore di laboratorio o una farmacia prima di procurartelo. La potassa (KOH) e l'ammoniaca sono caustiche; il fenolo è tossico anche per contatto.</p>
+        <p>Una goccia sulla carne, sulla cuticola o sul vetrino può separare due specie simili. Qui trovi i reagenti usati in micologia, da quelli che bastano per cominciare a quelli che si usano solo in laboratorio. Scegli che prova vuoi fare, cosa vuoi guardare, oppure scrivi il nome di un genere (per esempio <i>Russula</i>) per vedere tutto quello che serve per lui.</p>
+        <div class="rv-box" role="group" aria-label="Filtri dei reagenti">
+          <div class="rv-row"><span class="rv-l">Che prova?</span><div class="rv-chips" id="rvTipo">
+            <button type="button" data-v="" aria-pressed="true">Tutte</button>
+            <button type="button" data-v="macro" aria-pressed="false">Sul fungo, a occhio</button>
+            <button type="button" data-v="micro" aria-pressed="false">Al microscopio</button>
+            <button type="button" data-v="mont" aria-pressed="false">Per montare il vetrino</button></div></div>
+          <div class="rv-row"><span class="rv-l">Cosa guardi?</span><div class="rv-chips" id="rvDove">
+            <button type="button" data-v="carne" aria-pressed="false">Carne</button>
+            <button type="button" data-v="cuticola" aria-pressed="false">Cuticola</button>
+            <button type="button" data-v="gambo" aria-pressed="false">Gambo</button>
+            <button type="button" data-v="lamelle" aria-pressed="false">Lamelle</button>
+            <button type="button" data-v="spore" aria-pressed="false">Spore</button>
+            <button type="button" data-v="ife" aria-pressed="false">Ife</button>
+            <button type="button" data-v="cistidi" aria-pressed="false">Cistidi</button>
+            <button type="button" data-v="basidi" aria-pressed="false">Basidi</button>
+            <button type="button" data-v="aschi" aria-pressed="false">Aschi</button></div></div>
+          <div class="rv-row"><span class="rv-l">Per chi?</span><div class="rv-chips" id="rvLv">
+            <button type="button" data-v="" aria-pressed="true">Tutti</button>
+            <button type="button" data-v="1" aria-pressed="false">Base</button>
+            <button type="button" data-v="2" aria-pressed="false">Con un po' di esperienza</button>
+            <button type="button" data-v="3" aria-pressed="false">Solo laboratorio</button></div></div>
+          <div class="rv-row"><label class="rv-l" for="reQ">Cerca</label><input id="reQ" type="search" list="rvGenList" placeholder="Un genere (Russula), un reagente (Melzer) o un effetto (amiloide, viola)" autocomplete="off"><datalist id="rvGenList"></datalist></div>
+        </div>
+        <div id="rvGen" aria-live="polite"></div>
+        <p class="rv-count" id="rvCount" aria-live="polite"></p>
+        <div class="rv-list" id="reList"></div>
+        <details class="rv-kit">
+          <summary>Che reagenti comprare per cominciare, e come si fa una buona prova</summary>
+          <div class="rv-kitb">
+            <h5>Kit di partenza</h5>
+            <p>Acqua distillata, potassa (KOH) al 5–10%, ammoniaca, solfato di ferro (o un cristallo di allume ferrico), tintura di guaiaco, Lugol, Rosso Congo o floxina, blu di metilene. Poi gocciolatori, vetrini, coprivetrini, carta assorbente, guanti, occhiali e flaconi con etichetta e data.</p>
+            <h5>Dopo qualche mese</h5>
+            <p>Reattivo di Melzer, blu cotone, blu di cresile e fenolo (con cautela). Tutto il resto, soprattutto ciò che contiene acidi forti, anilina o cloralio, resta per chi lavora in laboratorio.</p>
+            <h5>Una buona prova</h5>
+            <ul>
+              <li>Fai sempre una prova di controllo con una goccia d'acqua sullo stesso fungo.</li>
+              <li>Usa fungo fresco, in buono stato, e sempre la stessa parte (gambo o carne a metà altezza).</li>
+              <li>Segna il tempo: molte reazioni valgono solo entro pochi secondi o minuti.</li>
+              <li>Un reagente da solo non determina una specie: si somma ai caratteri a occhio, alla sporata e al microscopio.</li>
+              <li>Scrivi il risultato nella scheda di raccolta, con colore, tempo e concentrazione.</li>
+            </ul>
+          </div>
+        </details>
+        <p class="tav-note">Sicurezza: guanti e occhiali, ambiente ventilato, lontano dai bambini; etichetta e data su ogni flacone. Potassa e ammoniaca sono caustiche, il fenolo è tossico anche per contatto, gli acidi sono corrosivi. Il Melzer contiene idrato di cloralio, a vendita regolamentata in diversi Paesi: informati presso un fornitore di laboratorio prima di procurartelo. Le prove sul fungo non servono a decidere se un fungo si può mangiare e questo sito non dà indicazioni di commestibilità.</p>
+        <p class="tav-note">Fonti: British Mycological Society (Chemical Reagents), Queensland Mycological Society (stains and reagents), Colorado Mycoflora (Stains and Reagents), voce «Chemical tests in mushroom identification» di Wikipedia, FUNGI Magazine (Simple Chemistry). I risultati vanno confrontati con le chiavi dei singoli generi e rivisti dal comitato scientifico.</p>
         </div>
       </details>
     </div>
@@ -3860,37 +3935,58 @@ function copyText(t, btn) {
 }
 
 /* ----- reagenti ----- */
-var REAG = [
-  { n: "Melzer", c: "Iodio, ioduro di potassio e idrato di cloralio in acqua. Bruno-arancio.", u: "Al microscopio, su spore, ife e apici degli aschi. Si osserva il colore dopo un minuto.",
-    r: [["Amiloide: grigio-blu fino a nero", "spore di Russula e Lactarius (ornamenti), di molte Amanita come la sezione phalloides, Melanoleuca, Leucopaxillus; apici degli aschi in Peziza"], ["Destrinoide: bruno-rossastro", "spore di Lepiota, Macrolepiota, Chlorophyllum e di alcune Mycena"], ["Inamiloide: nessun cambiamento, giallastro", "per esempio Amanita caesarea e muscaria, Tricholoma, Agaricus"]], k: "amiloide destrinoide spore aschi russula lactarius amanita lepiota peziza" },
-  { n: "Potassa (KOH 3–10%)", c: "Idrossido di potassio in acqua.", u: "Una goccia sulla cuticola o sulla carne; al microscopio per reidratare il materiale secco.",
-    r: [["Giallo vivo", "cuticola delle Agaricus della sezione Xanthodermatei e della sezione Arvenses"], ["Rosso-porpora", "Cortinarius del gruppo Dermocybe"], ["Nero", "carne di Inonotus e di altri funghi xantocroici"]], k: "potassa koh agaricus cortinarius dermocybe inonotus reidratare" },
-  { n: "Solfato di ferro (FeSO₄)", c: "Cristallo o soluzione al 10% di solfato ferroso.", u: "Si strofina sul gambo o sulla carne e si guarda il colore dopo pochi secondi.",
-    r: [["Verde", "Russula del gruppo xerampelina; alcuni boleti"], ["Rosa-salmone", "molte Russula, per esempio della sezione Heterophyllae"], ["Grigio-verde", "alcuni Lactarius e boleti"]], k: "solfato ferro feso4 russula xerampelina boleti lactarius" },
-  { n: "Tintura di guaiaco", c: "Resina di guaiaco sciolta in alcol.", u: "Sul gambo o sulla carne. Conta la velocità della reazione, entro 5–10 secondi.",
-    r: [["Blu-verde rapido", "molte Russula; il tempo e l'intensità aiutano a separare le specie"], ["Debole o assente", "altre Russula"]], k: "guaiaco russula" },
-  { n: "Sulfovanillina", c: "Vanillina sciolta in acido solforico diluito. Si prepara al momento.", u: "Al microscopio, su sezioni della cuticola e dell'imenio.",
-    r: [["Grigio-nero o blu-nero", "gleocistidi di Russula e Lactarius"]], k: "sulfovanillina cistidi gleocistidi russula lactarius" },
-  { n: "Fenolo (2–3%)", c: "Fenolo in acqua o in alcol.", u: "Una goccia sulla carne o sul gambo, si osserva dopo qualche minuto.",
-    r: [["Vinoso, rosso-bruno o cioccolato", "molte Russula"]], k: "fenolo russula agaricus" },
-  { n: "Ammoniaca", c: "Ammoniaca diluita in acqua.", u: "Sulla cuticola, sulla carne o al microscopio come base per altri coloranti.",
-    r: [["Cambi di colore della cuticola", "utile in alcuni generi, per esempio in certi Boletus"]], k: "ammoniaca boletus" },
-  { n: "Rosso Congo", c: "Colorante rosso, di solito in ammoniaca.", u: "Al microscopio, per colorare le pareti di ife, basidi e cistidi.",
-    r: [["Pareti rosse", "rende visibili giunti a fibbia, basidi e cistidi"]], k: "rosso congo ife basidi cistidi fibbie microscopio" },
-  { n: "Blu cotone (lattofenolo)", c: "Blu di metile in lattofenolo.", u: "Al microscopio, sulle spore.",
-    r: [["Cianofilo: ornamenti e pareti blu", "perispora delle spore dei Pezizales; in Lyophyllum e Calocybe il blu cotone evidenzia i granuli dei basidi"]], k: "blu cotone lattofenolo cianofilo spore lyophyllum calocybe pezizales" }
-];
-function renderReag() {
-  var q = norm(($("#reQ").value || "").trim()), h = "";
-  REAG.forEach(function (r) {
-    var hay = norm(r.n + " " + r.c + " " + r.u + " " + r.k + " " + r.r.map(function (x) { return x.join(" "); }).join(" "));
-    if (q && q.split(/\s+/).some(function (w) { return hay.indexOf(w) < 0; })) return;
-    h += '<article class="re-card"><h4>' + esc(r.n) + '</h4><p class="re-c">' + esc(r.c) + '</p><p><b>Come si usa.</b> ' + esc(r.u) + '</p><ul>' +
-      r.r.map(function (x) { return "<li><b>" + esc(x[0]) + ".</b> " + esc(x[1]) + "</li>"; }).join("") + "</ul></article>";
+var REAG = [], REGEN = {}, RV = { tipo: "", dove: {}, lv: "" };
+var RV_T = { macro: "Prova sul fungo", micro: "Al microscopio", mont: "Montaggio" }, RV_L = { 1: "Base", 2: "Con esperienza", 3: "Solo laboratorio" };
+function rvChips(id, key, multi) {
+  $(id).addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    var v = b.getAttribute("data-v");
+    if (multi) { if (RV[key][v]) delete RV[key][v]; else RV[key][v] = 1; b.setAttribute("aria-pressed", RV[key][v] ? "true" : "false"); }
+    else { RV[key] = v; $(id).querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); }
+    renderReag();
   });
-  $("#reList").innerHTML = h || '<p class="status">Nessun reagente con questa parola.</p>';
 }
-$("#reQ").addEventListener("input", renderReag); renderReag();
+function rvCard(r) {
+  var h = '<details class="rv-card" id="rv-' + r.id + '"><summary><span class="rv-n"><b>' + esc(r.n) + '</b>' + (r.alt ? '<small>' + esc(r.alt) + '</small>' : "") + '</span><span class="rv-tags"><span class="rv-t">' + RV_T[r.t] + '</span><span class="rv-t">' + RV_L[r.lv] + '</span></span></summary><div class="rv-b">';
+  h += '<p class="rv-u">' + esc(r.u) + '</p><h5>Com\u2019\u00e8 fatto</h5><p>' + esc(r.c) + '</p><h5>Cosa si vede</h5><ul>' +
+    r.r.map(function (x) { return "<li><b>" + esc(x[0]) + ".</b> " + esc(x[1]) + "</li>"; }).join("") + "</ul>";
+  h += '<h5>Attenzione</h5><p class="rv-warn">' + esc(r.a) + '</p><p class="rv-m"><b>Si conserva:</b> ' + esc(r.s) + ' <b>Al suo posto:</b> ' + esc(r.x) + '</p></div></details>';
+  return h;
+}
+function renderReag() {
+  var raw = ($("#reQ").value || "").trim(), q = norm(raw), h = "", n = 0, gen = "", gk = null;
+  if (q.length >= 3) Object.keys(REGEN).forEach(function (g) { if (!gk && norm(g) === q) gk = g; });
+  if (!gk && q.length >= 4) Object.keys(REGEN).forEach(function (g) { if (!gk && norm(g).indexOf(q) === 0) gk = g; });
+  var doveK = Object.keys(RV.dove);
+  REAG.forEach(function (r) {
+    if (RV.tipo && r.t !== RV.tipo) return;
+    if (RV.lv && String(r.lv) !== RV.lv) return;
+    if (doveK.length && !doveK.some(function (d) { return r.w.indexOf(d) >= 0; })) return;
+    var hay = norm(r.n + " " + (r.alt || "") + " " + r.c + " " + r.u + " " + r.k + " " + r.r.map(function (x) { return x[0] + " " + x[1] + " " + x[2].join(" "); }).join(" "));
+    if (gk) { if (!REGEN[gk].some(function (x) { return x.id === r.id; })) return; }
+    else if (q && q.split(/\s+/).some(function (w) { return hay.indexOf(w) < 0; })) return;
+    n++; h += rvCard(r);
+  });
+  if (gk) {
+    gen = '<div class="rv-gen"><h4>Per <i>' + esc(gk) + '</i>: ' + REGEN[gk].length + ' reazioni utili</h4><ul>' + REGEN[gk].map(function (x) {
+      return '<li><a data-open="' + x.id + '">' + esc(x.n) + "</a>: " + esc(x.l) + ". " + esc(x.t) + "</li>"; }).join("") + "</ul></div>";
+  }
+  $("#rvGen").innerHTML = gen;
+  $("#reList").innerHTML = h || '<p class="status">Nessun reagente con questi filtri. Togli un filtro o cambia la parola.</p>';
+  $("#rvCount").textContent = (REAG.length ? n + (n === 1 ? " reagente" : " reagenti") + " su " + REAG.length : "");
+}
+$("#rvGen").addEventListener("click", function (e) {
+  var a = e.target.closest("a[data-open]"); if (!a) return;
+  var c = document.getElementById("rv-" + a.getAttribute("data-open")); if (c) { c.open = true; c.scrollIntoView({ behavior: "smooth", block: "start" }); }
+});
+rvChips("#rvTipo", "tipo", false); rvChips("#rvLv", "lv", false); rvChips("#rvDove", "dove", true);
+$("#reQ").addEventListener("input", renderReag);
+fetch("libri/reagenti.json", { cache: "no-cache" }).then(function (r) { return r.json(); }).then(function (d) {
+  REAG = d;
+  d.forEach(function (r) { r.r.forEach(function (x) { x[2].forEach(function (g) { (REGEN[g] = REGEN[g] || []).push({ id: r.id, n: r.n, l: x[0], t: x[1] }); }); }); });
+  $("#rvGenList").innerHTML = Object.keys(REGEN).sort().map(function (g) { return '<option value="' + esc(g) + '">'; }).join("");
+  renderReag();
+}).catch(function () { $("#reList").innerHTML = '<p class="status">Non riesco a caricare i reagenti. Riprova tra poco.</p>'; });
 
 /* ----- colore della sporata ----- */
 var SPO = [

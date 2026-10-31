@@ -1,0 +1,995 @@
+[
+ {
+  "id": "acqua",
+  "n": "Acqua distillata",
+  "t": "mont",
+  "lv": 1,
+  "w": [
+   "spore",
+   "ife",
+   "cistidi",
+   "basidi"
+  ],
+  "c": "Acqua pulita, meglio distillata. Si compra in ferramenta o al supermercato.",
+  "u": "È il primo vetrino di ogni osservazione. Colori e misure delle spore e delle ife restano naturali, senza deformazioni.",
+  "r": [
+   [
+    "Colori naturali",
+    "Si vedono i pigmenti veri di pareti e contenuto, che negli alcali possono sciogliersi o cambiare",
+    []
+   ],
+   [
+    "Misure corrette",
+    "Le spore misurate in acqua sono il riferimento per i confronti",
+    []
+   ]
+  ],
+  "a": "Nessuna. Poco chiara per le strutture trasparenti: per quelle serve un colorante.",
+  "s": "Sempre pronta.",
+  "x": "Soluzioni saline o glicerina per conservare il preparato più a lungo.",
+  "k": "montaggio acqua distillata primo vetrino colori"
+ },
+ {
+  "id": "koh",
+  "n": "Potassa (KOH)",
+  "alt": "Idrossido di potassio",
+  "t": "macro",
+  "lv": 1,
+  "w": [
+   "carne",
+   "cuticola",
+   "gambo",
+   "spore",
+   "ife"
+  ],
+  "c": "Soluzione in acqua al 3–10% per il vetrino; fino al 30–40% per le prove sulla carne.",
+  "u": "Si mette una goccia sulla cuticola o sulla carne e si guarda il colore dopo un minuto. Al microscopio serve anche per reidratare il materiale secco e come liquido di montaggio.",
+  "r": [
+   [
+    "Giallo vivo",
+    "cuticola di Agaricus xanthodermus e delle specie vicine; cuticola di Amanita della sezione Phalloideae (giallo limone entro un minuto)",
+    [
+     "Agaricus",
+     "Amanita"
+    ]
+   ],
+   [
+    "Verde",
+    "cuticola di Agaricus subrutilescens; alcune Russula e Lactarius danno un verde oliva",
+    [
+     "Agaricus",
+     "Russula",
+     "Lactarius"
+    ]
+   ],
+   [
+    "Rosso-porpora",
+    "Cortinarius del gruppo Dermocybe; Hapalopilus rutilans vira a viola intenso",
+    [
+     "Cortinarius",
+     "Hapalopilus"
+    ]
+   ],
+   [
+    "Nero",
+    "carne di Inonotus e di altri polipori che hanno pigmenti gialli (reazione xantocroica)",
+    [
+     "Inonotus"
+    ]
+   ],
+   [
+    "Bruno scuro",
+    "carne della maggior parte dei Cortinarius",
+    [
+     "Cortinarius"
+    ]
+   ],
+   [
+    "Cambi al microscopio",
+    "le ife della cuticola di Cystoderma diventano bruno-rossastre; i peli del cappello di Crinipellis diventano grigi; i crisocistidi di Hypholoma gialli",
+    [
+     "Cystoderma",
+     "Crinipellis",
+     "Hypholoma"
+    ]
+   ],
+   [
+    "Nessun cambiamento",
+    "molti Agaricus: anche il «nessun cambiamento» è un dato, se la prova è fatta bene",
+    [
+     "Agaricus"
+    ]
+   ]
+  ],
+  "a": "Caustica: guanti e occhiali, mai vicino agli occhi. Cristallizza e perde forza in circa un anno. Non va mescolata con il Melzer. Alcuni pigmenti si sciolgono negli alcali.",
+  "s": "Circa un anno in flacone di plastica ben chiuso.",
+  "x": "Ammoniaca (spesso dà reazioni simili sui vetrini).",
+  "k": "potassa koh idrossido potassio agaricus xanthodermus amanita phalloides cortinarius dermocybe inonotus hapalopilus cystoderma crinipellis hypholoma reidratare secco"
+ },
+ {
+  "id": "nh3",
+  "n": "Ammoniaca",
+  "alt": "Idrossido di ammonio",
+  "t": "macro",
+  "lv": 1,
+  "w": [
+   "carne",
+   "cuticola",
+   "spore",
+   "cistidi"
+  ],
+  "c": "Soluzione in acqua: 5–10% per i vetrini, fino al 40% per le prove sul fungo intero. L'ammoniaca per pulizia di casa va bene per le prove più semplici.",
+  "u": "Una o due gocce sulla carne o sulla cuticola. Al microscopio è il liquido di montaggio preferito per le spore brune: il preparato risulta più chiaro che con la potassa.",
+  "r": [
+   [
+    "Blu-verde passeggero",
+    "carne di Boletus spadiceus (oggi in Xerocomus)",
+    [
+     "Boletus",
+     "Xerocomus"
+    ]
+   ],
+   [
+    "Nero",
+    "cuticola di Gymnopilus",
+    [
+     "Gymnopilus"
+    ]
+   ],
+   [
+    "Verde",
+    "muco del cappello di alcune Psathyrella; trama di alcune Collybia",
+    [
+     "Psathyrella",
+     "Collybia"
+    ]
+   ],
+   [
+    "Bruno-rossastro",
+    "cistidi di Xeromphalina",
+    [
+     "Xeromphalina"
+    ]
+   ],
+   [
+    "Cistidi gialli e ben visibili",
+    "crisocistidi di Hypholoma, Pholiota e Stropharia",
+    [
+     "Hypholoma",
+     "Pholiota",
+     "Stropharia"
+    ]
+   ]
+  ],
+  "a": "I vapori irritano: usala all'aperto o vicino a una finestra. Mai insieme al Melzer: si forma un precipitato torbido.",
+  "s": "Alcuni anni se il flacone è chiuso bene.",
+  "x": "Potassa.",
+  "k": "ammoniaca nh3 idrossido ammonio boletus spadiceus xerocomus gymnopilus psathyrella xeromphalina hypholoma pholiota stropharia spore brune"
+ },
+ {
+  "id": "feso4",
+  "n": "Solfato di ferro",
+  "alt": "Solfato ferroso, FeSO₄",
+  "t": "macro",
+  "lv": 1,
+  "w": [
+   "carne",
+   "gambo"
+  ],
+  "c": "Soluzione al 10% in acqua (10 g in 100 ml). Sul campo basta un cristallo di allume ferrico, strofinato sul gambo.",
+  "u": "Una goccia sul gambo o sulla carne tagliata: si guarda il colore dopo pochi secondi. Si confronta sempre con una goccia d'acqua sullo stesso fungo.",
+  "r": [
+   [
+    "Rosa-salmone",
+    "molte Russula",
+    [
+     "Russula"
+    ]
+   ],
+   [
+    "Verde",
+    "alcune Russula, per esempio del gruppo xerampelina; alcuni boleti",
+    [
+     "Russula",
+     "Boletus"
+    ]
+   ],
+   [
+    "Nessun cambiamento",
+    "altre Russula, che così si separano dalle precedenti",
+    [
+     "Russula"
+    ]
+   ],
+   [
+    "Verde oliva, nero o viola",
+    "carne di Boletus e di Leccinum, in tonalità diverse a seconda della specie",
+    [
+     "Boletus",
+     "Leccinum"
+    ]
+   ],
+   [
+    "Giallo limone o oliva",
+    "carne di Boletus chrysenteron (oggi Xerocomellus)",
+    [
+     "Boletus",
+     "Xerocomellus"
+    ]
+   ],
+   [
+    "Grigio-oliva",
+    "carne di Tylopilus; oliva in Gyrodon",
+    [
+     "Tylopilus",
+     "Gyrodon"
+    ]
+   ]
+  ],
+  "a": "Poco pericoloso, ma non va inghiottito. Macchia gli abiti. La soluzione dura pochi mesi: si ossida e imbrunisce.",
+  "s": "Pochi mesi in soluzione; i cristalli secchi durano a lungo se tenuti asciutti.",
+  "x": "Cristallo di allume ferrico (stesse reazioni).",
+  "k": "solfato ferro ferroso feso4 allume russula boletus leccinum tylopilus gyrodon xerocomellus lactarius tricholoma clavaria"
+ },
+ {
+  "id": "guaiaco",
+  "n": "Tintura di guaiaco",
+  "alt": "Gomma di guaiaco",
+  "t": "macro",
+  "lv": 1,
+  "w": [
+   "carne",
+   "gambo",
+   "cistidi"
+  ],
+  "c": "Gomma di guaiaco sciolta in alcol 70%, fino a saturazione.",
+  "u": "Si mette sulla carne o sul gambo e si conta il tempo: la reazione positiva compare entro 5–10 secondi. Non conta solo il colore, ma la velocità.",
+  "r": [
+   [
+    "Blu-verde rapido",
+    "carne di molte Russula e di alcuni Cortinarius; il tempo e l'intensità aiutano a separare le specie",
+    [
+     "Russula",
+     "Cortinarius"
+    ]
+   ],
+   [
+    "Debole o assente",
+    "altre Russula",
+    [
+     "Russula"
+    ]
+   ],
+   [
+    "Cistidi incrostati colorati",
+    "cistidi di Inocybe, al microscopio",
+    [
+     "Inocybe"
+    ]
+   ]
+  ],
+  "a": "Infiammabile (alcol). Dura circa un anno, meglio al buio.",
+  "s": "Circa un anno, in bottiglia scura.",
+  "x": "Nessun sostituto semplice.",
+  "k": "guaiaco guaiacum gomma russula cortinarius inocybe cistidi incrostati"
+ },
+ {
+  "id": "fenolo",
+  "n": "Fenolo",
+  "alt": "Acido fenico",
+  "t": "macro",
+  "lv": 2,
+  "w": [
+   "carne",
+   "gambo"
+  ],
+  "c": "Soluzione acquosa al 2–3%.",
+  "u": "Una goccia sulla carne o sul gambo: si osserva dopo qualche minuto.",
+  "r": [
+   [
+    "Vinoso, rosso-bruno o cioccolato",
+    "molte Russula, a seconda della specie",
+    [
+     "Russula"
+    ]
+   ]
+  ],
+  "a": "Tossico anche per contatto sulla pelle e per i vapori: guanti, occhiali, ambiente ventilato, lontano dai bambini. In alcune zone è a vendita regolata.",
+  "s": "Alcuni mesi, al buio.",
+  "x": "Solfato di ferro e guaiaco danno spesso informazioni sovrapponibili.",
+  "k": "fenolo acido fenico russula"
+ },
+ {
+  "id": "pdab",
+  "n": "Reattivo di Ehrlich",
+  "alt": "PDAB, para-dimetilamminobenzaldeide",
+  "t": "macro",
+  "lv": 3,
+  "w": [
+   "lamelle"
+  ],
+  "c": "Para-dimetilamminobenzaldeide in ambiente acido.",
+  "u": "Su fungo fresco: una goccia sulle lamelle. Funziona solo su materiale fresco.",
+  "r": [
+   [
+    "Blu evidente",
+    "lamelle di Lyophyllum",
+    [
+     "Lyophyllum"
+    ]
+   ]
+  ],
+  "a": "Contiene acidi: da preparare in laboratorio. Reazione utile per un solo gruppo di generi.",
+  "s": "Alcuni mesi.",
+  "x": "L'acetocarminio per i granuli dei basidi nelle Lyophyllaceae.",
+  "k": "pdab ehrlich dimetilamminobenzaldeide lyophyllum lamelle fresco"
+ },
+ {
+  "id": "schaeffer",
+  "n": "Reazione di Schäffer",
+  "alt": "Anilina e acido nitrico",
+  "t": "macro",
+  "lv": 3,
+  "w": [
+   "cuticola",
+   "carne"
+  ],
+  "c": "Anilina (o acqua di anilina) e acido nitrico al 65%.",
+  "u": "Si tracciano due righe che si incrociano sul cappello, una con anilina e una con acido nitrico: si guarda il colore dove si incontrano.",
+  "r": [
+   [
+    "Arancio brillante nel punto d'incrocio",
+    "tipica della sezione Flavescentes di Agaricus; ci sono falsi negativi in Agaricus placomyces e xanthodermus",
+    [
+     "Agaricus"
+    ]
+   ],
+   [
+    "Viola-rosa scuro",
+    "Allopsalliota",
+    [
+     "Allopsalliota"
+    ]
+   ]
+  ],
+  "a": "Anilina e acido nitrico sono pericolosi: solo in laboratorio, con guanti, occhiali e cappa. Esiste una variante con anilina e acido acetico glaciale in parti uguali.",
+  "s": "Non conservare: si prepara al momento.",
+  "x": "Potassa sulla cuticola, che per Agaricus dà informazioni di più facile uso.",
+  "k": "schaeffer schäffer anilina acido nitrico agaricus flavescentes allopsalliota"
+ },
+ {
+  "id": "meixner",
+  "n": "Prova di Meixner",
+  "alt": "Prova di Wieland, acido cloridrico e carta di giornale",
+  "t": "macro",
+  "lv": 3,
+  "w": [
+   "carne"
+  ],
+  "c": "Acido cloridrico concentrato e carta di giornale (a base di lignina).",
+  "u": "Si spreme il fungo su carta di giornale, si lascia asciugare, si mette una goccia di acido. Compare un blu-verde dopo 15–20 minuti se ci sono amatossine.",
+  "r": [
+   [
+    "Blu-verde",
+    "in specie di Amanita, Lepiota e Galerina che contengono amatossine; ma anche la psilocina dà un falso positivo",
+    [
+     "Amanita",
+     "Lepiota",
+     "Galerina"
+    ]
+   ]
+  ],
+  "a": "L'acido concentrato è pericoloso. La prova è inaffidabile: dà falsi positivi e falsi negativi e non va mai usata per decidere se un fungo è sicuro. Il sito non dà indicazioni di commestibilità.",
+  "s": "Non conservare.",
+  "x": "Nessuno: in caso di dubbio ci si affida al micologo e all'ASL.",
+  "k": "meixner wieland acido cloridrico giornale amatossine amanita lepiota galerina"
+ },
+ {
+  "id": "melzer",
+  "n": "Reattivo di Melzer",
+  "alt": "Iodio, ioduro di potassio e idrato di cloralio",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "spore",
+   "ife",
+   "aschi",
+   "cistidi"
+  ],
+  "c": "Iodio e ioduro di potassio in acqua, con idrato di cloralio. Colore bruno-arancio. Si compra pronto da fornitori di laboratorio: l'idrato di cloralio è a vendita regolamentata in diversi Paesi.",
+  "u": "Si scalda appena (senza bollire), si mette il materiale in una goccia e si copre. Nei casi dubbi si aspetta fino a 20 minuti e si aumenta la luce del microscopio.",
+  "r": [
+   [
+    "Amiloide: blu-grigio fino a nero",
+    "spore di Amanita, Russula, Lactarius (anche gli ornamenti), Melanoleuca, Leucopaxillus, Mycena (alcune), Lentinellus, Panellus, Xeromphalina e molti altri; apice degli aschi in Peziza",
+    [
+     "Amanita",
+     "Russula",
+     "Lactarius",
+     "Melanoleuca",
+     "Leucopaxillus",
+     "Mycena",
+     "Lentinellus",
+     "Panellus",
+     "Xeromphalina",
+     "Peziza",
+     "Lepiota"
+    ]
+   ],
+   [
+    "Destrinoide: bruno-rossastro",
+    "spore di Lepiota, Macrolepiota e Chlorophyllum; alcune Crinipellis, Cystolepiota, Hygrophoropsis, Paxillus (alcuni) e Pseudobaeospora",
+    [
+     "Lepiota",
+     "Macrolepiota",
+     "Chlorophyllum",
+     "Crinipellis",
+     "Cystolepiota",
+     "Hygrophoropsis",
+     "Paxillus",
+     "Pseudobaeospora"
+    ]
+   ],
+   [
+    "Inamiloide: nessun cambiamento o giallastro",
+    "per esempio Amanita caesarea e A. muscaria (sottogenere Amanita), Tricholoma, Agaricus",
+    [
+     "Amanita",
+     "Tricholoma",
+     "Agaricus"
+    ]
+   ],
+   [
+    "Ife amiloidi",
+    "ife di Chroogomphus; setti di alcuni Boletus",
+    [
+     "Chroogomphus",
+     "Boletus"
+    ]
+   ]
+  ],
+  "a": "Mai a contatto con alcali (potassa, ammoniaca): si forma subito un precipitato torbido. Macchia pelle e abiti.",
+  "s": "Alcuni anni, al buio.",
+  "x": "Lugol (solo per l'amiloide, non distingue il destrinoide).",
+  "k": "melzer amiloide destrinoide inamiloide iodio cloralio spore aschi amanita russula lactarius lepiota macrolepiota peziza melanoleuca chroogomphus"
+ },
+ {
+  "id": "lugol",
+  "n": "Lugol",
+  "alt": "Soluzione iodo-iodurata",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "spore",
+   "ife",
+   "aschi",
+   "carne"
+  ],
+  "c": "Iodio e ioduro di potassio in acqua. Si compra in farmacia.",
+  "u": "Come il Melzer, ma più semplice da trovare. Va bene per l'amiloide, non per il destrinoide. Per gli ascomiceti si usa spesso insieme a una soluzione tipo Baral.",
+  "r": [
+   [
+    "Amiloide: blu",
+    "apice degli aschi in molti ascomiceti",
+    [
+     "Peziza"
+    ]
+   ],
+   [
+    "Lilla o viola",
+    "carne di Cortinarius",
+    [
+     "Cortinarius"
+    ]
+   ],
+   [
+    "Globuli bruno-rossi o gialli",
+    "materiale incrostato in Suillus",
+    [
+     "Suillus"
+    ]
+   ],
+   [
+    "Attenzione ai falsi destrinoidi",
+    "con il Lugol Amanita frostiana sembra destrinoide: con il Melzer no",
+    [
+     "Amanita"
+    ]
+   ]
+  ],
+  "a": "Poco pericoloso, macchia. Da usare con prudenza quando conta il destrinoide.",
+  "s": "Circa un anno.",
+  "x": "Melzer.",
+  "k": "lugol iodio ioduro farmacia amiloide cortinarius suillus ascomiceti aschi baral"
+ },
+ {
+  "id": "baral",
+  "n": "Soluzione di Baral",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "aschi"
+  ],
+  "c": "Reattivo a base di iodio, simile al Melzer, pensato per gli ascomiceti. Si compra pronto.",
+  "u": "Si usa a fianco del Melzer: confrontando le due reazioni si legge meglio il colore dell'apice degli aschi.",
+  "r": [
+   [
+    "Rosso o blu a seconda del tessuto",
+    "apici degli aschi di Helotiales e di altri ascomiceti",
+    []
+   ]
+  ],
+  "a": "Come il Melzer contiene cloralio: stesse precauzioni.",
+  "s": "Alcuni anni.",
+  "x": "Melzer e Lugol.",
+  "k": "baral ascomiceti helotiales aschi iodio"
+ },
+ {
+  "id": "rossocongo",
+  "n": "Rosso Congo",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "ife",
+   "spore",
+   "basidi",
+   "cistidi"
+  ],
+  "c": "Soluzione acquosa all'1%, oppure satura in ammoniaca.",
+  "u": "Si mette il materiale nella goccia di colorante, si copre e si toglie l'eccesso aspirando con una carta assorbente mentre si fa passare sotto il vetrino un po' di ammoniaca o potassa.",
+  "r": [
+   [
+    "Pareti rosse",
+    "le pareti delle ife diventano rosse su fondo incolore: si vedono bene fibbie, basidi e cistidi",
+    []
+   ],
+   [
+    "Ornamenti delle spore",
+    "rende visibili spore lisce o ornamentate",
+    []
+   ],
+   [
+    "Parete delle spore di Chlorophyllum",
+    "si colora di rosso con Rosso Congo in ammoniaca e potassa al 5%",
+    [
+     "Chlorophyllum"
+    ]
+   ],
+   [
+    "Cistidi di Psathyrella",
+    "si riscalda a secco e si lava con ammoniaca",
+    [
+     "Psathyrella"
+    ]
+   ]
+  ],
+  "a": "Macchia molto: usa guanti e proteggi il piano di lavoro.",
+  "s": "Alcuni anni.",
+  "x": "Floxina.",
+  "k": "rosso congo congo red pareti ife fibbie basidi cistidi chlorophyllum psathyrella"
+ },
+ {
+  "id": "floxina",
+  "n": "Floxina B",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "ife",
+   "spore",
+   "basidi"
+  ],
+  "c": "Soluzione all'1,5% in acqua.",
+  "u": "Colora il contenuto delle ife e fa spiccare gli ornamenti delle spore difficili da vedere. Si può mescolare con il Rosso Congo.",
+  "r": [
+   [
+    "Ornamenti evidenti",
+    "spore ornamentate di Laccaria e di Tricholoma",
+    [
+     "Laccaria",
+     "Tricholoma"
+    ]
+   ]
+  ],
+  "a": "Macchia. Poco pericolosa.",
+  "s": "Alcuni anni.",
+  "x": "Rosso Congo.",
+  "k": "floxina phloxine laccaria tricholoma ornamenti spore"
+ },
+ {
+  "id": "bluc",
+  "n": "Blu cotone",
+  "alt": "Blu di cotone in lattofenolo",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "spore",
+   "ife"
+  ],
+  "c": "Blu di cotone in lattofenolo (acido lattico, fenolo, glicerina). Si compra pronto.",
+  "u": "Mostra le strutture che assorbono il colore (cianofile). Si toglie l'eccesso con lattoglicerolo per avere un fondo pulito.",
+  "r": [
+   [
+    "Parete delle spore blu scuro",
+    "spore cianofile di Lepista; ornamenti delle spore di Pezizales (perispora)",
+    [
+     "Lepista",
+     "Peziza"
+    ]
+   ],
+   [
+    "Pareti delle ife blu",
+    "per esempio i peli del cappello di Crinipellis",
+    [
+     "Crinipellis"
+    ]
+   ],
+   [
+    "Granuli dei basidi",
+    "in Lyophyllum e Calocybe",
+    [
+     "Lyophyllum",
+     "Calocybe"
+    ]
+   ]
+  ],
+  "a": "Contiene fenolo: guanti. Colora anche detriti e batteri, quindi si leggono i risultati con attenzione.",
+  "s": "Alcuni anni.",
+  "x": "Floxina e Rosso Congo.",
+  "k": "blu cotone cotton blue lattofenolo cianofilo cianofilia lepista crinipellis pezizales lyophyllum calocybe"
+ },
+ {
+  "id": "cresyl",
+  "n": "Blu di cresile brillante",
+  "alt": "Metacromasia",
+  "t": "micro",
+  "lv": 2,
+  "w": [
+   "ife",
+   "basidi",
+   "spore",
+   "cistidi"
+  ],
+  "c": "Soluzione acquosa allo 0,5–1%, lasciata 5–10 minuti e filtrata.",
+  "u": "Si mette il materiale in una goccia su vetrino. Se compare il colore viola-rosso (metacromatico), la parete o il tessuto è gelatinizzato; il blu scuro indica una reazione normale (ortocromatica).",
+  "r": [
+   [
+    "Metacromatico: rosso-magenta fino a viola",
+    "spore di Macrolepiota, Leucoagaricus e Leucocoprinus; ife dello stipite di alcune Mycena; basidi di Tricholoma; cistidi di Melanoleuca; gleocistidi nei Corticiaceae",
+    [
+     "Macrolepiota",
+     "Leucoagaricus",
+     "Leucocoprinus",
+     "Mycena",
+     "Tricholoma",
+     "Melanoleuca"
+    ]
+   ],
+   [
+    "Trama colorata",
+    "Agrocybe, Boletus e Gyroporus; ife gelatinose di Hygrocybe, Hygrophorus e Psilocybe",
+    [
+     "Agrocybe",
+     "Boletus",
+     "Gyroporus",
+     "Hygrocybe",
+     "Hygrophorus",
+     "Psilocybe"
+    ]
+   ],
+   [
+    "Ornamenti delle spore",
+    "in Russula",
+    [
+     "Russula"
+    ]
+   ]
+  ],
+  "a": "Macchia. La tinta varia da un produttore all'altro: confronta sempre con un campione noto. La soluzione acquosa dura poche settimane.",
+  "s": "Poche settimane in acqua; di più in alcol.",
+  "x": "Blu di toluidina o blu di metilene.",
+  "k": "cresyl blue blu cresile metacromasia macrolepiota leucoagaricus mycena tricholoma melanoleuca hygrocybe hygrophorus agrocybe gyroporus psilocybe russula gelatinoso"
+ },
+ {
+  "id": "metilene",
+  "n": "Blu di metilene",
+  "alt": "Blu di toluidina",
+  "t": "micro",
+  "lv": 1,
+  "w": [
+   "ife",
+   "cistidi",
+   "spore"
+  ],
+  "c": "Soluzione acquosa all'1%.",
+  "u": "Si usa come il blu di cresile. Per molti dà dettagli migliori delle ife e permette di vedere i dermatocistidi delle Russulaceae senza usare reagenti forti come la sulfovanillina.",
+  "r": [
+   [
+    "Cistidi e ife ben visibili",
+    "dermatocistidi di Russula e Lactarius",
+    [
+     "Russula",
+     "Lactarius"
+    ]
+   ],
+   [
+    "Incrostazioni resistenti all'acido",
+    "in Russula, osservate dopo HCl al 2%",
+    [
+     "Russula"
+    ]
+   ]
+  ],
+  "a": "Macchia. Poco pericoloso.",
+  "s": "Alcuni mesi.",
+  "x": "Blu di cresile.",
+  "k": "blu metilene toluidina methylene dermatocistidi russula lactarius incrostazioni"
+ },
+ {
+  "id": "fucsina",
+  "n": "Fucsina fenicata",
+  "alt": "Carbol fuchsin",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "ife",
+   "cistidi"
+  ],
+  "c": "Fucsina in soluzione di fenolo (forte).",
+  "u": "Si colora per circa 15 minuti, si lava un minuto con acido cloridrico al 10%, si osserva in acqua.",
+  "r": [
+   [
+    "Ife e dermatocistidi rosso scuro",
+    "fucsinofili in Russula",
+    [
+     "Russula"
+    ]
+   ]
+  ],
+  "a": "Contiene fenolo e usa acido cloridrico: solo laboratorio. Alternativa più semplice: sulfovanillina o blu di metilene.",
+  "s": "Alcuni mesi.",
+  "x": "Sulfovanillina.",
+  "k": "fucsina fenicata carbol fuchsin russula dermatocistidi"
+ },
+ {
+  "id": "sulfovanillina",
+  "n": "Sulfovanillina",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "cistidi",
+   "ife"
+  ],
+  "c": "Vanillina sciolta in acido solforico diluito. Si prepara al momento e dura pochi giorni.",
+  "u": "Si mette sul materiale al microscopio: in pochi istanti il contenuto di certe cellule si scurisce.",
+  "r": [
+   [
+    "Grigio-nero o blu-nero",
+    "contenuto dei gleocistidi e dei dermatocistidi di Russula e Lactarius",
+    [
+     "Russula",
+     "Lactarius"
+    ]
+   ],
+   [
+    "Positiva anche in",
+    "alcune Panaeolus",
+    [
+     "Panaeolus"
+    ]
+   ]
+  ],
+  "a": "Contiene acido solforico: solo laboratorio, con guanti e occhiali. Non va mai preparata dai principianti. Una variante usa piperonale (sulfopiperonale) o benzaldeide (sulfobenzaldeide): colorano le ife lattifere di Lactarius e i pileocistidi di Russula.",
+  "s": "Pochi giorni.",
+  "x": "Blu di metilene.",
+  "k": "sulfovanillina vanillina acido solforico sulfopiperonale sulfobenzaldeide russula lactarius gleocistidi pileocistidi ife lattifere panaeolus"
+ },
+ {
+  "id": "acetocarminio",
+  "n": "Acetocarminio",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "basidi",
+   "spore"
+  ],
+  "c": "Carminio in acido acetico diluito, con un po' di ferro.",
+  "u": "Si riscalda il preparato per colorare i granuli siderofili dei basidi e le pareti delle spore.",
+  "r": [
+   [
+    "Granuli scuri nei basidi",
+    "Tephrocybe, Calocybe e Lyophyllum; pareti di spore e basidi in Hypsizygus; Asterophora",
+    [
+     "Tephrocybe",
+     "Calocybe",
+     "Lyophyllum",
+     "Hypsizygus",
+     "Asterophora"
+    ]
+   ]
+  ],
+  "a": "Si usa a caldo: attenzione a schizzi. Lavora in ambiente ventilato.",
+  "s": "Alcuni anni.",
+  "x": "Reattivo di Ehrlich (macro).",
+  "k": "acetocarminio carmine granuli siderofili lyophyllum calocybe tephrocybe hypsizygus asterophora basidi"
+ },
+ {
+  "id": "eritrosina",
+  "n": "Eritrosina",
+  "t": "micro",
+  "lv": 2,
+  "w": [
+   "spore",
+   "ife"
+  ],
+  "c": "Soluzione allo 0,5% in ammoniaca al 10%.",
+  "u": "Fa risaltare spore e protoplasma delle ife.",
+  "r": [
+   [
+    "Spore e ife più visibili",
+    "utile per le spore con parete trasparente, come nei Coprinus",
+    [
+     "Coprinus"
+    ]
+   ]
+  ],
+  "a": "Macchia. Poco pericolosa.",
+  "s": "Alcuni anni.",
+  "x": "Floxina.",
+  "k": "eritrosina erythrosin coprinus spore trasparente"
+ },
+ {
+  "id": "sudan",
+  "n": "Sudan III o IV",
+  "t": "micro",
+  "lv": 2,
+  "w": [
+   "spore",
+   "ife"
+  ],
+  "c": "Colorante liposolubile in alcol.",
+  "u": "Si usa per colorare le gocce d'olio dentro le spore e le ife.",
+  "r": [
+   [
+    "Gocce rosse",
+    "contenuto oleoso delle cellule",
+    []
+   ]
+  ],
+  "a": "Soluzione in alcol: infiammabile.",
+  "s": "Alcuni anni.",
+  "x": "Nessuno.",
+  "k": "sudan lipidi gocce olio spore"
+ },
+ {
+  "id": "antracene",
+  "n": "Verde antracene",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "cistidi",
+   "ife"
+  ],
+  "c": "0,5 g in 100 ml di ammoniaca al 2,5%.",
+  "u": "Colora i cristalli di ossalato che incrostano cistidi e tessuti.",
+  "r": [
+   [
+    "Cristalli colorati",
+    "incrostazioni di cistidi e tessuti",
+    []
+   ]
+  ],
+  "a": "Uso raro. Da laboratorio.",
+  "s": "Alcuni mesi.",
+  "x": "Nessuno.",
+  "k": "antracene anthracene verde ossalato cristalli cistidi inocybe"
+ },
+ {
+  "id": "hcl",
+  "n": "Acido cloridrico",
+  "t": "micro",
+  "lv": 3,
+  "w": [
+   "cuticola",
+   "ife",
+   "cistidi"
+  ],
+  "c": "Concentrato per i cortinari; al 2% per le incrostazioni delle Russula; al 10% per lavare dopo le colorazioni.",
+  "u": "Si applica sul vetrino con una pipetta.",
+  "r": [
+   [
+    "Verde o rosso",
+    "cellule terminali di Cortinarius, con acido concentrato",
+    [
+     "Cortinarius"
+    ]
+   ],
+   [
+    "Incrostazioni resistenti",
+    "visibili dopo colorazione",
+    [
+     "Russula"
+    ]
+   ],
+   [
+    "Cellule del velo e cristalli",
+    "in Coprinus",
+    [
+     "Coprinus"
+    ]
+   ]
+  ],
+  "a": "Corrosivo. Solo laboratorio, con cappa e guanti.",
+  "s": "Anni, in flacone di vetro.",
+  "x": "Nessuno.",
+  "k": "acido cloridrico hcl cortinarius russula coprinus incrostazioni cellule terminali"
+ },
+ {
+  "id": "argento",
+  "n": "Altri reattivi di laboratorio",
+  "alt": "Nitrato d'argento, sulfoformolo, o-toluidina, formalina",
+  "t": "macro",
+  "lv": 3,
+  "w": [
+   "carne"
+  ],
+  "c": "Reattivi di uso raro, descritti in letteratura per pochi generi.",
+  "u": "Si usano solo quando una chiave li richiede.",
+  "r": [
+   [
+    "Giallo",
+    "nitrato d'argento: carne di Cortinarius della sezione Leprocybe",
+    [
+     "Cortinarius"
+    ]
+   ],
+   [
+    "Verde",
+    "sulfoformolo: Tricholoma stiparophyllum",
+    [
+     "Tricholoma"
+    ]
+   ],
+   [
+    "Prove sulla carne",
+    "o-toluidina in Russula; formalina in Leccinum",
+    [
+     "Russula",
+     "Leccinum"
+    ]
+   ]
+  ],
+  "a": "Sono sostanze pericolose o a vendita regolata: non per uso amatoriale.",
+  "s": "—",
+  "x": "Per questi generi di solito basta il microscopio.",
+  "k": "nitrato argento sulfoformolo toluidina formalina cortinarius leprocybe tricholoma stiparophyllum leccinum russula"
+ },
+ {
+  "id": "glicerina",
+  "n": "Liquidi di montaggio",
+  "alt": "Lattoglicerolo, L4, soluzione di Clémençon",
+  "t": "mont",
+  "lv": 2,
+  "w": [
+   "spore",
+   "ife"
+  ],
+  "c": "Miscele di acqua, glicerina e piccole quantità di alcali o sali.",
+  "u": "Servono per esaminare materiale secco, per ottenere un fondo chiaro dopo i coloranti e per conservare il preparato. Il lattoglicerolo toglie l'eccesso di blu cotone. La soluzione di Clémençon ammorbidisce i tessuti secchi più facilmente della potassa.",
+  "r": [
+   [
+    "Rigonfiamento del materiale secco",
+    "tutti i generi",
+    []
+   ],
+   [
+    "Fondo pulito dopo i coloranti",
+    "lattoglicerolo",
+    []
+   ]
+  ],
+  "a": "Quelle con alcali non vanno mescolate con il Melzer.",
+  "s": "Alcuni mesi o anni, a seconda della miscela.",
+  "x": "Acqua per materiale fresco, potassa o ammoniaca per materiale secco.",
+  "k": "lattoglicerolo glicerina l4 clemencon montaggio secco rigonfiamento"
+ }
+]
