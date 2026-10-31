@@ -5,7 +5,11 @@
 <script>(function(){var g=document.getElementById('inzGate'),ok=false;try{ok=localStorage.getItem('inz-gate')==='1'}catch(e){}if(ok){g.remove();return}g.querySelector('form').addEventListener('submit',function(e){e.preventDefault();if(document.getElementById('inzGateP').value.trim().toLowerCase()==='inzenga2027'){try{localStorage.setItem('inz-gate','1')}catch(e){}g.remove()}else{document.getElementById('inzGateE').textContent='Password non corretta.'}});document.getElementById('inzGateP').focus()})();</script>
 
 <title>Gestionale del Consiglio Direttivo</title>
-<link rel="manifest" href="https://cangelosky.github.io/Inzenga/manifest.webmanifest?v=3">
+<link rel="manifest" href="https://cangelosky.github.io/Inzenga/manifest.webmanifest?v=4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inzenga">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/png" sizes="32x32" href="https://cangelosky.github.io/Inzenga/img/logo-32.png?v=3">
 <link rel="apple-touch-icon" href="https://cangelosky.github.io/Inzenga/img/logo-180.png?v=3">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -618,4 +622,5 @@ footer { color: var(--ink-2); font-size: 15.5px; text-align: center; padding-top
 </script>
 
 
+<script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})});</script>
 </body></html>

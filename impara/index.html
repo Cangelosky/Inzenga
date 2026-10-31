@@ -8,7 +8,11 @@
 <title>Didattica e Biblioteca</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="La chiave per determinare i funghi, i caratteri, gli strumenti e le schede delle specie del Sud Italia, con foto dal vero e tavole dei libri storici.">
-<link rel="manifest" href="https://cangelosky.github.io/Inzenga/manifest.webmanifest?v=3">
+<link rel="manifest" href="https://cangelosky.github.io/Inzenga/manifest.webmanifest?v=4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inzenga">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/png" sizes="32x32" href="https://cangelosky.github.io/Inzenga/img/logo-32.png?v=3">
 <link rel="icon" type="image/png" sizes="48x48" href="https://cangelosky.github.io/Inzenga/img/logo-48.png?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="https://cangelosky.github.io/Inzenga/img/logo-192.png?v=3">
@@ -4596,3 +4600,4 @@ window.addEventListener("hashchange", function () { setTab(location.hash.replace
   sec.addEventListener("click", function (e) { var b = e.target.closest("[data-kmode]"); if (b) mode(b.getAttribute("data-kmode")); });
 })();
 </script>
+<script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})});</script>
