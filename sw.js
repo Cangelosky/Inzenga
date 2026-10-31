@@ -1,8 +1,8 @@
 /* Service worker dell'app dell'Associazione Inzenga.
    Rete prima, copia salvata se manca la connessione. Le foto pesanti non vengono salvate. */
-var V = "inz-app-v1";
+var V = "inz-app-v2";
 self.addEventListener("install", function (e) {
-  e.waitUntil(caches.open(V).then(function (c) { return c.addAll(["./", "impara/", "img/app-192.png"]); }).then(function () { return self.skipWaiting(); }));
+  e.waitUntil(caches.open(V).then(function (c) { return c.addAll(["./", "impara/", "img/fungo-192.png"]); }).then(function () { return self.skipWaiting(); }));
 });
 self.addEventListener("activate", function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== V; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));
