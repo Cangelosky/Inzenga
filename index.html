@@ -606,7 +606,7 @@ footer a { color: var(--ink); }
   </defs>
 </svg>
 
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 10:08</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 10:12</span></div>
 <div class="draft gut"><div class="wrap"><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 
 <header class="top gut">
@@ -1146,7 +1146,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   /* ---------- attività ---------- */
   var ACTS = [
     { cat: 'conv', img: 'corsi', alt: 'Relatore e soci attorno a un tavolo con i funghi da osservare e annusare', t: 'Conversazioni', b: 'Il lunedì e il giovedì ci incontriamo in sede per studiare i funghi e parlare di bosco e di natura. I soci sono relatori volontari e raccontano le loro esperienze e conoscenze.', w: 'Soci e ospiti, secondo l\'incontro' },
-    { cat: 'lez', img: 'corsiaula', alt: 'Un\'aula con i soci seduti davanti allo schermo che mostra la foto di un fungo durante una lezione', t: 'Lezioni in sede', b: 'Cicli di lezioni in sede, tenute da soci docenti, per approfondire un tema alla volta: i funghi ipogei, i tricolomi, la riproduzione dei funghi, le intossicazioni. Si seguono la sera, dentro il calendario delle serate.', w: 'Il lunedì e il giovedì, in sede' },
+    { cat: 'lez', src: 'img/lezioni.svg', img: 'lezioni', alt: 'Un uomo e una donna insegnano davanti a una lavagna con il disegno di un fungo, mentre alcuni corsisti, visti di spalle, seguono la lezione', t: 'Lezioni in sede', b: 'Cicli di lezioni in sede, tenute da soci docenti, per approfondire un tema alla volta: i funghi ipogei, i tricolomi, la riproduzione dei funghi, le intossicazioni. Si seguono la sera, dentro il calendario delle serate.', w: 'Il lunedì e il giovedì, in sede' },
     { cat: 'pratica', img: 'pratica', alt: 'Funghi su un tavolo scuro con lampada, microscopio e libro di determinazione', t: 'Pratica di determinazione', b: 'Ogni fungo interessante trovato nel bosco diventa oggetto di discussione e determinazione, che coinvolge appassionati e micologi esperti.', w: 'Il lunedì, in sede' },
     { cat: 'corsi', img: 'corsiaula', alt: 'Un\'aula di corso con i corsisti seduti davanti allo schermo che mostra la foto di un fungo', t: 'Corsi', b: 'Vuoi imparare a conoscere funghi e tartufi e hai bisogno del tesserino obbligatorio per la raccolta? Iscriviti adesso ai nostri corsi per il conseguimento o l\'aggiornamento del tesserino.', x: '<a class="btn solid" href="#corsi" data-go="corsi" data-iscr="1">Iscriviti adesso</a>', w: 'Venti posti per corso' },
     { cat: 'gite', img: 'gite', alt: 'Un gruppo di soci in posa in una pineta, con cestini e bastoni da trekking', t: 'Gite sociali', b: 'La stagione dei funghi è il momento migliore per organizzare passeggiate nei boschi insieme agli associati.', x: '<a class="more" href="#calendario" data-go="calendario" data-cal="gite">Scopri nel calendario le prossime gite</a>', w: 'Soci, con parenti e amici esperti di trekking' },
@@ -1155,7 +1155,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     { cat: 'eventi', img: 'eventi', alt: 'I soci a cena insieme, seduti ai lunghi tavoli del ristorante', t: 'Eventi conviviali', b: 'Non solo boschi e funghi: anche cene, pranzi sociali e momenti di festa da vivere insieme.', w: 'Per i soci' }
   ];
   document.getElementById('acts').innerHTML = ACTS.map(function (a) {
-    var pic = a.img ? '<img src="' + IMG[a.img] + '" alt="' + esc(a.alt) + '" loading="lazy">' :
+    var pic = (a.src || a.img) ? '<img src="' + (a.src || IMG[a.img]) + '" alt="' + esc(a.alt) + '" loading="lazy">' :
       '<svg viewBox="0 0 400 267" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="330" cy="55" r="30" fill="var(--card)" opacity="0.7"/>' + a.ph.map(function (m) {
         return '<use href="#' + m[0] + '" x="' + m[1] + '" y="' + m[2] + '" width="' + m[3] + '" height="' + (m[3] * 1.2) + '" style="--cap:' + m[4] + ';--stem:var(--card);--gill:var(--card)"/>';
       }).join('') + '<rect y="240" width="400" height="27" fill="var(--ink)" opacity="0.12"/></svg><span class="ph">Foto da inserire</span>';
@@ -1210,16 +1210,17 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       e.preventDefault(); var to = b === tabCal ? tabActs : tabCal; to.focus(); to.click();
     });
   });
+  (function(){ var b = document.querySelector('#p-corsi .ban img'); if (b && IMG.corsiaula) { b.src = IMG.corsiaula; b.style.objectPosition = '50% 40%'; } })();
   var actPage = document.getElementById('actPage');
   function renderAct(slug) {
     var cat = BY_SLUG[slug], a = ACTS.filter(function (x) { return x.cat === cat; })[0], c = CAT[cat];
     var evs = CAL.filter(function (e) { return e.c === cat; });
     var spot = SPOT.filter(function (s) { return s.cat === cat && !s.chip; })[0];
     var others = Object.keys(SLUG).filter(function (k) { return k !== cat; }).map(function (k) { return tag(k); }).join('');
-    var pic = a.img ? '<figure class="tile nocap" style="--tint:' + c.v + '"><div class="pic"><img src="' + IMG[a.img] + '" alt="' + esc(a.alt) + '"></div></figure>' : '';
+    var pic = (a.img && !a.src) ? '<figure class="tile nocap" style="--tint:' + c.v + '"><div class="pic"><img src="' + IMG[a.img] + '" alt="' + esc(a.alt) + '"></div></figure>' : '';
     var hi = spot ? '<section class="cell" style="--tint:' + c.v + '" aria-label="In primo piano"><h3>' + esc(spot.t) + '</h3><p>' + esc(spot.b) + '</p><p><b>' + esc(spot.d) + '</b></p><a class="btn solid" href="#' + spot.go + '" data-go="' + spot.go + '" style="align-self:flex-start">' + esc(spot.cta) + '</a></section>' : '';
     var rows = evs.slice(0, 6).map(function (e) { return evRow(e, false); }).join('');
-    var heroPic = a.img ? '<img src="' + IMG[a.img] + '" alt="' + esc(a.alt) + '">' : '';
+    var heroPic = (a.src || a.img) ? '<img src="' + (a.src || IMG[a.img]) + '"' + (a.src ? ' style="object-position:68% 50%"' : '') + ' alt="' + esc(a.alt) + '">' : '';
     actPage.innerHTML =
       '<header class="ahero" style="--tint:' + c.v + '">' + heroPic + '<div class="ahero-in"><div class="crumbs" role="navigation" aria-label="Percorso"><a href="#attivita" data-go="attivita">Attività</a><span aria-hidden="true">›</span><span aria-current="page">' + esc(c.n) + '</span></div><span class="chip">' + esc(c.n) + '</span><h2 style="font-size:clamp(30px,5vw,50px)">' + esc(a.t) + '</h2></div></header>' +
       '<div class="two one"><div class="text"><p class="lead">' + esc(a.b) + '</p><p class="fact"><b>Chi partecipa:</b> ' + esc(a.w) + '</p>' + (a.x ? '<p class="axtra">' + a.x + '</p>' : '') + '</div></div>' +
