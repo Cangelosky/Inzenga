@@ -10,11 +10,12 @@ h1{font:700 26px var(--fd);margin:0 0 4px}.lead{color:var(--ink2);margin:0 0 36p
 .opt{margin:0 0 56px}.opt h2{font:700 22px var(--fd);margin:0 0 2px}.opt .why{margin:0 0 14px;color:var(--ink2);font-size:14.5px}
 .sec{font:700 clamp(26px,3.6vw,36px)/1.1 var(--fd);letter-spacing:-.02em;margin:0 0 14px}
 /* slide comune */
-.sl{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:#10201A;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:clamp(20px,4vw,44px)}
+.sl{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:radial-gradient(circle at 75% 50%,#1F5239,#10201A 75%);display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:clamp(20px,4vw,44px)}
 .sl .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
 .sl.p .bg{filter:blur(22px) brightness(.65);transform:scale(1.3)}
 .sl.r .bg{display:none}.sl.r{background:radial-gradient(circle at 78% 45%,#2B6B4C,#15362A 70%)}
-.sl::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,18,13,.85),rgba(8,18,13,.25) 60%,rgba(8,18,13,.1))}
+.sl::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(8,18,13,.82) 0%,rgba(8,18,13,.5) 50%,rgba(8,18,13,.12) 100%),linear-gradient(0deg,rgba(8,18,13,.7),transparent 55%)}
+@media (max-width:700px){.sl::before{background:linear-gradient(0deg,rgba(8,18,13,.92),rgba(8,18,13,.55) 60%,rgba(8,18,13,.2))}}
 .sl .ps{position:absolute;z-index:-1;right:6%;top:50%;transform:translateY(-50%);height:74%;max-width:36%;object-fit:contain;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.5)}
 .sl.r .ps{border-radius:50%;box-shadow:none;filter:drop-shadow(0 8px 20px rgba(0,0,0,.4))}
 .sl .k{font:600 12.5px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#F6D58A}
@@ -49,9 +50,11 @@ h1{font:700 26px var(--fd);margin:0 0 4px}.lead{color:var(--ink2);margin:0 0 36p
 .C .num{position:absolute;z-index:5;top:26px;left:18px;font:600 13px var(--fb);color:#fff;opacity:.85}
 .C .z{position:absolute;top:0;bottom:0;width:30%;z-index:4;cursor:pointer;background:none;border:0}.C .z.l{left:0}.C .z.r2{right:0}
 .C .sl>.k,.C .sl>h3,.C .sl>p,.C .sl>.d,.C .sl>.cta{position:relative;z-index:6}.C .sl{padding-top:56px;min-height:520px}
+.sl .bg.ct{object-fit:contain;object-position:100% 50%!important;left:auto;right:2%;width:56%;height:92%;top:4%;background:none}
+@media (max-width:700px){.sl .bg.ct{left:auto;right:4%;width:70%;height:50%;top:4%;object-position:50% 50%!important}}
 </style></head><body><div class="wrap">
 <h1>Tre proposte per «In primo piano»</h1>
-<p class="lead">Nessuna fila di pulsanti in alto. Stesse immagini e stessi testi delle schede attuali. Idee prese da schemi molto usati nei siti di notizie e di eventi: vetrina a riquadri, schede affiancate, storie. Per «Diventa socio» c'è la foto della serata, perché la scheda non ha un'immagine.</p>
+<p class="lead">Nessuna fila di pulsanti in alto. Stesse immagini e stessi testi delle schede attuali, ora tutte a tutto campo come sfondo, anche locandine e logo 5×1000. Idee prese da schemi molto usati nei siti di notizie e di eventi: vetrina a riquadri, schede affiancate, storie. Per «Diventa socio» c'è la foto della serata, perché la scheda non ha un'immagine.</p>
 
 <section class="opt"><h2>A · Vetrina</h2><p class="why">Una scheda grande e le altre in elenco accanto, con la miniatura: si vede subito tutto quello che c'è. Tocchi un titolo e passa in grande. Scorre da sola.</p>
 <h2 class="sec">In primo piano</h2><div class="A" id="A"><div class="big" id="Abig"></div><div class="side" id="Aside"></div></div></section>
@@ -69,8 +72,9 @@ var S=[
 {k:'Mostra',t:'65 specie in un giorno: la mostra al Parco Uditore',b:'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!',d:'Parco Uditore, Palermo · 11 ottobre 2026',cta:'Guarda le attività',img:'mostra26.jpg',pos:'50% 60%',tab:'Mostra micologica'},
 {k:'Stage · Gambarie',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stageloc.jpg',p:1,tab:'Stage Micologico'},
 {k:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'eventi.jpg',pos:'50% 55%',tab:'Diventa socio'}];
+var CONT={'cinque.svg':1};S[1].k='5 per mille';var POS={'cefalu.jpg':'50% 28%','cinque.svg':'50% 50%','stageloc.jpg':'50% 30%'};S.forEach(function(s){s.p=0;s.r=0;if(POS[s.img])s.pos=POS[s.img]});
 function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
-function slide(s,cls){return '<article class="sl '+(s.p?'p ':'')+(s.r?'r ':'')+(cls||'')+'">'+(s.r?'':'<img class="bg" src="'+s.img+'" alt="" style="object-position:'+(s.pos||'50% 30%')+'">')+(s.p?'<img class="ps" src="'+s.img+'" alt="">':'')+'<span class="k">'+e(s.k)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="d">'+e(s.d)+'</div><a class="cta" href="#">'+e(s.cta)+'</a></article>'}
+function slide(s,cls){return '<article class="sl '+(s.p?'p ':'')+(s.r?'r ':'')+(cls||'')+'">'+'<img class="bg'+(CONT[s.img]?' ct':'')+'" src="'+s.img+'" alt="" style="object-position:'+(s.pos||'50% 30%')+'">'+(s.p?'<img class="ps" src="'+s.img+'" alt="">':'')+'<span class="k">'+e(s.k)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="d">'+e(s.d)+'</div><a class="cta" href="#">'+e(s.cta)+'</a></article>'}
 /* A */
 var ai=0,at=Date.now(),ah=false,big=document.getElementById('Abig'),side=document.getElementById('Aside');
 side.innerHTML=S.map(function(s,i){return '<button class="mini" data-i="'+i+'"><img class="'+(s.r?'c':'')+'" src="'+s.img+'" alt=""><div><b>'+e(s.tab)+'</b><span>'+e(s.d.split(' · ')[0])+'</span></div></button>'}).join('');
