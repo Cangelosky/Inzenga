@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Provino 2 · In primo piano</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F1F4EC;--ink:#14231B;--ink2:#2F3E34;--ochre:#E2AB3C;--forest:#15362A;--line:#D3DBCB;--fd:"Bricolage Grotesque","Trebuchet MS",sans-serif;--fb:"Instrument Sans",system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--fb)}
+.wrap{max-width:1120px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 80px}
+h1{font:700 26px var(--fd);margin:0 0 4px}.lead{color:var(--ink2);margin:0 0 36px;font-size:15px}
+.opt{margin:0 0 56px}.opt h2{font:700 22px var(--fd);margin:0 0 2px}.opt .why{margin:0 0 14px;color:var(--ink2);font-size:14.5px}
+.sec{font:700 clamp(26px,3.6vw,36px)/1.1 var(--fd);letter-spacing:-.02em;margin:0 0 14px}
+/* slide comune */
+.sl{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:#10201A;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:clamp(20px,4vw,44px)}
+.sl .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.sl.p .bg{filter:blur(22px) brightness(.65);transform:scale(1.3)}
+.sl.r .bg{display:none}.sl.r{background:radial-gradient(circle at 78% 45%,#2B6B4C,#15362A 70%)}
+.sl::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,18,13,.85),rgba(8,18,13,.25) 60%,rgba(8,18,13,.1))}
+.sl .ps{position:absolute;z-index:-1;right:6%;top:50%;transform:translateY(-50%);height:74%;max-width:36%;object-fit:contain;border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.5)}
+.sl.r .ps{border-radius:50%;box-shadow:none;filter:drop-shadow(0 8px 20px rgba(0,0,0,.4))}
+.sl .k{font:600 12.5px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:#F6D58A}
+.sl h3{font:700 clamp(24px,3.4vw,40px)/1.06 var(--fd);letter-spacing:-.02em;margin:0;max-width:19ch;text-wrap:balance}
+.sl p{margin:0;max-width:44ch;font-size:16px;color:#EDF2E9}
+.sl .d{font-weight:600;font-size:15px;color:#F6D58A}
+.cta{align-self:flex-start;margin-top:6px;display:inline-block;text-decoration:none;font-weight:600;padding:10px 20px;border-radius:999px;background:var(--ochre);color:#1A2A20;font-size:15px}
+@media (min-width:701px){.sl.p>.k,.sl.p>h3,.sl.p>p,.sl.p>.d{max-width:54%}.sl.p>p{max-width:min(46ch,54%)}}
+@media (max-width:700px){.sl .ps{position:relative;transform:none;right:auto;top:auto;height:150px;max-width:50%;align-self:flex-start;z-index:0;margin-bottom:6px}}
+/* A vetrina */
+.A{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px}
+.A .big{min-height:520px;border-radius:24px}
+.A .big .sl{position:absolute;inset:0}
+.A .big{position:relative}
+.A .side{display:grid;gap:10px;align-content:stretch}
+.A .mini{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;background:#FAFBF6;border:1px solid var(--line);border-radius:18px;padding:10px;transition:.2s}
+.A .mini:hover{transform:translateX(3px);border-color:#9fb59f}
+.A .mini img{width:76px;height:76px;object-fit:cover;border-radius:12px;background:#10201A}
+.A .mini img.c{object-fit:contain;padding:6px}
+.A .mini b{font:700 16px/1.2 var(--fd);display:block}.A .mini span{font-size:13.5px;color:var(--ink2)}
+.A .mini[aria-current=true]{background:var(--forest);color:#fff;border-color:var(--forest)}.A .mini[aria-current=true] span{color:#cfe0d3}
+@media (max-width:820px){.A{grid-template-columns:1fr}.A .big{min-height:560px}.A .side{grid-auto-flow:column;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.A .mini{scroll-snap-align:start}}
+/* B affiancate */
+.B{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;scrollbar-width:none}.B::-webkit-scrollbar{display:none}
+.B .sl{flex:0 0 min(78%,720px);min-height:460px;border-radius:24px;scroll-snap-align:center}
+.dots{display:flex;gap:7px;justify-content:center;margin-top:10px}.dots i{width:8px;height:8px;border-radius:50%;background:#b7c6b6;transition:.25s}.dots i.on{width:26px;border-radius:5px;background:var(--forest)}
+/* C storie */
+.C{position:relative;border-radius:26px;overflow:hidden}
+.C .sl{min-height:540px}
+.C .seg{position:absolute;z-index:5;top:14px;left:16px;right:16px;display:flex;gap:6px}
+.C .seg i{flex:1;height:3.5px;border-radius:3px;background:rgba(255,255,255,.35);overflow:hidden}.C .seg i b{display:block;height:100%;width:0;background:#fff}
+.C .num{position:absolute;z-index:5;top:26px;left:18px;font:600 13px var(--fb);color:#fff;opacity:.85}
+.C .z{position:absolute;top:0;bottom:0;width:30%;z-index:4;cursor:pointer;background:none;border:0}.C .z.l{left:0}.C .z.r2{right:0}
+.C .sl>.k,.C .sl>h3,.C .sl>p,.C .sl>.d,.C .sl>.cta{position:relative;z-index:6}.C .sl{padding-top:56px;min-height:520px}
+</style></head><body><div class="wrap">
+<h1>Tre proposte per «In primo piano»</h1>
+<p class="lead">Nessuna fila di pulsanti in alto. Stesse immagini e stessi testi delle schede attuali. Idee prese da schemi molto usati nei siti di notizie e di eventi: vetrina a riquadri, schede affiancate, storie. Per «Diventa socio» c'è la foto della serata, perché la scheda non ha un'immagine.</p>
+
+<section class="opt"><h2>A · Vetrina</h2><p class="why">Una scheda grande e le altre in elenco accanto, con la miniatura: si vede subito tutto quello che c'è. Tocchi un titolo e passa in grande. Scorre da sola.</p>
+<h2 class="sec">In primo piano</h2><div class="A" id="A"><div class="big" id="Abig"></div><div class="side" id="Aside"></div></div></section>
+
+<section class="opt"><h2>B · Schede affiancate</h2><p class="why">Si scorre con il dito o con la rotella: la scheda dopo spunta di lato, come nelle app di film e musica. Solo puntini sotto, nessun pulsante.</p>
+<h2 class="sec">In primo piano</h2><div class="B" id="B"></div><div class="dots" id="Bd"></div></section>
+
+<section class="opt"><h2>C · Storie</h2><p class="why">Una scheda alla volta, con barrette di avanzamento sottili in alto come nelle storie di Instagram. Tocchi il lato destro o sinistro per avanti e indietro. Scorre da sola.</p>
+<h2 class="sec">In primo piano</h2><div class="C" id="C"></div></section>
+</div>
+<script>
+var S=[
+{k:'Corsi · Cefalù',t:'Corso di micologia a Cefalù: dall\'11 al 21 novembre',b:'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.',d:'Cefalù · 11-21 novembre 2026 · iscrizioni aperte',cta:'Mi preiscrivo',img:'cefalu.jpg',p:1,tab:'Corso Base'},
+{k:'5 per mille',t:'Una firma che non ti costa niente',b:'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.',d:'Codice fiscale: da inserire',cta:'Contatti',img:'cinque.svg',p:1,r:1,tab:'Dona il 5x1000'},
+{k:'Mostra',t:'65 specie in un giorno: la mostra al Parco Uditore',b:'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!',d:'Parco Uditore, Palermo · 11 ottobre 2026',cta:'Guarda le attività',img:'mostra26.jpg',pos:'50% 60%',tab:'Mostra micologica'},
+{k:'Stage · Gambarie',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stageloc.jpg',p:1,tab:'Stage Micologico'},
+{k:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'eventi.jpg',pos:'50% 55%',tab:'Diventa socio'}];
+function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function slide(s,cls){return '<article class="sl '+(s.p?'p ':'')+(s.r?'r ':'')+(cls||'')+'">'+(s.r?'':'<img class="bg" src="'+s.img+'" alt="" style="object-position:'+(s.pos||'50% 30%')+'">')+(s.p?'<img class="ps" src="'+s.img+'" alt="">':'')+'<span class="k">'+e(s.k)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="d">'+e(s.d)+'</div><a class="cta" href="#">'+e(s.cta)+'</a></article>'}
+/* A */
+var ai=0,at=Date.now(),ah=false,big=document.getElementById('Abig'),side=document.getElementById('Aside');
+side.innerHTML=S.map(function(s,i){return '<button class="mini" data-i="'+i+'"><img class="'+(s.r?'c':'')+'" src="'+s.img+'" alt=""><div><b>'+e(s.tab)+'</b><span>'+e(s.d.split(' · ')[0])+'</span></div></button>'}).join('');
+function aset(i){ai=i;at=Date.now();big.innerHTML=slide(S[i]);[].forEach.call(side.children,function(b,k){b.setAttribute('aria-current',k===i)})}
+side.onclick=function(ev){var b=ev.target.closest('.mini');if(b)aset(+b.dataset.i)};
+document.getElementById('A').onpointerenter=function(){ah=true};document.getElementById('A').onpointerleave=function(){ah=false;at=Date.now()};
+aset(0);setInterval(function(){if(!ah&&!document.hidden&&Date.now()-at>7000)aset((ai+1)%S.length)},500);
+/* B */
+var B=document.getElementById('B'),Bd=document.getElementById('Bd');
+B.innerHTML=S.map(function(s){return slide(s)}).join('');Bd.innerHTML=S.map(function(){return '<i></i>'}).join('');
+function bdots(){var w=B.children[0].offsetWidth+14,i=Math.round(B.scrollLeft/w);[].forEach.call(Bd.children,function(d,k){d.classList.toggle('on',k===i)})}
+B.addEventListener('scroll',bdots);bdots();
+/* C */
+var C=document.getElementById('C'),ci=0,ct=Date.now(),ch=false,D=7000;
+C.innerHTML='<div class="seg">'+S.map(function(){return '<i><b></b></i>'}).join('')+'</div><div class="num" id="cn"></div><div id="cs"></div><button class="z l" aria-label="Indietro"></button><button class="z r2" aria-label="Avanti"></button>';
+var cs=document.getElementById('cs'),cn=document.getElementById('cn'),bars=C.querySelectorAll('.seg b');
+function cset(i){ci=(i+S.length)%S.length;ct=Date.now();cs.innerHTML=slide(S[ci]);cn.textContent=('0'+(ci+1)).slice(-2)+' / 0'+S.length;[].forEach.call(bars,function(b,k){b.style.width=k<ci?'100%':'0'})}
+C.querySelector('.l').onclick=function(){cset(ci-1)};C.querySelector('.r2').onclick=function(){cset(ci+1)};
+C.onpointerdown=function(){ch=true};C.onpointerup=function(){ch=false;ct=Date.now()-((parseFloat(bars[ci].style.width)||0)/100*D)};
+cset(0);setInterval(function(){if(document.hidden)return;if(ch){ct=Date.now()-((parseFloat(bars[ci].style.width)||0)/100*D);return}var p=(Date.now()-ct)/D;bars[ci].style.width=Math.min(p,1)*100+'%';if(p>=1)cset(ci+1)},50);
+</script></body></html>
