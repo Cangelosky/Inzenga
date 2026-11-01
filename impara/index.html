@@ -755,19 +755,24 @@ body.pg-lab .pban-bib, body.pg-bib .pban-lab { display: none; }
 body { padding-top: 0; }
 body > .stamp { margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
 /* barra del sito (logo e menù), uguale a quella delle altre pagine */
-.sitebar { --sb-bg: #EDF0EA; --sb-ink: #17251F; --sb-ink2: #33453A; --sb-line: #B3C0B6; --sb-card: #F9FAF6; --sb-forest: #15362A; --sb-forest-ink: #E8EFE3;
+.sitebar, .sitedraft { --sb-bg: #D6E2C5; --sb-ink: #14231B; --sb-ink2: #33453A; --sb-line: #C0CFB0; --sb-card: #FAFCF4; --sb-forest: #1F4A38; --sb-forest-ink: #F0F5E8; }
+html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1D14; --sb-ink: #F2EADA; --sb-ink2: #D6CAB4; --sb-line: #5A4531; --sb-card: #3F3022; --sb-forest: #2F4A2A; --sb-forest-ink: #F0F4E2; }
+.sitedraft { background: var(--sb-forest); color: var(--sb-forest-ink); font: 14px/1.5 var(--f-body); padding: 8px max(16px, env(safe-area-inset-left, 0px)) 8px max(16px, env(safe-area-inset-right, 0px));
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+.sitedraft div { max-width: 1120px; margin: 0 auto; display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.sitedraft b { font-weight: 600; }
+.sitebar {
   position: sticky; top: 0; z-index: 50; background: var(--sb-bg); color: var(--sb-ink); border-bottom: 1px solid var(--sb-line);
   margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 18px calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
   padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); font-family: var(--f-body); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sitebar { --sb-bg: #070C09; --sb-ink: #E5EDE1; --sb-ink2: #C4D2C7; --sb-line: #263A2E; --sb-card: #15221A; --sb-forest: #1B4132; } }
-:root[data-theme="dark"] .sitebar { --sb-bg: #070C09; --sb-ink: #E5EDE1; --sb-ink2: #C4D2C7; --sb-line: #263A2E; --sb-card: #15221A; --sb-forest: #1B4132; }
 .sitebar-in { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
 .sb-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--sb-ink); min-width: 0; }
 .sb-brand img { width: 48px; height: 48px; flex: none; display: block; }
 .sb-brand span { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
 .sb-brand strong { font-family: var(--f-display, inherit); font-size: 17px; letter-spacing: -0.02em; line-height: 1.15; max-width: 15em; }
+@media (max-width: 480px) { .sb-brand strong { font-size: 15px; } .sb-brand small { font-size: 12px; } .sb-brand img { width: 44px; height: 44px; } }
 .sb-brand small { font-size: 12.5px; color: var(--sb-ink2); }
-.sb-btn { display: none; border: 1px solid var(--sb-line); background: var(--sb-card); color: var(--sb-ink); border-radius: 999px; padding: 8px 16px; font: 500 15px var(--f-body); cursor: pointer; }
+.sb-btn { display: none; border: 1px solid var(--sb-line); background: var(--sb-card); color: var(--sb-ink); border-radius: 999px; padding: 8px 16px; font: 500 16px var(--f-body); cursor: pointer; }
 .sb-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 2px; align-items: center; }
 .sb-nav a { white-space: nowrap; display: block; text-decoration: none; color: var(--sb-ink); padding: 8px 11px; border-radius: 999px; font-weight: 500; font-size: 15px; }
 .sb-nav a:hover { background: var(--sb-line); }
@@ -806,7 +811,9 @@ body > .stamp { margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 10:55</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:06</span></div>
+<script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
+<div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
   <div class="sitebar-in">
     <a class="sb-brand" href="../#home" aria-label="Associazione Micologica Giuseppe Inzenga APS, gruppo A.M.B. di Palermo: vai alla home">
