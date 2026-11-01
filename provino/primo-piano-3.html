@@ -23,8 +23,15 @@ h2{font:700 clamp(28px,4vw,40px)/1.08 var(--fd);letter-spacing:-.02em;margin:0 0
 .cta{margin-top:auto;align-self:flex-start;text-decoration:none;font-weight:600;font-size:15px;padding:9px 18px;border-radius:999px;background:var(--ochre);color:#1A2A20}
 .dots{display:flex;gap:7px;justify-content:center;margin-top:6px}.dots i{width:8px;height:8px;border-radius:50%;background:#b7c6b6;transition:.25s}.dots i.on{width:26px;border-radius:5px;background:var(--forest)}
 @media (max-width:640px){.card{flex-basis:82%}}
+.ph{cursor:zoom-in}.ph:focus-visible{outline:3px solid var(--ochre);outline-offset:-3px}
+.ph .zm{position:absolute;z-index:2;right:12px;top:12px;width:34px;height:34px;border-radius:50%;background:rgba(10,22,16,.6);display:grid;place-items:center;opacity:.85}
+.ph .zm svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(6,14,10,.97);display:none;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px 16px;cursor:zoom-out}
+.lb.on{display:flex}.lb img{max-width:100%;max-height:calc(100vh - 80px);border-radius:10px;background:#10201A;object-fit:contain}
+.lb figcaption{position:absolute;left:16px;right:70px;bottom:14px;color:#E8EFE3;font-size:14.5px}
+.lb button{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:14px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:24px;line-height:1;cursor:pointer}
 </style></head><body><div class="wrap">
-<p class="note">Provino 3, non è ancora nel sito. Schede verticali: foto ritagliata al centro in alto, titolo dentro la foto in basso, testo sotto. Il logo 5×1000 è intero e al centro. Si scorre di lato con il dito o con la rotella.</p>
+<p class="note">Provino 3, non è ancora nel sito. Schede verticali: foto ritagliata al centro in alto, titolo dentro la foto in basso, testo sotto. Il logo 5×1000 è intero e al centro. Toccando la foto si ingrandisce; il pulsante porta alla pagina. Si scorre di lato con il dito o con la rotella.</p>
 <h2>In primo piano</h2><p class="sub">Le novità, una alla volta.</p>
 <div class="row" id="row"></div><div class="dots" id="dots"></div>
 </div>
@@ -34,11 +41,18 @@ var S=[
 {k:'5 per mille',t:'Una firma che non ti costa niente',b:'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.',d:'Codice fiscale: da inserire',cta:'Contatti',img:'cinque.svg',logo:1},
 {k:'Mostra',t:'65 specie in un giorno: la mostra al Parco Uditore',b:'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!',d:'Parco Uditore, Palermo · 11 ottobre 2026',cta:'Guarda le attività',img:'mostra26.jpg'},
 {k:'Stage',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stageloc.jpg'},
-{k:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'eventi.jpg'}];
+{k:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'socio.jpg'}];
 function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 var row=document.getElementById('row'),dots=document.getElementById('dots');
-row.innerHTML=S.map(function(s){return '<article class="card"><div class="ph'+(s.logo?' logo':'')+'"><img src="'+s.img+'" alt=""><span class="k">'+e(s.k)+'</span><h3>'+e(s.t)+'</h3></div><div class="tx"><p>'+e(s.b)+'</p><div class="d">'+e(s.d)+'</div><a class="cta" href="#">'+e(s.cta)+'</a></div></article>'}).join('');
+row.innerHTML=S.map(function(s){return '<article class="card"><div class="ph'+(s.logo?' logo':'')+'" role="button" tabindex="0" aria-label="Ingrandisci la foto: '+e(s.t)+'" data-src="'+s.img+'"><img src="'+s.img+'" alt=""><span class="k">'+e(s.k)+'</span><span class="zm" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M11 8.5v5M8.5 11h5"/></svg></span><h3>'+e(s.t)+'</h3></div><div class="tx"><p>'+e(s.b)+'</p><div class="d">'+e(s.d)+'</div><a class="cta" href="#">'+e(s.cta)+'</a></div></article>'}).join('');
 dots.innerHTML=S.map(function(){return '<i></i>'}).join('');
 function dd(){var w=row.children[0].offsetWidth+16,i=Math.min(S.length-1,Math.round(row.scrollLeft/w));[].forEach.call(dots.children,function(d,k){d.classList.toggle('on',k===i)})}
 row.addEventListener('scroll',dd);dd();
+var lb=document.createElement('figure');lb.className='lb';lb.setAttribute('role','dialog');lb.setAttribute('aria-modal','true');lb.style.margin=0;lb.innerHTML='<img alt=""><figcaption></figcaption><button type="button" aria-label="Chiudi">×</button>';document.body.appendChild(lb);
+var lbi=lb.querySelector('img'),lbc=lb.querySelector('figcaption'),last=null;
+function open(el){last=el;lbi.src=el.dataset.src;lbc.textContent=el.querySelector('h3').textContent;lb.classList.add('on');lb.querySelector('button').focus()}
+function close(){lb.classList.remove('on');lbi.removeAttribute('src');if(last)last.focus()}
+row.addEventListener('click',function(ev){var p=ev.target.closest('.ph');if(p)open(p)});
+row.addEventListener('keydown',function(ev){if((ev.key==='Enter'||ev.key===' ')&&ev.target.classList.contains('ph')){ev.preventDefault();open(ev.target)}});
+lb.addEventListener('click',close);document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&lb.classList.contains('on'))close()});
 </script></body></html>
