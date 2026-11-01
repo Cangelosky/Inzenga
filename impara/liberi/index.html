@@ -83,8 +83,10 @@ button:focus-visible { outline: 2px solid var(--hit); outline-offset: 2px; }
 .nm { font-weight: 600; }
 .tg { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .t { font-size: 12px; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
-.row .ot { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
-.row .ot .ol { display: block; margin-bottom: 2px; }
+.row .ot { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.row .ot summary { cursor: pointer; font-weight: 600; color: var(--accent); min-height: 32px; display: flex; align-items: center; }
+.row .ot p { margin: 4px 0 0; }
+.qnote { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
 .tg .ol { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); width: 100%; }
 .t b { font-weight: 600; color: var(--ink); }
 .row .lk { display: inline-block; margin-top: 6px; font-weight: 700; font-size: 14px; color: var(--accent); text-decoration: none; padding: 4px 0; min-height: 32px; }
@@ -245,11 +247,11 @@ function pickerHTML() {
 function resultHTML(cs) {
   if (!order.length) return '<div class="empty"><b>Scegli il primo carattere che vedi.</b><span>Non importa quale: parti da quello che noti per primo. L\'elenco si restringe a ogni scelta.</span></div>';
   if (!cs.length) return '<div class="empty"><b>Nessuna specie con questa combinazione.</b><span>Nella lista di esempio non c\'è. Togli l\'ultimo carattere o quello di cui sei meno sicuro.</span></div>';
-  return '<ul class="list">' + cs.map(function (sp) {
+  return '<p class="qnote">Il punto interrogativo <b>?</b> vuol dire che quel carattere non è ancora registrato per la specie: succede, per esempio, ai funghi senza un vero cappello, come tartufi, vesce, stelle di terra e polipori.</p><ul class="list">' + cs.map(function (sp) {
     var cf = sp.v.cf ? ico('cf', sp.v.cf[0], 56) : '<span></span>';
     return '<li class="row">' + cf + '<div><div class="nm"><i>' + esc(sp.n) + '</i> <span class="sw" title="' + esc((sp.v.col || [''])[0]) + '" style="background:' + (sp.v.col ? SW[sp.v.col[0]] : 'transparent') + '"></span></div><div class="tg">' +
       order.map(function (id) { var v = sp.v[id]; return known(sp, id) ? '<span class="t on">' + esc(v.join(', ')) + '</span>' : '<span class="t q" title="Carattere non ancora registrato per questa specie">' + esc(chById(id).label) + ' ?</span>'; }).join('') + '</div>' +
-      (function () { var oth = CH.filter(function (c) { return order.indexOf(c.id) < 0 && known(sp, c.id); }); return oth.length ? '<p class="ot"><span class="ol">Altri caratteri</span>' + oth.map(function (c) { return '<span><b>' + esc(c.label) + ':</b> ' + esc(sp.v[c.id].join(', ')) + '</span>'; }).join(' · ') + '</p>' : ''; })() +
+      (function () { var oth = CH.filter(function (c) { return order.indexOf(c.id) < 0 && known(sp, c.id); }); return oth.length ? '<details class="ot"><summary>Altri caratteri (' + oth.length + ')</summary><p>' + oth.map(function (c) { return '<span><b>' + esc(c.label) + ':</b> ' + esc(sp.v[c.id].join(', ')) + '</span>'; }).join(' · ') + '</p></details>' : ''; })() +
       '<a class="lk" href="#" data-sp="' + esc(sp.n) + '">Apri la scheda ›</a></div></li>';
   }).join('') + '</ul>';
 }
