@@ -870,7 +870,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:29</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:45</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -918,12 +918,12 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
   </nav>
   <div class="sheet">
   <div class="tabs" role="tablist" aria-label="Sezioni">
-    <button class="tab" role="tab" id="tab-percorso" aria-controls="p-percorso" aria-selected="true" data-tab="percorso" data-pg="lab">Il percorso didattico</button>
+    <button class="tab" role="tab" id="tab-albero" aria-controls="p-albero" aria-selected="false" data-tab="albero" data-pg="lab">Classificazione</button>
+    <button class="tab" role="tab" id="tab-specie" aria-controls="p-specie" aria-selected="false" data-tab="specie" data-pg="lab">Specie</button>
     <button class="tab" role="tab" id="tab-chiave" aria-controls="p-chiave" aria-selected="false" data-tab="chiave" data-pg="lab">La chiave dicotomica</button>
     <button class="tab" role="tab" id="tab-caratteri" aria-controls="p-caratteri" aria-selected="false" data-tab="caratteri" data-pg="lab">I caratteri distintivi</button>
-    <button class="tab" role="tab" id="tab-specie" aria-controls="p-specie" aria-selected="false" data-tab="specie" data-pg="lab">Specie</button>
-    <button class="tab" role="tab" id="tab-albero" aria-controls="p-albero" aria-selected="false" data-tab="albero" data-pg="lab">Classificazione</button>
     <button class="tab" role="tab" id="tab-strumenti" aria-controls="p-strumenti" aria-selected="false" data-tab="strumenti" data-pg="lab">Strumenti scientifici</button>
+    <button class="tab" role="tab" id="tab-percorso" aria-controls="p-percorso" aria-selected="true" data-tab="percorso" data-pg="lab">Il percorso didattico</button>
     <button class="tab" role="tab" id="tab-biblioteca" aria-controls="p-biblioteca" aria-selected="false" data-tab="biblioteca" data-pg="bib">Libri</button>
     <button class="tab" role="tab" id="tab-tavole" aria-controls="p-tavole" aria-selected="false" data-tab="tavole" data-pg="bib">Tavole</button>
     <button class="tab" role="tab" id="tab-pubblicazioni" aria-controls="p-pubblicazioni" aria-selected="false" data-tab="pubblicazioni" data-pg="bib">Pubblicazioni</button>
@@ -935,7 +935,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
         <button type="button" role="tab" class="ix-tab ix-t-lab" id="ixt-lab" aria-controls="ix-pl" aria-selected="true" data-ix="lab">Didattica</button>
         <button type="button" role="tab" class="ix-tab ix-t-bib" id="ixt-bib" aria-controls="ix-pb" aria-selected="false" data-ix="bib">Biblioteca</button>
       </div>
-      <section class="ix-world ix-lab" id="ix-pl" role="tabpanel" aria-labelledby="ixt-lab"><h2 class="ix-h">Didattica</h2><p class="sub">Qui i funghi si imparano facendo, dal primo cappello alla specie.</p><div class="ix-cards"><a class="ix-card" href="#percorso"><span class="ico ph" style="background-image:url(../img/ix-percorso.svg)"></span><div><h3>Il percorso didattico</h3><p>Sette tappe con quiz per imparare le parole giuste.</p><span class="n" >7 tappe</span></div></a><a class="ix-card" href="#chiave"><span class="ico ph" style="background-image:url(../img/ix-chiave.svg)"></span><div><h3>La chiave dicotomica</h3><p>Rispondi a poche domande, o descrivi il fungo come vuoi tu, e arrivi al genere o alla specie.</p><span class="n" >197 specie passo passo · 387 a caratteri liberi</span></div></a><a class="ix-card" href="#caratteri"><span class="ico ph" style="background-image:url(../img/ix-caratteri.svg)"></span><div><h3>I caratteri distintivi</h3><p>Cappello, lamelle, gambo, anello: le parti da osservare.</p><span class="n" >10 caratteri</span></div></a><a class="ix-card" href="#specie"><span class="ico ph" style="background-image:url(../img/ix-specie.svg)"></span><div><h3>Specie</h3><p>Le specie segnalate nel Sud Italia, con disegni storici, foto e cartina.</p><span class="n" id="ix-specie">1.691 specie · 110 con foto</span></div></a><a class="ix-card" href="#albero"><span class="ico ph" style="background-image:url(../img/ix-albero.svg)"></span><div><h3>Classificazione</h3><p>Dal regno alla specie: divisioni, classi, ordini, famiglie e generi. Cerca dall’alto o parti dal nome del fungo.</p><span class="n" >dal regno alla specie</span></div></a><a class="ix-card" href="#strumenti"><span class="ico ph" style="background-image:url(../img/ix-strumenti.svg)"></span><div><h3>Strumenti scientifici</h3><p>Scheda di raccolta, sporata, nomi, misura delle spore, reagenti.</p><span class="n" >5 strumenti</span></div></a></div></section>
+      <section class="ix-world ix-lab" id="ix-pl" role="tabpanel" aria-labelledby="ixt-lab"><h2 class="ix-h">Didattica</h2><p class="sub">Qui i funghi si imparano facendo, dal primo cappello alla specie.</p><div class="ix-cards"><a class="ix-card" href="#albero"><span class="ico ph" style="background-image:url(../img/ix-albero.svg)"></span><div><h3>Classificazione</h3><p>Dal regno alla specie: divisioni, classi, ordini, famiglie e generi. Cerca dall’alto o parti dal nome del fungo.</p><span class="n" >dal regno alla specie</span></div></a><a class="ix-card" href="#specie"><span class="ico ph" style="background-image:url(../img/ix-specie.svg)"></span><div><h3>Specie</h3><p>Le specie segnalate nel Sud Italia, con disegni storici, foto e cartina.</p><span class="n" id="ix-specie">1.691 specie · 110 con foto</span></div></a><a class="ix-card" href="#chiave"><span class="ico ph" style="background-image:url(../img/ix-chiave.svg)"></span><div><h3>La chiave dicotomica</h3><p>Rispondi a poche domande, o descrivi il fungo come vuoi tu, e arrivi al genere o alla specie.</p><span class="n" >197 specie passo passo · 387 a caratteri liberi</span></div></a><a class="ix-card" href="#caratteri"><span class="ico ph" style="background-image:url(../img/ix-caratteri.svg)"></span><div><h3>I caratteri distintivi</h3><p>Cappello, lamelle, gambo, anello: le parti da osservare.</p><span class="n" >10 caratteri</span></div></a><a class="ix-card" href="#strumenti"><span class="ico ph" style="background-image:url(../img/ix-strumenti.svg)"></span><div><h3>Strumenti scientifici</h3><p>Scheda di raccolta, sporata, nomi, misura delle spore, reagenti.</p><span class="n" >5 strumenti</span></div></a><a class="ix-card" href="#percorso"><span class="ico ph" style="background-image:url(../img/ix-percorso.svg)"></span><div><h3>Il percorso didattico</h3><p>Sette tappe con quiz per imparare le parole giuste.</p><span class="n" >7 tappe</span></div></a></div></section>
       <section class="ix-world ix-bib" id="ix-pb" role="tabpanel" aria-labelledby="ixt-bib" hidden><h2 class="ix-h">Biblioteca</h2><p class="sub">I libri antichi da sfogliare e leggere, le tavole ripulite, gli studi scientifici sul Sud.</p><div class="ix-cards"><a class="ix-card" href="#biblioteca"><span class="ico ph" style="background-image:url(../img/ix-libri.svg)"></span><div><h3>Libri</h3><p>Inzenga, Vittadini, Bresadola, Comes e Mattirolo, con ricerca nel testo.</p><span class="n" id="ix-biblioteca">5 libri trascritti</span></div></a><a class="ix-card" href="#tavole"><span class="ico ph" style="background-image:url(../img/ix-tavole.svg)"></span><div><h3>Tavole</h3><p>Le tavole illustrate dei libri storici, ripulite, con il nome di oggi accanto a quello originale.</p><span class="n" id="ix-tavole"></span></div></a><a class="ix-card" href="#pubblicazioni"><span class="ico ph" style="background-image:url(../img/ix-pubblicazioni.svg)"></span><div><h3>Pubblicazioni</h3><p>Articoli scientifici sui funghi del Sud e della Sicilia, con riassunto in italiano.</p><span class="n" id="ix-pubblicazioni">21 articoli</span></div></a></div></section>
     </div>
   </section>
@@ -4736,13 +4736,14 @@ var TAV = [
   });
   document.getElementById("tab-albero").addEventListener("click", init);
   window.addEventListener("hashchange", function () { if (location.hash === "#albero") init(); });
+  window.addEventListener("message", function (e) { var d = e.data; if (d && d.inzSpecie) { setTab("specie", true); var q = $("#spQ"); q.value = d.inzSpecie; q.dispatchEvent(new Event("input")); window.scrollTo(0, 0); } });
   if (location.hash === "#albero") init();
   [].forEach.call(document.querySelectorAll('a[href="#albero"]'), function (a) { a.addEventListener("click", init); });
 })();
 
-var PG = { lab: ["percorso", "chiave", "caratteri", "specie", "albero", "strumenti"], bib: ["biblioteca", "tavole", "pubblicazioni"] };
+var PG = { lab: ["albero", "specie", "chiave", "caratteri", "strumenti", "percorso"], bib: ["biblioteca", "tavole", "pubblicazioni"] };
 var PGTXT = {
-  lab: ["Didattica", "Qui i funghi si imparano facendo: il percorso didattico, la chiave dicotomica, i caratteri distintivi, le specie del Sud Italia e gli strumenti scientifici per chi determina.", "Didattica e strumenti"],
+  lab: ["Didattica", "Qui i funghi si imparano facendo: la classificazione, le specie del Sud Italia, la chiave dicotomica, i caratteri distintivi, gli strumenti scientifici per chi determina e il percorso didattico.", "Didattica e strumenti"],
   idx: ["Studia i funghi con noi, anche da casa", "Una raccolta di strumenti e testi storici per studiare e approfondire il mondo della micologia.", "Didattica e Biblioteca"],
   bib: ["Biblioteca", "I libri storici da sfogliare e da leggere trascritti, le loro tavole (immagini di funghi) ripulite e le pubblicazioni scientifiche sui funghi del Sud Italia.", "Libri, tavole e pubblicazioni"]
 };
@@ -4758,7 +4759,7 @@ function setTab(name, updateHash) {
   var all = PG.lab.concat(PG.bib);
   var idx = !name || name === "indice" || name === "indice-biblioteca";
   var ixw = name === "indice-biblioteca" ? "bib" : "lab";
-  if (!idx && all.indexOf(name) < 0) name = "percorso";
+  if (!idx && all.indexOf(name) < 0) name = "albero";
   if (idx) {
     all.forEach(function (t) { $("#p-" + t).hidden = true; });
     $("#p-indice").hidden = false; ixShow(ixw);

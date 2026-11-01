@@ -50,7 +50,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible { outline: 2px solid var(--hit); outline-offset: 2px; }
 .panel { background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px; }
 .panel h2 { font: 600 17px/1.2 var(--f-display); margin: 0 0 12px; }
-.grid { display: grid; grid-template-columns: minmax(380px, 48%) minmax(0, 1fr); gap: 20px; align-items: start; }
+.grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); gap: 20px; align-items: start; }
 @media (max-width: 820px) { .grid { grid-template-columns: minmax(0, 1fr); } }
 .col { position: sticky; top: 12px; }
 @media (max-width: 820px) { .col { position: static; } }
@@ -83,6 +83,12 @@ button:focus-visible { outline: 2px solid var(--hit); outline-offset: 2px; }
 .nm { font-weight: 600; }
 .tg { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .t { font-size: 12px; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
+.row .ot { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.row .ot .ol { display: block; margin-bottom: 2px; }
+.tg .ol { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); width: 100%; }
+.t b { font-weight: 600; color: var(--ink); }
+.row .lk { display: inline-block; margin-top: 6px; font-weight: 700; font-size: 14px; color: var(--accent); text-decoration: none; padding: 4px 0; min-height: 32px; }
+.row .lk:hover { text-decoration: underline; }
 .t.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .empty { display: grid; gap: 4px; padding: 18px; border: 1.5px dashed var(--line2); border-radius: 12px; color: var(--muted); }
 .empty b { color: var(--ink); }
@@ -242,9 +248,12 @@ function resultHTML(cs) {
   return '<ul class="list">' + cs.map(function (sp) {
     var cf = sp.v.cf ? ico('cf', sp.v.cf[0], 56) : '<span></span>';
     return '<li class="row">' + cf + '<div><div class="nm"><i>' + esc(sp.n) + '</i> <span class="sw" title="' + esc((sp.v.col || [''])[0]) + '" style="background:' + (sp.v.col ? SW[sp.v.col[0]] : 'transparent') + '"></span></div><div class="tg">' +
-      order.map(function (id) { var v = sp.v[id]; return known(sp, id) ? '<span class="t on">' + esc(v.join(', ')) + '</span>' : '<span class="t q" title="Carattere non ancora registrato per questa specie">' + esc(chById(id).label) + ' ?</span>'; }).join('') + '</div></div></li>';
+      order.map(function (id) { var v = sp.v[id]; return known(sp, id) ? '<span class="t on">' + esc(v.join(', ')) + '</span>' : '<span class="t q" title="Carattere non ancora registrato per questa specie">' + esc(chById(id).label) + ' ?</span>'; }).join('') + '</div>' +
+      (function () { var oth = CH.filter(function (c) { return order.indexOf(c.id) < 0 && known(sp, c.id); }); return oth.length ? '<p class="ot"><span class="ol">Altri caratteri</span>' + oth.map(function (c) { return '<span><b>' + esc(c.label) + ':</b> ' + esc(sp.v[c.id].join(', ')) + '</span>'; }).join(' · ') + '</p>' : ''; })() +
+      '<a class="lk" href="#" data-sp="' + esc(sp.n) + '">Apri la scheda ›</a></div></li>';
   }).join('') + '</ul>';
 }
+document.addEventListener('click', function (e) { var a = e.target.closest('[data-sp]'); if (!a) return; e.preventDefault(); try { parent.postMessage({ inzSpecie: a.getAttribute('data-sp') }, '*'); } catch (x) {} });
 function render() {
   var cs = cands();
   document.getElementById('chosen').innerHTML = chosenHTML();
