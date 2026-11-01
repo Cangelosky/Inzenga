@@ -160,59 +160,28 @@ nav a.socio:hover { background: #EDBB55; }
 .hero-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 48% 55%; display: block; }
 @media (max-width: 820px) { .hero { grid-template-columns: minmax(0, 1fr); } .hero-art { min-height: 260px; order: -1; } }
 
-/* in primo piano: schedario */
+/* in primo piano: schede verticali che si scorrono di lato */
 .chip { display: inline-flex; align-self: flex-start; font-size: 13.5px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); }
-.sched { --tw: 176px; --step: 164px; position: relative; }
-.sched-bar { position: relative; height: 50px; margin-bottom: -1px; z-index: 2; }
-.sched-tabs { position: absolute; inset: 0 50px 0 0; overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent); }
-.sched-tab { position: absolute; left: 0; bottom: 0; width: var(--tw); height: 40px; padding: 0 10px 0 22px; display: flex; align-items: center; text-align: left; font: inherit; font-weight: 600; font-size: 15px; color: var(--ink-2); background: var(--tint, var(--c-conv)); border: 1px solid var(--line); border-bottom: 0; border-radius: 14px 14px 0 0; box-shadow: -5px 0 7px -5px rgba(0,0,0,.28); cursor: pointer; transition: transform .55s cubic-bezier(.3,.7,.2,1), height .3s ease, opacity .3s ease, visibility 0s; }
-.sched-tab span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sched-tab:hover { color: var(--ink); }
-.sched-tab.front { height: 50px; color: var(--ink); cursor: default; padding-left: 20px; }
-.sched-tab.off { opacity: 0; visibility: hidden; pointer-events: none; }
-.sched-tab:focus-visible { outline: 2px solid var(--link); outline-offset: -3px; }
-.sched-pp:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.sched-pp { position: absolute; right: 0; bottom: 6px; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; padding: 0; }
-.sched-pp:hover { background: var(--line); }
-.sched-pp svg { width: 15px; height: 15px; fill: currentColor; }
-.sched-body { position: relative; isolation: isolate; display: grid; margin-bottom: 26px; border-radius: 0 24px 24px 24px; touch-action: pan-y; }
-.sched-body::before, .sched-body::after { content: ""; position: absolute; inset: 0; border-radius: 24px; border: 1px solid var(--line); z-index: -1; transition: background .45s ease; }
-.sched-body::after { background: var(--n1, var(--c-corsi)); transform: translateY(10px) scaleX(.972); }
-.sched-body::before { background: var(--n2, var(--c-gite)); transform: translateY(20px) scaleX(.944); }
-.fold { grid-area: 1 / 1; min-width: 0; background: var(--tint, var(--c-conv)); border: 1px solid var(--line); border-radius: 0 24px 24px 24px; padding: clamp(24px, 4.2vw, 56px); display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "body" "foot" "cta"; align-content: center; gap: 14px 40px; visibility: hidden; opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s; }
-.fold.on { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
-.fold.has-poster { grid-template-columns: minmax(0, 1fr) minmax(150px, 200px); grid-template-areas: "head poster" "body poster" "foot poster" "cta poster"; }
-.fold-head { grid-area: head; display: flex; flex-direction: column; gap: 12px; }
-.fold h3 { font-size: clamp(28px, 3.4vw, 38px); max-width: 30ch; }
-.fold p.body { grid-area: body; max-width: 72ch; color: var(--ink); font-size: 19px; }
-.fold-cta { grid-area: cta; align-self: start; justify-self: start; margin-top: 4px; padding: 9px 20px; font-size: 15px; white-space: nowrap; }
-.fold-foot { grid-area: foot; font-weight: 500; font-size: 17px; }
-.fold-poster { grid-area: poster; align-self: center; padding: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); position: relative; aspect-ratio: 5 / 7; cursor: zoom-in; }
-.fold-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.fold-poster span { position: absolute; right: 8px; bottom: 8px; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; font-weight: 600; padding: 2px 10px; }
-.fold-poster.round { aspect-ratio: 1; border: 0; border-radius: 50%; background: transparent; overflow: visible; }
-.fold-poster.round img { object-fit: contain; filter: drop-shadow(0 6px 14px rgba(0,0,0,.28)); }
-.fold-poster.round span { right: 50%; transform: translateX(50%); bottom: -34px; }
-@media (max-width: 820px) {
-  .sched { --tw: 144px; --step: 124px; }
-  .sched-tabs { right: 46px; }
-  .sched-pp { width: 36px; height: 36px; }
-  .sched-tab { font-size: 13px; padding: 0 6px 0 16px; }
-  .sched-tab.front { padding-left: 14px; }
-  .sched-body { border-radius: 0 20px 20px 20px; margin-bottom: 24px; }
-  .sched-body::before, .sched-body::after { border-radius: 20px; }
-  .fold { border-radius: 0 20px 20px 20px; padding: 18px; gap: 12px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "body" "foot" "cta"; align-content: start; }
-  .fold h3 { font-size: 21px; line-height: 1.2; max-width: none; }
-  .fold p.body { font-size: 15.5px; line-height: 1.45; }
-  .fold.has-poster { grid-template-columns: minmax(0, 1fr) 84px; grid-template-areas: "head poster" "body body" "foot foot" "cta cta"; }
-  .fold-poster { align-self: start; border-radius: 10px; }
-  .fold-poster.round { width: 96px; justify-self: end; }
-  .fold-poster span { display: none; }
-  .fold-cta { margin-top: 2px; }
-  .fold-foot { font-size: 14px; }
-}
-@media (prefers-reduced-motion: reduce) { .sched-tab, .fold, .sched-body::before, .sched-body::after { transition: none; } .fold { transform: none; } }
-
+.pp-row { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; padding: 2px 2px 14px; scrollbar-width: none; }
+.pp-row::-webkit-scrollbar { display: none; }
+.pp-card { flex: 0 0 clamp(250px, 30%, 340px); scroll-snap-align: start; background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.pp-ph { position: relative; aspect-ratio: 4 / 5.2; background: #10201A; overflow: hidden; cursor: zoom-in; display: block; width: 100%; padding: 0; border: 0; font: inherit; text-align: left; }
+.pp-ph:focus-visible { outline: 3px solid var(--ochre); outline-offset: -3px; }
+.pp-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.pp-ph.logo { background: radial-gradient(circle at 50% 45%, #2B6B4C, #15362A 75%); }
+.pp-ph.logo img { inset: 8% 9% 30% 9%; width: 82%; height: 62%; object-fit: contain; }
+.pp-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,18,13,.88) 0%, rgba(8,18,13,.45) 34%, transparent 58%); }
+.pp-ph h3 { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 14px; margin: 0; color: #fff; font-size: clamp(21px, 2.1vw, 25px); line-height: 1.08; text-shadow: 0 1px 12px rgba(0,0,0,.4); }
+.pp-zm { position: absolute; z-index: 2; right: 12px; top: 12px; width: 34px; height: 34px; border-radius: 50%; background: rgba(10,22,16,.6); display: grid; place-items: center; }
+.pp-zm svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
+.pp-tx { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.pp-tx p { margin: 0; font-size: 15.5px; color: var(--ink-2); }
+.pp-tx .pp-d { font-weight: 600; font-size: 14.5px; color: var(--ink); }
+.pp-tx .btn { margin-top: auto; align-self: flex-start; padding: 9px 20px; font-size: 15px; }
+.pp-dots { display: flex; gap: 7px; justify-content: center; margin: 2px 0 26px; }
+.pp-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: width .25s, background .25s; }
+.pp-dots i.on { width: 26px; border-radius: 5px; background: var(--forest); }
+@media (max-width: 640px) { .pp-card { flex-basis: 82%; } }
 /* foto */
 .strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .tile { margin: 0; display: flex; flex-direction: column; min-width: 0; background: var(--tint, var(--c-conv)); border: 1px solid var(--line); border-radius: 20px; padding: 10px 10px 0; }
@@ -604,7 +573,7 @@ footer a { color: var(--ink); }
   </defs>
 </svg>
 
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 08:58</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 09:01</span></div>
 <div class="draft gut"><div class="wrap"><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 
 <header class="top gut">
@@ -669,14 +638,8 @@ footer a { color: var(--ink); }
     </div>
 
     <div>
-      <div class="sec-head"><h2>In primo piano</h2><p>Le novità, una alla volta: tocca una linguetta per aprire la scheda.</p></div>
-      <div class="sched" id="sched">
-        <div class="sched-bar">
-          <div class="sched-tabs" id="schedTabs" role="tablist" aria-label="Avvisi in primo piano"></div>
-          <button type="button" class="sched-pp" id="schedPP" aria-label="Metti in pausa lo scorrimento automatico"></button>
-        </div>
-        <div class="sched-body" id="schedBody"></div>
-      </div>
+      <div class="sec-head"><h2>In primo piano</h2><p>Le novità, una alla volta: scorri di lato; tocca la foto per ingrandirla.</p></div>
+      <div class="pp-row" id="ppRow"></div><div class="pp-dots" id="ppDots" aria-hidden="true"></div>
     </div>
 
     <div>
@@ -1110,70 +1073,22 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 
   /* ---------- in primo piano ---------- */
   var SPOT = [
-    { cat: 'corsi', tab: 'Corso Base', t: 'Corso di micologia a Cefalù: dall\'11 al 21 novembre', b: 'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.', d: 'Cefalù · 11-21 novembre 2026 · iscrizioni aperte', go: 'corsi', cta: 'Mi preiscrivo', poster: 'cefalu', palt: 'Locandina del corso di micologia a Cefalù, dall\'11 al 21 novembre, presso l\'Aula Consiliare' },
-    { cat: 'eventi', tab: 'Dona il 5x1000', t: 'Una firma che non ti costa niente', b: 'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.', d: 'Codice fiscale: da inserire', go: 'contatti', cta: 'Contatti', chip: '5 per mille', poster: 'cinque', palt: 'Logo 5 per mille dell\'Associazione Micologica Giuseppe Inzenga', round: true },
-    { cat: 'mostre', tab: 'Mostra micologica', t: '65 specie in un giorno: la mostra al Parco Uditore', b: 'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!', d: 'Parco Uditore, Palermo · 11 ottobre 2026', go: 'attivita', cta: 'Guarda le attività', poster: 'mostra26', palt: 'La mostra micologica 2026 al Parco Uditore: soci e visitatori attorno ai tavoli con i funghi esposti e i cartellini con i nomi' },
-    { cat: 'stage', tab: 'Stage Micologico', t: 'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie', b: 'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.', d: 'Gambarie d\'Aspromonte · 23-25 ottobre 2026', go: 'attivita', cta: 'Scopri lo stage', poster: 'stageloc', palt: 'Locandina dello stage micologico a Gambarie d\'Aspromonte, 23-25 ottobre 2026' },
-    { cat: 'eventi', tint: 'var(--c-socio)', chip: 'Diventa socio', tab: 'Diventa socio', t: 'Diventa socio: i funghi si imparano in compagnia', b: 'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.', d: 'Quota annuale: da inserire', go: 'associati', cta: 'Scopri cosa fa un socio' }
+    { t: 'Corso di micologia a Cefalù: dall\'11 al 21 novembre', b: 'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.', d: 'Cefalù · 11-21 novembre 2026 · iscrizioni aperte', go: 'corsi', cta: 'Mi preiscrivo', img: IMG.cefalu, alt: 'Locandina del corso di micologia a Cefalù, dall\'11 al 21 novembre, presso l\'Aula Consiliare' },
+    { t: 'Una firma che non ti costa niente', b: 'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.', d: 'Codice fiscale: da inserire', go: 'contatti', cta: 'Contatti', img: IMG.cinque, logo: true, alt: 'Logo 5 per mille dell\'Associazione Micologica Giuseppe Inzenga' },
+    { t: '65 specie in un giorno: la mostra al Parco Uditore', b: 'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!', d: 'Parco Uditore, Palermo · 11 ottobre 2026', go: 'attivita', cta: 'Guarda le attività', img: IMG.mostra26, alt: 'La mostra micologica 2026 al Parco Uditore: soci e visitatori attorno ai tavoli con i funghi esposti' },
+    { t: 'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie', b: 'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.', d: 'Gambarie d\'Aspromonte · 23-25 ottobre 2026', go: 'attivita', cta: 'Scopri lo stage', img: IMG.stageloc, alt: 'Locandina dello stage micologico a Gambarie d\'Aspromonte, 23-25 ottobre 2026' },
+    { t: 'Diventa socio: i funghi si imparano in compagnia', b: 'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.', d: 'Quota annuale: da inserire', go: 'associati', cta: 'Scopri cosa fa un socio', img: 'img/socio-serata.jpg', alt: 'Soci attorno al tavolo con i funghi durante una serata in sede' }
   ];
-  var N = SPOT.length, cur = 0, userAt = 0, hov = false, vis = false;
-  var sched = document.getElementById('sched'), tabsEl = document.getElementById('schedTabs'), bodyEl = document.getElementById('schedBody'), pp = document.getElementById('schedPP');
-  var paused = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  tabsEl.innerHTML = SPOT.map(function (s, i) {
-    return '<button type="button" class="sched-tab" role="tab" id="stab-' + i + '" aria-controls="fold-' + i + '" data-i="' + i + '" style="--tint:' + (s.tint || CAT[s.cat].v) + '"><span>' + esc(s.tab) + '</span></button>';
+  var ppRow = document.getElementById('ppRow'), ppDots = document.getElementById('ppDots');
+  ppRow.innerHTML = SPOT.map(function (s, i) {
+    return '<article class="pp-card"><button type="button" class="pp-ph' + (s.logo ? ' logo' : '') + '" data-i="' + i + '" aria-label="Ingrandisci la foto: ' + esc(s.t) + '"><img src="' + s.img + '" alt="" loading="lazy" draggable="false"><span class="pp-zm" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M11 8.5v5M8.5 11h5"/></svg></span><h3>' + esc(s.t) + '</h3></button>' +
+      '<div class="pp-tx"><p>' + esc(s.b) + '</p><div class="pp-d">' + esc(s.d) + '</div><a class="btn solid" href="#' + s.go + '" data-go="' + s.go + '">' + esc(s.cta) + '</a></div></article>';
   }).join('');
-  bodyEl.innerHTML = SPOT.map(function (s, i) {
-    var c = CAT[s.cat];
-    return '<article class="fold' + (s.poster ? ' has-poster' : '') + '" id="fold-' + i + '" role="tabpanel" aria-labelledby="stab-' + i + '" style="--tint:' + (s.tint || c.v) + '">' +
-      '<div class="fold-head">' + (s.chip ? '<span class="chip">' + esc(s.chip) + '</span>' : tag(s.cat)) + '<h3>' + esc(s.t) + '</h3></div>' +
-      '<p class="body">' + esc(s.b) + '</p>' +
-      (s.poster ? '<button type="button" class="fold-poster' + (s.round ? ' round' : '') + '" data-i="' + i + '" aria-label="Ingrandisci: ' + esc(s.palt) + '"><img src="' + IMG[s.poster] + '" alt=""><span>Ingrandisci</span></button>' : '') +
-      '<div class="fold-foot">' + esc(s.d) + '</div>' +
-      '<a class="btn solid fold-cta" href="#' + s.go + '" data-go="' + s.go + '">' + esc(s.cta) + '</a></article>';
-  }).join('');
-  var tabBtns = tabsEl.children, folds = bodyEl.children;
-  function layout() {
-    var cs = getComputedStyle(sched), tw = parseFloat(cs.getPropertyValue('--tw')) || 150, step = parseFloat(cs.getPropertyValue('--step')) || 138, avail = tabsEl.clientWidth;
-    for (var i = 0; i < N; i++) {
-      var rank = (i - cur + N) % N, b = tabBtns[i], show = rank * step + Math.min(tw, 64) <= avail + 1;
-      b.style.transform = 'translateX(' + (rank * step) + 'px)'; b.style.zIndex = N - rank;
-      b.classList.toggle('front', rank === 0); b.classList.toggle('off', !show);
-      b.setAttribute('aria-selected', rank === 0 ? 'true' : 'false'); b.tabIndex = rank === 0 ? 0 : -1;
-      folds[i].classList.toggle('on', i === cur);
-    }
-    bodyEl.style.setProperty('--n1', CAT[SPOT[(cur + 1) % N].cat].v);
-    bodyEl.style.setProperty('--n2', CAT[SPOT[(cur + 2) % N].cat].v);
-  }
-  function go(i, byUser) { cur = ((i % N) + N) % N; if (byUser) userAt = Date.now(); layout(); }
-  tabsEl.addEventListener('click', function (e) { var b = e.target.closest('.sched-tab'); if (!b) return; var i = +b.getAttribute('data-i'); if (i !== cur) go(i, true); else userAt = Date.now(); });
-  tabsEl.addEventListener('keydown', function (e) {
-    var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
-    e.preventDefault(); go(cur + d, true); tabBtns[cur].focus();
-  });
-  bodyEl.addEventListener('click', function (e) { var b = e.target.closest('.fold-poster'); if (!b) return; var s = SPOT[+b.getAttribute('data-i')]; openLb(IMG[s.poster], s.palt, b); });
-  var tx = 0, ty = 0;
-  bodyEl.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
-  bodyEl.addEventListener('touchend', function (e) {
-    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(cur + (dx < 0 ? 1 : -1), true);
-  }, { passive: true });
-  function ppLabel() {
-    pp.innerHTML = paused ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
-    pp.setAttribute('aria-label', paused ? 'Riprendi lo scorrimento automatico' : 'Metti in pausa lo scorrimento automatico');
-  }
-  pp.addEventListener('click', function () { paused = !paused; ppLabel(); });
-  sched.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hov = true; });
-  sched.addEventListener('pointerleave', function () { hov = false; });
-  sched.addEventListener('focusin', function (e) { if (e.target.matches && e.target.matches(':focus-visible')) hov = true; });
-  sched.addEventListener('focusout', function () { hov = false; });
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { vis = en[0].isIntersecting; }, { threshold: 0.4 }).observe(sched); else vis = true;
-  window.addEventListener('resize', layout);
-  if ('ResizeObserver' in window) new ResizeObserver(layout).observe(tabsEl);
-  ppLabel(); layout();
-  setInterval(function () {
-    if (paused || !vis || hov || document.hidden || Date.now() - userAt < 10000 || !lb.hidden) return;
-    go(cur + 1, false);
-  }, 6000);
+  ppDots.innerHTML = SPOT.map(function () { return '<i></i>'; }).join('');
+  function ppDot() { var w = ppRow.children[0].offsetWidth + 16, i = Math.min(SPOT.length - 1, Math.round(ppRow.scrollLeft / w)); [].forEach.call(ppDots.children, function (d, k) { d.classList.toggle('on', k === i); }); }
+  ppRow.addEventListener('scroll', ppDot, { passive: true }); window.addEventListener('resize', ppDot); ppDot();
+  ppRow.addEventListener('click', function (e) { var b = e.target.closest('.pp-ph'); if (!b) return; var s = SPOT[+b.getAttribute('data-i')]; openLb(s.img, s.alt, b); });
+
 
   /* ---------- foto (segnaposto geometrici) ---------- */
   var TILES = [
