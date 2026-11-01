@@ -870,7 +870,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 15:51</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 16:49</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -3809,7 +3809,7 @@ $("#bkList").addEventListener("click", function (e) {
 
 function fotoHTML(nk) {
   var L = window.FOTO_MAP && window.FOTO_MAP[nk]; if (!L) return "";
-  return '<div class="foto-dv"><b>Dal vero</b><div class="foto-row">' + L.map(function (h) { return h.f.map(function (src) { return '<figure><img loading="lazy" src="' + src + '" alt="Foto di ' + esc(h.sp) + ' in natura"><figcaption><i>' + esc(h.sp) + "</i></figcaption></figure>"; }).join(""); }).join("") + '</div><small>Foto: © Oscar Cangelosi. Determinazione certa, dal monitoraggio dell\'associazione.</small></div>';
+  return '<div class="foto-dv"><b>Dal vero</b><div class="foto-row">' + L.map(function (h) { return h.f.map(function (src) { return '<figure><img loading="lazy" src="' + src + '" alt="Foto di ' + esc(h.sp) + ' in natura"><figcaption><i>' + esc(h.sp) + "</i></figcaption></figure>"; }).join(""); }).join("") + '</div><small>Foto: © Oscar Cangelosi, licenza CC BY 4.0. Determinazione certa, dal monitoraggio dell\'associazione.</small></div>';
 }
 
 /* ===== Libri trascritti: ricerca, lettura del testo, tavole ripulite ===== */
@@ -4415,7 +4415,7 @@ function pubFull(p, lang) {
       (b ? '<span class="sp-bds">' + b + "</span>" : "") + (reg ? '<span class="sp-rgs">' + reg + "</span>" : "") + (old ? '<span class="sp-old">Nei libri e in mostra come: ' + old + "</span>" : "") + '<span class="sp-open">Apri la scheda ›</span></span></button>';
   }
   function fpos(m) { return m && m.f ? ' style="object-position:' + (+m.f[0]) + "% " + (+m.f[1]) + '%"' : ""; }
-  function phCr(m) { m = m || {}; return "© " + esc(m.a || "Oscar Cangelosi") + (m.l ? " · " + esc(m.l) : "") + (m.d ? " · " + esc(m.d) : ""); }
+  function phCr(m) { m = m || {}; var own = !m.a || m.a === "Oscar Cangelosi"; return "© " + esc(m.a || "Oscar Cangelosi") + (m.l ? " · " + esc(m.l) : own ? " · CC BY 4.0" : "") + (m.d ? " · " + esc(m.d) : ""); }
   function phNt(m) { m = m || {}; var t = [m.v, m.nt].filter(Boolean).map(esc).join(" · "); return t + (m.u ? ' <a href="' + esc(m.u) + '" target="_blank" rel="noopener">Osservazione originale</a>' : ""); }
   function phBox(src, e, m) { return '<div class="spd-ph"><img class="spd-gm" src="' + src + '" alt="Foto di ' + esc(e.n) + ' in natura"><span class="spd-cr">' + phCr(m) + "</span></div>"; }
   function phNote(m) { var x = phNt(m); return '<figcaption class="spd-gc spd-nt"' + (x ? "" : " hidden") + ">" + x + "</figcaption>"; }
