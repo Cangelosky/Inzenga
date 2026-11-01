@@ -824,6 +824,21 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 .tx-list button:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
 .tx-anc .sn, .tx-list .sn { grid-column: 1 / -1; font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.35; }
 @media (max-width: 560px) { .tx-anc, .tx-now, .tx-kids { margin-left: calc(var(--d, 0) * 8px); } .tx-bc { top: 66px; font-size: 13px; } .tx-list { grid-template-columns: 1fr; } .tx-now h3 { font-size: 21px; } }
+
+[data-r="0"] { --rc: #6B4A2F; } [data-r="1"] { --rc: #1F6B4A; } [data-r="2"] { --rc: #17697A; } [data-r="3"] { --rc: #A04E17; } [data-r="4"] { --rc: #8A6A0B; } [data-r="5"] { --rc: #84365A; } [data-r="6"] { --rc: #3F55A0; }
+:root[data-theme="dark"] [data-r="0"], :root[data-theme="dark"] [data-r="1"], :root[data-theme="dark"] [data-r="2"], :root[data-theme="dark"] [data-r="3"], :root[data-theme="dark"] [data-r="4"], :root[data-theme="dark"] [data-r="5"], :root[data-theme="dark"] [data-r="6"] { filter: none; }
+.tx-leg { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 10px; font: 600 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.tx-leg li { display: flex; align-items: center; gap: 5px; }
+.tx-leg i { width: 12px; height: 12px; border-radius: 4px; background: var(--rc); display: block; }
+.tx-now { background: var(--rc, var(--accent)); color: #fff; }
+.tx-anc button, .tx-list button { border-left: 7px solid var(--rc); }
+.tx-list li[data-r] button:hover, .tx-anc button:hover { border-color: var(--rc); }
+.tx-anc .rk, .tx-list .rk { color: var(--rc); }
+.tx-bc [data-r] { color: var(--rc); }
+.tx-bc button[data-r] { text-decoration-thickness: 2px; font-weight: 600; }
+.tx-bc .cur[data-r] { box-shadow: inset 0 -3px 0 var(--rc); }
+.tx-anc::before, .tx-now::before, .tx-kids::before { border-color: var(--line2); }
+.btn-sp { color: var(--rc, var(--accent)); background: #fff; }
 .tx-scale { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
 .tx-scale summary { cursor: pointer; font-weight: 600; min-height: 32px; }
 .tx-scale ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 4px; }
@@ -855,7 +870,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:26</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:28</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -1037,6 +1052,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
       <h2>L'albero dei funghi</h2>
       <p>Ogni fungo appartiene a una famiglia, che sta in un ordine, in una classe e in una divisione. Scendi dall'alto scegliendo un ramo alla volta: a ogni passo vedi che cosa caratterizza il gruppo e tutto il percorso fatto. Oppure cerca una specie, un genere o una famiglia e salta direttamente lì.</p>
     </div>
+    <ul class="tx-leg" aria-label="Colori dei livelli"><li data-r="0"><i></i>Regno</li><li data-r="1"><i></i>Divisione</li><li data-r="2"><i></i>Classe</li><li data-r="3"><i></i>Ordine</li><li data-r="4"><i></i>Famiglia</li><li data-r="5"><i></i>Genere</li><li data-r="6"><i></i>Specie</li></ul>
     <details class="tx-scale"><summary>I livelli della classificazione, dal regno alla varietà</summary>
       <ol><li><b>Regno</b> · Fungi, tutti i funghi</li><li><b>Divisione</b> · Basidiomycota (spore su basidi) o Ascomycota (spore in aschi)</li><li><b>Classe</b> · es. Agaricomycetes</li><li><b>Ordine</b> · es. Agaricales (finisce in <i>-ales</i>)</li><li><b>Famiglia</b> · es. Amanitaceae (finisce in <i>-aceae</i>)</li><li><b>Genere</b> · es. <i>Amanita</i>, la prima parola del nome</li><li><b>Specie</b> · es. <i>Amanita muscaria</i></li><li><b>Varietà e forma</b> · sotto la specie, es. <i>Amanita muscaria</i> var. <i>guessowii</i></li></ol>
       <p>Nell'albero qui sotto si arriva fino alla specie. Le varietà e le forme non sono ancora nei nostri elenchi: si aggiungeranno quando il comitato scientifico le avrà verificate.</p>
@@ -4675,13 +4691,13 @@ var TAV = [
     var ln = lineage(nd), h = "";
     h += '<nav class="tx-bc" aria-label="Percorso nell\'albero">' + ln.map(function (x, i) {
       var last = i === ln.length - 1;
-      return (i ? '<span class="sep" aria-hidden="true">›</span>' : "") + (last ? '<span class="cur' + it(x) + '" aria-current="page">' + esc(x.n) + "</span>" : '<button type="button" class="' + it(x).trim() + '" data-txn="' + flat.indexOf(x) + '">' + esc(x.n) + "</button>");
+      return (i ? '<span class="sep" aria-hidden="true">›</span>' : "") + (last ? '<span data-r="' + x.r + '" class="cur' + it(x) + '" aria-current="page">' + esc(x.n) + "</span>" : '<button type="button" data-r="' + x.r + '" class="' + it(x).trim() + '" data-txn="' + flat.indexOf(x) + '">' + esc(x.n) + "</button>");
     }).join("") + "</nav>";
     h += '<div class="tx-trunk">';
     ln.slice(0, -1).forEach(function (x, i) {
-      h += '<div class="tx-anc" style="--d:' + i + '"><button type="button" data-txn="' + flat.indexOf(x) + '"><span class="rk">' + RK[x.r] + '</span><span class="nm' + it(x) + '">' + esc(x.n) + '</span><span class="ct">' + x.c + ' specie</span><span class="sn">' + esc(snippet(x)) + '</span></button></div>';
+      h += '<div class="tx-anc" data-r="' + x.r + '" style="--d:' + i + '"><button type="button" data-txn="' + flat.indexOf(x) + '"><span class="rk">' + RK[x.r] + '</span><span class="nm' + it(x) + '">' + esc(x.n) + '</span><span class="ct">' + x.c + ' specie</span><span class="sn">' + esc(snippet(x)) + '</span></button></div>';
     });
-    h += '<article class="tx-now" style="--d:' + (ln.length - 1) + '"><span class="rk">' + RK[nd.r] + '</span><h3 class="' + it(nd).trim() + '">' + esc(nd.n) + "</h3><p>" + esc(desc(nd)) + "</p>";
+    h += '<article class="tx-now" data-r="' + nd.r + '" style="--d:' + (ln.length - 1) + '"><span class="rk">' + RK[nd.r] + '</span><h3 class="' + it(nd).trim() + '">' + esc(nd.n) + "</h3><p>" + esc(desc(nd)) + "</p>";
     if (nd.r < 6) h += '<p class="meta">' + nd.c + " specie · " + Object.keys(nd.k).length + " " + RKP[nd.r + 1] + "</p>";
     else h += '<p><button type="button" class="btn-sp" data-txsp="' + esc(nd.n) + '">Apri la scheda della specie ›</button></p>';
     h += "</article>";
@@ -4697,7 +4713,7 @@ var TAV = [
     if (!noScroll) { var b = box.querySelector(".tx-bc"); if (b) b.scrollIntoView({ block: "start", behavior: "smooth" }); }
   }
   function kid(k) {
-    return '<li data-h="' + esc(k.h) + '"><button type="button" data-txn="' + flat.indexOf(k) + '"><span class="rk">' + RK[k.r] + '</span><span class="nm' + it(k) + '">' + esc(k.n) + "</span>" +
+    return '<li data-r="' + k.r + '" data-h="' + esc(k.h) + '"><button type="button" data-txn="' + flat.indexOf(k) + '"><span class="rk">' + RK[k.r] + '</span><span class="nm' + it(k) + '">' + esc(k.n) + "</span>" +
       (k.r < 6 ? '<span class="ct">' + k.c + " specie</span>" : "") + '<span class="sn">' + esc(snippet(k)) + "</span></button></li>";
   }
   function search() {
