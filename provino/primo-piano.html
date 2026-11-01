@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Provino · In primo piano</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F1F4EC;--ink:#14231B;--ink-2:#2F3E34;--ochre:#E2AB3C;--forest:#15362A;--fd:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;--fb:"Instrument Sans",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--fb)}
+.wrap{max-width:1120px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 60px}
+.note{font-size:14px;color:var(--ink-2);margin:0 0 22px}
+h2{font:700 clamp(28px,4vw,40px)/1.08 var(--fd);letter-spacing:-.02em;margin:0 0 6px}
+.sub{margin:0 0 20px;color:var(--ink-2)}
+.pp{position:relative;border-radius:26px;overflow:hidden;background:#14231B;color:#fff;isolation:isolate;touch-action:pan-y}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;padding:clamp(24px,5vw,60px);opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
+.slide.on{opacity:1;visibility:visible;position:relative}
+.pp{min-height:clamp(440px,52vw,560px);display:grid}
+.slide{grid-area:1/1;position:relative}
+.bg{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transform:scale(1.04);transition:transform 9s ease-out}
+.slide.on .bg{transform:scale(1.12)}
+.slide::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(10,22,16,.88) 0%,rgba(10,22,16,.62) 45%,rgba(10,22,16,.1) 100%),linear-gradient(0deg,rgba(10,22,16,.55),transparent 55%)}
+.chip{align-self:flex-start;font:600 13.5px var(--fb);letter-spacing:.02em;padding:4px 13px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(4px)}
+.slide h3{font:700 clamp(30px,4.6vw,52px)/1.05 var(--fd);letter-spacing:-.02em;margin:0;max-width:20ch;text-wrap:balance;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.slide p{margin:0;max-width:52ch;font-size:clamp(16px,1.6vw,19px);color:#F2F5EE}
+.foot{font-weight:600;color:#F6D58A}
+.btn{align-self:flex-start;display:inline-block;margin-top:4px;text-decoration:none;font-weight:600;padding:12px 24px;border-radius:999px;background:var(--ochre);color:#1A2A20}
+.btn:hover{background:#EDBB55}
+.tabs{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+.tabs button{font:600 14.5px var(--fb);color:var(--ink-2);background:#FAFBF6;border:1px solid #D3DBCB;border-radius:999px;padding:7px 15px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--forest);color:#E8EFE3;border-color:var(--forest)}
+.bar{position:absolute;left:0;bottom:0;height:4px;background:var(--ochre);width:0;z-index:3}
+@media (max-width:640px){.slide::before{background:linear-gradient(0deg,rgba(10,22,16,.92) 0%,rgba(10,22,16,.6) 55%,rgba(10,22,16,.15) 100%)}}
+@media (prefers-reduced-motion:reduce){.bg,.slide{transition:none}}
+</style></head><body><div class="wrap">
+<p class="note">Provino, non è ancora nel sito. Le foto sono quelle già usate sul sito; il testo è quello attuale delle schede. Scorre da solo ogni 7 secondi; tocca una linguetta per scegliere.</p>
+<h2>In primo piano</h2><p class="sub">Le novità, una alla volta.</p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="pp" id="pp"></div>
+</div>
+<script>
+var S=[
+{tab:'Corso Base',chip:'Corsi',t:'Corso di micologia a Cefalù: dall\'11 al 21 novembre',b:'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.',d:'Cefalù · 11-21 novembre 2026 · iscrizioni aperte',cta:'Mi preiscrivo',img:'corsiaula.jpg',pos:'50% 45%'},
+{tab:'Dona il 5x1000',chip:'5 per mille',t:'Una firma che non ti costa niente',b:'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.',d:'Codice fiscale: da inserire',cta:'Contatti',img:'gite.jpg',pos:'50% 50%'},
+{tab:'Mostra micologica',chip:'Mostre',t:'65 specie in un giorno: la mostra al Parco Uditore',b:'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!',d:'Parco Uditore, Palermo · 11 ottobre 2026',cta:'Guarda le attività',img:'mostra26.jpg',pos:'50% 62%'},
+{tab:'Stage Micologico',chip:'Stage',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stage.jpg',pos:'50% 40%'},
+{tab:'Diventa socio',chip:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'eventi.jpg',pos:'50% 55%'}
+];
+function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+var pp=document.getElementById('pp'),tb=document.getElementById('tabs'),cur=0,t0=Date.now(),D=7000,hold=false;
+tb.innerHTML=S.map(function(s,i){return '<button role="tab" data-i="'+i+'">'+e(s.tab)+'</button>'}).join('');
+pp.innerHTML=S.map(function(s,i){return '<article class="slide"><img class="bg" src="'+s.img+'" alt="" style="object-position:'+s.pos+'"><span class="chip">'+e(s.chip)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="foot">'+e(s.d)+'</div><a class="btn" href="#">'+e(s.cta)+'</a></article>'}).join('')+'<div class="bar" id="bar"></div>';
+var sl=pp.querySelectorAll('.slide'),bt=tb.children,bar=document.getElementById('bar');
+function go(i){cur=(i+S.length)%S.length;t0=Date.now();for(var k=0;k<S.length;k++){sl[k].classList.toggle('on',k===cur);bt[k].setAttribute('aria-selected',k===cur)}}
+tb.addEventListener('click',function(ev){var b=ev.target.closest('button');if(b)go(+b.dataset.i)});
+pp.addEventListener('pointerenter',function(){hold=true});pp.addEventListener('pointerleave',function(){hold=false;t0=Date.now()});
+var x0=0;pp.addEventListener('touchstart',function(ev){x0=ev.touches[0].clientX},{passive:true});
+pp.addEventListener('touchend',function(ev){var d=ev.changedTouches[0].clientX-x0;if(Math.abs(d)>50)go(cur+(d<0?1:-1))},{passive:true});
+setInterval(function(){if(hold||document.hidden){bar.style.width='0';return}var p=(Date.now()-t0)/D;bar.style.width=Math.min(p,1)*100+'%';if(p>=1)go(cur+1)},60);
+go(0);
+</script></body></html>
