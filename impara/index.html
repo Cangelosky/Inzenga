@@ -793,27 +793,37 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 .tx-res button i { font-style: italic; }
 .tx-res button small { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-left: 6px; }
 .tx-res button:hover { border-color: var(--accent); }
-.tx-trail { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; background: var(--accent-soft); color: var(--ink); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
-.tx-trail { position: sticky; top: 76px; z-index: 5; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
-.tx-trail b { font-weight: 600; }
-@media (max-width: 560px) { .tx-tree ul { margin-left: 2px; padding-left: 5px; } .tx-tree summary { padding: 8px; gap: 2px 8px; } .tx-tree .rk { min-width: 0; } .tx-trail { top: 70px; font-size: 13px; } }
-.tx-trail span.sep { color: var(--muted); }
-.tx-trail button { font: inherit; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; }
-.tx-tree, .tx-tree ul { list-style: none; margin: 0; padding: 0; }
-.tx-tree ul { margin-left: 14px; padding-left: 12px; border-left: 2px solid var(--line); }
-.tx-tree details { margin: 2px 0; }
-.tx-tree summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; cursor: pointer; padding: 8px 10px; border-radius: 10px; min-height: 40px; list-style: none; background: var(--surface); border: 1px solid var(--line); }
-.tx-tree summary::-webkit-details-marker { display: none; }
-.tx-tree summary::before { content: "▸"; color: var(--accent); font-size: 13px; transition: transform .15s; }
-.tx-tree details[open] > summary::before { transform: rotate(90deg); }
-.tx-tree .rk { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); min-width: 5.2em; }
-.tx-tree .nm { font-weight: 600; }
-.tx-tree .nm.it { font-style: italic; }
-.tx-tree .ct { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); }
-.tx-tree .hit > summary, .tx-tree .hit > .tx-leaf { outline: 2.5px solid var(--ochre); outline-offset: 1px; }
-.tx-leaf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; width: 100%; text-align: left; padding: 8px 10px; border-radius: 10px; min-height: 40px; background: var(--bg); border: 1px solid var(--line); font: inherit; color: inherit; cursor: pointer; }
-.tx-leaf:hover { border-color: var(--accent); }
-.tx-leaf .go { margin-left: auto; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+.tx-bc { position: sticky; top: 72px; z-index: 6; display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; background: var(--accent-soft); border-radius: 12px; padding: 9px 12px; font-size: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.15); margin-bottom: 14px; }
+.tx-bc .sep { color: var(--muted); }
+.tx-bc button { font: inherit; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 4px 2px; min-height: 32px; }
+.tx-bc .cur { font-weight: 700; padding: 4px 2px; }
+.tx-bc .it { font-style: italic; }
+.tx-trunk { display: grid; gap: 0; }
+.tx-anc, .tx-now, .tx-kids { margin-left: calc(var(--d, 0) * 18px); position: relative; }
+.tx-anc::before, .tx-now::before, .tx-kids::before { content: ""; position: absolute; left: -12px; top: -8px; bottom: 50%; width: 12px; border-left: 2.5px solid var(--line2); border-bottom: 2.5px solid var(--line2); border-bottom-left-radius: 10px; }
+.tx-anc:first-child::before, .tx-now:first-child::before { display: none; }
+.tx-anc { padding-top: 8px; }
+.tx-anc button { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 4px 10px; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; cursor: pointer; font: inherit; color: inherit; min-height: 40px; }
+.tx-anc button:hover { border-color: var(--accent); }
+.rk { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.tx-anc .nm, .tx-list .nm { font-weight: 600; }
+.tx-anc .ct, .tx-list .ct { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); white-space: nowrap; }
+.it { font-style: italic; }
+.tx-now { margin-top: 8px; background: var(--accent); color: var(--accent-ink); border-radius: 14px; padding: 14px 16px; }
+.tx-now .rk { color: inherit; opacity: .8; }
+.tx-now h3 { margin: 2px 0 6px; font: 700 24px/1.15 var(--f-display); }
+.tx-now p { margin: 0 0 6px; font-size: 15.5px; line-height: 1.5; }
+.tx-now .meta { font: 500 12.5px var(--f-mono); opacity: .85; }
+.btn-sp { background: var(--accent-ink); color: var(--accent); border: 0; border-radius: 999px; padding: 9px 16px; font: 700 14.5px var(--f-body); cursor: pointer; min-height: 40px; }
+.tx-kids { margin-top: 8px; }
+.tx-kids h4 { margin: 4px 0 8px; font: 700 15px var(--f-display); }
+.tx-kids h4 span { color: var(--muted); font-weight: 500; }
+.tx-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.tx-list li[hidden] { display: none; }
+.tx-list button { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 8px; align-items: baseline; width: 100%; text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; cursor: pointer; font: inherit; color: inherit; height: 100%; }
+.tx-list button:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.tx-anc .sn, .tx-list .sn { grid-column: 1 / -1; font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.35; }
+@media (max-width: 560px) { .tx-anc, .tx-now, .tx-kids { margin-left: calc(var(--d, 0) * 8px); } .tx-bc { top: 66px; font-size: 13px; } .tx-list { grid-template-columns: 1fr; } .tx-now h3 { font-size: 21px; } }
 .tx-scale { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
 .tx-scale summary { cursor: pointer; font-weight: 600; min-height: 32px; }
 .tx-scale ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 4px; }
@@ -845,7 +855,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:20</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:26</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -1025,7 +1035,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
   <section id="p-albero" role="tabpanel" aria-labelledby="tab-albero" hidden>
     <div class="tav-intro">
       <h2>L'albero dei funghi</h2>
-      <p>Ogni fungo appartiene a una famiglia, che sta in un ordine, in una classe e in una divisione. Qui puoi scendere dall'alto, aprendo i rami uno dopo l'altro, oppure partire dal nome di una specie, di un genere o di una famiglia e vedere subito tutti i suoi “parenti”.</p>
+      <p>Ogni fungo appartiene a una famiglia, che sta in un ordine, in una classe e in una divisione. Scendi dall'alto scegliendo un ramo alla volta: a ogni passo vedi che cosa caratterizza il gruppo e tutto il percorso fatto. Oppure cerca una specie, un genere o una famiglia e salta direttamente lì.</p>
     </div>
     <details class="tx-scale"><summary>I livelli della classificazione, dal regno alla varietà</summary>
       <ol><li><b>Regno</b> · Fungi, tutti i funghi</li><li><b>Divisione</b> · Basidiomycota (spore su basidi) o Ascomycota (spore in aschi)</li><li><b>Classe</b> · es. Agaricomycetes</li><li><b>Ordine</b> · es. Agaricales (finisce in <i>-ales</i>)</li><li><b>Famiglia</b> · es. Amanitaceae (finisce in <i>-aceae</i>)</li><li><b>Genere</b> · es. <i>Amanita</i>, la prima parola del nome</li><li><b>Specie</b> · es. <i>Amanita muscaria</i></li><li><b>Varietà e forma</b> · sotto la specie, es. <i>Amanita muscaria</i> var. <i>guessowii</i></li></ol>
@@ -1035,8 +1045,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
       <div class="search"><input id="txQ" type="search" placeholder="Cerca una specie, un genere, una famiglia o un ordine: Amanita muscaria, Boletaceae…" aria-label="Cerca nell'albero" autocomplete="off"></div>
       <ul class="tx-res" id="txRes" aria-live="polite"></ul>
     </div>
-    <div class="tx-trail" id="txTrail" hidden></div>
-    <ul class="tx-tree" id="txTree"></ul>
+    <div id="txView"></div>
     <p class="tx-note">Famiglie e ordini seguono i nomi usati nei libri e negli elenchi della Biblioteca. La classificazione dei funghi cambia spesso con gli studi sul DNA: i gruppi vanno confermati dal comitato scientifico prima della pubblicazione. Divisione e classe sono ricavate dall'ordine.</p>
   </section>
 
@@ -4627,10 +4636,11 @@ var TAV = [
 
 /* ===== Albero sistematico ===== */
 (function () {
+  var DESC = {"Fungi": "Il regno dei funghi: organismi che non fanno la fotosintesi e si nutrono assorbendo dall'ambiente le sostanze già pronte. Hanno pareti di chitina e non sono né piante né animali. Quello che raccogliamo è solo il “frutto”: il fungo vero e proprio è il micelio, una rete di filamenti nascosta nel terreno o nel legno.", "Basidiomycota": "Le spore si formano all'esterno di cellule a clava, i basidi, di solito quattro per ciascuno. Qui stanno la maggior parte dei funghi con cappello e gambo, i boleti, le russule, i cantarelli, i funghi del legno e le stelle di terra.", "Ascomycota": "Le spore, di solito otto, si formano dentro piccoli sacchi detti aschi. Qui stanno spugnole, pezize e tartufi veri, oltre a lieviti e muffe. I corpi fruttiferi sono spesso a coppa, a sella o a cervello.", "Agaricomycetes": "La classe dei funghi “classici” a corpo fruttifero evidente: l'imenio, la parte che produce le spore, è su lamelle, tubuli, aculei, pieghe o dentro un involucro chiuso.", "Tremellomycetes": "Funghi gelatinosi, tremolanti, spesso gialli o bianchi, che vivono sul legno o come parassiti di altri funghi.", "Dacrymycetes": "Funghi gelatinosi o cerosi, arancio o gialli, su legno morto. I basidi hanno la forma di una forcella.", "Pezizomycetes": "Ascomiceti con aschi che si aprono con un coperchietto, l'opercolo. Corpo a coppa (pezize), a sella o a cervello (spugnole, elvelle) o sotterraneo (tartufi).", "Leotiomycetes": "Ascomiceti per lo più piccoli, a coppa o a clava, su legno e resti vegetali. Gli aschi si aprono con un poro, senza coperchio.", "Agaricales": "Il più grande ordine: funghi con cappello e gambo, per lo più con lamelle, su terra, legno e lettiera. Dentro ci sono amanite, agarici, tricolomi, cortinari, inocibe, micene e molti altri.", "Russulales": "Carne fragile, “a gesso”, per la presenza di cellule rotonde nel tessuto. Russule e lattari, con spore ornate che si colorano con lo iodio.", "Pezizales": "Pezize, spugnole, elvelle e tartufi: ascomiceti con aschi dotati di opercolo.", "Polyporales": "Funghi del legno, spesso a mensola, con pori o tubuli, a volte crostosi. Molti decompongono il legno.", "Boletales": "I boleti e i loro parenti: spesso con tubuli sotto il cappello al posto delle lamelle, carne che può cambiare colore al taglio e spore brune. Molti vivono in simbiosi con gli alberi.", "Hymenochaetales": "Funghi del legno, duri, con carne bruna color ruggine e spesso con setole. Causano carie del legno vivo e morto.", "Thelephorales": "Funghi terrestri a ventaglio, a rosetta o con aculei, con spore brune e carne fibrosa o coriacea. Vivono in simbiosi con gli alberi.", "Cantharellales": "Cantarelli, craterelli e idni: imenio a false lamelle, pieghe o aculei, di solito su terra, in simbiosi con gli alberi.", "Gomphales": "Funghi a clava, a corallo (ramarie) o a imbuto, sul terreno dei boschi.", "Geastrales": "Le stelle di terra: l'involucro esterno si apre a stella attorno a un sacco che contiene le spore.", "Hysterangiales": "Funghi sotterranei o semi-sotterranei, a forma di tartufo, con l'interno gelatinoso. Vivono in simbiosi con gli alberi.", "Phallales": "Dall'“uovo” esce un corpo fruttifero maleodorante, con una massa mucosa che attira gli insetti e così diffonde le spore.", "Auriculariales": "Funghi gelatinosi o cartilaginei, a forma di orecchio, sul legno.", "Gloeophyllales": "Funghi del legno con tessuto tenace, coriaceo, a lamelle o labirinto; causano la carie bruna.", "Tremellales": "Funghi gelatinosi, tremolanti, spesso parassiti di altri funghi.", "Dacrymycetales": "Funghi gelatinosi o cerosi, gialli o arancio, su legno morto.", "Helotiales": "Piccole coppe o dischi, spesso su legno o resti vegetali.", "Sebacinales": "Funghi spesso crostosi o gelatinosi, molti vivono in simbiosi con le radici; difficili da riconoscere senza microscopio.", "Russulaceae": "Russule e lattari: carne fragile, lamelle fragili, spore bianche o crema. I lattari perdono un latte se li tagli.", "Cortinariaceae": "Famiglia numerosissima: cortina di filamenti fra margine e gambo da giovani, spore color ruggine. Vivono in simbiosi con gli alberi; difficili da determinare.", "Agaricaceae": "Agarici, lepiote, macrolepiote e vesce: spesso con anello, lamelle libere dal gambo, spore bianche o brune.", "Tricholomataceae": "Tricolomi e parenti: funghi di taglia media o grande, lamelle attaccate al gambo, spore bianche.", "Inocybaceae": "Inocibe e affini: cappelli fibrillosi o screpolati, spore brune, quasi tutti tossici o velenosi.", "Boletaceae": "I boleti veri: tubuli sotto il cappello, gambo spesso, spore bruno-olivastre; alcuni viranno al blu.", "Entolomataceae": "Spore rosate e angolose; molti entolomi sono tossici.", "Mycenaceae": "Micene: funghi piccoli, esili, con cappello a campana e gambo fragile.", "Polyporaceae": "Poliporei: funghi del legno con pori sulla faccia inferiore, a mensola o a ventaglio.", "Psathyrellaceae": "Psatirelle e coprini: spore scure, carne fragile; alcuni si sciolgono in liquido nero.", "Amanitaceae": "Le amanite: velo generale che lascia volva e resti sul cappello, lamelle libere, spesso un anello. Famiglia con specie mortali e ottimi commestibili.", "Hygrophoraceae": "Igrofori e igrocibe: lamelle cerose e spesse, spore bianche; molti dai colori vivaci nei prati e nei boschi.", "Hymenogastraceae": "Ebeloma e affini: spore brune, spesso con odore di ravanello.", "Pezizaceae": "Pezize a coppa su terra, legno o letame; aschi con opercolo.", "Pyronemataceae": "Piccole pezize colorate di arancio o rosso, spesso su terreno bruciato.", "Lyophyllaceae": "Licofilli e affini: crescono spesso in gruppi, carne che può annerire.", "Omphalotaceae": "Gimnopi e affini: piccoli o medi, spesso su legno e lettiera.", "Hymenochaetaceae": "Funghi del legno duri, color ruggine, con carne bruna.", "Hydnaceae": "Idni e cantarelli: imenio a aculei o a pieghe.", "Marasmiaceae": "Marasmi: piccoli funghi coriacei che si reidratano dopo la secca.", "Clavariaceae": "Clavarie: funghi a clava o a pennello, senza cappello.", "Geastraceae": "Stelle di terra, con esoperidio che si apre a stella.", "Lycoperdaceae": "Vesce di lupo: palloncini con spore polverose all'interno.", "Helvellaceae": "Elvelle: aschi a sella o a lobi, gambo spesso solcato; non da mangiare crudi.", "Strophariaceae": "Stropharie e pholiota: spore brune, spesso su legno o letame.", "Bankeraceae": "Idnellum e affini: aculei sotto il cappello, spore brune, in simbiosi con le conifere.", "Tuberaceae": "I tartufi veri: sotterranei, aschi dentro il corpo fruttifero. Fra loro il tartufo pregiato.", "Physalacriaceae": "Chiodini e flammuline: crescono su legno, spesso in cespi.", "Fomitopsidaceae": "Funghi del legno che causano la carie bruna.", "Gomphaceae": "Ramarie e gonfi: a corallo o a imbuto, su terra.", "Thelephoraceae": "Telefore: funghi a ventaglio o a rosetta, con carne fibrosa.", "Pluteaceae": "Plutei e volvarielle: lamelle libere, spore rosate.", "Morchellaceae": "Le spugnole: cappello alveolato, interno cavo. Si mangiano cotte.", "Suillaceae": "Suilli: boleti viscidi, con punti ghiandolari, sotto i pini.", "Paxillaceae": "Paxillus e affini: lamelle decorrenti, carne che imbrunisce.", "Sclerodermataceae": "Scleroderma: palloncini duri, con spore scure, tossici.", "Pleurotaceae": "Pleuroti: funghi a ostrica, sul legno, lamelle decorrenti.", "Amanita": "Funghi con volva, spesso anello e lamelle libere. Qui troviamo specie mortali (A. phalloides) e ottimi commestibili (A. caesarea).", "Russula": "Il genere più ricco, con carne fragile e senza latte. Si riconoscono dalla fragilità della carne e dai colori vivi del cappello.", "Lactarius": "Lattari: tagliando il fungo esce un liquido, il latte, di colore diverso a seconda della specie.", "Cortinarius": "Il genere più numeroso, con cortina dai giovani e spore ruggine. Tutti da non mangiare senza certezza assoluta.", "Inocybe": "Inocibe: piccole, fibrillose, spore brune. Quasi tutte tossiche.", "Agaricus": "Agarici e prataioli: anello, lamelle da rosa a bruno cioccolato, spore brune.", "Boletus": "Boleti veri: tubuli sotto il cappello e gambo spesso con un reticolo.", "Tricholoma": "Tricolomi: carne bianca, spore bianche, lamelle emarginate.", "Cantharellus": "Cantarelli: imenio a false lamelle decorrenti, profumo di albicocca.", "Morchella": "Spugnole: cappello alveolato, interno cavo.", "Pleurotus": "Pleuroti: crescono a mensola sul legno, lamelle decorrenti.", "Armillaria": "Chiodini: in cespi sul legno, con anello e spore bianche.", "Lepiota": "Lepiote: anello, lamelle libere, cappello squamoso. Alcune mortali, di piccola taglia.", "Hygrophorus": "Igrofori: lamelle cerose, spesso viscidi.", "Mycena": "Micene: piccole, delicate, a campana.", "Entoloma": "Entolomi: lamelle rosate a maturità, spore angolose.", "Geastrum": "Stelle di terra: involucro che si apre a stella.", "Tuber": "Tartufi veri: sotterranei, profumati.", "Suillus": "Suilli: viscidi, con boleti sotto i pini.", "Ramaria": "Ramarie: ramificati a corallo.", "Lycoperdon": "Vesce: a palloncino, con spore polverose."};
   var CLS = { Agaricales: "Agaricomycetes", Russulales: "Agaricomycetes", Polyporales: "Agaricomycetes", Boletales: "Agaricomycetes", Hymenochaetales: "Agaricomycetes", Thelephorales: "Agaricomycetes", Cantharellales: "Agaricomycetes", Gomphales: "Agaricomycetes", Geastrales: "Agaricomycetes", Hysterangiales: "Agaricomycetes", Phallales: "Agaricomycetes", Gloeophyllales: "Agaricomycetes", Auriculariales: "Agaricomycetes", Sebacinales: "Agaricomycetes", Tremellales: "Tremellomycetes", Dacrymycetales: "Dacrymycetes", Pezizales: "Pezizomycetes", Helotiales: "Leotiomycetes" };
   var DIV = { Agaricomycetes: "Basidiomycota", Tremellomycetes: "Basidiomycota", Dacrymycetes: "Basidiomycota", Pezizomycetes: "Ascomycota", Leotiomycetes: "Ascomycota" };
-  var RK = ["Regno", "Divisione", "Classe", "Ordine", "Famiglia", "Genere", "Specie"];
-  var root = null, tree = $("#txTree"), built = false, byName = {}, flat = [];
+  var RK = ["Regno", "Divisione", "Classe", "Ordine", "Famiglia", "Genere", "Specie"], RKP = ["", "divisioni", "classi", "ordini", "famiglie", "generi", "specie"];
+  var root = null, cur = null, built = false, flat = [], box = $("#txView");
   function node(name, rank, parent) { return { n: name, r: rank, p: parent, k: {}, c: 0, sp: null }; }
   function build(list) {
     var gOrd = {}, gFam = {};
@@ -4640,48 +4650,55 @@ var TAV = [
       var g = e.n.split(" ")[0], o = e.o || gOrd[g] || "", f = e.f || gFam[g] || "Famiglia non indicata";
       var cl = CLS[o] || "Classe non indicata", dv = DIV[cl] || "Divisione non indicata";
       if (!o) o = "Ordine non indicato";
-      var path = [dv, cl, o, f, g, e.n], cur = root; root.c++;
-      path.forEach(function (nm, i) {
-        var nx = cur.k[nm]; if (!nx) { nx = cur.k[nm] = node(nm, i + 1, cur); }
-        nx.c++; cur = nx;
-      });
-      cur.sp = e;
+      var path = [dv, cl, o, f, g, e.n], c = root; root.c++;
+      path.forEach(function (nm, i) { var nx = c.k[nm]; if (!nx) { nx = c.k[nm] = node(nm, i + 1, c); } nx.c++; c = nx; });
+      c.sp = e;
     });
     (function walk(nd) { flat.push(nd); Object.keys(nd.k).forEach(function (x) { walk(nd.k[x]); }); })(root);
     flat.forEach(function (nd) { nd.h = norm(nd.n); });
     built = true;
   }
   function kids(nd) { return Object.keys(nd.k).sort(function (a, b) { return nd.k[b].c - nd.k[a].c || a.localeCompare(b); }).map(function (x) { return nd.k[x]; }); }
-  function label(nd) { return '<span class="rk">' + RK[nd.r] + '</span><span class="nm' + (nd.r >= 5 ? ' it' : '') + '">' + esc(nd.n) + '</span>' + (nd.r < 6 ? '<span class="ct">' + nd.c + (nd.r === 5 ? ' specie' : ' specie') + '</span>' : ''); }
-  function li(nd) {
-    var el = document.createElement("li"); el._nd = nd;
-    if (nd.r === 6) { el.innerHTML = '<button type="button" class="tx-leaf" data-txsp="' + esc(nd.n) + '"><span class="rk">Specie</span><span class="nm it">' + esc(nd.n) + '</span>' + (nd.sp.a ? '<small class="iz-a">' + esc(nd.sp.a) + '</small>' : '') + '<span class="go">Apri la scheda ›</span></button>'; return el; }
-    var d = document.createElement("details"); d._nd = nd; d.innerHTML = "<summary>" + label(nd) + "</summary>";
-    d.addEventListener("toggle", function () { if (d.open) fill(d); });
-    el.appendChild(d); return el;
+  function lineage(nd) { var a = []; for (var x = nd; x; x = x.p) a.unshift(x); return a; }
+  function it(nd) { return nd.r >= 5 ? " it" : ""; }
+  function desc(nd) {
+    if (nd.r === 6) return nd.sp && nd.sp.a ? "Specie descritta da " + nd.sp.a.replace(/\.$/, "") + "." : "Specie dell'elenco del Sud Italia.";
+    if (DESC[nd.n]) return DESC[nd.n];
+    var ks = kids(nd).slice(0, 4).map(function (k) { return k.n; });
+    var par = nd.p && nd.p.r > 0 ? " " + (nd.r === 5 ? "della famiglia " : nd.r === 4 ? "dell'ordine " : "del gruppo ") + nd.p.n : "";
+    return RK[nd.r] + par + ": " + nd.c + " specie nel nostro elenco" + (ks.length ? ", fra cui " + ks.join(", ") : "") + ".";
   }
-  function fill(d) {
-    if (d._ok) return; d._ok = true;
-    var ul = document.createElement("ul"); kids(d._nd).forEach(function (c) { ul.appendChild(li(c)); }); d.appendChild(ul);
-  }
-  function openPath(nd) {
-    var chain = []; for (var x = nd; x && x.p; x = x.p) chain.unshift(x);
-    var ul = tree, last = null;
-    chain.forEach(function (c) {
-      var item = [].filter.call(ul.children, function (l) { return l._nd === c; })[0]; if (!item) return;
-      last = item; var d = item.querySelector("details");
-      if (d && c !== nd) { d.open = true; fill(d); ul = d.querySelector("ul"); }
+  function snippet(nd) { var t = desc(nd); var m = t.split(". ")[0]; return m.length > 110 ? m.slice(0, 107) + "…" : m; }
+  var filt = "";
+  function go(nd, noScroll) {
+    cur = nd; filt = "";
+    var ln = lineage(nd), h = "";
+    h += '<nav class="tx-bc" aria-label="Percorso nell\'albero">' + ln.map(function (x, i) {
+      var last = i === ln.length - 1;
+      return (i ? '<span class="sep" aria-hidden="true">›</span>' : "") + (last ? '<span class="cur' + it(x) + '" aria-current="page">' + esc(x.n) + "</span>" : '<button type="button" class="' + it(x).trim() + '" data-txn="' + flat.indexOf(x) + '">' + esc(x.n) + "</button>");
+    }).join("") + "</nav>";
+    h += '<div class="tx-trunk">';
+    ln.slice(0, -1).forEach(function (x, i) {
+      h += '<div class="tx-anc" style="--d:' + i + '"><button type="button" data-txn="' + flat.indexOf(x) + '"><span class="rk">' + RK[x.r] + '</span><span class="nm' + it(x) + '">' + esc(x.n) + '</span><span class="ct">' + x.c + ' specie</span><span class="sn">' + esc(snippet(x)) + '</span></button></div>';
     });
-    return last;
+    h += '<article class="tx-now" style="--d:' + (ln.length - 1) + '"><span class="rk">' + RK[nd.r] + '</span><h3 class="' + it(nd).trim() + '">' + esc(nd.n) + "</h3><p>" + esc(desc(nd)) + "</p>";
+    if (nd.r < 6) h += '<p class="meta">' + nd.c + " specie · " + Object.keys(nd.k).length + " " + RKP[nd.r + 1] + "</p>";
+    else h += '<p><button type="button" class="btn-sp" data-txsp="' + esc(nd.n) + '">Apri la scheda della specie ›</button></p>';
+    h += "</article>";
+    if (nd.r < 6) {
+      var ks = kids(nd);
+      h += '<div class="tx-kids" style="--d:' + ln.length + '"><h4>' + RKP[nd.r + 1].charAt(0).toUpperCase() + RKP[nd.r + 1].slice(1) + " di " + esc(nd.n) + " <span>(" + ks.length + ")</span></h4>";
+      if (ks.length > 12) h += '<div class="search"><input type="search" id="txF" placeholder="Filtra questo elenco…" aria-label="Filtra l\'elenco" autocomplete="off"></div>';
+      h += '<ul class="tx-list" id="txList">' + ks.map(kid).join("") + "</ul></div>";
+    }
+    h += "</div>";
+    box.innerHTML = h;
+    var f = $("#txF"); if (f) f.addEventListener("input", function () { var q = norm(f.value.trim()); [].forEach.call(document.querySelectorAll("#txList li"), function (l) { l.hidden = q && l.getAttribute("data-h").indexOf(q) < 0; }); });
+    if (!noScroll) { var b = box.querySelector(".tx-bc"); if (b) b.scrollIntoView({ block: "start", behavior: "smooth" }); }
   }
-  function show(nd) {
-    [].forEach.call(tree.querySelectorAll(".hit"), function (h) { h.classList.remove("hit"); });
-    var it = openPath(nd); if (!it) return;
-    var tg = it.querySelector("details") || it; if (nd.r < 6) { var dd = it.querySelector("details"); dd.open = true; fill(dd); }
-    it.classList.add("hit"); setTimeout(function () { it.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60);
-    var parts = []; for (var x = nd; x && x.p; x = x.p) parts.unshift(x);
-    var tr = $("#txTrail"); tr.hidden = false;
-    tr.innerHTML = "<b>Dal regno a qui:</b> " + parts.map(function (c, i) { return (i ? '<span class="sep">›</span>' : "") + '<button type="button" data-txn="' + flat.indexOf(c) + '"><i>' + (c.r >= 5 ? esc(c.n) : esc(c.n)) + '</i></button> <small>' + RK[c.r] + "</small>"; }).join("");
+  function kid(k) {
+    return '<li data-h="' + esc(k.h) + '"><button type="button" data-txn="' + flat.indexOf(k) + '"><span class="rk">' + RK[k.r] + '</span><span class="nm' + it(k) + '">' + esc(k.n) + "</span>" +
+      (k.r < 6 ? '<span class="ct">' + k.c + " specie</span>" : "") + '<span class="sn">' + esc(snippet(k)) + "</span></button></li>";
   }
   function search() {
     var q = norm($("#txQ").value.trim()), res = $("#txRes"); res.innerHTML = "";
@@ -4693,12 +4710,12 @@ var TAV = [
   }
   function init() {
     if (built) return;
-    var go = function (d) { build(d); kids(root).forEach(function (c) { tree.appendChild(li(c)); }); var f = tree.querySelector("details"); if (f) { f.open = true; fill(f); } };
-    if (typeof SP !== "undefined" && SP) go(SP); else fetch("libri/specie.json").then(function (r) { return r.json(); }).then(go);
+    var start = function (d) { build(d); go(root, true); };
+    if (typeof SP !== "undefined" && SP) start(SP); else fetch("libri/specie.json").then(function (r) { return r.json(); }).then(start);
   }
   var T2 = 0; $("#txQ").addEventListener("input", function () { if (!built) init(); clearTimeout(T2); T2 = setTimeout(search, 150); });
   document.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-txn]"); if (b) { show(flat[+b.getAttribute("data-txn")]); return; }
+    var b = e.target.closest("[data-txn]"); if (b && built) { go(flat[+b.getAttribute("data-txn")]); $("#txRes").innerHTML = ""; return; }
     var s = e.target.closest("[data-txsp]"); if (s) { setTab("specie", true); var q = $("#spQ"); q.value = s.getAttribute("data-txsp"); q.dispatchEvent(new Event("input")); window.scrollTo(0, 0); }
   });
   document.getElementById("tab-albero").addEventListener("click", init);
