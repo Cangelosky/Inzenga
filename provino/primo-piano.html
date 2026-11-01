@@ -31,24 +31,31 @@ h2{font:700 clamp(28px,4vw,40px)/1.08 var(--fd);letter-spacing:-.02em;margin:0 0
 .bar{position:absolute;left:0;bottom:0;height:4px;background:var(--ochre);width:0;z-index:3}
 @media (max-width:640px){.slide::before{background:linear-gradient(0deg,rgba(10,22,16,.92) 0%,rgba(10,22,16,.6) 55%,rgba(10,22,16,.15) 100%)}}
 @media (prefers-reduced-motion:reduce){.bg,.slide{transition:none}}
+.pst .bg{filter:blur(22px) brightness(.7);transform:scale(1.25)}
+.slide.on.pst .bg{transform:scale(1.3)}
+.flat{background:radial-gradient(circle at 75% 50%,#2B6B4C,#15362A 70%)}
+.poster{position:absolute;right:clamp(24px,6vw,80px);top:50%;transform:translateY(-50%);height:min(86%,480px);width:auto;max-width:34%;border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.5);z-index:0;object-fit:contain}
+.rnd .poster{box-shadow:none;border-radius:50%;filter:drop-shadow(0 8px 24px rgba(0,0,0,.4));height:min(70%,360px)}
+.slide.pst>*:not(.bg):not(.poster){position:relative;z-index:1;max-width:min(100%,50%)}
+@media (max-width:640px){.slide.pst>*:not(.bg):not(.poster){max-width:100%}.poster{position:relative;right:auto;top:auto;transform:none;align-self:center;height:200px;max-width:60%;order:-1}.slide.pst{justify-content:flex-start}.pp{min-height:640px}}
 </style></head><body><div class="wrap">
-<p class="note">Provino, non è ancora nel sito. Le foto sono quelle già usate sul sito; il testo è quello attuale delle schede. Scorre da solo ogni 7 secondi; tocca una linguetta per scegliere.</p>
+<p class="note">Provino, non è ancora nel sito. Le immagini sono quelle già presenti in ogni scheda (locandine, logo 5 per mille, foto della mostra); per «Diventa socio», che non ne ha, ho messo una foto della serata in sede; il testo è quello attuale delle schede. Scorre da solo ogni 7 secondi; tocca una linguetta per scegliere.</p>
 <h2>In primo piano</h2><p class="sub">Le novità, una alla volta.</p>
 <div class="tabs" role="tablist" id="tabs"></div>
 <div class="pp" id="pp"></div>
 </div>
 <script>
 var S=[
-{tab:'Corso Base',chip:'Corsi',t:'Corso di micologia a Cefalù: dall\'11 al 21 novembre',b:'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.',d:'Cefalù · 11-21 novembre 2026 · iscrizioni aperte',cta:'Mi preiscrivo',img:'corsiaula.jpg',pos:'50% 45%'},
-{tab:'Dona il 5x1000',chip:'5 per mille',t:'Una firma che non ti costa niente',b:'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.',d:'Codice fiscale: da inserire',cta:'Contatti',img:'gite.jpg',pos:'50% 50%'},
+{tab:'Corso Base',chip:'Corsi',t:'Corso di micologia a Cefalù: dall\'11 al 21 novembre',b:'Il corso obbligatorio per il tesserino di raccolta dei funghi epigei arriva in Aula Consiliare, in Piazza Duomo. Lo organizziamo noi, gruppo Giuseppe Inzenga di Palermo.',d:'Cefalù · 11-21 novembre 2026 · iscrizioni aperte',cta:'Mi preiscrivo',img:'cefalu.jpg',poster:1},
+{tab:'Dona il 5x1000',chip:'5 per mille',t:'Una firma che non ti costa niente',b:'Il tuo 5 per mille all\'Inzenga: basta una firma nella dichiarazione dei redditi per sostenere corsi, mostre e ricerca.',d:'Codice fiscale: da inserire',cta:'Contatti',img:'cinque.svg',poster:1,round:1},
 {tab:'Mostra micologica',chip:'Mostre',t:'65 specie in un giorno: la mostra al Parco Uditore',b:'L\'11 ottobre, nella Giornata Nazionale della Micologia, i nostri micologi hanno determinato ed esposto 65 specie raccolte nei boschi siciliani. Grazie a chi è passato a trovarci!',d:'Parco Uditore, Palermo · 11 ottobre 2026',cta:'Guarda le attività',img:'mostra26.jpg',pos:'50% 62%'},
-{tab:'Stage Micologico',chip:'Stage',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stage.jpg',pos:'50% 40%'},
+{tab:'Stage Micologico',chip:'Stage',t:'Tre giorni nel cuore dell\'Aspromonte: lo stage a Gambarie',b:'Al mattino cerchi nel bosco, al pomeriggio studi al microscopio quello che hai trovato. È la 32ª edizione, con l\'Associazione Micologica Naturale Aspromonte.',d:'Gambarie d\'Aspromonte · 23-25 ottobre 2026',cta:'Scopri lo stage',img:'stageloc.jpg',poster:1},
 {tab:'Diventa socio',chip:'Diventa socio',t:'Diventa socio: i funghi si imparano in compagnia',b:'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.',d:'Quota annuale: da inserire',cta:'Scopri cosa fa un socio',img:'eventi.jpg',pos:'50% 55%'}
 ];
 function e(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 var pp=document.getElementById('pp'),tb=document.getElementById('tabs'),cur=0,t0=Date.now(),D=7000,hold=false;
 tb.innerHTML=S.map(function(s,i){return '<button role="tab" data-i="'+i+'">'+e(s.tab)+'</button>'}).join('');
-pp.innerHTML=S.map(function(s,i){return '<article class="slide"><img class="bg" src="'+s.img+'" alt="" style="object-position:'+s.pos+'"><span class="chip">'+e(s.chip)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="foot">'+e(s.d)+'</div><a class="btn" href="#">'+e(s.cta)+'</a></article>'}).join('')+'<div class="bar" id="bar"></div>';
+pp.innerHTML=S.map(function(s,i){return '<article class="slide'+(s.poster?' pst':'')+(s.round?' rnd':'')+'">'+(s.round?'<div class="bg flat"></div>':'<img class="bg" src="'+s.img+'" alt="" style="object-position:'+(s.pos||'50% 30%')+'">')+(s.poster?'<img class="poster" src="'+s.img+'" alt="">':'')+'<span class="chip">'+e(s.chip)+'</span><h3>'+e(s.t)+'</h3><p>'+e(s.b)+'</p><div class="foot">'+e(s.d)+'</div><a class="btn" href="#">'+e(s.cta)+'</a></article>'}).join('')+'<div class="bar" id="bar"></div>';
 var sl=pp.querySelectorAll('.slide'),bt=tb.children,bar=document.getElementById('bar');
 function go(i){cur=(i+S.length)%S.length;t0=Date.now();for(var k=0;k<S.length;k++){sl[k].classList.toggle('on',k===cur);bt[k].setAttribute('aria-selected',k===cur)}}
 tb.addEventListener('click',function(ev){var b=ev.target.closest('button');if(b)go(+b.dataset.i)});
