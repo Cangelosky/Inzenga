@@ -786,6 +786,40 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
   .sb-nav a { padding: 12px 14px; }
 }
 
+/* albero sistematico */
+.tx-tools { display: grid; gap: 10px; margin: 10px 0 14px; }
+.tx-res { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tx-res button { font: 500 14px/1.2 var(--f-body); border: 1.5px solid var(--line2); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 12px; cursor: pointer; min-height: 38px; }
+.tx-res button i { font-style: italic; }
+.tx-res button small { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-left: 6px; }
+.tx-res button:hover { border-color: var(--accent); }
+.tx-trail { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; background: var(--accent-soft); color: var(--ink); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+.tx-trail { position: sticky; top: 76px; z-index: 5; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+.tx-trail b { font-weight: 600; }
+@media (max-width: 560px) { .tx-tree ul { margin-left: 2px; padding-left: 5px; } .tx-tree summary { padding: 8px; gap: 2px 8px; } .tx-tree .rk { min-width: 0; } .tx-trail { top: 70px; font-size: 13px; } }
+.tx-trail span.sep { color: var(--muted); }
+.tx-trail button { font: inherit; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; }
+.tx-tree, .tx-tree ul { list-style: none; margin: 0; padding: 0; }
+.tx-tree ul { margin-left: 14px; padding-left: 12px; border-left: 2px solid var(--line); }
+.tx-tree details { margin: 2px 0; }
+.tx-tree summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; cursor: pointer; padding: 8px 10px; border-radius: 10px; min-height: 40px; list-style: none; background: var(--surface); border: 1px solid var(--line); }
+.tx-tree summary::-webkit-details-marker { display: none; }
+.tx-tree summary::before { content: "▸"; color: var(--accent); font-size: 13px; transition: transform .15s; }
+.tx-tree details[open] > summary::before { transform: rotate(90deg); }
+.tx-tree .rk { font: 600 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); min-width: 5.2em; }
+.tx-tree .nm { font-weight: 600; }
+.tx-tree .nm.it { font-style: italic; }
+.tx-tree .ct { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); }
+.tx-tree .hit > summary, .tx-tree .hit > .tx-leaf { outline: 2.5px solid var(--ochre); outline-offset: 1px; }
+.tx-leaf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; width: 100%; text-align: left; padding: 8px 10px; border-radius: 10px; min-height: 40px; background: var(--bg); border: 1px solid var(--line); font: inherit; color: inherit; cursor: pointer; }
+.tx-leaf:hover { border-color: var(--accent); }
+.tx-leaf .go { margin-left: auto; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+.tx-scale { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-top: 12px; }
+.tx-scale summary { cursor: pointer; font-weight: 600; min-height: 32px; }
+.tx-scale ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 4px; }
+.tx-scale p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.tx-note { font-size: 13px; color: var(--muted); margin: 12px 0 0; }
+
 </style>
 
 <meta name="robots" content="noindex,nofollow">
@@ -811,7 +845,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:15</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 11:20</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -863,6 +897,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
     <button class="tab" role="tab" id="tab-chiave" aria-controls="p-chiave" aria-selected="false" data-tab="chiave" data-pg="lab">La chiave dicotomica</button>
     <button class="tab" role="tab" id="tab-caratteri" aria-controls="p-caratteri" aria-selected="false" data-tab="caratteri" data-pg="lab">I caratteri distintivi</button>
     <button class="tab" role="tab" id="tab-specie" aria-controls="p-specie" aria-selected="false" data-tab="specie" data-pg="lab">Specie</button>
+    <button class="tab" role="tab" id="tab-albero" aria-controls="p-albero" aria-selected="false" data-tab="albero" data-pg="lab">Albero dei funghi</button>
     <button class="tab" role="tab" id="tab-strumenti" aria-controls="p-strumenti" aria-selected="false" data-tab="strumenti" data-pg="lab">Strumenti scientifici</button>
     <button class="tab" role="tab" id="tab-biblioteca" aria-controls="p-biblioteca" aria-selected="false" data-tab="biblioteca" data-pg="bib">Libri</button>
     <button class="tab" role="tab" id="tab-tavole" aria-controls="p-tavole" aria-selected="false" data-tab="tavole" data-pg="bib">Tavole</button>
@@ -875,7 +910,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
         <button type="button" role="tab" class="ix-tab ix-t-lab" id="ixt-lab" aria-controls="ix-pl" aria-selected="true" data-ix="lab">Didattica</button>
         <button type="button" role="tab" class="ix-tab ix-t-bib" id="ixt-bib" aria-controls="ix-pb" aria-selected="false" data-ix="bib">Biblioteca</button>
       </div>
-      <section class="ix-world ix-lab" id="ix-pl" role="tabpanel" aria-labelledby="ixt-lab"><h2 class="ix-h">Didattica</h2><p class="sub">Qui i funghi si imparano facendo, dal primo cappello alla specie.</p><div class="ix-cards"><a class="ix-card" href="#percorso"><span class="ico ph" style="background-image:url(../img/ix-percorso.svg)"></span><div><h3>Il percorso didattico</h3><p>Sette tappe con quiz per imparare le parole giuste.</p><span class="n" >7 tappe</span></div></a><a class="ix-card" href="#chiave"><span class="ico ph" style="background-image:url(../img/ix-chiave.svg)"></span><div><h3>La chiave dicotomica</h3><p>Rispondi a poche domande, o descrivi il fungo come vuoi tu, e arrivi al genere o alla specie.</p><span class="n" >197 specie passo passo · 387 a caratteri liberi</span></div></a><a class="ix-card" href="#caratteri"><span class="ico ph" style="background-image:url(../img/ix-caratteri.svg)"></span><div><h3>I caratteri distintivi</h3><p>Cappello, lamelle, gambo, anello: le parti da osservare.</p><span class="n" >10 caratteri</span></div></a><a class="ix-card" href="#specie"><span class="ico ph" style="background-image:url(../img/ix-specie.svg)"></span><div><h3>Specie</h3><p>Le specie segnalate nel Sud Italia, con disegni storici, foto e cartina.</p><span class="n" id="ix-specie">1.691 specie · 110 con foto</span></div></a><a class="ix-card" href="#strumenti"><span class="ico ph" style="background-image:url(../img/ix-strumenti.svg)"></span><div><h3>Strumenti scientifici</h3><p>Scheda di raccolta, sporata, nomi, misura delle spore, reagenti.</p><span class="n" >5 strumenti</span></div></a></div></section>
+      <section class="ix-world ix-lab" id="ix-pl" role="tabpanel" aria-labelledby="ixt-lab"><h2 class="ix-h">Didattica</h2><p class="sub">Qui i funghi si imparano facendo, dal primo cappello alla specie.</p><div class="ix-cards"><a class="ix-card" href="#percorso"><span class="ico ph" style="background-image:url(../img/ix-percorso.svg)"></span><div><h3>Il percorso didattico</h3><p>Sette tappe con quiz per imparare le parole giuste.</p><span class="n" >7 tappe</span></div></a><a class="ix-card" href="#chiave"><span class="ico ph" style="background-image:url(../img/ix-chiave.svg)"></span><div><h3>La chiave dicotomica</h3><p>Rispondi a poche domande, o descrivi il fungo come vuoi tu, e arrivi al genere o alla specie.</p><span class="n" >197 specie passo passo · 387 a caratteri liberi</span></div></a><a class="ix-card" href="#caratteri"><span class="ico ph" style="background-image:url(../img/ix-caratteri.svg)"></span><div><h3>I caratteri distintivi</h3><p>Cappello, lamelle, gambo, anello: le parti da osservare.</p><span class="n" >10 caratteri</span></div></a><a class="ix-card" href="#specie"><span class="ico ph" style="background-image:url(../img/ix-specie.svg)"></span><div><h3>Specie</h3><p>Le specie segnalate nel Sud Italia, con disegni storici, foto e cartina.</p><span class="n" id="ix-specie">1.691 specie · 110 con foto</span></div></a><a class="ix-card" href="#albero"><span class="ico ph" style="background-image:url(../img/ix-albero.svg)"></span><div><h3>L’albero dei funghi</h3><p>Dal regno alla specie: divisioni, classi, ordini, famiglie e generi. Cerca dall’alto o parti dal nome del fungo.</p><span class="n" >dal regno alla specie</span></div></a><a class="ix-card" href="#strumenti"><span class="ico ph" style="background-image:url(../img/ix-strumenti.svg)"></span><div><h3>Strumenti scientifici</h3><p>Scheda di raccolta, sporata, nomi, misura delle spore, reagenti.</p><span class="n" >5 strumenti</span></div></a></div></section>
       <section class="ix-world ix-bib" id="ix-pb" role="tabpanel" aria-labelledby="ixt-bib" hidden><h2 class="ix-h">Biblioteca</h2><p class="sub">I libri antichi da sfogliare e leggere, le tavole ripulite, gli studi scientifici sul Sud.</p><div class="ix-cards"><a class="ix-card" href="#biblioteca"><span class="ico ph" style="background-image:url(../img/ix-libri.svg)"></span><div><h3>Libri</h3><p>Inzenga, Vittadini, Bresadola, Comes e Mattirolo, con ricerca nel testo.</p><span class="n" id="ix-biblioteca">5 libri trascritti</span></div></a><a class="ix-card" href="#tavole"><span class="ico ph" style="background-image:url(../img/ix-tavole.svg)"></span><div><h3>Tavole</h3><p>Le tavole illustrate dei libri storici, ripulite, con il nome di oggi accanto a quello originale.</p><span class="n" id="ix-tavole"></span></div></a><a class="ix-card" href="#pubblicazioni"><span class="ico ph" style="background-image:url(../img/ix-pubblicazioni.svg)"></span><div><h3>Pubblicazioni</h3><p>Articoli scientifici sui funghi del Sud e della Sicilia, con riassunto in italiano.</p><span class="n" id="ix-pubblicazioni">21 articoli</span></div></a></div></section>
     </div>
   </section>
@@ -985,6 +1020,24 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
     <button class="btn" type="button" id="spMore" hidden>Mostra altre specie</button>
     <p class="tav-note">Fonte delle segnalazioni: GBIF, il database mondiale della biodiversità, che raccoglie dati di erbari, ricerche e osservazioni dei cittadini (non tutte verificate); nomi secondo la sua tassonomia, consultata il 29 ottobre 2026. Il numero di segnalazioni dice quanto una specie è stata registrata, non quanto è comune. Per ogni specie mostriamo per primo il disegno dei libri storici, se c'è, e accanto la foto dal vero: dove manca, ce lo segniamo per cercarla tra le foto dei soci. Elenco da rivedere con il comitato scientifico.</p>
 
+  </section>
+
+  <section id="p-albero" role="tabpanel" aria-labelledby="tab-albero" hidden>
+    <div class="tav-intro">
+      <h2>L'albero dei funghi</h2>
+      <p>Ogni fungo appartiene a una famiglia, che sta in un ordine, in una classe e in una divisione. Qui puoi scendere dall'alto, aprendo i rami uno dopo l'altro, oppure partire dal nome di una specie, di un genere o di una famiglia e vedere subito tutti i suoi “parenti”.</p>
+    </div>
+    <details class="tx-scale"><summary>I livelli della classificazione, dal regno alla varietà</summary>
+      <ol><li><b>Regno</b> · Fungi, tutti i funghi</li><li><b>Divisione</b> · Basidiomycota (spore su basidi) o Ascomycota (spore in aschi)</li><li><b>Classe</b> · es. Agaricomycetes</li><li><b>Ordine</b> · es. Agaricales (finisce in <i>-ales</i>)</li><li><b>Famiglia</b> · es. Amanitaceae (finisce in <i>-aceae</i>)</li><li><b>Genere</b> · es. <i>Amanita</i>, la prima parola del nome</li><li><b>Specie</b> · es. <i>Amanita muscaria</i></li><li><b>Varietà e forma</b> · sotto la specie, es. <i>Amanita muscaria</i> var. <i>guessowii</i></li></ol>
+      <p>Nell'albero qui sotto si arriva fino alla specie. Le varietà e le forme non sono ancora nei nostri elenchi: si aggiungeranno quando il comitato scientifico le avrà verificate.</p>
+    </details>
+    <div class="tx-tools">
+      <div class="search"><input id="txQ" type="search" placeholder="Cerca una specie, un genere, una famiglia o un ordine: Amanita muscaria, Boletaceae…" aria-label="Cerca nell'albero" autocomplete="off"></div>
+      <ul class="tx-res" id="txRes" aria-live="polite"></ul>
+    </div>
+    <div class="tx-trail" id="txTrail" hidden></div>
+    <ul class="tx-tree" id="txTree"></ul>
+    <p class="tx-note">Famiglie e ordini seguono i nomi usati nei libri e negli elenchi della Biblioteca. La classificazione dei funghi cambia spesso con gli studi sul DNA: i gruppi vanno confermati dal comitato scientifico prima della pubblicazione. Divisione e classe sono ricavate dall'ordine.</p>
   </section>
 
   <section id="p-strumenti" role="tabpanel" aria-labelledby="tab-strumenti" hidden>
@@ -4571,7 +4624,90 @@ var TAV = [
 })();
 
 /* ===== Schede e indirizzo ===== */
-var PG = { lab: ["percorso", "chiave", "caratteri", "specie", "strumenti"], bib: ["biblioteca", "tavole", "pubblicazioni"] };
+
+/* ===== Albero sistematico ===== */
+(function () {
+  var CLS = { Agaricales: "Agaricomycetes", Russulales: "Agaricomycetes", Polyporales: "Agaricomycetes", Boletales: "Agaricomycetes", Hymenochaetales: "Agaricomycetes", Thelephorales: "Agaricomycetes", Cantharellales: "Agaricomycetes", Gomphales: "Agaricomycetes", Geastrales: "Agaricomycetes", Hysterangiales: "Agaricomycetes", Phallales: "Agaricomycetes", Gloeophyllales: "Agaricomycetes", Auriculariales: "Agaricomycetes", Sebacinales: "Agaricomycetes", Tremellales: "Tremellomycetes", Dacrymycetales: "Dacrymycetes", Pezizales: "Pezizomycetes", Helotiales: "Leotiomycetes" };
+  var DIV = { Agaricomycetes: "Basidiomycota", Tremellomycetes: "Basidiomycota", Dacrymycetes: "Basidiomycota", Pezizomycetes: "Ascomycota", Leotiomycetes: "Ascomycota" };
+  var RK = ["Regno", "Divisione", "Classe", "Ordine", "Famiglia", "Genere", "Specie"];
+  var root = null, tree = $("#txTree"), built = false, byName = {}, flat = [];
+  function node(name, rank, parent) { return { n: name, r: rank, p: parent, k: {}, c: 0, sp: null }; }
+  function build(list) {
+    var gOrd = {}, gFam = {};
+    list.forEach(function (e) { var g = e.n.split(" ")[0]; if (e.o && !gOrd[g]) gOrd[g] = e.o; if (e.f && !gFam[g]) gFam[g] = e.f; });
+    root = node("Fungi", 0, null);
+    list.forEach(function (e) {
+      var g = e.n.split(" ")[0], o = e.o || gOrd[g] || "", f = e.f || gFam[g] || "Famiglia non indicata";
+      var cl = CLS[o] || "Classe non indicata", dv = DIV[cl] || "Divisione non indicata";
+      if (!o) o = "Ordine non indicato";
+      var path = [dv, cl, o, f, g, e.n], cur = root; root.c++;
+      path.forEach(function (nm, i) {
+        var nx = cur.k[nm]; if (!nx) { nx = cur.k[nm] = node(nm, i + 1, cur); }
+        nx.c++; cur = nx;
+      });
+      cur.sp = e;
+    });
+    (function walk(nd) { flat.push(nd); Object.keys(nd.k).forEach(function (x) { walk(nd.k[x]); }); })(root);
+    flat.forEach(function (nd) { nd.h = norm(nd.n); });
+    built = true;
+  }
+  function kids(nd) { return Object.keys(nd.k).sort(function (a, b) { return nd.k[b].c - nd.k[a].c || a.localeCompare(b); }).map(function (x) { return nd.k[x]; }); }
+  function label(nd) { return '<span class="rk">' + RK[nd.r] + '</span><span class="nm' + (nd.r >= 5 ? ' it' : '') + '">' + esc(nd.n) + '</span>' + (nd.r < 6 ? '<span class="ct">' + nd.c + (nd.r === 5 ? ' specie' : ' specie') + '</span>' : ''); }
+  function li(nd) {
+    var el = document.createElement("li"); el._nd = nd;
+    if (nd.r === 6) { el.innerHTML = '<button type="button" class="tx-leaf" data-txsp="' + esc(nd.n) + '"><span class="rk">Specie</span><span class="nm it">' + esc(nd.n) + '</span>' + (nd.sp.a ? '<small class="iz-a">' + esc(nd.sp.a) + '</small>' : '') + '<span class="go">Apri la scheda ›</span></button>'; return el; }
+    var d = document.createElement("details"); d._nd = nd; d.innerHTML = "<summary>" + label(nd) + "</summary>";
+    d.addEventListener("toggle", function () { if (d.open) fill(d); });
+    el.appendChild(d); return el;
+  }
+  function fill(d) {
+    if (d._ok) return; d._ok = true;
+    var ul = document.createElement("ul"); kids(d._nd).forEach(function (c) { ul.appendChild(li(c)); }); d.appendChild(ul);
+  }
+  function openPath(nd) {
+    var chain = []; for (var x = nd; x && x.p; x = x.p) chain.unshift(x);
+    var ul = tree, last = null;
+    chain.forEach(function (c) {
+      var item = [].filter.call(ul.children, function (l) { return l._nd === c; })[0]; if (!item) return;
+      last = item; var d = item.querySelector("details");
+      if (d && c !== nd) { d.open = true; fill(d); ul = d.querySelector("ul"); }
+    });
+    return last;
+  }
+  function show(nd) {
+    [].forEach.call(tree.querySelectorAll(".hit"), function (h) { h.classList.remove("hit"); });
+    var it = openPath(nd); if (!it) return;
+    var tg = it.querySelector("details") || it; if (nd.r < 6) { var dd = it.querySelector("details"); dd.open = true; fill(dd); }
+    it.classList.add("hit"); setTimeout(function () { it.scrollIntoView({ behavior: "smooth", block: "center" }); }, 60);
+    var parts = []; for (var x = nd; x && x.p; x = x.p) parts.unshift(x);
+    var tr = $("#txTrail"); tr.hidden = false;
+    tr.innerHTML = "<b>Dal regno a qui:</b> " + parts.map(function (c, i) { return (i ? '<span class="sep">›</span>' : "") + '<button type="button" data-txn="' + flat.indexOf(c) + '"><i>' + (c.r >= 5 ? esc(c.n) : esc(c.n)) + '</i></button> <small>' + RK[c.r] + "</small>"; }).join("");
+  }
+  function search() {
+    var q = norm($("#txQ").value.trim()), res = $("#txRes"); res.innerHTML = "";
+    if (q.length < 2) return;
+    var toks = q.split(/\s+/), hits = flat.filter(function (n) { return n.r > 0 && toks.every(function (t) { return n.h.indexOf(t) > -1; }); });
+    hits.sort(function (a, b) { return (a.h.indexOf(q) === 0 ? 0 : 1) - (b.h.indexOf(q) === 0 ? 0 : 1) || a.r - b.r || a.n.localeCompare(b.n); });
+    hits.slice(0, 24).forEach(function (n) { var l = document.createElement("li"); l.innerHTML = '<button type="button" data-txn="' + flat.indexOf(n) + '"><i>' + esc(n.n) + "</i><small>" + RK[n.r] + "</small></button>"; res.appendChild(l); });
+    if (!hits.length) res.innerHTML = '<li class="tx-note">Nessun risultato per «' + esc($("#txQ").value) + '».</li>'; else if (hits.length > 24) { var m = document.createElement("li"); m.className = "tx-note"; m.textContent = "…e altri " + (hits.length - 24) + ": scrivi qualche lettera in più."; res.appendChild(m); }
+  }
+  function init() {
+    if (built) return;
+    var go = function (d) { build(d); kids(root).forEach(function (c) { tree.appendChild(li(c)); }); var f = tree.querySelector("details"); if (f) { f.open = true; fill(f); } };
+    if (typeof SP !== "undefined" && SP) go(SP); else fetch("libri/specie.json").then(function (r) { return r.json(); }).then(go);
+  }
+  var T2 = 0; $("#txQ").addEventListener("input", function () { if (!built) init(); clearTimeout(T2); T2 = setTimeout(search, 150); });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-txn]"); if (b) { show(flat[+b.getAttribute("data-txn")]); return; }
+    var s = e.target.closest("[data-txsp]"); if (s) { setTab("specie", true); var q = $("#spQ"); q.value = s.getAttribute("data-txsp"); q.dispatchEvent(new Event("input")); window.scrollTo(0, 0); }
+  });
+  document.getElementById("tab-albero").addEventListener("click", init);
+  window.addEventListener("hashchange", function () { if (location.hash === "#albero") init(); });
+  if (location.hash === "#albero") init();
+  [].forEach.call(document.querySelectorAll('a[href="#albero"]'), function (a) { a.addEventListener("click", init); });
+})();
+
+var PG = { lab: ["percorso", "chiave", "caratteri", "specie", "albero", "strumenti"], bib: ["biblioteca", "tavole", "pubblicazioni"] };
 var PGTXT = {
   lab: ["Didattica", "Qui i funghi si imparano facendo: il percorso didattico, la chiave dicotomica, i caratteri distintivi, le specie del Sud Italia e gli strumenti scientifici per chi determina.", "Didattica e strumenti"],
   idx: ["Studia i funghi con noi, anche da casa", "Una raccolta di strumenti e testi storici per studiare e approfondire il mondo della micologia.", "Didattica e Biblioteca"],
