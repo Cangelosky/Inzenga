@@ -879,7 +879,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>3 novembre 2026, ore 18:18</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>3 novembre 2026, ore 18:40</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -1686,10 +1686,10 @@ SPKEYS["Macrolepiota e Chlorophyllum"] = Q("Sporata", "Hai controllato la sporat
             S("Macrolepiota excoriata", "Cappello bianco-crema la cui pellicola si strappa verso il margine, lasciando la carne scoperta. Gambo bianco senza zebrature. Prati e pascoli.", ["pellicola strappata", "gambo liscio", "prati"]))
         ])),
       O("Sì, diventa arancio o rossastra", "Il taglio vira in pochi secondi",
-        SG("Mazze di tamburo che arrossano", "Chlorophyllum: grandi funghi a cappello squamoso con carne che arrossa al taglio, gambo liscio senza bande e spesso bulboso alla base. Lamelle bianche e sporata bianca. C. brunneum ha un bulbo marginato. Giardini, compost, boschi.", ["carne che arrossa", "gambo liscio", "sporata bianca", "anello scorrevole"], "Chlorophyllum rhacodes, C. brunneum"))
+        SG("Chlorophyllum che arrossano", "Chlorophyllum, non Macrolepiota: grandi funghi a cappello squamoso con carne che arrossa al taglio, gambo liscio senza bande e spesso bulboso alla base. Lamelle bianche e sporata bianca. C. brunneum ha un bulbo marginato. Giardini, compost, boschi.", ["carne che arrossa", "gambo liscio", "sporata bianca", "anello scorrevole"], "Chlorophyllum rhacodes, C. brunneum"))
     ])),
   O("Non l'ho controllata: il fungo è giovane", "Lamelle ancora bianche",
-    STOP("Mazze di tamburo giovani", "Da giovani, le Macrolepiota e Chlorophyllum molybdites hanno lamelle bianche e si somigliano molto. La sporata è bianca nelle Macrolepiota e in C. rhacodes, verde in C. molybdites.", "Sporata (cappello su un foglio per alcune ore), gambo zebrato o liscio, e se hai dubbi l'esame di un micologo.", ["Macrolepiota", "Chlorophyllum"]))
+    STOP("Macrolepiota o Chlorophyllum: da giovani non si distinguono", "Da giovani, le Macrolepiota e Chlorophyllum molybdites hanno lamelle bianche e si somigliano molto, ma sono generi diversi e non vanno trattati allo stesso modo. La sporata è bianca nelle Macrolepiota e in C. rhacodes, verde in C. molybdites.", "Sporata (cappello su un foglio per alcune ore), gambo zebrato o liscio, e se hai dubbi l'esame di un micologo.", ["Macrolepiota", "Chlorophyllum"]))
 ]);
 
 SPKEYS["Pleurotus e affini"] = Q("Substrato", "Su cosa cresce?", "Scava alla base: alcune specie sembrano a terra ma nascono su radici.", [
@@ -4469,8 +4469,8 @@ function pubFull(p, lang) {
     var rows = CMP_ROWS.map(function (r) {
       return "<tr><th scope=\"row\">" + esc(r[0]) + "</th>" + CMP_SP.map(function (n, i) { return '<td class="' + (i === me ? "me" : "") + '" data-l="' + esc(n) + '">' + esc(r[i + 1]) + "</td>"; }).join("") + "</tr>";
     }).join("");
-    return "<h3>Le mazze di tamburo a confronto</h3>" + '<table class="spd-cmp"><thead><tr><th></th>' + th + "</tr></thead><tbody>" + rows + "</tbody></table>" +
-      '<p class="spd-cmpn"><strong>Da giovani si somigliano molto: decide la sporata.</strong> Appoggia il cappello su un foglio, con le lamelle in basso, e aspetta alcune ore. Se hai dubbi, fai controllare il fungo da un micologo; questo sito non dà indicazioni di commestibilità. Bozza da verificare con il comitato scientifico. Fonti: ' +
+    return "<h3>Macrolepiota procera e Chlorophyllum a confronto</h3>" + '<table class="spd-cmp"><thead><tr><th></th>' + th + "</tr></thead><tbody>" + rows + "</tbody></table>" +
+      '<p class="spd-cmpn"><strong>Da giovani si somigliano molto, ma sono generi diversi: non vanno confusi. Decide la sporata.</strong> Appoggia il cappello su un foglio, con le lamelle in basso, e aspetta alcune ore. Se hai dubbi, fai controllare il fungo da un micologo; questo sito non dà indicazioni di commestibilità. Bozza da verificare con il comitato scientifico. Fonti: ' +
       '<a href="https://www.mushroomexpert.com/chlorophyllum_molybdites" target="_blank" rel="noopener">MushroomExpert</a>, <a href="https://www.first-nature.com/fungi/chlorophyllum-rhacodes.php" target="_blank" rel="noopener">First Nature</a>, <a href="https://alabamamushroomsociety.org/Macrolepiota" target="_blank" rel="noopener">Alabama Mushroom Society</a>.</p>';
   }
   function keySec(e) {
