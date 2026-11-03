@@ -735,6 +735,15 @@ body.pg-lab .pban-bib, body.pg-bib .pban-lab { display: none; }
 .spd-sim th { font: 600 11px/1.2 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .spd-sim button { border: 0; background: none; padding: 0; color: var(--accent); font: italic 600 13.5px var(--f-body); cursor: pointer; text-align: left; }
 @media (max-width: 560px) { .spd-sim thead { display: none; } .spd-sim tr { display: grid; padding: 6px 0; border-bottom: 1px solid var(--line); } .spd-sim td { border: 0; padding: 2px 4px; } .spd-sim td:first-child { font-weight: 600; } }
+.spd-cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.spd-cmp th, .spd-cmp td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.spd-cmp thead th { font: 600 11px/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.spd-cmp tbody th { font-weight: 600; width: 16%; }
+.spd-cmp .me { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.spd-cmp .dx { box-shadow: inset 3px 0 0 var(--accent); }
+.spd-cmpn { font-size: 13px; color: var(--muted); margin: 8px 0 0; max-width: 90ch; }
+.spd-cmpn a { color: var(--accent); }
+@media (max-width: 640px) { .spd-cmp thead { display: none; } .spd-cmp tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); } .spd-cmp th, .spd-cmp td, .spd-cmp tbody th { display: block; border: 0; padding: 2px 4px; width: auto; } .spd-cmp td::before { content: attr(data-l); display: block; font: 600 10.5px/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); } }
 .ks-genus { border-bottom: 1.5px dashed var(--line); padding-bottom: 10px; margin-bottom: 10px; display: grid; gap: 4px; }
 .ks-genus h3 { margin: 0; }
 .ks-next { font: 600 12px/1.2 var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin: 4px 0 0; }
@@ -870,7 +879,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>1 novembre 2026, ore 16:49</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>3 novembre 2026, ore 18:18</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -1290,7 +1299,7 @@ var anelloSi = Q("Dove cresce", "Il fungo con anello cresce su legno o su terra?
   O("Su terra o lettiera", "Bosco, radura, prato",
     Q("Cappello", "Il cappello è squamoso e l'anello scorre lungo il gambo?", "Prova a spostare l'anello con un dito: se scorre è mobile.", [
       O("Sì, e il fungo è grande", "Cappello oltre 10 cm da adulto, gambo lungo e screziato",
-        R("Macrolepiota e Chlorophyllum", "Gruppo", "Funghi grandi con cappello squamoso, lamelle libere e anello doppio che scorre. La carne può cambiare colore al taglio: è un carattere da annotare.", ["cappello squamoso", "anello mobile", "lamelle libere"], "Macrolepiota procera")),
+        R("Macrolepiota e Chlorophyllum", "Gruppo", "Funghi grandi con cappello squamoso, lamelle libere e anello che scorre. Da annotare: il colore della sporata (bianca, ma verde in Chlorophyllum molybdites), la superficie del gambo (zebrato o liscio) e il colore della carne al taglio.", ["cappello squamoso", "anello mobile", "lamelle libere", "sporata da controllare"], "Macrolepiota procera, Chlorophyllum molybdites")),
       O("No, o il fungo è piccolo", "Squamette fini, anello fragile o assente",
         R("Lepiota e affini", "Gruppo", "Lepiota, Leucoagaricus, Cystoderma: funghi piccoli e medi con cappello squamoso o granuloso. Per andare oltre serve spesso il microscopio.", ["squamoso o granuloso", "lamelle libere"], "Lepiota, Leucoagaricus"))
     ]))
@@ -1376,11 +1385,13 @@ var scura = Q("Aspetto", "Come si presenta il fungo?", "Per vedere il colore giu
     R("Panaeolus, Psathyrella e affini", "Gruppo", "Funghi fragili con lamelle a macchie (Panaeolus, su sterco) o cappello igrofano che cambia colore asciugando (Psathyrella, su legno marcio e terra).", ["fragili", "su sterco o legno marcio"], "Panaeolus, Psathyrella"))
 ]);
 
-var lamelle = Q("Sporata", "Di che colore è la sporata, cioè la polvere di spore?", "Appoggia il cappello, lamelle in giù, su un foglio mezzo bianco e mezzo nero. Copri con un bicchiere per qualche ora.", [
+var lamelle = Q("Sporata", "Di che colore è la sporata, cioè la polvere di spore?", "Appoggia il cappello, lamelle in giù, su un foglio mezzo bianco e mezzo nero. Copri con un bicchiere per qualche ora. Una sporata verde è rara tra i grandi funghi: se la vedi, scegli «Verde». Da giovane le lamelle sono ancora bianche, quindi aspetta la sporata.", [
   O("Bianca o crema", "Polvere chiara sul foglio nero", bianca),
   O("Rosa", "Colore salmone o rosa pallido", rosa),
   O("Bruno-ruggine o ocra", "Colore tabacco, ruggine, nocciola", ruggine),
-  O("Bruno scuro, porpora o nera", "Cioccolato, violaceo, nero", scura)
+  O("Bruno scuro, porpora o nera", "Cioccolato, violaceo, nero", scura),
+  O("Verde o grigio-verdastra", "Rara: grandi funghi di prati e giardini",
+    S("Chlorophyllum molybdites", "Cappello grande (oltre 10 cm), da bianco a crema, con squame brune concentrate al centro che si rompono a placche. Lamelle libere, bianche da giovani e poi grigio-verdastre; sporata verde grigiastra. Gambo liscio, senza le bande brune a pelle di serpente della Macrolepiota procera, appena ingrossato alla base; anello bianco e persistente. La carne è bianca, ma alla base può arrossire un poco. Prati, giardini e parchi; specie di origine tropicale, segnalata in Sicilia e nel Sud Italia.", ["sporata verde", "lamelle grigio-verdastre", "gambo liscio"], "Agaricus molybdites"))
 ]);
 
 /* ---------- Tubuli con pori ---------- */
@@ -1662,18 +1673,23 @@ SPKEYS["Lactarius"] = Q("Latice", "Di che colore è il latice appena esce, e cam
     ]))
 ]);
 
-SPKEYS["Macrolepiota e Chlorophyllum"] = Q("Carne", "Taglia il gambo: la carne diventa arancio o rossastra?", "Aspetta un minuto: il viraggio può essere lento.", [
-  O("No, resta bianca", "Nessun cambiamento",
-    Q("Cappello", "Com'è il fungo?", null, [
-      O("Molto grande, gambo zebrato di bruno", "Cappello con squame brune su fondo chiaro",
-        S("Macrolepiota procera", "Il cappello arriva a 30 cm, con un umbone bruno e squame brune su fondo crema. Gambo lungo e zebrato a bande brune, anello doppio che scorre. Prati e radure.", ["gambo zebrato", "anello scorrevole", "molto grande"])),
-      O("Medio, bianco, con umbone netto", "Squamette fini, gambo poco zebrato",
-        S("Macrolepiota mastoidea", "Cappello bianco-crema con umbone a capezzolo e squamette fini. Gambo bianco con zebrature leggere. Bordi dei boschi e radure.", ["umbone a capezzolo", "squame fini"])),
-      O("Cappello che si lacera a stella", "Gambo bianco liscio, nei prati",
-        S("Macrolepiota excoriata", "Cappello bianco-crema la cui pellicola si strappa verso il margine, lasciando la carne scoperta. Gambo bianco senza zebrature. Prati e pascoli.", ["pellicola strappata", "gambo liscio", "prati"]))
+SPKEYS["Macrolepiota e Chlorophyllum"] = Q("Sporata", "Hai controllato la sporata? Com'è?", "Appoggia il cappello, con le lamelle in basso, su un foglio e lascialo alcune ore. Da giovani, tutte queste specie hanno lamelle bianche: la sporata verde di Chlorophyllum molybdites compare solo dopo. Se è verde, torna indietro e scegli «Verde» alla domanda sulla sporata.", [
+  O("Bianca, controllata dopo alcune ore", "Bianca o crema chiaro",
+    Q("Carne", "Taglia il gambo: la carne diventa arancio o rossastra?", "Aspetta un minuto: il viraggio può essere lento.", [
+      O("No, resta bianca", "Nessun cambiamento",
+        Q("Cappello", "Com'è il fungo?", null, [
+          O("Molto grande, gambo zebrato di bruno", "Cappello con squame brune su fondo chiaro",
+            S("Macrolepiota procera", "Il cappello arriva a 30 cm, con un umbone bruno e squame brune su fondo crema. Gambo lungo e zebrato a bande brune, anello doppio che scorre. Lamelle bianche e sporata bianca (verde in Chlorophyllum molybdites). Prati e radure.", ["gambo zebrato", "anello scorrevole", "molto grande", "sporata bianca"])),
+          O("Medio, bianco, con umbone netto", "Squamette fini, gambo poco zebrato",
+            S("Macrolepiota mastoidea", "Cappello bianco-crema con umbone a capezzolo e squamette fini. Gambo bianco con zebrature leggere. Bordi dei boschi e radure.", ["umbone a capezzolo", "squame fini"])),
+          O("Cappello che si lacera a stella", "Gambo bianco liscio, nei prati",
+            S("Macrolepiota excoriata", "Cappello bianco-crema la cui pellicola si strappa verso il margine, lasciando la carne scoperta. Gambo bianco senza zebrature. Prati e pascoli.", ["pellicola strappata", "gambo liscio", "prati"]))
+        ])),
+      O("Sì, diventa arancio o rossastra", "Il taglio vira in pochi secondi",
+        SG("Mazze di tamburo che arrossano", "Chlorophyllum: grandi funghi a cappello squamoso con carne che arrossa al taglio, gambo liscio senza bande e spesso bulboso alla base. Lamelle bianche e sporata bianca. C. brunneum ha un bulbo marginato. Giardini, compost, boschi.", ["carne che arrossa", "gambo liscio", "sporata bianca", "anello scorrevole"], "Chlorophyllum rhacodes, C. brunneum"))
     ])),
-  O("Sì, diventa arancio o rossastra", "Il taglio vira in pochi secondi",
-    SG("Mazze di tamburo che arrossano", "Chlorophyllum: grandi funghi a cappello squamoso con carne che arrossa al taglio. C. brunneum ha un bulbo marginato. Giardini, compost, boschi.", ["carne che arrossa", "anello scorrevole"], "Chlorophyllum rhacodes, C. brunneum"))
+  O("Non l'ho controllata: il fungo è giovane", "Lamelle ancora bianche",
+    STOP("Mazze di tamburo giovani", "Da giovani, le Macrolepiota e Chlorophyllum molybdites hanno lamelle bianche e si somigliano molto. La sporata è bianca nelle Macrolepiota e in C. rhacodes, verde in C. molybdites.", "Sporata (cappello su un foglio per alcune ore), gambo zebrato o liscio, e se hai dubbi l'esame di un micologo.", ["Macrolepiota", "Chlorophyllum"]))
 ]);
 
 SPKEYS["Pleurotus e affini"] = Q("Substrato", "Su cosa cresce?", "Scava alla base: alcune specie sembrano a terra ma nascono su radici.", [
@@ -4139,7 +4155,7 @@ var SPO = [
   ["Ocra, ruggine o bruno-arancio", "#B46A2C", "Cortinarius, Pholiota, Gymnopilus, Galerina, Agrocybe, Hebeloma (bruno argilla), Inocybe (bruno tabacco)"],
   ["Bruno-porpora o cioccolato", "#5A3A3A", "Agaricus, Stropharia, Hypholoma"],
   ["Nera", "#1E1B1A", "Coprinus, Coprinopsis, Panaeolus; Psathyrella da bruno scuro a nera"],
-  ["Verde", "#9DB58A", "Chlorophyllum molybdites: sporata verde, carattere raro tra i grandi funghi; specie di origine tropicale, in Europa solo segnalazioni sporadiche"],
+  ["Verde", "#9DB58A", "Chlorophyllum molybdites: sporata verde, carattere raro tra i grandi funghi; specie di origine tropicale, segnalata in Sicilia e in altre regioni del Sud Italia, simile alle Macrolepiota quando è giovane e ha le lamelle ancora bianche"],
   ["Bruno-olivastra", "#6E6A3C", "molti boleti, come Boletus e Suillus; rosa-vinosa in Tylopilus"]
 ];
 $("#spoList").innerHTML = SPO.map(function (s) {
@@ -4434,16 +4450,35 @@ function pubFull(p, lang) {
       '<div class="spd-media">' + figs + ph + "</div>" + (badges(e) ? '<p class="sp-bds">' + badges(e) + "</p>" : "") +
       (e.t ? '<h3>Dove è stata segnalata</h3><div class="sp-mapw">' + regMap(e) + '<div><p class="sp-rgs">' + regs(e, true) + '</p><p class="sp-old sp-ml">Più la regione è scura, più segnalazioni ci sono. Cartina semplificata (@svg-maps/italy, CC BY 4.0); dati GBIF.</p></div></div><p class="sp-old">' + e.t + (e.t === 1 ? " segnalazione" : " segnalazioni") + " nel Sud Italia su GBIF. Il numero dice quanto è stata registrata, non quanto è comune.</p>" : "") +
       (e.k ? '<div class="gbif-box"><div class="bk-act"><button class="btn" type="button" data-gbif="' + e.k + '" aria-expanded="false">Mostra la mappa dei ritrovamenti</button></div><div class="gbif-map" hidden></div></div>' : "") +
-      keySec(e) +
+      keySec(e) + cmpSec(e) +
       (old ? "<h3>Nomi antichi</h3><ul class=\"spd-old\">" + old + "</ul>" : "") + (e.x ? '<p class="sp-old">' + esc(e.x) + "</p>" : "") +
       '<div class="bk-act"><button class="btn" type="button" data-sp-libri="' + esc(e.n) + '">Cerca nei libri</button>' + "</div>";
+  }
+  var CMP_SP = ["Macrolepiota procera", "Chlorophyllum rhacodes", "Chlorophyllum molybdites"];
+  var CMP_ROWS = [
+    ["Gambo", "Con bande brune a pelle di serpente (piccole scaglie a V)", "Liscio, senza bande; grande bulbo alla base", "Liscio, senza bande; appena ingrossato alla base"],
+    ["Lamelle da adulto", "Bianche, a volte con una sfumatura rosata", "Bianche; arrossano se toccate o tagliate", "Bianche da giovani, poi grigio-verdastre"],
+    ["Sporata", "Bianca", "Bianca o crema chiaro", "Verde grigiastra"],
+    ["Carne al taglio", "Bianca, senza viraggi evidenti", "Arrossa, nel gambo e nel cappello", "Bianca; alla base del gambo può arrossire un poco"],
+    ["Cappello", "Umbone bruno al centro e squame brune piccole su fondo chiaro", "Squame brune più grosse e scagliose su fondo chiaro", "Da bianco a crema, con squame brune concentrate al centro"],
+    ["Dove", "Prati, radure, margini di bosco", "Boschi, siepi, terreno ricco di humus", "Prati, giardini e parchi, spesso in file o cerchi"]
+  ];
+  function cmpSec(e) {
+    var me = CMP_SP.indexOf(e.n); if (me < 0) return "";
+    var th = CMP_SP.map(function (n, i) { return '<th class="' + (i === me ? "me" : "") + '"><i>' + esc(n) + "</i></th>"; }).join("");
+    var rows = CMP_ROWS.map(function (r) {
+      return "<tr><th scope=\"row\">" + esc(r[0]) + "</th>" + CMP_SP.map(function (n, i) { return '<td class="' + (i === me ? "me" : "") + '" data-l="' + esc(n) + '">' + esc(r[i + 1]) + "</td>"; }).join("") + "</tr>";
+    }).join("");
+    return "<h3>Le mazze di tamburo a confronto</h3>" + '<table class="spd-cmp"><thead><tr><th></th>' + th + "</tr></thead><tbody>" + rows + "</tbody></table>" +
+      '<p class="spd-cmpn"><strong>Da giovani si somigliano molto: decide la sporata.</strong> Appoggia il cappello su un foglio, con le lamelle in basso, e aspetta alcune ore. Se hai dubbi, fai controllare il fungo da un micologo; questo sito non dà indicazioni di commestibilità. Bozza da verificare con il comitato scientifico. Fonti: ' +
+      '<a href="https://www.mushroomexpert.com/chlorophyllum_molybdites" target="_blank" rel="noopener">MushroomExpert</a>, <a href="https://www.first-nature.com/fungi/chlorophyllum-rhacodes.php" target="_blank" rel="noopener">First Nature</a>, <a href="https://alabamamushroomsociety.org/Macrolepiota" target="_blank" rel="noopener">Alabama Mushroom Society</a>.</p>';
   }
   function keySec(e) {
     var K = window.keyInfo && keyInfo(e.n); if (!K) return "";
     var h = "<h3>Nella chiave dicotomica</h3>";
     if (!K.path.length) return h + '<p class="sp-old">La chiave arriva fino a «' + esc(K.at) + '». Per separare questa specie dalle altre servono altri caratteri, spesso il microscopio.</p><div class="bk-act"><button class="btn" type="button" data-key-go="' + esc(e.n) + '">Vai nella chiave dicotomica</button></div>';
     h += '<div class="spd-key"><ol class="spd-qa">' + K.path.map(function (p) { return "<li><span class=\"q\">" + esc(p.q) + "</span> <b>" + esc(p.a) + "</b></li>"; }).join("") + '</ol><div class="bk-act"><button class="btn" type="button" data-key-go="' + esc(e.n) + '">Seguila nella chiave dicotomica</button></div></div>';
-    if (K.sims.length) h += "<h3>Come distinguerla dalle simili</h3>" + '<table class="spd-sim"><thead><tr><th>Simile</th><th>Questa specie</th><th>La simile</th></tr></thead><tbody>' + K.sims.map(function (x) { return '<tr><td><button type="button" data-spk-sim="' + esc(x.name) + '">' + esc(x.name) + "</button>" + (x.rank !== "Specie" ? " <small>(gruppo)</small>" : "") + "</td><td>" + esc(x.mine) + "</td><td>" + esc(x.theirs) + "</td></tr>"; }).join("") + "</tbody></table>";
+    if (K.sims.length && e.n !== "Chlorophyllum molybdites") h += "<h3>Come distinguerla dalle simili</h3>" + '<table class="spd-sim"><thead><tr><th>Simile</th><th>Questa specie</th><th>La simile</th></tr></thead><tbody>' + K.sims.map(function (x) { return '<tr><td><button type="button" data-spk-sim="' + esc(x.name) + '">' + esc(x.name) + "</button>" + (x.rank !== "Specie" ? " <small>(gruppo)</small>" : "") + "</td><td>" + esc(x.mine) + "</td><td>" + esc(x.theirs) + "</td></tr>"; }).join("") + "</tbody></table>";
     return h;
   }
 
