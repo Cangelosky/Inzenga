@@ -6,6 +6,7 @@
 <title>Identificatore a caratteri liberi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex,nofollow">
+<script src="../tossici.js"></script>
 <script>try{if(localStorage.getItem("inz-gate")!=="1"){document.documentElement.style.display="none";location.replace("../")}}catch(e){}
 if(window.self!==window.top)document.documentElement.className="emb";</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -168,6 +169,7 @@ h3.add { font: 600 15px/1.2 var(--f-display); margin: 16px 0 6px; padding-top: 1
 </defs></svg>
 <div class="wrap">
   <h1>Descrivi il fungo come viene</h1>
+  <script>document.write(window.TX ? TX.general() : "")</script>
   <p class="lead">Aggiungi i caratteri nell'ordine che preferisci, tra tutti quelli della sezione «I caratteri distintivi». Quelli scelti restano sempre in vista e puoi cambiarli quando vuoi.</p>
   <span class="note">Bozza · 387 specie, caratteri da verificare</span>
   <div class="grid">
@@ -249,7 +251,7 @@ function resultHTML(cs) {
   if (!cs.length) return '<div class="empty"><b>Nessuna specie con questa combinazione.</b><span>Nella lista di esempio non c\'è. Togli l\'ultimo carattere o quello di cui sei meno sicuro.</span></div>';
   return '<p class="qnote">Il punto interrogativo <b>?</b> vuol dire che quel carattere non è ancora registrato per la specie: succede, per esempio, ai funghi senza un vero cappello, come tartufi, vesce, stelle di terra e polipori.</p><ul class="list">' + cs.map(function (sp) {
     var cf = sp.v.cf ? ico('cf', sp.v.cf[0], 56) : '<span></span>';
-    return '<li class="row">' + cf + '<div><div class="nm"><i>' + esc(sp.n) + '</i> <span class="sw" title="' + esc((sp.v.col || [''])[0]) + '" style="background:' + (sp.v.col ? SW[sp.v.col[0]] : 'transparent') + '"></span></div><div class="tg">' +
+    return '<li class="row">' + cf + '<div><div class="nm"><i>' + esc(sp.n) + '</i> ' + (window.TX ? TX.badge(TX.sp(sp.n)) : '') + ' <span class="sw" title="' + esc((sp.v.col || [''])[0]) + '" style="background:' + (sp.v.col ? SW[sp.v.col[0]] : 'transparent') + '"></span></div><div class="tg">' +
       order.map(function (id) { var v = sp.v[id]; return known(sp, id) ? '<span class="t on">' + esc(v.join(', ')) + '</span>' : '<span class="t q" title="Carattere non ancora registrato per questa specie">' + esc(chById(id).label) + ' ?</span>'; }).join('') + '</div>' +
       (function () { var oth = CH.filter(function (c) { return order.indexOf(c.id) < 0 && known(sp, c.id); }); return oth.length ? '<details class="ot"><summary>Altri caratteri (' + oth.length + ')</summary><p>' + oth.map(function (c) { return '<span><b>' + esc(c.label) + ':</b> ' + esc(sp.v[c.id].join(', ')) + '</span>'; }).join(' · ') + '</p></details>' : ''; })() +
       '<a class="lk" href="#" data-sp="' + esc(sp.n) + '">Apri la scheda ›</a></div></li>';

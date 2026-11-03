@@ -859,6 +859,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <meta name="robots" content="noindex,nofollow">
 <style>#inzGate{position:fixed;inset:0;z-index:9999;background:#15362A;color:#E8EFE3;display:flex;align-items:center;justify-content:center;padding:24px;font-family:"Instrument Sans",system-ui,sans-serif}#inzGate form{width:min(380px,100%);display:grid;gap:14px}#inzGate h1{font:700 26px/1.15 "Bricolage Grotesque",system-ui,sans-serif;margin:0}#inzGate p{margin:0;color:#C9D8C6;font-size:16px;line-height:1.5}#inzGate input{font:inherit;font-size:17px;padding:12px 14px;border-radius:12px;border:1px solid #4B7A62;background:#1F4A38;color:#fff}#inzGate button{font:inherit;font-weight:600;font-size:16px;padding:12px 18px;border-radius:999px;border:0;background:#E2AB3C;color:#1A2A20;cursor:pointer}#inzGate .e{color:#F4C987;min-height:1.2em}</style>
 <div id="inzGate"><form autocomplete="off"><h1>Anteprima riservata</h1><p>Sito dell'Associazione Micologica Giuseppe Inzenga, in prova. Inserisci la password che ti è stata data.</p><label style="display:grid;gap:6px;font-weight:600">Password<input id="inzGateP" type="password" autocomplete="current-password"></label><button type="submit">Entra</button><p class="e" id="inzGateE" role="alert"></p></form></div>
+<script src="tossici.js"></script>
 <script>(function(){var g=document.getElementById('inzGate'),ok=false;try{ok=localStorage.getItem('inz-gate')==='1'}catch(e){}if(ok){g.remove();return}g.querySelector('form').addEventListener('submit',function(e){e.preventDefault();if(document.getElementById('inzGateP').value.trim().toLowerCase()==='inzenga2027'){try{localStorage.setItem('inz-gate','1')}catch(e){}g.remove()}else{document.getElementById('inzGateE').textContent='Password non corretta.'}});document.getElementById('inzGateP').focus()})();</script>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -879,7 +880,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>3 novembre 2026, ore 18:40</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>3 novembre 2026, ore 18:45</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
 <div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
@@ -2432,7 +2433,7 @@ function leafHTML(n, compact) {
   return '<div class="' + cls.join(" ") + '"' + attrs + ">" +
     '<div class="card-top"><span class="rank">' + esc(n.rank) + "</span></div>" +
     '<h3 class="' + (n.rank === "Genere" || n.rank === "Specie" ? "latin" : "") + '">' + esc(n.name) + "</h3>" +
-    '<p class="desc">' + esc(n.desc) + "</p>" + (n.sp ? (compact ? "" : spMedia(n)) : leafImgHTML(n, compact)) + feats + eg + (n.syn ? '<p class="eg"><span>Nome antico</span> <i>' + esc(n.syn) + "</i></p>" : "") + (n.stop && !compact ? '<p class="ks-stop"><b>Per andare avanti serve:</b> ' + esc(n.stop) + '</p><p class="eg">Le specie possibili sono nel riquadro «Specie che restano».</p>' : "") + "</div>";
+    '<p class="desc">' + esc(n.desc) + "</p>" + (window.TX ? (function () { var l = n.sp && !n.stop && n.rank === "Specie" ? TX.sp(n.name) : TX.txt(n.name + " " + (n.eg || "") + " " + (n.gen ? n.gen.join(" ") : "")); return compact ? TX.badge(l) : TX.banner(l, !(n.sp && !n.stop && n.rank === "Specie")); })() : "") + (n.sp ? (compact ? "" : spMedia(n)) : leafImgHTML(n, compact)) + feats + eg + (n.syn ? '<p class="eg"><span>Nome antico</span> <i>' + esc(n.syn) + "</i></p>" : "") + (n.stop && !compact ? '<p class="ks-stop"><b>Per andare avanti serve:</b> ' + esc(n.stop) + '</p><p class="eg">Le specie possibili sono nel riquadro «Specie che restano».</p>' : "") + "</div>";
 }
 function nodeHTML(n, depth, parentMulti) {
   if (!n.q) return '<div class="branch">' + leafHTML(n, parentMulti && !state.detail.has(n.id)) + "</div>";
@@ -2497,8 +2498,8 @@ function render(scrollToOpt) {
   function archFor(gs) { var o = []; gs.forEach(function (g) { (BYG[g] || []).forEach(function (e) { o.push(e); }); }); o.sort(function (a, b) { return b.t - a.t; }); return o; }
   function optOf(n) { return n.parentOpt ? n.parentOpt.l : ""; }
   function thumb(name) { var m = window.KSP && KSP[name]; var src = m && (m.ph || m.tv); return src ? '<img loading="lazy" src="' + src + '" alt="">' : '<span class="ci-ph" aria-hidden="true">●</span>'; }
-  function item(l) { return '<li><button type="button" class="cand-it" data-cgo="' + l.id + '">' + thumb(l.name) + '<span><b>' + esc(l.name) + '</b><small>' + esc(l.rank !== "Specie" ? l.rank : (l.feats || []).slice(0, 2).join(" · ")) + "</small></span></button></li>"; }
-  function archItem(e) { return '<li><button type="button" class="cand-it" data-cspk="' + esc(e.n) + '">' + (e.tv || e.ph ? '<img loading="lazy" src="' + (e.ph ? e.ph[0] : (window.KSP && KSP[e.n] && KSP[e.n].tv) || "") + '" alt="">' : '<span class="ci-ph" aria-hidden="true">●</span>') + '<span><b>' + esc(e.n) + '</b><small>' + (e.t || 0) + (e.t === 1 ? " segnalazione" : " segnalazioni") + " nel Sud</small></span></button></li>"; }
+  function item(l) { return '<li><button type="button" class="cand-it" data-cgo="' + l.id + '">' + thumb(l.name) + '<span><b>' + esc(l.name) + '</b>' + (window.TX ? TX.badge(l.rank === "Specie" && !l.stop ? TX.sp(l.name) : TX.txt(l.name + " " + (l.eg || "") + " " + (l.gen ? l.gen.join(" ") : ""))) : "") + '<small>' + esc(l.rank !== "Specie" ? l.rank : (l.feats || []).slice(0, 2).join(" · ")) + "</small></span></button></li>"; }
+  function archItem(e) { return '<li><button type="button" class="cand-it" data-cspk="' + esc(e.n) + '">' + (e.tv || e.ph ? '<img loading="lazy" src="' + (e.ph ? e.ph[0] : (window.KSP && KSP[e.n] && KSP[e.n].tv) || "") + '" alt="">' : '<span class="ci-ph" aria-hidden="true">●</span>') + '<span><b>' + esc(e.n) + '</b>' + (window.TX ? TX.badge(TX.sp(e.n)) : "") + '<small>' + (e.t || 0) + (e.t === 1 ? " segnalazione" : " segnalazioni") + " nel Sud</small></span></button></li>"; }
   window.renderCand = function () {
     var p = pathInfo(), end = p.out.length ? p.end : KEY, body = $("#candBody"), head = $("#candHead");
     if (end !== lastEnd) { showAll = false; lastEnd = end; }
@@ -4422,7 +4423,7 @@ function pubFull(p, lang) {
     return '<svg class="rm" viewBox="' + ITM.vb.join(" ") + '" role="img" aria-label="Cartina del Sud Italia: regioni colorate in base al numero di segnalazioni di ' + esc(e.n) + '">' + s + "</svg>";
   }
   function regs(e, n) { return Object.keys(RG).filter(function (k) { return e.r && e.r[k]; }).map(function (k) { return '<span class="sp-rg" title="' + e.r[k] + ' segnalazioni">' + RG[k] + (n ? " · " + e.r[k] : "") + "</span>"; }).join(""); }
-  function badges(e) { return (e.tv ? '<span class="sp-bd">Tavola storica</span>' : "") + (e.ph ? '<span class="sp-bd">' + (e.pm && e.pm.every(function (q) { return q.r; }) ? "Foto di riferimento" : "Foto dal vero") + (e.ph.length > 1 ? " (" + e.ph.length + ")" : "") + "</span>" : ""); }
+  function badges(e) { return (window.TX ? TX.badge(TX.sp(e.n)) : "") + (e.tv ? '<span class="sp-bd">Tavola storica</span>' : "") + (e.ph ? '<span class="sp-bd">' + (e.pm && e.pm.every(function (q) { return q.r; }) ? "Foto di riferimento" : "Foto dal vero") + (e.ph.length > 1 ? " (" + e.ph.length + ")" : "") + "</span>" : ""); }
   function card(e) {
     var reg = regs(e), b = badges(e), src = e.tv ? tvSrc(e.tv[0]) : null;
     var media = '<span class="sp-media">' + (src ? '<img class="sp-tv" loading="lazy" src="' + src + '" alt="">' : "") + (e.ph ? '<img class="sp-ph" loading="lazy" src="' + e.ph[0] + '" alt=""' + fpos((e.pm || [])[0]) + ">" : MISS) + "</span>";
@@ -4446,7 +4447,7 @@ function pubFull(p, lang) {
       '<figure class="spd-fig spd-miss">' + MISS + "<figcaption>Non abbiamo ancora una foto di questa specie. Se ne hai una con determinazione certa, mandala all'associazione.</figcaption></figure>";
     if (!figs) figs = '<figure class="spd-fig spd-miss"><span class="sp-miss">Nessun disegno</span><figcaption>Nessuna tavola dei libri della Biblioteca per questa specie.</figcaption></figure>';
     var old = (e.on || []).map(function (x) { return "<li><i>" + esc(x[1]) + "</i> · " + esc(x[0]) + "</li>"; }).join("");
-    return '<h2><i>' + esc(e.n) + '</i> <span class="iz-a">' + esc(e.a || "") + '</span></h2><p class="iz-m">' + esc(GR[e.g] || "") + (e.f ? " · famiglia " + esc(e.f) : "") + (e.o ? " · ordine " + esc(e.o) : "") + "</p>" +
+    return '<h2><i>' + esc(e.n) + '</i> <span class="iz-a">' + esc(e.a || "") + '</span></h2><p class="iz-m">' + esc(GR[e.g] || "") + (e.f ? " · famiglia " + esc(e.f) : "") + (e.o ? " · ordine " + esc(e.o) : "") + "</p>" + (window.TX ? TX.banner(TX.sp(e.n)) : "") +
       '<div class="spd-media">' + figs + ph + "</div>" + (badges(e) ? '<p class="sp-bds">' + badges(e) + "</p>" : "") +
       (e.t ? '<h3>Dove è stata segnalata</h3><div class="sp-mapw">' + regMap(e) + '<div><p class="sp-rgs">' + regs(e, true) + '</p><p class="sp-old sp-ml">Più la regione è scura, più segnalazioni ci sono. Cartina semplificata (@svg-maps/italy, CC BY 4.0); dati GBIF.</p></div></div><p class="sp-old">' + e.t + (e.t === 1 ? " segnalazione" : " segnalazioni") + " nel Sud Italia su GBIF. Il numero dice quanto è stata registrata, non quanto è comune.</p>" : "") +
       (e.k ? '<div class="gbif-box"><div class="bk-act"><button class="btn" type="button" data-gbif="' + e.k + '" aria-expanded="false">Mostra la mappa dei ritrovamenti</button></div><div class="gbif-map" hidden></div></div>' : "") +
@@ -4478,7 +4479,7 @@ function pubFull(p, lang) {
     var h = "<h3>Nella chiave dicotomica</h3>";
     if (!K.path.length) return h + '<p class="sp-old">La chiave arriva fino a «' + esc(K.at) + '». Per separare questa specie dalle altre servono altri caratteri, spesso il microscopio.</p><div class="bk-act"><button class="btn" type="button" data-key-go="' + esc(e.n) + '">Vai nella chiave dicotomica</button></div>';
     h += '<div class="spd-key"><ol class="spd-qa">' + K.path.map(function (p) { return "<li><span class=\"q\">" + esc(p.q) + "</span> <b>" + esc(p.a) + "</b></li>"; }).join("") + '</ol><div class="bk-act"><button class="btn" type="button" data-key-go="' + esc(e.n) + '">Seguila nella chiave dicotomica</button></div></div>';
-    if (K.sims.length && e.n !== "Chlorophyllum molybdites") h += "<h3>Come distinguerla dalle simili</h3>" + '<table class="spd-sim"><thead><tr><th>Simile</th><th>Questa specie</th><th>La simile</th></tr></thead><tbody>' + K.sims.map(function (x) { return '<tr><td><button type="button" data-spk-sim="' + esc(x.name) + '">' + esc(x.name) + "</button>" + (x.rank !== "Specie" ? " <small>(gruppo)</small>" : "") + "</td><td>" + esc(x.mine) + "</td><td>" + esc(x.theirs) + "</td></tr>"; }).join("") + "</tbody></table>";
+    if (K.sims.length && e.n !== "Chlorophyllum molybdites") h += "<h3>Come distinguerla dalle simili</h3>" + '<table class="spd-sim"><thead><tr><th>Simile</th><th>Questa specie</th><th>La simile</th></tr></thead><tbody>' + K.sims.map(function (x) { return '<tr><td><button type="button" data-spk-sim="' + esc(x.name) + '">' + esc(x.name) + "</button>" + (window.TX ? TX.badge(TX.sp(x.name)) : "") + (x.rank !== "Specie" ? " <small>(gruppo)</small>" : "") + "</td><td>" + esc(x.mine) + "</td><td>" + esc(x.theirs) + "</td></tr>"; }).join("") + "</tbody></table>";
     return h;
   }
 
@@ -4849,4 +4850,6 @@ window.addEventListener("hashchange", function () { setTab(location.hash.replace
   sec.addEventListener("click", function (e) { var b = e.target.closest("[data-kmode]"); if (b) mode(b.getAttribute("data-kmode")); });
 })();
 </script>
-<script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})});</script>
+<script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})});
+try { var __sh = document.querySelector('.sheet'); if (__sh && window.TX) __sh.insertAdjacentHTML('afterbegin', TX.general()); } catch (e) {}
+</script>
