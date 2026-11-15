@@ -11,17 +11,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>(function(){try{var m=localStorage.getItem('inz-mode');if(m==='dark'||m==='light')document.documentElement.setAttribute('data-theme',m);}catch(e){}})();</script>
 <style>
 /* Gestionale del Consiglio Direttivo. Palette Radura come il sito pubblico.
    Si apre su "Oggi"; aree per compiti, al massimo due livelli. */
 :root {
   --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
-  --bg: #EAF0DF; --card: #FAFCF4; --ink: #14231B; --ink-2: #33453A; --line: #C0CFB0;
+  --bg: #FFFFFF; --card: #FFFFFF; --ink: #14231B; --ink-2: #3A4B40; --line: #D5DFCC;
   --link: #1B5C3A; --forest: #1F4A38; --forest-ink: #F0F5E8; --fill: #2A6048;
   --ok-bg: #D7EBDF; --ok-ink: #1B5C3A; --warn-bg: #F4EAC2; --warn-ink: #6B4A06; --crit-bg: #F5D9B8; --crit-ink: #7A3410;
   --stamp: #A8321C; --focus: #1B5C3A; --gold: #E2AB3C;
   color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1511; --card: #151E18; --ink: #E7EEE6; --ink-2: #B3C2B7; --line: #2C3B32;
+    --link: #8FD3AA; --forest: #1F4A38; --forest-ink: #F0F5E8; --fill: #4FA27A;
+    --ok-bg: #18382B; --ok-ink: #9AD9B4; --warn-bg: #3A3117; --warn-ink: #F0D58A; --crit-bg: #45281A; --crit-ink: #F5B795;
+    --stamp: #F08B6E; --focus: #8FD3AA; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1511; --card: #151E18; --ink: #E7EEE6; --ink-2: #B3C2B7; --line: #2C3B32;
+  --link: #8FD3AA; --forest: #1F4A38; --forest-ink: #F0F5E8; --fill: #4FA27A;
+  --ok-bg: #18382B; --ok-ink: #9AD9B4; --warn-bg: #3A3117; --warn-ink: #F0D58A; --crit-bg: #45281A; --crit-ink: #F5B795;
+  --stamp: #F08B6E; --focus: #8FD3AA; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -50,6 +65,10 @@ button, select, input, textarea { font: inherit; color: inherit; }
 #login .qb button { background: #F0F5E8; color: #14231B; font-size: 16px; }
 @media (max-width: 520px) { #search { flex-wrap: wrap; } #search input { flex: 1 1 100%; } #search .btn { flex: 1 1 0; } }
 #addBtn { white-space: nowrap; }
+footer .tema { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-left: 8px; }
+footer .tema button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 2px 10px; cursor: pointer; font-size: 14px; color: var(--ink); }
+footer .tema button[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink); border-color: var(--forest); }
+.box { box-shadow: 0 1px 0 rgba(20,35,27,.03); }
 
 /* intestazione */
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 14px 18px; background: var(--forest); color: var(--forest-ink); border-radius: 14px; }
@@ -60,7 +79,7 @@ button, select, input, textarea { font: inherit; color: inherit; }
 .top .who a, .top .who button { color: var(--forest-ink); background: none; border: 1px solid rgba(240,245,232,.5); border-radius: 999px; padding: 4px 12px; cursor: pointer; text-decoration: none; font-size: 15px; }
 .bar2 { display: grid; gap: 10px; }
 nav.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
-nav.tabs a { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 16.5px; }
+nav.tabs a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 4px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; }
 nav.tabs a[aria-current="page"] { background: var(--forest); color: var(--forest-ink); border-color: var(--forest); }
 nav.tabs .n { font-size: 13.5px; min-width: 24px; padding: 0 7px; border-radius: 999px; background: var(--crit-bg); color: var(--crit-ink); text-align: center; }
 form.search { display: flex; gap: 8px; }
@@ -244,7 +263,7 @@ a.card:hover { border-color: var(--link); }
 .ev.rit { background: transparent; border-color: var(--line); color: var(--ink-2); }
 .ev.sca { background: var(--crit-bg); border-color: var(--stamp); }
 .ev.pas { background: var(--warn-bg); border-color: var(--gold); }
-.ev.chk { background: #E4E9F2; border-color: #4C6A92; }
+.ev.chk { background: color-mix(in srgb, #4C6A92 18%, var(--card)); border-color: #4C6A92; }
 .ev.done { text-decoration: line-through; opacity: .65; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 15px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -317,6 +336,40 @@ i.sw { width: 16px; height: 16px; border-radius: 4px; display: inline-block; bac
 .mini-f input { min-height: 40px; padding: 4px 10px; border: 2px solid var(--line); border-radius: 8px; background: var(--card); font-size: 15.5px; }
 table.pre td select { min-height: 40px; border: 2px solid var(--line); border-radius: 8px; background: var(--card); font-weight: 600; }
 
+/* rifiniture v4 */
+.hero { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 980px) { .hero { grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); } }
+.hero-l { display: grid; gap: 14px; min-width: 0; }
+.stats.s5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.stats.s5 b { font-size: 30px; } .stats.s5 a { padding: 12px 14px; } .stats.s5 span { font-size: 14.5px; line-height: 1.3; display: block; }
+@media (max-width: 860px) { .stats.s5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .stats.s5 a { border-left: 0; border-top: 1px solid var(--line); border-radius: 0 !important; } }
+.carica h2 { font-size: 20px; }
+.cc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .cc { grid-template-columns: 1fr; } }
+ul.plain.sm li, ul.sm li { font-size: 15.5px; line-height: 1.45; }
+.quadro { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.qd { border-radius: 12px; padding: 12px 14px; display: grid; gap: 10px; align-content: start; border: 1px solid var(--line); }
+.qrow { display: grid; gap: 4px; color: inherit; text-decoration: none; }
+.qrow:hover b { color: var(--link); text-decoration: underline; }
+.mt { display: inline; } .mt + .mt::before { content: " · "; }
+.mt em { font-style: normal; font-weight: 600; color: var(--ink); }
+.ruolo-r .rr { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .ruolo-r .rr { grid-template-columns: 1fr; } }
+.btn.sm { min-height: 38px; padding: 4px 14px; font-size: 15px; }
+.btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
+.azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+details.ed { margin-top: 6px; }
+details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; font-size: 15.5px; width: fit-content; }
+.check .cb { display: grid; gap: 2px; min-width: 0; }
+.doclink { display: inline-flex; gap: 6px; align-items: baseline; border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 6px 10px; color: var(--link); text-decoration: none; font-weight: 600; cursor: pointer; font-size: 15.5px; }
+.doclink.off { color: var(--ink-2); }
+.docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.rq .chips { flex-wrap: nowrap; }
+.cal .day { position: relative; }
+.cal .addday { position: absolute; top: 4px; right: 6px; width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center; text-decoration: none; color: var(--link); font-weight: 700; opacity: 0; border: 1px solid var(--line); background: var(--card); }
+.cal .day:hover .addday, .cal .addday:focus { opacity: 1; }
+
 /* registro */
 .reg { list-style: none; margin: 0; padding: 0; display: grid; }
 .reg li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 14px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 16.5px; }
@@ -359,15 +412,16 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
 
   <div id="app" hidden>
     <header class="top">
-      <div class="brand"><strong>Gestionale del Consiglio Direttivo</strong><span>Associazione Micologica Bresadola APS · Gruppo di Palermo «G. Inzenga» · <a href="../" style="color:inherit">torna al sito</a></span></div>
-      <div class="who"><span>Sei entrato come</span><b id="whoName"></b><a href="#account" id="pwLink">Password</a><button type="button" id="logout">Esci</button></div>
+      <div class="brand"><strong><a href="#oggi" style="color:inherit;text-decoration:none">Gestionale del Consiglio Direttivo</a></strong><span>Associazione Micologica Bresadola APS · Gruppo di Palermo «G. Inzenga» · <a href="../" style="color:inherit">torna al sito</a></span></div>
+      <div class="who"><a href="../" title="Torna alla Home del sito dell’associazione">← Sito</a><span>Sei entrato come</span><b id="whoName"></b><a href="#account" id="pwLink">Password</a><button type="button" id="logout">Esci</button></div>
     </header>
     <div class="bar2">
       <nav class="tabs" id="tabs" aria-label="Aree del gestionale"></nav>
       <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Cerca in documenti, scadenze, attività, ruoli…" aria-label="Cerca nel gestionale"><button class="btn alt" type="submit">Cerca</button><a class="btn" href="#nuovo" id="addBtn">＋ Aggiungi</a></form>
     </div>
     <main id="main" tabindex="-1"><p class="loading">Caricamento…</p></main>
-    <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. Il libro soci resta fuori dal gestionale; qui arrivano solo le richieste inviate dal sito.</footer>
+    <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. I dati delle persone si vedono solo entrando con la password personale.
+      <span class="tema" role="group" aria-label="Aspetto">Aspetto: <button type="button" data-tema="auto">Automatico</button> <button type="button" data-tema="light">Chiaro</button> <button type="button" data-tema="dark">Scuro</button></span></footer>
   </div>
 </div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
@@ -400,7 +454,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   function slugify(s) { return low(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'file'; }
 
   var me = null, D = {};
-  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro', 'checklist', 'prima_nota', 'audit', 'sito_slide', 'sito_corsi', 'sito_calendario', 'sito_testi', 'sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
+  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro', 'checklist', 'prima_nota', 'audit', 'sito_slide', 'sito_corsi', 'sito_calendario', 'sito_testi', 'sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi', 'commenti', 'richieste', 'attivita_liste'];
 
   /* ---------- accesso ---------- */
   var loginEl = document.getElementById('login'), appEl = document.getElementById('app');
@@ -503,16 +557,6 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   function attSorted() { return D.attivita.slice().sort(function (a, b) { return (attDate(a) || 0) - (attDate(b) || 0); }); }
   function pillCls(s) { return s === 'Confermata' || s === 'In uso' ? '' : 'warn'; }
   var PASSO = { da_fare: ['Da fare', 'warn'], in_corso: ['In corso', 'warn'], fatto: ['Fatto', ''], non_ancora: ['Non ancora possibile', 'plain'] };
-  function scadItem(x, withNote) {
-    var p = scState(x), d = scadDate(x);
-    return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (d ? fD.format(d) : esc(x.etichetta || '')) + ' · ' + esc(x.categoria || '') + ' · ' + esc(x.responsabile || 'Da assegnare') +
-      (withNote && x.note ? '<br>' + esc(x.note) : '') + (x.pratica_id ? '<br><a href="#pratiche">Fa parte di una pratica</a>' : '') + '</span></div><span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></li>';
-  }
-  function decList(arr) {
-    if (!arr.length) return '<p class="sub">Tutte le decisioni sono state approvate.</p>';
-    return '<div>' + arr.map(function (x) {
-      return '<div class="check' + (x.approvata ? ' done' : '') + '"><input type="checkbox" id="dec' + x.id + '" data-act="dec" data-id="' + x.id + '" ' + (x.approvata ? 'checked' : '') + ' aria-label="Segna come approvata: ' + esc(x.testo) + '"><label for="dec' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.testo) + '</b><span class="sub">' + esc(x.rif || '') + ' · ' + (x.approvata ? 'approvata' + (x.aggiornata_da ? ' (segnata da ' + esc(x.aggiornata_da) + ')' : '') : 'da votare') + '</span></label></div>'; }).join('') + '</div>';
-  }
   function fileRow(d) {
     var vers = D.documenti_versioni.filter(function (v) { return v.documento_id === d.id; }).sort(function (a, b) { return b.versione - a.versione; });
     var h = vers.length ? '<details><summary>Versioni precedenti (' + vers.length + ')</summary><ul>' + vers.map(function (o) {
@@ -551,115 +595,191 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   }
 
   /* ---------- pagine ---------- */
-  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
+  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
   var P = {};
+
+  function meta(pairs) { return pairs.filter(function (p) { return p[1]; }).map(function (p) { return '<span class="mt"><em>' + p[0] + '</em> ' + p[1] + '</span>'; }).join(''); }
+  function prSteps(pr) { var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pr.id; }); return { ps: ps, done: ps.filter(function (x) { return x.stato === 'fatto'; }).length, next: ps.filter(function (x) { return x.stato === 'in_corso'; })[0] || ps.filter(function (x) { return x.stato === 'da_fare'; })[0] }; }
+  function praticheAttive() { return D.pratiche.filter(function (p) { return !p.archiviato && p.stato !== 'chiusa'; }); }
+  function richiestePerMe() { if (me.admin) return D.richieste.filter(function (r) { return r.stato === 'aperta' || r.stato === 'presa'; }); return D.richieste.filter(function (r) { return (r.stato === 'aperta' || r.stato === 'presa') && low(r.a_chi) === low(myName()); }); }
+  function richiestaLi(r) {
+    var ctx = r.attivita_id && att(r.attivita_id) ? '<a href="#attivita/' + r.attivita_id + '">' + esc(att(r.attivita_id).titolo) + '</a>' : r.pratica_id ? '<a href="#pratiche/p' + r.pratica_id + '">pratica</a>' : '';
+    return '<li class="rq"><div><b>' + esc(r.testo) + '</b><span class="sub">' + meta([['Chiesto da', esc(r.da_chi)], ['A', esc(r.a_chi)], ['Entro', r.scadenza ? fD.format(dt(r.scadenza)) : ''], ['Per', ctx]]) + (r.risposta ? '<br>Risposta: ' + esc(r.risposta) : '') + '</span></div>' +
+      '<div class="chips">' + (r.stato === 'aperta' ? '<button class="btn alt" type="button" data-act="rqStato" data-v="presa" data-id="' + r.id + '">La prendo io</button>' : '<span class="pill warn">Presa in carico</span>') + '<button class="btn" type="button" data-act="rqStato" data-v="fatta" data-id="' + r.id + '">Fatta</button></div></li>';
+  }
 
   P.oggi = function () {
     var mine = me.admin ? null : carica(me.carica);
-    var passi = D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); });
-    var scad = scSorted(openScad().filter(function (x) { var d = scadDate(x); return (x.urgente || (d && dleft(d) <= 60)) && isMine(x.responsabile); }));
+    var passi = D.pratica_passi.filter(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; return pr && !pr.archiviato && pr.stato !== 'chiusa' && x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); });
+    var scadMie = scSorted(openScad().filter(function (x) { var d = scadDate(x); return (x.urgente || (d && dleft(d) <= 60)) && isMine(x.responsabile); }));
+    var scadTutte = scSorted(openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 45); }));
     var s30 = openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 30); }).length;
-    var a30 = D.attivita.filter(function (x) { var d = attDate(x); return d && dleft(d) <= 30 && dleft(d) >= 0; }).length;
-    var bozze = D.documenti.filter(function (d) { return d.stato === 'bozza' || d.stato === 'da_firmare'; }).length;
+    var a30 = D.attivita.filter(function (x) { var d = attDate(x); return !x.archiviato && d && dleft(d) <= 30 && dleft(d) >= 0; }).length;
+    var bozze = D.documenti.filter(function (d) { return !d.archiviato && (d.stato === 'bozza' || d.stato === 'da_firmare'); }).length;
     var myCl = myClOpen().sort(function (a, b) { return (a.scadenza || '9').localeCompare(b.scadenza || '9') || a.attivita_id - b.attivita_id || a.ordine - b.ordine; });
+    var rq = richiestePerMe();
     var altri = regEntries().filter(function (e) { return e.uid && e.uid !== me.id && e.op !== 'LOG'; }).slice(0, 6);
-    var last = D.documenti.slice().sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
+    var last = D.documenti.filter(function (d) { return !d.archiviato; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
     var ns = nuoviDalSito(), nsTot = ns.pre + ns.soc + ns.msg;
-    var dalSito = '<section class="box k-sito"><header><h2>Dal sito</h2><a href="#sito">Sito</a></header>' + (nsTot ? '<ul class="list">' +
-      (ns.pre ? '<li><div><b><a href="#attivita/corsi">Preiscrizioni ai corsi</a></b><span class="sub">Da contattare</span></div><span class="pill crit">' + ns.pre + '</span></li>' : '') +
-      (ns.soc ? '<li><div><b><a href="#soci">Richieste per diventare socio</a></b><span class="sub">Nuove</span></div><span class="pill crit">' + ns.soc + '</span></li>' : '') +
-      (ns.msg ? '<li><div><b><a href="#sito/messaggi">Messaggi da «Scrivici»</a></b><span class="sub">Da leggere</span></div><span class="pill crit">' + ns.msg + '</span></li>' : '') + '</ul>' : '<p class="sub">Nessuna richiesta nuova dal sito.</p>') + '</section>';
-    var card = '';
+    var card;
     if (mine) {
       var sost = mine.sostituto_id ? carica(mine.sostituto_id).nome : null;
-      var copro = D.cariche.filter(function (c) { return c.sostituto_id === mine.id; }).map(function (c) { return c.nome; });
-      card = '<section class="box tinted"' + tintCarica(mine.nome) + '><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Tutti i ruoli</a></header>' +
-        '<div class="cols"><div><b>Cosa ti chiede lo statuto</b><ul class="plain">' + mine.compiti_statuto.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
-        '<div class="ruolo" style="border:0;padding:0;background:none"><div class="sost"><b>Se manchi, ti sostituisce</b>' + esc(mine.sostituto_nota || sost || 'Da decidere in CD.') + '</div>' +
-        (copro.length ? '<div class="sost"><b>Tu sostituisci</b>' + esc(copro.join(', ')) + '</div>' : '') + '</div></div></section>';
+      card = '<aside class="box carica tinted"' + tintCarica(mine.nome) + '><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Dettagli</a></header>' +
+        '<div class="cc"><div><div class="lbl">Ruoli dallo statuto</div><ul class="plain sm">' + mine.compiti_statuto.slice(0, 3).map(function (t) { return '<li>' + esc(short(t.replace(/\s*\(art\.[^)]*\)\.?$/, ''), 70)) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><div class="lbl">Mansioni</div><ul class="plain sm">' + (mine.mansioni.length ? mine.mansioni.slice(0, 3).map(function (t) { return '<li>' + esc(short(t, 70)) + '</li>'; }).join('') : '<li>Da definire in Consiglio</li>') + '</ul></div></div>' +
+        '<p class="sub"><b>Se manchi ti sostituisce:</b> ' + esc(mine.sostituto_nota || sost || 'da decidere in CD') + '</p></aside>';
     } else {
-      card = '<section class="box"><header><h2>Amministratore</h2><a href="#admin">Amministrazione</a></header><p>Vedi le cose da fare di tutte le cariche. Da Amministrazione scarichi la copia di sicurezza di tutti i dati.</p></section>';
+      card = '<aside class="box carica"><header><h2>Amministratore</h2><a href="#admin">Amministrazione</a></header><p class="sub">Vedi le cose da fare di tutte le cariche. Da Amministrazione scarichi la copia di sicurezza di tutti i dati.</p></aside>';
     }
-    return head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui trovi solo quello che riguarda ' + (me.admin ? 'tutto il Consiglio' : 'la tua carica') + ': le cose da fare, le scadenze vicine e le prossime attività.') +
-      '<nav class="stats" aria-label="Riepilogo"><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
-      '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti in bozza o da firmare</span></a></nav>' +
-      card +
+    var cose = myCl.length + passi.length + rq.length;
+    var visione = '<section class="box"><header><h2>Il quadro generale</h2><span class="sub">Tutto il lavoro in corso, a colpo d’occhio</span></header><div class="quadro">' +
+      '<div class="qd k-dec"><div class="lbl"><a href="#pratiche">Pratiche in corso</a></div>' + (praticheAttive().length ? praticheAttive().map(function (pr) { var x = prSteps(pr); return '<a class="qrow" href="#pratiche/p' + pr.id + '"><b>' + esc(pr.titolo) + '</b>' + progBar(x.done, x.ps.length, 'passi') + (x.next ? '<span class="sub">Prossimo passo: ' + esc(short(x.next.titolo, 70)) + ' · ' + esc(x.next.responsabile || 'da assegnare') + '</span>' : '') + '</a>'; }).join('') : '<p class="sub">Nessuna pratica aperta.</p>') + '</div>' +
+      '<div class="qd k-att"><div class="lbl"><a href="#attivita">Attività da preparare</a></div>' + attSorted().filter(function (a) { return !a.archiviato && clOf(a.id).length && attPhase(a) !== 'concluse'; }).slice(0, 4).map(function (a) { var p = clProg(clOf(a.id)), d = attDate(a); return '<a class="qrow" href="#attivita/' + a.id + '"><b>' + esc(a.titolo) + '</b>' + progBar(p.done, p.tot, 'passi') + '<span class="sub">' + (d ? fD.format(d) + ' · ' : '') + 'responsabile: ' + esc(a.responsabile || 'da assegnare') + '</span></a>'; }).join('') + '</div>' +
+      '<div class="qd k-sito"><div class="lbl"><a href="#sito">Dal sito</a></div>' + (nsTot ? '<ul class="plain sm">' + (ns.pre ? '<li><a href="#attivita/corsi">' + ns.pre + ' preiscrizioni ai corsi da contattare</a></li>' : '') + (ns.soc ? '<li><a href="#soci">' + ns.soc + ' richieste per diventare socio</a></li>' : '') + (ns.msg ? '<li><a href="#sito/messaggi">' + ns.msg + ' messaggi da leggere</a></li>' : '') + '</ul>' : '<p class="sub">Nessuna richiesta nuova dal sito.</p>') +
+      (D.prima_nota.length ? '<div class="lbl" style="margin-top:12px"><a href="#soldi/primanota">Contabilità</a></div><p class="sub">In cassa ' + eur2(saldo('cassa')) + ' · in banca ' + eur2(saldo('banca')) + '</p>' : '') + '</div></div></section>';
+    return '<div class="hero"><div class="hero-l">' + head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui sotto trovi lo stato di tutto il lavoro dell’associazione e le cose che toccano a te.') +
+      '<nav class="stats s5" aria-label="Riepilogo"><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
+      '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti da completare o firmare</span></a><a href="#sito"><b>' + nsTot + '</b><span>richieste nuove dal sito</span></a></nav></div>' + card + '</div>' +
+      visione +
       '<div class="cols"><div class="col">' +
-      '<section class="box k-att"><header><h2>Da fare per te</h2><a href="#attivita/chi">Chi fa cosa</a></header>' +
+      '<section class="box k-att"><header><h2>Cose da fare</h2><span class="pill ' + (cose ? 'warn' : '') + '">' + cose + '</span></header>' +
+      (rq.length ? '<div class="lbl">Richieste che ti hanno fatto</div><ul class="list">' + rq.map(richiestaLi).join('') + '</ul>' : '') +
       (myCl.length ? '<div class="lbl">Nelle attività</div><ul class="list">' + myCl.slice(0, 8).map(function (x) { var a = att(x.attivita_id), d = x.scadenza && dt(x.scadenza);
-        return '<li><div><b><a href="#attivita/' + x.attivita_id + '">' + esc(short(x.testo, 100)) + '</a></b><span class="sub">' + esc(a ? a.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' + (myCl.length > 8 ? '<p class="sub">e altri ' + (myCl.length - 8) + ' in <a href="#attivita/chi">Chi fa cosa</a>.</p>' : '') + '<div class="lbl">Nelle pratiche</div>' : '') +
-      (passi.length ? '<ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
-        return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + esc(pr ? pr.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun passo aperto assegnato alla tua carica.</p>') + '</section>' +
-      '<section class="box k-scad"><header><h2>Scadenze vicine</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
-      (scad.length ? '<ul class="list">' + scad.slice(0, 6).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza nei prossimi 60 giorni per la tua carica.</p>') + '</section></div>' +
-      '<div class="col">' + dalSito +
-      '<section class="box k-cal"><header><h2>Prossime attività</h2><a href="#attivita">Tutte</a></header><ul class="list">' +
-      attSorted().filter(function (x) { var d = attDate(x); return d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d) + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
-      '<section class="box k-dec"><header><h2>Da votare in CD</h2><a href="#pratiche/decisioni">Tutte le ' + D.decisioni.length + '</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
+        return '<li><div><b><a href="#attivita/' + x.attivita_id + '">' + esc(short(x.testo, 110)) + '</a></b><span class="sub">' + meta([['Attività', esc(a ? a.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' + (myCl.length > 8 ? '<p class="sub">e altri ' + (myCl.length - 8) + ' in <a href="#attivita/chi">Chi fa cosa</a>.</p>' : '') : '') +
+      (passi.length ? '<div class="lbl">Nelle pratiche</div><ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
+        return '<li><div><b><a href="#pratiche/p' + x.pratica_id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Pratica', esc(pr ? pr.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '') +
+      (scadMie.length ? '<div class="lbl">Scadenze tue</div><ul class="list">' + scadMie.slice(0, 5).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '') +
+      (!cose && !scadMie.length ? '<p class="sub">Niente in sospeso per la tua carica.</p>' : '') + '</section>' +
+      '<section class="box k-scad"><header><h2>Scadenze dell’associazione</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
+      (scadTutte.length ? '<ul class="list">' + scadTutte.slice(0, 6).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza nei prossimi 45 giorni.</p>') + '</section></div>' +
+      '<div class="col">' +
+      '<section class="box k-cal"><header><h2>Prossime attività</h2><a href="#calendario">Calendario</a></header><ul class="list">' +
+      attSorted().filter(function (x) { var d = attDate(x); return !x.archiviato && d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Quando', (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d)], ['Responsabile', esc(x.responsabile || 'da assegnare')]]) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
+      '<section class="box k-dec"><header><h2>Da votare in Consiglio</h2><a href="#pratiche/decisioni">Tutte</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
       '<section class="box k-altri"><header><h2>Cosa stanno facendo gli altri</h2><a href="#archivio/registro">Registro</a></header>' + (altri.length ? '<ul class="reg">' + altri.map(regLi).join('') + '</ul>' : '<p class="sub">Ancora nessuna modifica dagli altri membri del Consiglio.</p>') + '</section>' +
       '<section class="box k-doc"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
-      last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + fD.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
+      last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + meta([['Aggiornato', fD.format(new Date(d.aggiornato_il))], ['da', esc(d.caricato_da)]]) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
   };
 
   P.ruoli = function () {
     var editing = P.ruoli.edit;
+    var rows = D.cariche.map(function (c) {
+      var s = c.sostituto_id && carica(c.sostituto_id);
+      var copro = D.cariche.filter(function (x) { return x.sostituto_id === c.id; }).map(function (x) { return x.nome; });
+      var ed = editing === c.id;
+      var atts = D.attivita.filter(function (a) { return !a.archiviato && (respMatch(a.responsabile, c.nome) || respMatch(a.vice, c.nome)); });
+      var cl = D.checklist.filter(function (x) { return respMatch(x.responsabile, c.nome) && (x.stato === 'da_fare' || x.stato === 'in_corso'); });
+      return '<article class="box ruolo-r tinted' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"' + tintCarica(c.nome) + '><header><h2>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h2><span class="sub">Statuto, ' + esc(c.rif_statuto || '') + '</span></header>' +
+        '<div class="rr"><div><div class="lbl">Ruoli dallo statuto</div><ul class="plain sm">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><div class="lbl">Mansioni</div>' + (ed ? '<form data-act="saveRuolo" data-id="' + c.id + '" style="display:grid;gap:8px"><label class="field" for="m-' + c.id + '">Una mansione per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label><div class="chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
+          : '<ul class="plain sm">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul><button class="btn alt sm" type="button" data-act="editRuolo" data-id="' + c.id + '">Modifica le mansioni</button>') + '</div>' +
+        '<div><div class="lbl">Vice e attività in gestione</div><p class="sub"><b>Se manca, lo sostituisce:</b> ' + esc(c.sostituto_nota || (s ? s.nome : '') || 'da decidere in CD') + '</p>' + (copro.length ? '<p class="sub"><b>Sostituisce:</b> ' + esc(copro.join(', ')) + '</p>' : '') +
+        (atts.length ? '<ul class="plain sm">' + atts.map(function (a) { return '<li><a href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a>' + (respMatch(a.vice, c.nome) ? ' (vice)' : '') + '</li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna attività affidata per ora.</p>') +
+        (cl.length ? '<p class="sub"><a href="#attivita/chi">' + cl.length + ' passi delle checklist da fare</a></p>' : '') +
+        (c.da_decidere.length ? '<div class="lbl">Da decidere in CD</div><ul class="plain sm">' + c.da_decidere.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') + '</div></div></article>';
+    }).join('');
     var mappa = '<section class="box"><header><h2>Chi sostituisce chi</h2><span class="sub">Se una carica manca, chi la copre</span></header><div class="mappa">' +
       D.cariche.map(function (c) { var s = c.sostituto_id && carica(c.sostituto_id);
         return '<div class="r"><div class="c">' + esc(c.nome) + '</div><div class="ar" aria-hidden="true">→</div>' + (s ? '<div class="c">' + esc(s.nome) + '</div>' : '<div class="c vuoto">Vice da nominare in CD</div>') + '</div>'; }).join('') +
       '</div><p class="sub">Freccia: «se manca, lo sostituisce». Le caselle gialle sono le nomine che il Consiglio deve votare.</p></section>';
-    var cards = '<div class="ruoli">' + D.cariche.map(function (c) {
-      var s = c.sostituto_id && carica(c.sostituto_id);
-      var copro = D.cariche.filter(function (x) { return x.sostituto_id === c.id; }).map(function (x) { return x.nome; });
-      var ed = editing === c.id;
-      return '<article class="ruolo tinted' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"' + tintCarica(c.nome) + '><h3>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h3>' +
-        '<div class="sost"><b>Se manca, lo sostituisce</b>' + esc(c.sostituto_nota || (s ? s.nome : '') || 'Da decidere in CD.') + '</div>' +
-        (copro.length ? '<div class="sost"><b>Sostituisce</b>' + esc(copro.join(', ')) + '</div>' : '') +
-        '<b>Cosa dice lo statuto</b><ul class="plain">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
-        '<b>Cosa fa oggi</b>' + (ed ? '<form data-act="saveRuolo" data-id="' + c.id + '" class="field" style="display:grid;gap:8px"><label class="field" for="m-' + c.id + '">Una mansione per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label><div class="chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
-          : '<ul class="plain">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul><div><button class="btn alt" type="button" data-act="editRuolo" data-id="' + c.id + '">Modifica le mansioni</button></div>') +
-        (c.da_decidere.length ? '<b>Da decidere in CD</b><ul class="plain">' + c.da_decidere.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
-        '<p class="sub">Riferimento: statuto, ' + esc(c.rif_statuto || '') + '.</p></article>';
-    }).join('') + '</div>';
-    return head('Ruoli e vice', 'Per ogni carica: cosa chiede lo statuto, cosa fa oggi e chi la sostituisce. Per ora ci sono solo le cariche, senza nomi: i nomi si aggiungono dopo il voto del Consiglio.') +
-      mappa + cards +
-      '<section class="box"><header><h2>Le decisioni sui ruoli</h2><a href="#pratiche/decisioni">Tutte le decisioni</a></header>' +
-      decList(D.decisioni.filter(function (x) { return /ruol|vice|tutor|responsabile/i.test(x.testo); })) + '</section>' +
-      '<p class="note">Le altre figure (consiglieri, revisori, comitato scientifico, responsabili di mostra, stage e uscite) si aggiungono quando il Consiglio le nomina. Statuto: art. 18 per il Consiglio, art. 19 per l’organo di controllo, art. 21 per il Comitato scientifico.</p>' +
-      '<p class="note">Prima nota: scrive solo il Tesoriere e il suo vice. Il vice lo imposta l’amministratore dopo il voto del Consiglio; da quel momento può registrare movimenti anche lui.</p>';
+    return head('Ruoli e mansioni', 'Per ogni carica: i ruoli che le dà lo statuto, le mansioni che svolge davvero, chi la sostituisce e le attività che ha in gestione.') + rows + mappa +
+      '<section class="box"><header><h2>Le decisioni sui ruoli</h2><a href="#pratiche/decisioni">Tutte le decisioni</a></header>' + decList(D.decisioni.filter(function (x) { return !x.archiviato && /ruol|vice|tutor|responsabile/i.test(x.testo); })) + '</section>' +
+      '<p class="note">Le altre figure (consiglieri, revisori, comitato scientifico, responsabili di mostra, stage e uscite) si aggiungono quando il Consiglio le nomina. Statuto: art. 18 per il Consiglio, art. 19 per l’organo di controllo, art. 21 per il Comitato scientifico. Prima nota: scrive solo il Tesoriere e il suo vice.</p>';
   };
 
+  /* modifica, archivia, elimina: gli stessi tre comandi ovunque */
+  function azioni(tb, row, label, extra) {
+    var arch = row.archiviato;
+    return '<div class="azioni">' + (extra || '') +
+      ('archiviato' in row ? '<button class="btn alt sm" type="button" data-act="archivia" data-t="' + tb + '" data-id="' + row.id + '" data-v="' + (arch ? '0' : '1') + '">' + (arch ? 'Ripristina' : 'Archivia') + '</button>' : '') +
+      (tb === 'documenti' && !me.admin ? '' : '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="' + tb + '" data-id="' + row.id + '" data-l="' + esc(label) + '">Elimina</button>') + '</div>';
+  }
+  function scadForm(x) {
+    return '<form class="sform" data-act="scadEdit" data-id="' + x.id + '"><label class="wide">Cosa va fatto<input name="titolo" required maxlength="200" value="' + esc(x.titolo) + '"></label>' +
+      '<label>Entro il<input name="data" type="date" value="' + esc(x.data || '') + '"></label><label>Chi se ne occupa<select name="responsabile">' + respOpts(x.responsabile || 'Da assegnare') + (RESP_SEL.indexOf(x.responsabile) < 0 && x.responsabile ? '<option selected>' + esc(x.responsabile) + '</option>' : '') + '</select></label>' +
+      '<label>Area<input name="categoria" maxlength="80" value="' + esc(x.categoria || '') + '"></label><label class="wide">Note<textarea name="note" maxlength="1000">' + esc(x.note || '') + '</textarea></label>' +
+      '<div class="wide chips">' + chk('urgente', x.urgente, 'Urgente') + chk('annuale', x.annuale, 'Si ripete ogni anno') + '</div><div class="wide"><button class="btn" type="submit">Salva</button></div></form>';
+  }
+  function scadRow(x) {
+    var p = scState(x), d = scadDate(x);
+    return '<div class="check' + (x.fatta ? ' done' : '') + '"><input type="checkbox" id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '"' + (x.fatta ? ' checked' : '') + ' aria-label="' + (x.fatta ? 'Riapri: ' : 'Segna come fatta: ') + esc(x.titolo) + '"><div class="cb"><label for="sc' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.titolo) + ' <span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></b></label><span class="sub">' +
+      meta([['Entro', d ? fD.format(d) : esc(x.etichetta || 'data da fissare')], ['Chi', esc(x.responsabile || 'da assegnare')], ['Area', esc(x.categoria || '')], ['', x.annuale ? 'si ripete ogni anno' : '']]) + (x.note ? '<br>' + esc(x.note) : '') + (x.pratica_id ? '<br><a href="#pratiche/p' + x.pratica_id + '">Fa parte di una pratica</a>' : '') + '</span>' +
+      '<details class="ed"><summary>Modifica</summary>' + scadForm(x) + azioni('scadenze', x, x.titolo) + '</details></div></div>';
+  }
+  function decForm(x) {
+    return '<form class="sform" data-act="decEdit" data-id="' + x.id + '"><label class="wide">Cosa si deve decidere<textarea name="testo" required maxlength="600">' + esc(x.testo) + '</textarea></label><label class="wide">Riferimento<input name="rif" maxlength="200" value="' + esc(x.rif || '') + '"></label><div class="wide"><button class="btn" type="submit">Salva</button></div></form>';
+  }
+  function decList(arr, edit) {
+    if (!arr.length) return '<p class="sub">Nessuna decisione in questo elenco.</p>';
+    return '<div>' + arr.map(function (x) {
+      return '<div class="check' + (x.approvata ? ' done' : '') + '"><input type="checkbox" id="dec' + x.id + '" data-act="dec" data-id="' + x.id + '" ' + (x.approvata ? 'checked' : '') + ' aria-label="Segna come approvata: ' + esc(x.testo) + '"><div class="cb"><label for="dec' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.testo) + '</b></label><span class="sub">' + meta([['Chi decide', 'Consiglio Direttivo'], ['Riferimento', esc(x.rif || '')], ['Esito', x.approvata ? 'approvata' + (x.aggiornata_da ? ' (segnata da ' + esc(x.aggiornata_da) + ')' : '') : 'da votare']]) + '</span>' +
+        (edit ? '<details class="ed"><summary>Modifica</summary>' + decForm(x) + azioni('decisioni', x, x.testo) + '</details>' : '') + '</div></div>'; }).join('') + '</div>';
+  }
+  function scadItem(x, withNote) {
+    var p = scState(x), d = scadDate(x);
+    return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + meta([['Entro', d ? fD.format(d) : esc(x.etichetta || 'data da fissare')], ['Chi', esc(x.responsabile || 'da assegnare')], ['Area', esc(x.categoria || '')]]) +
+      (withNote && x.note ? '<br>' + esc(x.note) : '') + '</span></div><span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></li>';
+  }
+  function docLink(slug) {
+    var dd = docBySlug(slug); if (!dd) return '';
+    if (dd.file_path) return '<button type="button" class="doclink" data-act="dl" data-path="' + esc(dd.file_path) + '">📄 ' + esc(dd.titolo) + ' <span class="sub">· scarica</span></button>';
+    if (dd.contenuto) return '<a class="doclink" href="' + docHref(dd) + '">📄 ' + esc(dd.titolo) + ' <span class="sub">· apri</span></a>';
+    return '<a class="doclink off" href="#nuovo/documento">📄 ' + esc(dd.titolo) + ' <span class="dc">' + (dd.stato === 'da_firmare' ? 'Da firmare: carica il file firmato' : 'File da caricare') + '</span></a>';
+  }
+  function passoRow(x) {
+    var d = x.scadenza && dt(x.scadenza);
+    return '<div class="task ' + x.stato + '"><span class="num">' + x.ordine + '</span><div><div class="row"><b>' + esc(x.titolo) + '</b>' +
+      '<label><span class="sub" style="margin-right:6px">Stato</span><select data-act="passo" data-id="' + x.id + '" aria-label="Stato del passo: ' + esc(x.titolo) + '">' + Object.keys(PASSO).map(function (k) { return '<option value="' + k + '"' + (k === x.stato ? ' selected' : '') + '>' + PASSO[k][0] + '</option>'; }).join('') + '</select></label></div>' +
+      '<span class="sub">' + meta([['Chi', esc(x.responsabile || 'da assegnare')], ['Entro', d ? fD.format(d) + ' (' + when(d) + ')' : ''], ['Aggiornato da', esc(x.aggiornato_da || '')]]) + '</span>' +
+      (x.descrizione ? '<p style="margin-top:4px">' + esc(x.descrizione) + '</p>' : '') +
+      (x.documenti_slug.length ? '<div class="docs">' + x.documenti_slug.map(docLink).join('') + '</div>' : '') +
+      '<details class="ed"><summary>Modifica il passo</summary><form class="sform" data-act="passoEdit" data-id="' + x.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300" value="' + esc(x.titolo) + '"></label><label class="wide">Spiegazione<textarea name="descrizione" maxlength="1500">' + esc(x.descrizione || '') + '</textarea></label><label>Chi<select name="responsabile">' + respOpts(x.responsabile || 'Da assegnare') + (RESP_SEL.indexOf(x.responsabile) < 0 && x.responsabile ? '<option selected>' + esc(x.responsabile) + '</option>' : '') + '</select></label><label>Entro il<input name="scadenza" type="date" value="' + esc(x.scadenza || '') + '"></label><label>Ordine<input name="ordine" type="number" min="1" max="999" value="' + x.ordine + '"></label><div class="wide"><button class="btn" type="submit">Salva</button></div></form>' + azioni('pratica_passi', x, x.titolo) + '</details>' +
+      '</div></div>';
+  }
+  function praticaPage(id) {
+    var pr = D.pratiche.filter(function (p) { return p.id === id; })[0];
+    if (!pr) return head('Pratica non trovata', '<a href="#pratiche">Torna alle pratiche</a>');
+    var x = prSteps(pr), com = D.commenti.filter(function (c) { return c.pratica_id === pr.id; }).sort(function (a, b) { return new Date(a.quando) - new Date(b.quando); });
+    var docs = D.documenti.filter(function (d) { return d.pratica_id === pr.id; });
+    var stato = pr.archiviato ? 'Archiviata' : pr.stato === 'chiusa' ? 'Chiusa' : 'In corso';
+    return '<a class="back" href="#pratiche">← Tutte le pratiche</a>' + head(esc(pr.titolo), esc(pr.descrizione || '')) +
+      '<section class="box k-dec"><header><div><span class="pill ' + (stato === 'In corso' ? 'warn' : '') + '">' + stato + '</span> <span class="sub">' + x.done + ' passi fatti su ' + x.ps.length + '</span></div>' +
+      azioni('pratiche', pr, pr.titolo, '<button class="btn alt sm" type="button" data-act="prStato" data-id="' + pr.id + '" data-v="' + (pr.stato === 'chiusa' ? 'in_corso' : 'chiusa') + '">' + (pr.stato === 'chiusa' ? 'Riapri la pratica' : 'Chiudi la pratica') + '</button>') + '</header>' + progBar(x.done, x.ps.length, 'passi') +
+      '<details class="ed"><summary>Modifica nome e descrizione</summary><form class="sform" data-act="prEdit" data-id="' + pr.id + '"><label class="wide">Nome<input name="titolo" required maxlength="200" value="' + esc(pr.titolo) + '"></label><label class="wide">A cosa serve<textarea name="descrizione" maxlength="1500">' + esc(pr.descrizione || '') + '</textarea></label><div class="wide"><button class="btn" type="submit">Salva</button></div></form></details></section>' +
+      '<section class="box"><h2>Passi</h2><div>' + x.ps.map(passoRow).join('') + '</div>' +
+      '<details><summary style="cursor:pointer;color:var(--link);font-weight:600">＋ Aggiungi un passo</summary><form class="sform" data-act="nPasso" data-id="' + pr.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300"></label><label>Chi<select name="responsabile">' + respOpts(me.carica ? myName() : 'Da assegnare') + '</select></label><label>Entro il<input name="scadenza" type="date"></label><div class="wide"><button class="btn" type="submit">Aggiungi il passo</button></div></form></details></section>' +
+      (docs.length ? '<section class="box k-doc"><h2>Documenti della pratica</h2>' + docs.map(fileRow).join('') + '</section>' : '') +
+      commentiBox('pratica_id', pr.id, com);
+  }
+  function commentiBox(col, id, com) {
+    return '<section class="box k-altri"><h2>Commenti e stato dell’arte</h2>' + (com.length ? '<ul class="reg">' + com.map(function (c) { return '<li><time>' + fT.format(new Date(c.quando)) + '</time><div><b>' + esc(c.chi) + '</b><span class="det" style="white-space:pre-wrap;color:var(--ink)">' + esc(c.testo) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun commento. Scrivi a che punto sei: lo leggono tutti i membri del Consiglio.</p>') +
+      '<form class="sform" data-act="commento" data-col="' + col + '" data-id="' + id + '"><label class="wide">Scrivi un aggiornamento<textarea name="testo" required maxlength="3000" placeholder="Es. Ho chiamato l’albergo: confermano 40 camere, aspettano la caparra entro il 15."></textarea></label><div class="wide"><button class="btn" type="submit">Pubblica il commento</button></div></form></section>';
+  }
+
   P.pratiche = function (sub) {
-    var tabs = [['', 'Pratiche in corso'], ['scadenze', 'Scadenze'], ['decisioni', 'Decisioni da votare']];
+    if (/^p\d+$/.test(sub || '')) return praticaPage(+sub.slice(1));
+    var tabs = [['', 'Pratiche'], ['scadenze', 'Scadenze'], ['decisioni', 'Decisioni da votare']];
     var t = '<div class="chips" role="tablist">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#pratiche' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'scadenze') {
-      var aperte = scSorted(openScad()), fatte = D.scadenze.filter(function (x) { return x.fatta; });
-      return head('Scadenze', 'Tutto quello che scade, in ordine. Il colore dice quanto è vicino. Spunta una scadenza quando è fatta.') + t + addLink('#nuovo/scadenza', 'Nuova scadenza') +
-        '<section class="box"><div>' + aperte.map(function (x) { var p = scState(x), d = scadDate(x);
-          return '<div class="check"><input type="checkbox" id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Segna come fatta: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.titolo) + ' <span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></b><span class="sub">' + (d ? fD.format(d) : esc(x.etichetta || '')) + ' · ' + esc(x.categoria || '') + ' · responsabile: ' + esc(x.responsabile || 'Da assegnare') + (x.annuale ? ' · si ripete ogni anno' : '') + (x.note ? '<br>' + esc(x.note) : '') + '</span></label></div>'; }).join('') + '</div></section>' +
-        (fatte.length ? '<section class="box"><details><summary>Scadenze fatte (' + fatte.length + ')</summary><div style="margin-top:10px">' + fatte.map(function (x) { return '<div class="check done"><input type="checkbox" checked id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Riapri: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="display:block">' + esc(x.titolo) + '</b></label></div>'; }).join('') + '</div></details></section>' : '') +
-        '<section class="box"><h2>Aggiungi una scadenza</h2><form class="up" data-act="newScad"><label>Cosa<input name="t" required placeholder="Es. Rinnovo della polizza"></label><label>Entro il<input name="d" type="date"></label><label>Responsabile<select name="r"><option>Presidente</option><option>Vicepresidente</option><option>Tesoriere</option><option>Segretario</option><option>Consiglio Direttivo</option><option>Da assegnare</option></select></label><label>Tipo<input name="c" placeholder="Es. Burocrazia"></label><button class="btn" type="submit">Aggiungi</button></form></section>' +
-        '<p class="note">Urgente: entro 15 giorni. In arrivo: entro 60 giorni. Le scadenze annuali vengono dalla pagina Normativa e guida alla gestione.</p>';
+      var aperte = scSorted(openScad().filter(function (x) { return !x.archiviato; })), fatte = D.scadenze.filter(function (x) { return x.fatta && !x.archiviato; }), arch = D.scadenze.filter(function (x) { return x.archiviato; });
+      return head('Scadenze', 'Tutto quello che va fatto entro una data, in ordine. Il colore dice quanto è vicino. Spunta una scadenza quando è fatta; con «Modifica» la cambi, la archivi o la elimini.') + t + addLink('#nuovo/scadenza', 'Nuova scadenza') +
+        '<section class="box k-scad"><div>' + aperte.map(scadRow).join('') + '</div></section>' +
+        (fatte.length ? '<section class="box"><details><summary>Scadenze fatte (' + fatte.length + ')</summary><div style="margin-top:10px">' + fatte.map(scadRow).join('') + '</div></details></section>' : '') +
+        (arch.length ? '<section class="box"><details><summary>Archiviate (' + arch.length + ')</summary><div style="margin-top:10px">' + arch.map(scadRow).join('') + '</div></details></section>' : '') +
+        '<p class="note">Rosso: entro 15 giorni o già passata. Giallo: entro 60 giorni. Le scadenze annuali vengono dalla pagina Normativa e guida alla gestione.</p>';
     }
     if (sub === 'decisioni') {
-      return head('Decisioni da votare', 'Le decisioni del piano si votano in Consiglio. Qui si segna l’esito: resta scritto chi l’ha segnata e quando.') + t + addLink('#nuovo/decisione', 'Nuova decisione da votare') +
-        '<section class="box"><header><h2>Da votare in CD</h2><span class="sub">' + openDec().length + ' su ' + D.decisioni.length + ' ancora da votare</span></header>' + decList(D.decisioni) + '</section>';
+      var dv = D.decisioni.filter(function (x) { return !x.archiviato; }), da = D.decisioni.filter(function (x) { return x.archiviato; });
+      return head('Decisioni da votare', 'I punti da portare in Consiglio. Quando il Consiglio vota, spunta la decisione: resta scritto chi l’ha segnata e quando.') + t + addLink('#nuovo/decisione', 'Nuova decisione da votare') +
+        '<section class="box k-dec"><header><h2>Da votare in Consiglio</h2><span class="sub">' + dv.filter(function (x) { return !x.approvata; }).length + ' su ' + dv.length + ' ancora da votare</span></header>' + decList(dv, true) + '</section>' +
+        (da.length ? '<section class="box"><details><summary>Archiviate (' + da.length + ')</summary>' + decList(da, true) + '</details></section>' : '');
     }
-    return head('Pratiche', 'Ogni lavoro che ha più passi diventa una pratica: i passi in ordine, chi li fa, entro quando, e i documenti pronti. Cambia lo stato di un passo quando lo completi.') + t + addLink('#nuovo/pratica', 'Nuova pratica') +
-      D.pratiche.map(function (pr) {
-        var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pr.id; });
-        var done = ps.filter(function (x) { return x.stato === 'fatto'; }).length;
-        return '<section class="box"><header><div><h2>' + esc(pr.titolo) + '</h2><span class="sub">' + done + ' passi fatti su ' + ps.length + '</span></div><span class="pill ' + (pr.stato === 'chiusa' ? '' : 'warn') + '">' + (pr.stato === 'chiusa' ? 'Chiusa' : 'In corso') + '</span></header>' +
-          '<div class="progress" role="img" aria-label="' + done + ' su ' + ps.length + ' passi fatti"><i style="width:' + (ps.length ? done / ps.length * 100 : 0).toFixed(0) + '%"></i></div>' +
-          '<p>' + esc(pr.descrizione || '') + '</p><div>' +
-          ps.map(function (x) { var d = x.scadenza && dt(x.scadenza);
-            return '<div class="task ' + x.stato + '"><span class="num">' + x.ordine + '</span><div><div class="row"><b>' + esc(x.titolo) + '</b>' +
-              '<label><span class="sub" style="margin-right:6px">Stato</span><select data-act="passo" data-id="' + x.id + '" aria-label="Stato del passo: ' + esc(x.titolo) + '">' + Object.keys(PASSO).map(function (k) { return '<option value="' + k + '"' + (k === x.stato ? ' selected' : '') + '>' + PASSO[k][0] + '</option>'; }).join('') + '</select></label></div>' +
-              '<span class="sub">' + esc(x.responsabile || 'Da assegnare') + (d ? ' · entro il ' + fD.format(d) + ' (' + when(d) + ')' : '') + (x.aggiornato_da ? ' · aggiornato da ' + esc(x.aggiornato_da) : '') + '</span>' +
-              (x.descrizione ? '<p style="margin-top:4px">' + esc(x.descrizione) + '</p>' : '') +
-              (x.documenti_slug.length ? '<div class="docs">' + x.documenti_slug.map(function (s) { var dd = docBySlug(s); return dd ? (dd.file_path ? '<a href="#" data-act="dl" data-path="' + esc(dd.file_path) + '">📄 ' + esc(dd.titolo) + '</a>' : '<span class="sub">📄 ' + esc(dd.titolo) + ' <span class="dc">' + (dd.stato === 'da_firmare' ? 'Da firmare' : 'File da caricare') + '</span></span>') : ''; }).join('') + '</div>' : '') +
-              '</div></div>'; }).join('') + '</div>' +
-          '<details><summary style="cursor:pointer;color:var(--link);font-weight:600">＋ Aggiungi un passo a questa pratica</summary><form class="sform" data-act="nPasso" data-id="' + pr.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300"></label><label>Chi<select name="responsabile">' + respOpts(me.carica ? myName() : 'Da assegnare') + '</select></label><label>Entro il<input name="scadenza" type="date"></label><div class="wide"><button class="btn" type="submit">Aggiungi il passo</button></div></form></details></section>';
-      }).join('');
+    var f = P.pratiche.f || 'aperte';
+    var list = D.pratiche.filter(function (p) { return f === 'aperte' ? !p.archiviato && p.stato !== 'chiusa' : f === 'chiuse' ? !p.archiviato && p.stato === 'chiusa' : p.archiviato; });
+    return head('Pratiche', 'Ogni lavoro con più passi è una pratica: i passi in ordine, chi li fa, entro quando, i documenti e i commenti. Tocca una pratica per aprirla.') + t + addLink('#nuovo/pratica', 'Nuova pratica') +
+      '<div class="chips">' + [['aperte', 'In corso'], ['chiuse', 'Chiuse'], ['archiviate', 'Archiviate']].map(function (x) { var n = D.pratiche.filter(function (p) { return x[0] === 'aperte' ? !p.archiviato && p.stato !== 'chiusa' : x[0] === 'chiuse' ? !p.archiviato && p.stato === 'chiusa' : p.archiviato; }).length; return '<button class="chip" type="button" data-act="prFiltro" data-v="' + x[0] + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + ' (' + n + ')</button>'; }).join('') + '</div>' +
+      (list.length ? '<div class="who-grid">' + list.map(function (pr) { var x = prSteps(pr); var d = x.next && x.next.scadenza && dt(x.next.scadenza);
+        return '<a class="card k-dec" href="#pratiche/p' + pr.id + '"><h3>' + esc(pr.titolo) + '</h3>' + progBar(x.done, x.ps.length, 'passi') + (x.next ? '<span class="sub">' + meta([['Prossimo passo', esc(short(x.next.titolo, 80))], ['Chi', esc(x.next.responsabile || 'da assegnare')], ['Entro', d ? fD.format(d) : '']]) + '</span>' : '<span class="sub">Tutti i passi sono fatti.</span>') + '</a>'; }).join('') + '</div>' : '<p class="sub">Nessuna pratica in questo elenco.</p>');
   };
 
   P.attivita = function (sub) {
@@ -933,13 +1053,13 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     for (var i = 0; i < ncell; i++) {
       var d = new Date(start.getTime() + i * DAY);
       var ev = E.filter(function (e) { return iso(e.d) === iso(d); });
-      cells += '<div class="day' + (d.getMonth() !== m ? ' out' : '') + (iso(d) === iso(base) ? ' today' : '') + '"><span class="n">' + d.getDate() + '</span>' + ev.slice(0, 4).map(evA).join('') + (ev.length > 4 ? '<span class="sub" style="font-size:13px">+' + (ev.length - 4) + ' altri</span>' : '') + '</div>';
+      cells += '<div class="day' + (d.getMonth() !== m ? ' out' : '') + (iso(d) === iso(base) ? ' today' : '') + '"><span class="n">' + d.getDate() + '</span><a class="addday" href="#nuovo/giorno/' + iso(d) + '" aria-label="Aggiungi qualcosa il ' + fD.format(d) + '">+</a>' + ev.slice(0, 4).map(evA).join('') + (ev.length > 4 ? '<span class="sub" style="font-size:13px">+' + (ev.length - 4) + ' altri</span>' : '') + '</div>';
     }
     var days = {}; E.forEach(function (e) { (days[iso(e.d)] = days[iso(e.d)] || []).push(e); });
     var agenda = Object.keys(days).sort().map(function (k) { return '<div class="giorno"><b>' + fL.format(dt(k)) + '</b>' + days[k].map(function (e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '"' + (e.c ? tintCat(e.c) : '') + '><span class="sub" style="display:block;font-size:13px">' + KIND[e.k] + '</span>' + esc(e.t) + '</a>'; }).join('') + '</div>'; }).join('');
     var senza = openScad().filter(function (x) { return !x.data; }).concat([]), attND = D.attivita.filter(function (a) { return !a.data && !a.ricorrenza; });
     var prossimi = []; [0, 1, 2].forEach(function (k) { var dd = new Date(base.getFullYear(), base.getMonth() + k, 1); calEvents(dd.getFullYear(), dd.getMonth()).forEach(function (e) { var n = dleft(e.d); if (n >= 0 && n <= 30 && !e.done && e.k !== 'rit') prossimi.push(e); }); });
-    return head('Calendario', 'Tutto quello che ha una data: attività, scadenze, passi delle pratiche e delle checklist. Tocca una voce per aprirla.') +
+    return head('Calendario', 'Tutto quello che ha una data: attività, scadenze, passi delle pratiche e delle checklist, appuntamenti del sito. Tocca una voce per aprirla, o il + su un giorno per aggiungere qualcosa in quella data.') + addLink('#nuovo/giorno/' + iso(base), 'Aggiungi in calendario') +
       '<section class="box"><div class="calnav"><h2>' + MESI[m] + ' ' + y + '</h2><div class="chips"><a class="chip" href="#calendario/' + iso(prev).slice(0, 7) + '">← ' + MESI[prev.getMonth()] + '</a><a class="chip" href="#calendario">Oggi</a><a class="chip" href="#calendario/' + iso(next).slice(0, 7) + '">' + MESI[next.getMonth()] + ' →</a><button class="chip" type="button" data-act="weekly" aria-pressed="' + !!P.calendario.weekly + '">Appuntamenti settimanali</button></div></div>' +
       '<div class="legend">' + ['sca', 'pas', 'chk', 'att', 'sit', 'rit'].map(function (k) { return '<span><i class="ev ' + k + '"' + (k === 'sit' ? tintCat('conv') : '') + '></i>' + KIND[k] + '</span>'; }).join('') + '</div>' +
       '<div class="cal">' + ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map(function (x) { return '<div class="dow">' + x + '</div>'; }).join('') + cells + '</div>' +
@@ -1104,7 +1224,8 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     var tabs = [['', 'Panoramica'], ['messaggi', 'Messaggi' + (n.msg ? ' (' + n.msg + ')' : '')], ['slide', 'In primo piano'], ['corsi', 'Corsi'], ['calendario', 'Calendario del sito'], ['testi', 'Contatti e avvisi']];
     return '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#sito' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
   }
-  function delBtn(table, id) { return me.admin ? '<button class="btn alt" type="button" data-act="sitoDel" data-t="' + table + '" data-id="' + id + '">Elimina</button>' : ''; }
+  var SOLO_ADMIN_DEL = ['sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
+  function delBtn(table, id) { return (me.admin || SOLO_ADMIN_DEL.indexOf(table) < 0) ? '<button class="btn alt" type="button" data-act="sitoDel" data-t="' + table + '" data-id="' + id + '">Elimina</button>' : ''; }
   function slideForm(s) {
     var id = s ? s.id : 'new';
     return '<form class="sform" data-act="slideSave" data-id="' + id + '">' +
@@ -1150,7 +1271,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       '<label class="wide">Titolo<input name="titolo" required maxlength="200" value="' + esc(e ? e.titolo : '') + '"></label>' +
       '<label class="wide">Sottotitolo (relatore, luogo, nota)<input name="sottotitolo" maxlength="300" value="' + esc(e ? e.sottotitolo || '' : '') + '"></label>' +
       '<div class="wide chips">' + chk('proposta', e && e.proposta, 'È una proposta da votare in CD') + chk('pubblicato', e ? e.pubblicato : true, 'Pubblicato sul sito') + '</div>' +
-      '<div class="wide chips"><button class="btn" type="submit">' + (e ? 'Salva' : 'Aggiungi al calendario') + '</button>' + (e ? delBtn('sito_calendario', e.id) : '') + '</div></form>';
+      '<div class="wide chips"><button class="btn" type="submit">' + (e && e.id !== 'new' ? 'Salva' : 'Aggiungi al calendario') + '</button>' + (e && e.id !== 'new' ? delBtn('sito_calendario', e.id) : '') + '</div></form>';
   }
   P.sito = function (sub) {
     var t = sitoTabs(sub), n = nuoviDalSito();
@@ -1284,12 +1405,16 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     ['sito', 'Qualcosa sul sito', 'Una slide in primo piano, un corso, un appuntamento del calendario, un avviso.', 'k-sito']
   ];
   function respOpts(cur) { return RESP_SEL.map(function (r) { return '<option' + (r === cur ? ' selected' : '') + '>' + r + '</option>'; }).join(''); }
-  P.nuovo = function (sub) {
+  P.nuovo = function (sub0) {
+    var parts = String(sub0 || '').split('/'), sub = parts[0], dataPre = /^\d{4}-\d{2}-\d{2}$/.test(parts[1] || '') ? parts[1] : '';
     var back = '<a class="back" href="#nuovo">← Cosa vuoi aggiungere</a>';
+    if (sub === 'giorno') return '<a class="back" href="#calendario/' + dataPre.slice(0, 7) + '">← Calendario</a>' + head('Cosa aggiungi il ' + (dataPre ? fL.format(dt(dataPre)) : 'giorno scelto') + '?', 'Scegli: la data è già inserita.') +
+      '<div class="who-grid">' + [['scadenza', 'Una scadenza', 'Qualcosa da fare entro quel giorno.', 'k-scad'], ['attivita', 'Un’attività o un evento', 'Una gita, una cena, un corso, una mostra: con la sua scheda.', 'k-att'], ['appuntamento', 'Un appuntamento sul sito', 'Compare nel calendario pubblico del sito.', 'k-sito']].map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '/' + dataPre + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
+    if (sub === 'appuntamento') return '<a class="back" href="#calendario">← Calendario</a>' + head('Nuovo appuntamento sul sito', 'Compare nel calendario pubblico del sito appena salvi.') + '<section class="box k-sito">' + calForm({ id: 'new', anno: +(dataPre || iso(base)).slice(0, 4), mese: +(dataPre || iso(base)).slice(5, 7) - 1, data: dataPre || null, pubblicato: true, categoria: 'conv', titolo: '' }, null).replace('data-id="new"', 'data-id="new"') + '</section>';
     var myR = me.carica ? myName() : 'Da assegnare';
     if (sub === 'scadenza') return back + head('Nuova scadenza', 'Compare in Scadenze, nel Calendario e in «Oggi» di chi ne è responsabile.') +
       '<section class="box k-scad"><form class="sform" data-act="nScad"><label class="wide">Cosa va fatto<input name="titolo" required maxlength="200" placeholder="Es. Rinnovo della polizza assicurativa"></label>' +
-      '<label>Entro il<input name="data" type="date"></label><label>Chi se ne occupa<select name="responsabile">' + respOpts(myR) + '</select></label>' +
+      '<label>Entro il<input name="data" type="date" value="' + dataPre + '"></label><label>Chi se ne occupa<select name="responsabile">' + respOpts(myR) + '</select></label>' +
       '<label>Tipo<input name="categoria" maxlength="80" placeholder="Es. Burocrazia, Soldi, Eventi"></label>' +
       '<label class="wide">Note<textarea name="note" maxlength="1000"></textarea></label>' +
       '<div class="wide chips">' + chk('urgente', false, 'Urgente') + chk('annuale', false, 'Si ripete ogni anno') + '</div>' +
@@ -1298,7 +1423,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
       return back + head('Nuova attività', 'Compare in Stato dei lavori, nel Calendario e in Chi fa cosa. Se scegli un disciplinare, la checklist si crea da sola.') +
         '<section class="box k-att"><form class="sform" data-act="nAtt"><label class="wide">Attività<input name="titolo" required maxlength="200" placeholder="Es. Gita a Ficuzza"></label>' +
-        '<label>Data<input name="data" type="date"></label><label>Tipo<select name="tipo">' + ['Conversazioni', 'Lezioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<option>' + k + '</option>'; }).join('') + '</select></label>' +
+        '<label>Data<input name="data" type="date" value="' + dataPre + '"></label><label>Tipo<select name="tipo">' + ['Conversazioni', 'Lezioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<option>' + k + '</option>'; }).join('') + '</select></label>' +
         '<label>Responsabile<input name="responsabile" maxlength="120" value="' + esc(myR) + '"></label><label>Stato<select name="stato">' + ATT_STATI.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select></label>' +
         '<label class="wide">Note<input name="note" maxlength="500"></label>' +
         '<label class="wide">Checklist dal disciplinare<select name="disc"><option value="">Nessuna, la scrivo dopo</option>' + disc.map(function (x) { return '<option value="' + esc(x.slug) + '">' + esc(x.titolo.replace('Disciplinare operativo, ', '')) + '</option>'; }).join('') + '</select></label>' +
@@ -1431,7 +1556,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       if (c) { toast(a === 'clStato' ? 'Passo segnato come «' + CLST[c.stato][0] + '».' : 'Salvato.'); render(); var el2 = document.querySelector('[data-act="' + a + '"][data-id="' + id + '"]'); if (el2) el2.focus(); }
     }
   });
-  mainEl.addEventListener('click', function (e) {
+  mainEl.addEventListener('click', async function (e) {
     var b = e.target.closest('[data-act]'); if (!b || b.tagName === 'FORM' || b.tagName === 'SELECT' || (b.tagName === 'INPUT')) return;
     var a = b.getAttribute('data-act');
     if (a === 'dl') { e.preventDefault(); download(b.getAttribute('data-path')); }
@@ -1444,6 +1569,11 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     else if (a === 'csv') { csvPN(b.getAttribute('data-v')); }
     else if (a === 'regWho') { P.archivio.who = b.getAttribute('data-v'); render(); }
     else if (a === 'regKind') { P.archivio.kind = b.getAttribute('data-v'); render(); }
+    else if (a === 'prFiltro') { P.pratiche.f = b.getAttribute('data-v'); render(); }
+    else if (a === 'prStato') { var pp = await upd('pratiche', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v') }); if (pp) { toast(pp.stato === 'chiusa' ? 'Pratica chiusa.' : 'Pratica riaperta.'); render(); } }
+    else if (a === 'archivia') { var tb2 = b.getAttribute('data-t'), on = b.getAttribute('data-v') === '1'; var ar = await upd(tb2, +b.getAttribute('data-id'), { archiviato: on }); if (ar) { toast(on ? 'Archiviato: lo ritrovi in «Archiviate».' : 'Ripristinato.'); render(); } }
+    else if (a === 'elimina') { await elimina(b.getAttribute('data-t'), +b.getAttribute('data-id'), b.getAttribute('data-l')); }
+    else if (a === 'rqStato') { var rr = await upd('richieste', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v'), aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (rr) { toast(rr.stato === 'fatta' ? 'Richiesta segnata come fatta.' : 'Hai preso in carico la richiesta.'); render(); } }
     else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
     else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
     else if (a === 'sitoDel') { sitoDel(b.getAttribute('data-t'), +b.getAttribute('data-id')); }
@@ -1506,6 +1636,23 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
         if (m2) { toast('Movimento annullato.'); render(); }
       } else if (a === 'slideSave' || a === 'corsoSave' || a === 'calSave') {
         await sitoSave(a, f);
+      } else if (a === 'scadEdit') {
+        var g = function (n) { return f[n].value.trim(); };
+        var r1 = await upd('scadenze', +f.getAttribute('data-id'), { titolo: g('titolo'), data: g('data') || null, responsabile: g('responsabile'), categoria: g('categoria') || null, note: g('note') || null, urgente: f.urgente.checked, annuale: f.annuale.checked, etichetta: g('data') ? null : 'Da fissare' });
+        if (r1) { toast('Scadenza salvata.'); render(); }
+      } else if (a === 'decEdit') {
+        var r2b = await upd('decisioni', +f.getAttribute('data-id'), { testo: f.testo.value.trim(), rif: f.rif.value.trim() || null });
+        if (r2b) { toast('Decisione salvata.'); render(); }
+      } else if (a === 'passoEdit') {
+        var r3b = await upd('pratica_passi', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null, responsabile: f.responsabile.value, scadenza: f.scadenza.value || null, ordine: +f.ordine.value || 1, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+        if (r3b) { D.pratica_passi.sort(function (a1, b1) { return a1.ordine - b1.ordine; }); toast('Passo salvato.'); render(); }
+      } else if (a === 'prEdit') {
+        var r4b = await upd('pratiche', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null });
+        if (r4b) { toast('Pratica salvata.'); render(); }
+      } else if (a === 'commento') {
+        var row = { chi: me.nome + (me.prova ? ' (accesso rapido)' : ''), testo: f.testo.value.trim() }; row[f.getAttribute('data-col')] = +f.getAttribute('data-id');
+        var r5b = await sb.from('commenti').insert(row).select().single();
+        if (r5b.error) throw r5b.error; D.commenti.push(r5b.data); toast('Commento pubblicato.'); render();
       } else if (/^n(Scad|Att|Pratica|Dec|Testo|Passo)$/.test(a)) {
         await nuovoSave(a, f);
       } else if (a === 'testiSave') {
@@ -1555,13 +1702,29 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     if (id === 'new') {
       var r = await sb.from(tb).insert(row).select().single();
       if (r.error) throw r.error; D[tb].push(r.data); toast('Aggiunto: è già sul sito' + (row.pubblicato ? '' : ' (nascosto)') + '.');
+      if (/^#nuovo/.test(location.hash)) { location.hash = tb === 'sito_calendario' && r.data.data ? '#calendario/' + r.data.data.slice(0, 7) : '#sito/' + (tb === 'sito_calendario' ? 'calendario' : tb === 'sito_slide' ? 'slide' : 'corsi'); return; }
     } else {
       var x = await upd(tb, +id, row); if (!x) return; toast('Salvato: il sito è già aggiornato.');
     }
     render();
   }
+  async function elimina(tb, id, label) {
+    if (!confirm('Eliminare «' + (label || 'questo elemento') + '»?\n\nSe vuoi solo toglierlo di mezzo, usa «Archivia»: si può ripristinare. L’eliminazione resta scritta nel registro.')) return;
+    try {
+      if (tb === 'pratiche') {
+        var e1 = await sb.from('scadenze').update({ pratica_id: null }).eq('pratica_id', id); if (e1.error) throw e1.error;
+        var e2 = await sb.from('pratica_passi').delete().eq('pratica_id', id); if (e2.error) throw e2.error;
+        D.pratica_passi = D.pratica_passi.filter(function (x) { return x.pratica_id !== id; });
+      }
+      var r = await sb.from(tb).delete().eq('id', id).select();
+      if (r.error) throw r.error;
+      if (!r.data.length) { toast('Non eliminato: permesso negato.'); return; }
+      D[tb] = D[tb].filter(function (x) { return x.id !== id; }); toast('Eliminato.');
+      if (tb === 'pratiche') location.hash = '#pratiche'; else if (tb === 'attivita') location.hash = '#attivita'; else render();
+    } catch (ex) { toast('Non eliminato: ' + (ex.message || ex)); }
+  }
   async function sitoDel(tb, id) {
-    if (!me.admin) return;
+    if (!me.admin && SOLO_ADMIN_DEL.indexOf(tb) >= 0) return;
     if (!confirm('Eliminare definitivamente? Se vuoi solo toglierlo dal sito, togli la spunta «Pubblicato».')) return;
     var r = await sb.from(tb).delete().eq('id', id).select();
     if (r.error) { toast('Non eliminato: ' + r.error.message); return; }
@@ -1614,6 +1777,11 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     try { await load(); var y = window.scrollY; render(); window.scrollTo(0, y); } catch (ex) { console.warn('aggiornamento non riuscito', ex); }
   }
   setInterval(refresh, 120000);
+  function temaBtn() { var m = 'auto'; try { m = localStorage.getItem('inz-mode') || 'auto'; } catch (e) {} document.querySelectorAll('[data-tema]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-tema') === m)); }); }
+  document.addEventListener('click', function (e) { var b = e.target.closest('[data-tema]'); if (!b) return; var m = b.getAttribute('data-tema');
+    try { if (m === 'auto') localStorage.removeItem('inz-mode'); else localStorage.setItem('inz-mode', m); } catch (x) {}
+    if (m === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', m); temaBtn(); });
+  temaBtn();
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refresh(); });
   sb.auth.getSession().then(function (r) { if (r.data && r.data.session) start(r.data.session); else showLogin(); });
 })();
