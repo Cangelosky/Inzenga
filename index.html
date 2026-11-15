@@ -1,4 +1,9 @@
-<!doctype html><html lang="it"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="it"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style>
+.hp { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.avviso { background: var(--c-gite, #F4EAC2); border: 1px solid var(--line); border-left: 6px solid var(--ochre, #D99A1E); border-radius: 14px; padding: 14px 18px; font-weight: 600; white-space: pre-wrap; }
+.small-note { font-size: 14.5px; color: var(--ink-2); margin: 0; }
+</style>
+</head><body>
 <meta name="robots" content="noindex,nofollow">
 <style>#inzGate{position:fixed;inset:0;z-index:9999;background:#15362A;color:#E8EFE3;display:flex;align-items:center;justify-content:center;padding:24px;font-family:"Instrument Sans",system-ui,sans-serif}#inzGate form{width:min(380px,100%);display:grid;gap:14px}#inzGate h1{font:700 26px/1.15 "Bricolage Grotesque",system-ui,sans-serif;margin:0}#inzGate p{margin:0;color:#C9D8C6;font-size:16px;line-height:1.5}#inzGate input{font:inherit;font-size:17px;padding:12px 14px;border-radius:12px;border:1px solid #4B7A62;background:#1F4A38;color:#fff}#inzGate button{font:inherit;font-weight:600;font-size:16px;padding:12px 18px;border-radius:999px;border:0;background:#E2AB3C;color:#1A2A20;cursor:pointer}#inzGate .e{color:#F4C987;min-height:1.2em}</style>
 <div id="inzGate"><form autocomplete="off"><h1>Anteprima riservata</h1><p>Sito dell'Associazione Micologica Giuseppe Inzenga, in prova. Inserisci la password che ti è stata data.</p><label style="display:grid;gap:6px;font-weight:600">Password<input id="inzGateP" type="password" autocomplete="current-password"></label><button type="submit">Entra</button><p class="e" id="inzGateE" role="alert"></p></form></div>
@@ -617,7 +622,7 @@ footer a { color: var(--ink); }
   </defs>
 </svg>
 
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>15 novembre 2026, ore 21:35</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>15 novembre 2026, ore 21:52</span></div>
 <div class="draft gut"><div class="wrap"><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 
 <header class="top gut">
@@ -646,6 +651,7 @@ footer a { color: var(--ink); }
 <!-- HOME -->
 <section class="page gut on" id="p-home" aria-label="Home">
   <div class="wrap stack">
+    <div class="avviso" id="avvisoHome" role="status" hidden></div>
     <div class="hero">
       <div class="hero-copy">
         <h1>Il bosco racconta.<br>Noi lo leggiamo, fungo per fungo.</h1>
@@ -801,7 +807,7 @@ footer a { color: var(--ink); }
       <p>Scegli a quale corso sei interessato. Non è ancora l'iscrizione e non devi essere socio: quando raggiungeremo 15 preiscrizioni, ti contatteremo con date, luogo e quota.</p>
       <div class="pick" id="pick" role="radiogroup" aria-label="Scegli a quale corso sei interessato"></div>
       <form id="preForm" novalidate hidden>
-        <h4 class="pre-for" id="preFor" tabindex="-1"></h4>
+        <h4 class="pre-for" id="preFor" tabindex="-1"></h4><input type="text" name="sito_web" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="fgrid">
           <input type="hidden" id="pc" value="">
           <label for="pn">Nome<input type="text" id="pn" autocomplete="given-name"></label>
@@ -894,7 +900,7 @@ footer a { color: var(--ink); }
     <div class="sdlg-in">
       <div class="sdlg-h"><h3 id="sdlgT">Richiesta di iscrizione</h3><button type="button" class="btn line" id="socioX">Chiudi</button></div>
       <p class="sdlg-p">Raccontaci chi sei e perché vuoi entrare: ci aiuta a presentarti il gruppo giusto. I campi segnati con * sono obbligatori.</p>
-      <form id="socioForm" novalidate>
+      <form id="socioForm" novalidate><input type="text" name="sito_web" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="fgrid">
           <label for="so_nome">Nome *<input type="text" id="so_nome" autocomplete="given-name" required></label>
           <label for="so_cognome">Cognome *<input type="text" id="so_cognome" autocomplete="family-name" required></label>
@@ -945,7 +951,7 @@ footer a { color: var(--ink); }
     <div class="sec-head"><h1 style="font-size:clamp(32px,5vw,52px)">Informativa sulla privacy</h1><p>Come trattiamo i dati che ci lasci quando ci scrivi, ti preiscrivi a un corso o chiedi di diventare socio. Ultimo aggiornamento: ottobre 2026.</p></div>
     <div class="box">
       <h3>Chi è il titolare del trattamento</h3>
-      <p>L'Associazione Micologica G. Inzenga APS, con sede in via S. Domenico Savio 4, 90145 Palermo (presso l'Oratorio dei Salesiani «Villaurea»). Puoi scriverci a <a href="mailto:gruppomic.inzenga@libero.it">gruppomic.inzenga@libero.it</a> per qualsiasi domanda sui tuoi dati.</p>
+      <p><span data-txt="privacy_titolare">L'Associazione Micologica G. Inzenga APS, con sede in via S. Domenico Savio 4, 90145 Palermo (presso l'Oratorio dei Salesiani «Villaurea»).</span> Puoi scriverci a <a data-txt="email" data-mail="1" href="mailto:gruppomic.inzenga@libero.it">gruppomic.inzenga@libero.it</a> per qualsiasi domanda sui tuoi dati.</p>
       <h3>Quali dati raccogliamo</h3>
       <p>Solo quelli che inserisci tu nei moduli del sito: nome e cognome, email, comune di residenza, il corso a cui sei interessato, i motivi per cui vuoi diventare socio e il testo del messaggio che ci scrivi. Non ti chiediamo dati sensibili e non raccogliamo dati di minori senza il consenso di chi esercita la responsabilità genitoriale.</p>
       <h3>Perché li usiamo e con quale base giuridica</h3>
@@ -975,26 +981,27 @@ footer a { color: var(--ink); }
   <div class="wrap stack">
     <div class="ban"><img src="img/contatti.svg" alt="" width="1200" height="300"><div class="ban-t"><h1>Contatti</h1></div></div>
     <div>
-      <div class="sec-head"><h2 style="font-size:clamp(32px,5vw,52px)">Vieni a trovarci in sede.</h2><p>Le serate sono il lunedì e il giovedì. Scrivici per un corso, per una mostra nel tuo comune o anche solo per capire se fa per te: ti rispondiamo volentieri.</p></div>
+      <div class="sec-head"><h2 style="font-size:clamp(32px,5vw,52px)">Vieni a trovarci in sede.</h2><p data-txt="contatti_intro">Le serate sono il lunedì e il giovedì. Scrivici per un corso, per una mostra nel tuo comune o anche solo per capire se fa per te: ti rispondiamo volentieri.</p></div>
       <div class="cols">
         <div class="box">
           <h3>Dove siamo</h3>
           <dl class="kv">
-            <dt>Sede</dt><dd>Oratorio dei Salesiani «Villaurea», Palermo</dd>
-            <dt>Indirizzo</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+S.+Domenico+Savio+4%2C+90145+Palermo" target="_blank" rel="noopener noreferrer">Via S. Domenico Savio 4, 90145 Palermo</a></dd>
-            <dt>Email</dt><dd><a href="mailto:gruppomic.inzenga@libero.it">gruppomic.inzenga@libero.it</a></dd>
-            <dt>Telefono</dt><dd>335 782 5415 · 335 844 4596</dd>
+            <dt>Sede</dt><dd data-txt="sede_nome">Oratorio dei Salesiani «Villaurea», Palermo</dd>
+            <dt>Indirizzo</dt><dd><a data-txt="sede_indirizzo" data-map="1" href="https://www.google.com/maps/search/?api=1&amp;query=Via+S.+Domenico+Savio+4%2C+90145+Palermo" target="_blank" rel="noopener noreferrer">Via S. Domenico Savio 4, 90145 Palermo</a></dd>
+            <dt>Email</dt><dd><a data-txt="email" data-mail="1" href="mailto:gruppomic.inzenga@libero.it">gruppomic.inzenga@libero.it</a></dd>
+            <dt>Telefono</dt><dd data-txt="telefono">335 782 5415 · 335 844 4596</dd>
             <dt>Social</dt><dd><span class="soc lab"><a class="soc-b" href="https://www.facebook.com/profile.php?id=61568126933510" target="_blank" rel="noopener noreferrer" aria-label="Facebook (si apre in una nuova scheda)" title="Facebook"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><text x="12" y="20" text-anchor="middle" font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-size="27" font-weight="800" fill="currentColor">f</text></svg><span class="t">Facebook</span></a><a class="soc-b" href="https://www.instagram.com/ass.micologica.inzenga/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (si apre in una nuova scheda)" title="Instagram"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.9" cy="7.1" r="1.25" fill="currentColor"/></svg><span class="t">Instagram</span></a></span></dd>
           </dl>
         </div>
         <div class="box">
           <h3>Scrivici</h3>
-          <form id="contactForm" novalidate>
+          <form id="contactForm" novalidate><input type="text" name="sito_web" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
             <label for="cn">Nome<input type="text" id="cn" autocomplete="name"></label>
             <label for="ce">Email<input type="email" id="ce" autocomplete="email"></label>
             <label for="cm">Messaggio<textarea id="cm"></textarea></label>
+            <p class="small-note">Usiamo nome ed email solo per risponderti. <a href="#privacy" data-go="privacy">Informativa sulla privacy</a>.</p>
             <button class="btn solid" type="submit">Scrivici</button>
-            <div class="msg" id="cmsg" hidden></div>
+            <div class="msg" id="cmsg" hidden role="status"></div>
           </form>
         </div>
       </div>
@@ -1125,11 +1132,14 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     { t: 'Diventa socio: i funghi si imparano in compagnia', b: 'Serate in sede il lunedì e il giovedì, gite nel bosco, mostre e stage. Non serve sapere già nulla di funghi: basta la curiosità.', d: 'Quota annuale: da inserire', go: 'associati', cta: 'Scopri cosa fa un socio', img: 'img/socio-serata.jpg', alt: 'Soci attorno al tavolo con i funghi durante una serata in sede' }
   ];
   var ppRow = document.getElementById('ppRow'), ppDots = document.getElementById('ppDots');
+  function renderSpot() {
   ppRow.innerHTML = SPOT.map(function (s, i) {
     return '<article class="pp-card"><button type="button" class="pp-ph' + (s.logo ? ' logo' : '') + '" data-i="' + i + '" aria-label="Ingrandisci la foto: ' + esc(s.t) + '"><img src="' + s.img + '" alt="" loading="lazy" draggable="false"><span class="pp-zm" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M11 8.5v5M8.5 11h5"/></svg></span><h3>' + esc(s.t) + '</h3></button>' +
       '<div class="pp-tx"><p>' + esc(s.b) + '</p><div class="pp-d">' + esc(s.d) + '</div><a class="btn solid" href="#' + s.go + '" data-go="' + s.go + '">' + esc(s.cta) + '</a></div></article>';
   }).join('');
   ppDots.innerHTML = SPOT.map(function () { return '<i></i>'; }).join('');
+  }
+  renderSpot();
   function ppDot() { var w = ppRow.children[0].offsetWidth + 16, i = Math.min(SPOT.length - 1, Math.round(ppRow.scrollLeft / w)); [].forEach.call(ppDots.children, function (d, k) { d.classList.toggle('on', k === i); }); }
   ppRow.addEventListener('scroll', ppDot, { passive: true }); window.addEventListener('resize', ppDot); ppDot();
   ppRow.addEventListener('click', function (e) { var b = e.target.closest('.pp-ph'); if (!b) return; var s = SPOT[+b.getAttribute('data-i')]; openLb(s.img, s.alt, b); });
@@ -1224,7 +1234,9 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   });
   (function(){ var b = document.querySelector('#p-corsi .ban img'); if (b && IMG.corsiaula) { b.src = IMG.corsiaula; b.style.objectPosition = '50% 40%'; } })();
   var actPage = document.getElementById('actPage');
+  var CAL_YEAR = 2027, actSlug = null;
   function renderAct(slug) {
+    actSlug = slug;
     var cat = BY_SLUG[slug], a = ACTS.filter(function (x) { return x.cat === cat; })[0], c = CAT[cat];
     var evs = CAL.filter(function (e) { return e.c === cat; });
     var spot = SPOT.filter(function (s) { return s.cat === cat && !s.chip; })[0];
@@ -1237,7 +1249,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       '<header class="ahero" style="--tint:' + c.v + '">' + heroPic + '<div class="ahero-in"><div class="crumbs" role="navigation" aria-label="Percorso"><a href="#attivita" data-go="attivita">Attività</a><span aria-hidden="true">›</span><span aria-current="page">' + esc(c.n) + '</span></div><span class="chip">' + esc(c.n) + '</span><h2 style="font-size:clamp(30px,5vw,50px)">' + esc(a.t) + '</h2></div></header>' +
       '<div class="two one"><div class="text"><p class="lead">' + esc(a.b) + '</p><p class="fact"><b>Chi partecipa:</b> ' + esc(a.w) + '</p>' + (a.x ? '<p class="axtra">' + a.x + '</p>' : '') + '</div></div>' +
       hi +
-      (evs.length ? '<section class="adet-sec"><h3>Nel calendario 2027</h3><ul class="evs">' + rows + '</ul>' + (evs.length > 6 ? '<p class="fact">Altre ' + (evs.length - 6) + ' date nel calendario.</p>' : '') + '<a class="btn solid" href="#calendario" data-go="calendario" data-cal="' + cat + '" style="align-self:flex-start">Tutte le date: ' + esc(c.n) + ' (' + evs.length + ') ›</a></section>' : '') +
+      (evs.length ? '<section class="adet-sec"><h3>Nel calendario ' + CAL_YEAR + '</h3><ul class="evs">' + rows + '</ul>' + (evs.length > 6 ? '<p class="fact">Altre ' + (evs.length - 6) + ' date nel calendario.</p>' : '') + '<a class="btn solid" href="#calendario" data-go="calendario" data-cal="' + cat + '" style="align-self:flex-start">Tutte le date: ' + esc(c.n) + ' (' + evs.length + ') ›</a></section>' : '') +
       '<section class="adet-sec"><h3>Le altre attività</h3><div class="others">' + others + '</div></section>';
   }
 
@@ -1834,18 +1846,22 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   var COURSES = [
     { real: true, t: 'Corso di micologia per il tesserino di raccolta: funghi epigei', w: 'Cefalù', when: '11 – 21 novembre 2026', where: 'Aula Consiliare, Piazza Duomo, 90015 Cefalù (PA)', tel: '335 782 5415 · 335 844 4596', note: 'Obbligatorio per il conseguimento del tesserino di raccolta dei funghi epigei. Lo organizza l\'Associazione Micologica Bresadola, gruppo Giuseppe Inzenga di Palermo.', poster: 'cefalu', palt: 'Locandina del corso di micologia a Cefalù, dall\'11 al 21 novembre, presso l\'Aula Consiliare' },
   ];
-  document.getElementById('courses').innerHTML = COURSES.map(function (c) {
+  function renderCourses() {
+  if (!COURSES.length) { document.getElementById('courses').innerHTML = '<p class="lead">Al momento non ci sono corsi con date fissate. Preiscriviti qui sotto al corso che ti interessa: ti avvisiamo appena si organizza.</p>'; return; }
+  document.getElementById('courses').innerHTML = COURSES.map(function (c, ci) {
     if (c.real) {
       return '<article class="course real"><div class="cbody"><div class="badges"><span class="badge ok">Iscrizioni aperte</span><span class="badge">' + esc(c.w) + '</span></div><h3>' + esc(c.t) + '</h3><p class="where">' + esc(c.note) + '</p>' +
-        '<dl class="facts-l"><dt>Quando</dt><dd>' + esc(c.when) + '</dd><dt>Dove</dt><dd>' + esc(c.where) + '</dd><dt>Informazioni</dt><dd>' + esc(c.tel) + '</dd></dl>' +
-        '<a class="btn solid" href="#preiscrizione" data-pre="' + esc(c.t) + '" style="align-self:flex-start">Mi preiscrivo a questo corso</a></div>' +
-        '<button type="button" class="cpic" aria-label="Ingrandisci la locandina del corso di ' + esc(c.w) + '"><img src="' + IMG[c.poster] + '" alt="' + esc(c.palt) + '"><span>Ingrandisci</span></button></article>';
+        '<dl class="facts-l">' + (c.when ? '<dt>Quando</dt><dd>' + esc(c.when) + '</dd>' : '') + (c.where ? '<dt>Dove</dt><dd>' + esc(c.where) + '</dd>' : '') + (c.tel ? '<dt>Informazioni</dt><dd>' + esc(c.tel) + '</dd>' : '') + '</dl>' +
+        '<a class="btn solid" href="#preiscrizione" data-pre="' + ci + '" style="align-self:flex-start">Mi preiscrivo a questo corso</a></div>' +
+        ((c.src || IMG[c.poster]) ? '<button type="button" class="cpic" data-ci="' + ci + '" aria-label="Ingrandisci la locandina del corso di ' + esc(c.w) + '"><img src="' + (c.src || IMG[c.poster]) + '" alt="' + esc(c.palt) + '"><span>Ingrandisci</span></button>' : '') + '</article>';
     }
     var done = c.n >= SOGLIA, pct = Math.min(100, Math.round(c.n / SOGLIA * 100));
     return '<article class="course"><div class="badges"><span class="badge">' + esc(c.inc) + '</span><span class="badge ex">Esempio</span>' + (done ? '<span class="badge ok">Si organizza</span>' : '') + '</div><h3>' + esc(c.t) + '</h3><p class="where">' + esc(c.w) + '. ' + esc(c.note) + '</p>' +
       '<div class="prog' + (done ? ' done' : '') + '"><div class="row"><span>' + c.n + ' preiscritti su ' + SOGLIA + '</span><span>' + (done ? 'Soglia raggiunta' : 'Ne mancano ' + (SOGLIA - c.n)) + '</span></div><div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="' + SOGLIA + '" aria-valuenow="' + c.n + '" aria-label="Preiscrizioni a ' + esc(c.t) + '"><div class="fill" style="width:' + pct + '%"></div></div></div>' +
       '<div class="detail" style="font-size:14.5px;color:var(--ink-2)">' + (done ? 'Date e luogo in definizione. Posti disponibili: al massimo ' + POSTI + '.' : 'Date: da definire quando si raggiunge la soglia.') + '</div></article>';
   }).join('');
+  }
+  renderCourses();
   var OPTS = [
     { v: 'Corso di micologia per funghi epigei · Cefalù, 11 – 21 novembre 2026', t: 'Corso di micologia per funghi epigei a Cefalù', d: '11 – 21 novembre 2026 · Aula Consiliare', tag: 'In programma' },
     { v: 'Corso base di micologia, funghi epigei', t: 'Corso base di micologia, funghi epigei', d: 'Per il tesserino di raccolta. Si organizza quando arriviamo a 15 preiscritti.' },
@@ -1857,11 +1873,15 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     setTimeout(function () { var r = document.querySelector('#pick input:checked') || document.querySelector('#pick input'); if (r) r.focus({ preventScroll: true }); }, 500);
   });
   var pick = document.getElementById('pick'), pform = document.getElementById('preForm');
+  var curOpt = -1;
+  function renderPick() {
   pick.innerHTML = OPTS.map(function (o, k) {
-    return '<label class="opt">' + (o.tag ? '<span class="tag">' + esc(o.tag) + '</span>' : '') + '<input type="radio" name="pcorso" value="' + k + '"><b>' + esc(o.t) + '</b><small>' + esc(o.d) + '</small></label>';
+    return '<label class="opt">' + (o.tag ? '<span class="tag">' + esc(o.tag) + '</span>' : '') + '<input type="radio" name="pcorso" value="' + k + '"' + (k === curOpt ? ' checked' : '') + '><b>' + esc(o.t) + '</b><small>' + esc(o.d) + '</small></label>';
   }).join('');
+  }
+  renderPick();
   function chooseCourse(k, go) {
-    var o = OPTS[k]; if (!o) return;
+    var o = OPTS[k]; if (!o) return; curOpt = k;
     pick.querySelectorAll('input').forEach(function (r) { r.checked = (+r.value === k); });
     document.getElementById('pc').value = o.v;
     document.getElementById('preFor').textContent = 'Preiscrizione: ' + o.t;
@@ -1870,8 +1890,8 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   }
   pick.addEventListener('change', function (e) { var r = e.target.closest('input'); if (r) chooseCourse(+r.value, true); });
   document.getElementById('courses').addEventListener('click', function (e) {
-    var a = e.target.closest('[data-pre]'); if (a) { e.preventDefault(); chooseCourse(0, false); document.getElementById('preiscrizione').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    var b = e.target.closest('.cpic'); if (b) openLb(IMG[COURSES[0].poster], COURSES[0].palt, b);
+    var a = e.target.closest('[data-pre]'); if (a) { e.preventDefault(); var cc = COURSES[+a.getAttribute('data-pre')] || {}, k = 0; OPTS.forEach(function (o, i) { if (cc.cid && o.cid === cc.cid) k = i; }); chooseCourse(k, false); document.getElementById('preiscrizione').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    var b = e.target.closest('.cpic'); if (b) { var c2 = COURSES[+b.getAttribute('data-ci')] || COURSES[0]; openLb(c2.src || IMG[c2.poster], c2.palt, b); }
   });
 
   var POSTERS = [
@@ -1879,16 +1899,20 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     { img: 'loc2', t: 'Corso di micologia per il tesserino', k: 'Raccolta funghi epigei', d: '7, 11 e 15 settembre · 16:00-21:00', w: 'Biblioteca Sociale «CeSVoP», Via Pizzetti 10, Palermo', alt: 'Locandina del corso di micologia per il tesserino di raccolta funghi epigei, Palermo, 7, 11 e 15 settembre dalle 16 alle 21' },
     { img: 'loc3', t: 'Corso di preparazione agli esami per il tesserino', k: 'Raccolta tartufi', d: '23, 26, 30 giugno e 3 luglio · 16:00-21:00', w: 'Via S. Domenico Savio 4, Palermo', alt: 'Locandina del corso di preparazione agli esami per il tesserino di raccolta tartufi, Palermo, 23, 26, 30 giugno e 3 luglio dalle 16 alle 21' }
   ];
+  function renderPosters() {
   document.getElementById('posters').innerHTML = POSTERS.map(function (p, i) {
-    return '<article class="poster"><button type="button" class="pic" data-i="' + i + '" aria-label="Ingrandisci la locandina: ' + esc(p.t) + '"><img src="' + IMG[p.img] + '" alt="' + esc(p.alt) + '" loading="lazy"><span>Ingrandisci</span></button>' +
-      '<div class="badges"><span class="badge done">Concluso</span><span class="badge">' + esc(p.k) + '</span></div><h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + '<br>' + esc(p.w) + '</p></article>';
+    var src = p.src || IMG[p.img];
+    return '<article class="poster">' + (src ? '<button type="button" class="pic" data-i="' + i + '" aria-label="Ingrandisci la locandina: ' + esc(p.t) + '"><img src="' + src + '" alt="' + esc(p.alt) + '" loading="lazy"><span>Ingrandisci</span></button>' : '') +
+      '<div class="badges"><span class="badge done">Concluso</span>' + (p.k ? '<span class="badge">' + esc(p.k) + '</span>' : '') + '</div><h3>' + esc(p.t) + '</h3><p>' + esc(p.d) + (p.w ? '<br>' + esc(p.w) : '') + '</p></article>';
   }).join('');
+  }
+  renderPosters();
   var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lastBtn = null;
   function openLb(src, alt, btn) { lastBtn = btn; lbImg.src = src; lbImg.alt = alt; lb.hidden = false; document.getElementById('lbClose').focus(); }
   document.getElementById('posters').addEventListener('click', function (e) {
     var b = e.target.closest('button.pic'); if (!b) return;
     var p = POSTERS[+b.getAttribute('data-i')];
-    openLb(IMG[p.img], p.alt, b);
+    openLb(p.src || IMG[p.img], p.alt, b);
   });
   function closeLb() { lb.hidden = true; lbImg.removeAttribute('src'); if (lastBtn) lastBtn.focus(); }
   document.getElementById('lbClose').addEventListener('click', closeLb);
@@ -1896,24 +1920,39 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
   document.getElementById('preForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    var err = document.getElementById('perr'), msg = document.getElementById('pmsg');
+    var f = this, err = document.getElementById('perr'), msg = document.getElementById('pmsg'), btn = f.querySelector('button[type=submit]');
     msg.hidden = true;
     var miss = [];
     if (!document.getElementById('pn').value.trim()) miss.push('il nome');
     if (!document.getElementById('ps').value.trim()) miss.push('il cognome');
-    if (!/^\S+@\S+\.\S+$/.test(document.getElementById('pe').value.trim())) miss.push('un\'email valida');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(document.getElementById('pe').value.trim())) miss.push('un\'email valida');
     if (!document.getElementById('pm').value.trim()) miss.push('il comune');
     if (!document.getElementById('pp').checked) miss.push('il consenso ai dati');
     if (miss.length) { err.hidden = false; err.textContent = 'Manca ' + miss.join(', ') + '.'; return; }
-    err.hidden = true; msg.hidden = false;
-    msg.textContent = 'In questa bozza la preiscrizione («' + document.getElementById('pc').value + '») non viene inviata. Nel sito vero arriva alla segreteria e il contatore del corso sale da solo.';
+    err.hidden = true;
+    var o = OPTS[curOpt] || {}, nome = document.getElementById('pn').value.trim();
+    function ok() { msg.hidden = false; msg.textContent = 'Grazie, ' + nome + '! La tua preiscrizione a «' + (o.t || 'corso') + '» è arrivata alla segreteria. Ti ricontattiamo con date, luogo e quota.'; ['pn', 'ps', 'pe', 'pt', 'pm', 'pk'].forEach(function (id) { document.getElementById(id).value = ''; }); document.getElementById('pp').checked = false; }
+    if (f.sito_web.value) { ok(); return; }
+    btn.disabled = true;
+    sbPost('sito_preiscrizioni', { corso_id: o.cid || null, corso_testo: (o.v || document.getElementById('pc').value || 'Corso').slice(0, 300), nome: nome, cognome: document.getElementById('ps').value.trim(), email: document.getElementById('pe').value.trim(), telefono: document.getElementById('pt').value.trim() || null, comune: document.getElementById('pm').value.trim(), note: document.getElementById('pk').value.trim() || null, consenso: true })
+      .then(ok, function () { err.hidden = false; err.textContent = 'Non siamo riusciti a inviare la preiscrizione. Riprova tra poco, oppure scrivici a ' + TXT.email + '.'; })
+      .then(function () { btn.disabled = false; });
   });
 
-  /* ---------- moduli (solo interfaccia) ---------- */
+  /* ---------- moduli ---------- */
   document.getElementById('contactForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    var m = document.getElementById('cmsg'); m.hidden = false;
-    m.textContent = 'In questa bozza il modulo non invia nulla. Nel sito vero il messaggio arriverà alla segreteria.';
+    var f = this, m = document.getElementById('cmsg'), btn = f.querySelector('button[type=submit]');
+    var nome = document.getElementById('cn').value.trim(), em = document.getElementById('ce').value.trim(), tx = document.getElementById('cm').value.trim();
+    m.hidden = false;
+    var miss = []; if (!nome) miss.push('il nome'); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) miss.push('un\'email valida'); if (!tx) miss.push('il messaggio');
+    if (miss.length) { m.textContent = 'Manca ' + miss.join(', ') + '.'; return; }
+    function ok() { m.textContent = 'Grazie, ' + nome + '! Il messaggio è arrivato alla segreteria: ti rispondiamo all\'indirizzo ' + em + '.'; f.reset(); }
+    if (f.sito_web.value) { ok(); return; }
+    btn.disabled = true; m.textContent = 'Invio in corso…';
+    sbPost('sito_messaggi', { nome: nome.slice(0, 120), email: em, messaggio: tx.slice(0, 4000) })
+      .then(ok, function () { m.textContent = 'Non siamo riusciti a inviare il messaggio. Riprova tra poco, oppure scrivici a ' + TXT.email + '.'; })
+      .then(function () { btn.disabled = false; });
   });
   /* ---------- accesso demo (utenti inventati) ---------- */
   var DEMO = [
@@ -1963,6 +2002,59 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     renderArea(acc);
   });
 
+  /* ---------- contenuti aggiornati dal gestionale del Consiglio Direttivo ----------
+     Slide, corsi, calendario e contatti arrivano dall'archivio del gestionale (Supabase).
+     Se l'archivio non risponde, restano i contenuti scritti qui sopra. */
+  var SB = 'https://vqmxyexwdxjbeakksypz.supabase.co', SBK = 'sb_publishable_jrmse0Bys256kjYFvNl9mQ_QBoECrd3';
+  var TXT = { email: 'gruppomic.inzenga@libero.it' };
+  function sbImg(p) { if (!p) return ''; if (/^(https?:|data:)/.test(p)) return p; if (/^immagini\//.test(p)) return SB + '/storage/v1/object/public/sito/' + p; return p; }
+  function sbGet(path) {
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ctl) ctl.abort(); }, 7000);
+    return fetch(SB + '/rest/v1/' + path, { headers: { apikey: SBK }, cache: 'no-store', signal: ctl ? ctl.signal : undefined }).then(function (r) { clearTimeout(tm); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  }
+  function sbPost(table, row) {
+    return fetch(SB + '/rest/v1/' + table, { method: 'POST', headers: { apikey: SBK, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(row) })
+      .then(function (r) { if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('HTTP ' + r.status)); }); });
+  }
+  function dayTxt(e) {
+    if (!e.data) return { d: '—', w: 'da definire' };
+    var W = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'], a = new Date(e.data + 'T12:00:00'), b = e.data_fine ? new Date(e.data_fine + 'T12:00:00') : null;
+    return b ? { d: a.getDate() + '–' + b.getDate(), w: W[a.getDay()] + '–' + W[b.getDay()] } : { d: String(a.getDate()), w: W[a.getDay()] };
+  }
+  function nn(v) { return v == null ? '' : String(v); }
+  window.inzPost = sbPost; window.inzTXT = TXT;
+  Promise.all([sbGet('sito_slide?select=*&order=ordine,id'), sbGet('sito_corsi?select=*&order=ordine,id'), sbGet('sito_calendario?select=*&order=anno,mese,data.nullslast,id'), sbGet('sito_testi?select=chiave,valore')]).then(function (R) {
+    if (R[0].length) {
+      SPOT = R[0].map(function (x) { return { t: x.titolo, b: nn(x.testo), d: nn(x.dettaglio), go: x.link || 'home', cta: x.bottone || 'Scopri di più', img: sbImg(x.immagine), alt: nn(x.alt), logo: !!x.logo }; });
+      renderSpot(); ppDot();
+    }
+    if (R[1].length) {
+      var ap = R[1].filter(function (c) { return c.stato === 'aperto'; }), at = R[1].filter(function (c) { return c.stato === 'in_attesa'; }), co = R[1].filter(function (c) { return c.stato === 'concluso'; });
+      COURSES = ap.map(function (c) { return { real: true, cid: c.id, t: c.titolo, w: nn(c.luogo), when: nn(c.quando), where: nn(c.dove), tel: nn(c.info), note: nn(c.descrizione), src: sbImg(c.locandina), palt: nn(c.alt) }; });
+      OPTS = ap.concat(at).map(function (c) { var bt = c.titolo_breve || c.titolo; return { cid: c.id, v: bt + (c.quando ? ' · ' + (c.luogo ? c.luogo + ', ' : '') + c.quando : ''), t: bt, d: c.stato === 'aperto' ? [c.quando, nn(c.dove).split(',')[0]].filter(Boolean).join(' · ') : nn(c.descrizione), tag: c.stato === 'aperto' ? 'In programma' : '' }; });
+      POSTERS = co.map(function (c) { return { src: sbImg(c.locandina), t: c.titolo, k: nn(c.tipo), d: nn(c.quando), w: nn(c.dove), alt: nn(c.alt) }; });
+      curOpt = -1; renderCourses(); renderPick(); renderPosters();
+    }
+    if (R[2].length) {
+      var y0 = new Date().getFullYear(), anni = R[2].map(function (e) { return e.anno; }).filter(function (a, i, A) { return A.indexOf(a) === i; }).sort();
+      CAL_YEAR = anni.filter(function (a) { return a >= y0; })[0] || anni[anni.length - 1];
+      CAL = R[2].filter(function (e) { return e.anno === CAL_YEAR; }).map(function (e) { var dd = dayTxt(e); return { m: e.mese, d: dd.d, w: dd.w, c: e.categoria, t: e.titolo, s: nn(e.sottotitolo), n: e.proposta ? 1 : 0 }; });
+      tabCal.textContent = 'Calendario ' + CAL_YEAR;
+      if (!panCal.hidden) calRender();
+      if (actSlug && document.getElementById('p-attivita-dett').classList.contains('on')) renderAct(actSlug);
+    }
+    var T = {}; R[3].forEach(function (x) { T[x.chiave] = x.valore; });
+    if (T.email) TXT.email = T.email;
+    document.querySelectorAll('[data-txt]').forEach(function (el) {
+      var v = T[el.getAttribute('data-txt')]; if (!v) return;
+      el.textContent = v;
+      if (el.hasAttribute('data-mail')) el.href = 'mailto:' + v;
+      if (el.hasAttribute('data-map')) el.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v);
+    });
+    var av = document.getElementById('avvisoHome');
+    if (T.avviso_home && T.avviso_home.trim()) { av.textContent = T.avviso_home.trim(); av.hidden = false; } else av.hidden = true;
+  }).catch(function () { /* l'archivio non risponde: restano i contenuti della pagina */ });
+
   /* ---------- sfondo ---------- */
   /* chiaro = Radura, scuro = Terra di bosco; segue il sistema finché non si sceglie a mano */
   var rootEl = document.documentElement, skinBtn = document.getElementById('skinBtn');
@@ -2007,7 +2099,15 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { m.textContent = "L'email non sembra corretta: controlla che ci sia la @ e il punto."; return; }
       if (!f.querySelector('#so_why input:checked')) { m.textContent = "Dicci almeno un motivo per cui vuoi diventare socio."; return; }
       if (!document.getElementById('so_priv').checked) { m.textContent = "Per inviare la richiesta serve il consenso sulla privacy."; return; }
-      m.textContent = 'Grazie, ' + document.getElementById('so_nome').value.trim() + '! In questa anteprima la richiesta non parte davvero. Nel sito vero arriva alla segreteria, che ti ricontatta per invitarti in sede.';
+      var nome = document.getElementById('so_nome').value.trim(), btn = f.querySelector('button[type=submit]');
+      function vals(sel) { return [].map.call(f.querySelectorAll(sel), function (x) { return x.value; }); }
+      function ok() { m.textContent = 'Grazie, ' + nome + '! La richiesta è arrivata alla segreteria, che ti ricontatta per invitarti in sede.'; f.reset(); }
+      if (f.sito_web.value) { ok(); return; }
+      btn.disabled = true; m.textContent = 'Invio in corso…';
+      var liv = f.querySelector('#so_liv input:checked');
+      window.inzPost('sito_richieste_socio', { nome: nome, cognome: document.getElementById('so_cognome').value.trim(), email: em, telefono: document.getElementById('so_tel').value.trim() || null, comune: document.getElementById('so_comune').value.trim(), come: document.getElementById('so_come').value || null, motivi: vals('#so_why input:checked'), interessi: vals('#so_int input:checked'), livello: liv ? liv.value : null, messaggio: document.getElementById('so_msg').value.trim() || null, consenso: true })
+        .then(ok, function () { m.textContent = 'Non siamo riusciti a inviare la richiesta. Riprova tra poco, oppure scrivici a ' + window.inzTXT.email + '.'; })
+        .then(function () { btn.disabled = false; });
     });
   })();
 </script>

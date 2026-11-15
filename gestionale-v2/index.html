@@ -262,6 +262,55 @@ tr.ann td.mot { text-decoration: none; }
 .pnform input, .pnform select { min-height: 46px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); width: 100%; min-width: 0; }
 .pnform .wide { grid-column: 1 / -1; }
 
+/* colori per categoria: tinte trasparenti sulla carta */
+:root {
+  --t-conv: #9CC58A; --t-lez: #B9D46A; --t-corsi: #E8C75A; --t-pratica: #6FC2A2; --t-gite: #F0A65A; --t-mostre: #D98FB8; --t-stage: #7EB3DA; --t-eventi: #EE8F6F; --t-ist: #A8A8C4;
+  --t-pres: #7EA8D8; --t-vice: #B395D6; --t-tes: #E3BE52; --t-seg: #74BE8C; --t-cd: #B9AE97; --t-altro: #C8CCC2;
+  --k-scad: #EE9A72; --k-att: #8CC481; --k-cal: #74B7A6; --k-dec: #E6BD55; --k-doc: #82AACF; --k-altri: #A9A2CF; --k-sito: #5FB8B0; --k-soci: #D396BE; --k-corsi: #E8C75A; --k-soldi: #DDB54E;
+}
+.tinted, .k-scad, .k-att, .k-cal, .k-dec, .k-doc, .k-altri, .k-sito, .k-soci, .k-corsi, .k-soldi { background: color-mix(in srgb, var(--tint, var(--line)) 16%, var(--card)); border-color: color-mix(in srgb, var(--tint, var(--line)) 45%, var(--line)); }
+.k-scad { --tint: var(--k-scad); } .k-att { --tint: var(--k-att); } .k-cal { --tint: var(--k-cal); } .k-dec { --tint: var(--k-dec); } .k-doc { --tint: var(--k-doc); } .k-altri { --tint: var(--k-altri); } .k-sito { --tint: var(--k-sito); } .k-soci { --tint: var(--k-soci); } .k-corsi { --tint: var(--k-corsi); } .k-soldi { --tint: var(--k-soldi); }
+.box.tinted.me, .ruolo.tinted.me { border: 2px solid var(--forest); }
+.ruolo.tinted .sost { background: color-mix(in srgb, var(--tint) 22%, var(--card)); }
+.stats.k-soci > div { border-color: color-mix(in srgb, var(--tint) 45%, var(--line)); }
+.ev.sit { background: color-mix(in srgb, var(--tint) 30%, var(--card)); border-color: var(--tint); }
+a.card.tinted:hover { border-color: var(--link); }
+
+/* pannello del sito */
+.sform { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: end; margin-top: 10px; }
+.sform label { display: grid; gap: 4px; font-size: 16px; font-weight: 500; }
+.sform input:not([type=checkbox]), .sform select, .sform textarea { min-height: 46px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); width: 100%; min-width: 0; font-size: 16.5px; }
+.sform textarea { min-height: 96px; line-height: 1.5; }
+.sform .wide { grid-column: 1 / -1; }
+label.ck { display: inline-flex !important; align-items: center; gap: 8px; font-weight: 500; min-height: 44px; }
+label.ck input { width: 22px; height: 22px; accent-color: var(--forest); }
+.sitem { grid-template-columns: 150px minmax(0, 1fr); align-items: start; }
+.sitem.off { opacity: .7; border-style: dashed; }
+.sthumb { width: 150px; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: var(--bg); }
+.sthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sthumb.logo img { object-fit: contain; padding: 8px; background: #fff; }
+.sbody { display: grid; gap: 8px; min-width: 0; }
+.sbody > header { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; justify-content: space-between; }
+.sbody h2 { font-size: 21px; }
+.sitem details > summary, .ce details > summary { cursor: pointer; color: var(--link); width: fit-content; font-weight: 600; }
+@media (max-width: 600px) { .sitem { grid-template-columns: 1fr; } .sthumb { width: 100%; max-width: 320px; } }
+h2.grp { font-size: 22px; margin-top: 6px; } h2.grp small { font-family: var(--font-body); font-size: 15px; color: var(--ink-2); }
+.msg { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line); }
+.msg:first-of-type { border-top: 0; padding-top: 0; }
+.msg > header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 14px; align-items: start; }
+.quote { background: var(--card); border-left: 4px solid var(--tint, var(--line)); padding: 10px 14px; border-radius: 0 10px 10px 0; white-space: pre-wrap; }
+.calist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ce { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 12px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--tint) 22%, var(--card)); border-left: 5px solid var(--tint); }
+.ce.off { opacity: .65; }
+.ce .cd b { display: block; font-family: var(--font-display); font-size: 22px; line-height: 1.1; }
+.ce .cd span { font-size: 14px; color: var(--ink-2); }
+.ce .ct { display: block; font-weight: 600; }
+.ce .sub { display: block; }
+i.sw { width: 16px; height: 16px; border-radius: 4px; display: inline-block; background: color-mix(in srgb, var(--tint) 45%, var(--card)); border-left: 4px solid var(--tint); }
+.mini-f { display: grid; gap: 6px; min-width: 220px; }
+.mini-f input { min-height: 40px; padding: 4px 10px; border: 2px solid var(--line); border-radius: 8px; background: var(--card); font-size: 15.5px; }
+table.pre td select { min-height: 40px; border: 2px solid var(--line); border-radius: 8px; background: var(--card); font-weight: 600; }
+
 /* registro */
 .reg { list-style: none; margin: 0; padding: 0; display: grid; }
 .reg li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 14px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 16.5px; }
@@ -302,7 +351,7 @@ tr.ann td.mot { text-decoration: none; }
       <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Cerca in documenti, scadenze, attività, ruoli…" aria-label="Cerca nel gestionale"><button class="btn alt" type="submit">Cerca</button></form>
     </div>
     <main id="main" tabindex="-1"><p class="loading">Caricamento…</p></main>
-    <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. Nessun dato personale dei soci è presente.</footer>
+    <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. Il libro soci resta fuori dal gestionale; qui arrivano solo le richieste inviate dal sito.</footer>
   </div>
 </div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
@@ -331,7 +380,7 @@ tr.ann td.mot { text-decoration: none; }
   function slugify(s) { return low(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'file'; }
 
   var me = null, D = {};
-  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro', 'checklist', 'prima_nota', 'audit'];
+  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro', 'checklist', 'prima_nota', 'audit', 'sito_slide', 'sito_corsi', 'sito_calendario', 'sito_testi', 'sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
 
   /* ---------- accesso ---------- */
   var loginEl = document.getElementById('login'), appEl = document.getElementById('app');
@@ -467,7 +516,7 @@ tr.ann td.mot { text-decoration: none; }
   }
 
   /* ---------- pagine ---------- */
-  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['comesifa', 'Come si fa']];
+  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
   var P = {};
 
   P.oggi = function () {
@@ -480,11 +529,16 @@ tr.ann td.mot { text-decoration: none; }
     var myCl = myClOpen().sort(function (a, b) { return (a.scadenza || '9').localeCompare(b.scadenza || '9') || a.attivita_id - b.attivita_id || a.ordine - b.ordine; });
     var altri = regEntries().filter(function (e) { return e.uid && e.uid !== me.id && e.op !== 'LOG'; }).slice(0, 6);
     var last = D.documenti.slice().sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
+    var ns = nuoviDalSito(), nsTot = ns.pre + ns.soc + ns.msg;
+    var dalSito = '<section class="box k-sito"><header><h2>Dal sito</h2><a href="#sito">Sito</a></header>' + (nsTot ? '<ul class="list">' +
+      (ns.pre ? '<li><div><b><a href="#attivita/corsi">Preiscrizioni ai corsi</a></b><span class="sub">Da contattare</span></div><span class="pill crit">' + ns.pre + '</span></li>' : '') +
+      (ns.soc ? '<li><div><b><a href="#soci">Richieste per diventare socio</a></b><span class="sub">Nuove</span></div><span class="pill crit">' + ns.soc + '</span></li>' : '') +
+      (ns.msg ? '<li><div><b><a href="#sito/messaggi">Messaggi da «Scrivici»</a></b><span class="sub">Da leggere</span></div><span class="pill crit">' + ns.msg + '</span></li>' : '') + '</ul>' : '<p class="sub">Nessuna richiesta nuova dal sito.</p>') + '</section>';
     var card = '';
     if (mine) {
       var sost = mine.sostituto_id ? carica(mine.sostituto_id).nome : null;
       var copro = D.cariche.filter(function (c) { return c.sostituto_id === mine.id; }).map(function (c) { return c.nome; });
-      card = '<section class="box"><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Tutti i ruoli</a></header>' +
+      card = '<section class="box tinted"' + tintCarica(mine.nome) + '><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Tutti i ruoli</a></header>' +
         '<div class="cols"><div><b>Cosa ti chiede lo statuto</b><ul class="plain">' + mine.compiti_statuto.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
         '<div class="ruolo" style="border:0;padding:0;background:none"><div class="sost"><b>Se manchi, ti sostituisce</b>' + esc(mine.sostituto_nota || sost || 'Da decidere in CD.') + '</div>' +
         (copro.length ? '<div class="sost"><b>Tu sostituisci</b>' + esc(copro.join(', ')) + '</div>' : '') + '</div></div></section>';
@@ -496,19 +550,19 @@ tr.ann td.mot { text-decoration: none; }
       '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti in bozza o da firmare</span></a></nav>' +
       card +
       '<div class="cols"><div class="col">' +
-      '<section class="box"><header><h2>Da fare per te</h2><a href="#attivita/chi">Chi fa cosa</a></header>' +
+      '<section class="box k-att"><header><h2>Da fare per te</h2><a href="#attivita/chi">Chi fa cosa</a></header>' +
       (myCl.length ? '<div class="lbl">Nelle attività</div><ul class="list">' + myCl.slice(0, 8).map(function (x) { var a = att(x.attivita_id), d = x.scadenza && dt(x.scadenza);
         return '<li><div><b><a href="#attivita/' + x.attivita_id + '">' + esc(short(x.testo, 100)) + '</a></b><span class="sub">' + esc(a ? a.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' + (myCl.length > 8 ? '<p class="sub">e altri ' + (myCl.length - 8) + ' in <a href="#attivita/chi">Chi fa cosa</a>.</p>' : '') + '<div class="lbl">Nelle pratiche</div>' : '') +
       (passi.length ? '<ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
         return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + esc(pr ? pr.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun passo aperto assegnato alla tua carica.</p>') + '</section>' +
-      '<section class="box"><header><h2>Scadenze vicine</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
+      '<section class="box k-scad"><header><h2>Scadenze vicine</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
       (scad.length ? '<ul class="list">' + scad.slice(0, 6).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza nei prossimi 60 giorni per la tua carica.</p>') + '</section></div>' +
-      '<div class="col">' +
-      '<section class="box"><header><h2>Prossime attività</h2><a href="#attivita">Tutte</a></header><ul class="list">' +
+      '<div class="col">' + dalSito +
+      '<section class="box k-cal"><header><h2>Prossime attività</h2><a href="#attivita">Tutte</a></header><ul class="list">' +
       attSorted().filter(function (x) { var d = attDate(x); return d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d) + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
-      '<section class="box"><header><h2>Da votare in CD</h2><a href="#pratiche/decisioni">Tutte le ' + D.decisioni.length + '</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
-      '<section class="box"><header><h2>Cosa stanno facendo gli altri</h2><a href="#archivio/registro">Registro</a></header>' + (altri.length ? '<ul class="reg">' + altri.map(regLi).join('') + '</ul>' : '<p class="sub">Ancora nessuna modifica dagli altri membri del Consiglio.</p>') + '</section>' +
-      '<section class="box"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
+      '<section class="box k-dec"><header><h2>Da votare in CD</h2><a href="#pratiche/decisioni">Tutte le ' + D.decisioni.length + '</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
+      '<section class="box k-altri"><header><h2>Cosa stanno facendo gli altri</h2><a href="#archivio/registro">Registro</a></header>' + (altri.length ? '<ul class="reg">' + altri.map(regLi).join('') + '</ul>' : '<p class="sub">Ancora nessuna modifica dagli altri membri del Consiglio.</p>') + '</section>' +
+      '<section class="box k-doc"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
       last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + fD.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
   };
 
@@ -522,7 +576,7 @@ tr.ann td.mot { text-decoration: none; }
       var s = c.sostituto_id && carica(c.sostituto_id);
       var copro = D.cariche.filter(function (x) { return x.sostituto_id === c.id; }).map(function (x) { return x.nome; });
       var ed = editing === c.id;
-      return '<article class="ruolo' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"><h3>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h3>' +
+      return '<article class="ruolo tinted' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"' + tintCarica(c.nome) + '><h3>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h3>' +
         '<div class="sost"><b>Se manca, lo sostituisce</b>' + esc(c.sostituto_nota || (s ? s.nome : '') || 'Da decidere in CD.') + '</div>' +
         (copro.length ? '<div class="sost"><b>Sostituisce</b>' + esc(copro.join(', ')) + '</div>' : '') +
         '<b>Cosa dice lo statuto</b><ul class="plain">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
@@ -587,31 +641,6 @@ tr.ann td.mot { text-decoration: none; }
       '<div class="cols"><section class="box"><h2>Da votare per il 2027</h2><ul class="list"><li><div><b style="font-weight:500">Almeno tre mostre micologiche, tra Palermo e il resto della Sicilia</b></div></li><li><div><b style="font-weight:500">Programma a orari e determinazione dal vivo alla mostra</b></div></li><li><div><b style="font-weight:500">Weekend amicologico, festa di primavera a fine marzo</b></div></li></ul></section>' +
       '<section class="box"><h2>I sette tipi di attività</h2><div class="chips">' + ['Conversazioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<span class="pill plain" style="font-size:16px;padding:6px 16px">' + k + '</span>'; }).join('') + '</div><p class="sub">Sono gli stessi del sito pubblico, così ogni attività ha lo stesso nome ovunque.</p></section></div>';
   };
-  function corsiPage() {
-    function dd(n) { var d = new Date(base); d.setDate(d.getDate() + n); return d; }
-    var CORSI = [
-      { t: 'Corso base di micologia (epigei), Cefalù', q: 'dall’11 al 21 novembre 2026', righe: [
-        ['Esempio 01', 'Cefalù', -40, 'Quota versata', 'Versata', 'Sì', 'Email e telefono', ''], ['Esempio 02', 'Cefalù', -38, 'Quota versata', 'Versata', 'Sì', 'Email', ''],
-        ['Esempio 03', 'Pollina', -33, 'Confermato', 'Da versare', 'Sì', 'Email e telefono', 'Ricontattare per la quota'], ['Esempio 04', 'Palermo', -30, 'Confermato', 'Da versare', 'Sì', 'Email', ''],
-        ['Esempio 05', 'Cefalù', -27, 'Contattato', 'Da versare', 'Sì', 'Email e telefono', 'Chiede se può portare un amico'], ['Esempio 06', 'Castelbuono', -21, 'Preiscritto', 'Da versare', 'Sì', 'Email', ''],
-        ['Esempio 07', 'Palermo', -12, 'Preiscritto', 'Da versare', 'Sì', 'Email e telefono', ''], ['Esempio 08', 'Termini Imerese', -6, 'Preiscritto', 'Da versare', 'Sì', 'Email', ''], ['Esempio 09', 'Cefalù', -2, 'Preiscritto', 'Da versare', 'Sì', 'Email', '']] },
-      { t: 'Corso per il tesserino dei tartufi (ipogei)', q: 'date da fissare', righe: [['Esempio 10', 'Godrano', -20, 'Preiscritto', 'Da versare', 'Sì', 'Email e telefono', 'Cavatore esperto'], ['Esempio 11', 'Piana degli Albanesi', -9, 'Preiscritto', 'Da versare', 'Sì', 'Email', '']] }];
-    var SOG = 15, MAX = 20, tot = 0, quote = 0;
-    CORSI.forEach(function (c) { c.righe.forEach(function (r) { tot++; if (r[3] !== 'Quota versata') quote++; }); });
-    function st(s) { return s === 'Quota versata' ? '' : (s === 'Confermato' ? 'warn' : 'plain'); }
-    return head('Corsi e iscrizioni', 'Le preiscrizioni dal sito arriveranno qui in lista. Per ogni persona si segue lo stato, la quota e ciò che manca. <b>I nomi sono inventati</b>: questa sezione è ancora dimostrativa, perché un elenco di persone è un dato personale.') +
-      '<div class="stats"><div><b>' + tot + '</b><span>preiscrizioni di esempio</span></div><div><b>' + quote + '</b><span>quote ancora da incassare</span></div><div><b>' + CORSI.length + '</b><span>corsi con preiscrizioni aperte</span></div><div><b>' + SOG + ' / ' + MAX + '</b><span>soglia per attivarlo / posti massimi</span></div></div>' +
-      CORSI.map(function (c) { var n = c.righe.length, ok = n >= SOG;
-        return '<section class="box"><header><div><h2>' + esc(c.t) + '</h2><span class="sub">' + esc(c.q) + '</span></div><span class="pill ' + (ok ? '' : 'warn') + '">' + n + ' su ' + SOG + (ok ? ' · si organizza' : ' · ne mancano ' + (SOG - n)) + '</span></header>' +
-          '<div class="tablew"><table><thead><tr><th>Persona</th><th>Comune</th><th>Preiscritta il</th><th>Stato</th><th>Quota</th><th>Consenso privacy</th><th>Contatti</th><th>Note</th></tr></thead><tbody>' +
-          c.righe.map(function (r) { return '<tr><td><b>' + esc(r[0]) + '</b></td><td>' + esc(r[1]) + '</td><td class="tn">' + fD.format(dd(r[2])) + '</td><td><span class="pill ' + st(r[3]) + '">' + esc(r[3]) + '</span></td><td>' + esc(r[4]) + '</td><td>' + esc(r[5]) + '</td><td>' + esc(r[6]) + '</td><td>' + esc(r[7]) + '</td></tr>'; }).join('') + '</tbody></table></div></section>'; }).join('') +
-      '<div class="cols"><section class="box"><h2>Gli stati, in ordine</h2><ol class="steps">' +
-      [['Preiscritto', 'Ha compilato il modulo sul sito. Il contatore del corso sale da solo.'], ['Contattato', 'La segreteria gli ha scritto con date, luogo e quota.'], ['Confermato', 'Ha detto sì. Resta da incassare la quota.'], ['Quota versata', 'Pagamento registrato, con data e metodo. Ha un posto.'], ['Ha frequentato', 'Presenze segnate. Diventa socio, come richiede la legge.'], ['Attestato consegnato', 'Fine corso: attestato e questionario di fine corso.'], ['In lista d’attesa / Ritirato', 'Oltre i 20 posti, o se rinuncia: la quota si gestisce secondo regola da decidere.']].map(function (a) { return '<li><div><b>' + a[0] + '</b><br><span class="sub">' + a[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
-      '<section class="box"><h2>Cosa potrà fare in automatico</h2><ul class="list">' +
-      ['Avviso al segretario quando un corso arriva a 15 preiscritti', 'Email di conferma con date, luogo e coordinate per la quota', 'Promemoria a chi non ha ancora versato', 'Lista d’attesa oltre i 20 posti', 'Passaggio a socio per chi frequenta', 'Invio del questionario di fine corso', 'Cancellazione dei dati di chi non prosegue, dopo un tempo stabilito'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Dopo il voto del CD</span></li>'; }).join('') + '</ul></section></div>' +
-      '<p class="note">Importo della quota, regola per chi rinuncia e per quanto tempo si conservano i dati: da decidere con tesoriere e presidente. Prima di inserire persone vere servono informativa e registro dei trattamenti.</p>';
-  }
-
   P.archivio = function (sub) {
     var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']];
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
@@ -654,18 +683,18 @@ tr.ann td.mot { text-decoration: none; }
       '<section class="box"><h2>Regole economiche già definite</h2><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b></div><span class="pill plain">' + esc(r.valore) + '</span></li>'; }).join('') + '</ul></section>' +
       '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
       ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
-      (hasPN ? '' : '<section class="box"><header><h2>Come apparirà il riepilogo</h2><span class="pill warn">Esempio con importi inventati</span></header><div class="cols"><div><h3 style="margin-bottom:12px">Entrate ' + eur(4250) + '</h3>' + bars(en) + '</div><div><h3 style="margin-bottom:12px">Uscite per attività ' + eur(2980) + '</h3>' + bars(sp) + '</div></div></section>') +
+
       '<section class="box"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Il rendiconto annuale e la prima nota si caricano qui.</p>') +
       upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], canUp, 'Qui caricano il Tesoriere e il Presidente. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
   };
 
   P.soci = function () {
-    return head('Soci, solo numeri', 'Nomi, indirizzi e telefoni dei soci restano sui computer dell’associazione. Qui compaiono solo i totali, finché il Consiglio non decide chi può vedere cosa.') +
-      '<div class="stats">' + D.numeri.map(function (n) { return '<div><b>' + esc(n.valore) + '</b><span>' + esc(n.descrizione) + '</span></div>'; }).join('') + '</div>' +
+    return head('Soci', 'Il libro soci, con nomi, indirizzi e telefoni, resta sui computer dell’associazione. Qui ci sono i totali e le richieste di iscrizione arrivate dal sito.') +
+      '<div class="stats k-soci">' + D.numeri.map(function (n) { return '<div><b>' + esc(n.valore) + '</b><span>' + esc(n.descrizione) + '</span></div>'; }).join('') + '</div>' +
       '<section class="box"><h2>Numeri da raccogliere</h2><ul class="list">' +
       ['Soci in regola con la quota', 'Soci in scadenza', 'Nuovi soci dell’anno', 'Permanenza dei corsisti dopo il corso (oggi stima a occhio: 1 su 10 il primo anno, 1 su 30 a lungo termine)'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
       '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati anagrafici completi (proposta: Presidente, Segretario, Tesoriere)</b></div></li><li><div><b style="font-weight:500">Quando caricare il libro soci nel gestionale, con informativa e registro dei trattamenti</b></div></li></ul></section>' +
-      '<p class="note">Quando servirà un elenco con i nomi, si prepara fuori dal gestionale e si porta in riunione. Così il gestionale non conserva dati personali finché il Consiglio non lo approva.</p>';
+      richiesteSoci() + '<p class="note">Il libro soci con i nomi resta fuori dal gestionale finché il Consiglio non decide diversamente. Le richieste del sito le vedono solo i membri del Consiglio, come dice l’informativa.</p>';
   };
 
   P.comesifa = function (sub) {
@@ -726,6 +755,9 @@ tr.ann td.mot { text-decoration: none; }
     D.comunicazioni.forEach(function (c) { if (hit(c.contenuto) || hit(c.quando)) R.push(['Comunicazione (' + c.attivita + ')', c.quando + ': ' + c.contenuto, '#comesifa/comunicazioni']); });
     D.testi.forEach(function (x) { if (hit(x.titolo) || hit(x.testo)) R.push(['Testo pronto', x.titolo, '#comesifa/comunicazioni']); });
     D.checklist.forEach(function (x) { if (hit(x.testo) || hit(x.nota)) { var a = att(x.attivita_id); R.push(['Passo della checklist' + (a ? ' · ' + a.titolo : ''), String(x.testo).replace(/\{\{DC\}\}/g, '…'), '#attivita/' + x.attivita_id]); } });
+    D.sito_calendario.forEach(function (x) { if (hit(x.titolo) || hit(x.sottotitolo)) R.push(['Calendario del sito · ' + (x.data ? fD.format(dt(x.data)) : MESI[x.mese] + ' ' + x.anno), x.titolo, '#sito/calendario']); });
+    D.sito_corsi.forEach(function (x) { if (hit(x.titolo) || hit(x.luogo) || hit(x.descrizione)) R.push(['Corso sul sito', x.titolo, '#sito/corsi']); });
+    D.sito_slide.forEach(function (x) { if (hit(x.titolo) || hit(x.testo)) R.push(['In primo piano sul sito', x.titolo, '#sito/slide']); });
     D.prima_nota.forEach(function (x) { if (hit(x.descrizione) || hit(x.riferimento) || hit(x.categoria)) R.push(['Prima nota · ' + fD.format(dt(x.data)) + ' · ' + eur2(x.importo), x.descrizione, '#soldi/primanota']); });
     return head('Risultati per «' + esc(decodeURIComponent(qs)) + '»', R.length + ' risultati') +
       '<section class="box">' + (R.length ? '<ul class="list">' + R.map(function (r) { return '<li><div><b><a href="' + r[2] + '">' + mk(r[1]) + '</a></b><span class="sub">' + esc(r[0]) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun risultato.</p>') + '</section>';
@@ -757,7 +789,7 @@ tr.ann td.mot { text-decoration: none; }
   function attCard(a) {
     var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
     var next = cl.filter(function (x) { return x.stato === 'in_corso'; })[0] || cl.filter(function (x) { return x.stato === 'da_fare'; })[0];
-    return '<a class="card" href="#attivita/' + a.id + '"><h3>' + esc(a.titolo) + '</h3><span class="sub">' + (a.ricorrenza ? esc(a.ricorrenza) : d ? fD.format(d) + ' (' + when(d) + ')' : 'Data da fissare') + ' · ' + esc(a.responsabile || 'Da assegnare') + '</span>' +
+    return '<a class="card tinted" href="#attivita/' + a.id + '"' + tintTipo(a.tipo) + '><h3>' + esc(a.titolo) + '</h3><span class="sub">' + (a.ricorrenza ? esc(a.ricorrenza) : d ? fD.format(d) + ' (' + when(d) + ')' : 'Data da fissare') + ' · ' + esc(a.responsabile || 'Da assegnare') + '</span>' +
       '<div><span class="pill ' + pillCls(a.stato) + '">' + esc(a.stato || '') + '</span> <span class="pill plain">' + esc(a.tipo) + '</span></div>' +
       (a.ricorrenza && !cl.length ? '<p class="sub">Appuntamento settimanale, senza checklist.</p>' : progBar(p.done, p.tot, 'passi')) +
       (next ? '<span class="sub">' + (next.stato === 'in_corso' ? 'In corso' : 'Prossimo passo') + ': <b>' + esc(short(next.testo, 90)) + '</b> · ' + esc(next.responsabile) + '</span>' : '') + '</a>';
@@ -795,7 +827,7 @@ tr.ann td.mot { text-decoration: none; }
       var I = itemsFor(g); if (!I.length && RESP.indexOf(g) > 3) return '';
       I.sort(function (a, b) { return (a.d || 9e15) - (b.d || 9e15); });
       var c = I.filter(function (i) { return i.st === 'in_corso'; }), f = I.filter(function (i) { return i.st === 'da_fare'; }), k = I.filter(function (i) { return i.st === 'fatto'; });
-      return '<section class="box' + (me.carica && g === myName() ? '" style="border:2px solid var(--forest)' : '') + '"><header><h2>' + esc(g) + '</h2><span class="sub">' + c.length + ' in corso · ' + f.length + ' da fare</span></header>' +
+      return '<section class="box tinted' + (me.carica && g === myName() ? ' me' : '') + '"' + tintCarica(g) + '><header><h2>' + esc(g) + '</h2><span class="sub">' + c.length + ' in corso · ' + f.length + ' da fare</span></header>' +
         (c.length ? '<div class="lbl">Sta facendo</div><ul class="mini">' + c.map(li).join('') + '</ul>' : '') +
         (f.length ? '<div class="lbl">Da fare</div><ul class="mini">' + f.slice(0, 8).map(li).join('') + '</ul>' + (f.length > 8 ? '<p class="sub">e altri ' + (f.length - 8) + '.</p>' : '') : '') +
         (k.length ? '<div class="lbl">Fatto nelle ultime tre settimane</div><ul class="mini">' + k.map(li).join('') + '</ul>' : '') +
@@ -848,11 +880,12 @@ tr.ann td.mot { text-decoration: none; }
     D.scadenze.forEach(function (x) { var d = scadDate(x); if (inM(d)) E.push({ d: d, k: 'sca', t: x.titolo, h: '#pratiche/scadenze', done: x.fatta }); });
     D.pratica_passi.forEach(function (x) { var d = x.scadenza && dt(x.scadenza); if (inM(d)) E.push({ d: d, k: 'pas', t: x.titolo, h: '#pratiche', done: x.stato === 'fatto' }); });
     D.checklist.forEach(function (x) { var d = x.scadenza && dt(x.scadenza), a = att(x.attivita_id); if (inM(d)) E.push({ d: d, k: 'chk', t: (a ? a.titolo + ': ' : '') + String(x.testo).replace(/\{\{DC\}\}/g, '…'), h: '#attivita/' + x.attivita_id, done: x.stato === 'fatto' || x.stato === 'non_serve' }); });
-    var ord = { sca: 0, pas: 1, chk: 2, att: 3, rit: 4 };
+    D.sito_calendario.forEach(function (x) { var d = x.data && dt(x.data); if (inM(d) && x.pubblicato) E.push({ d: d, k: 'sit', c: x.categoria, t: x.titolo + (x.sottotitolo ? ' · ' + x.sottotitolo : ''), h: '#sito/calendario', done: false }); });
+    var ord = { sca: 0, pas: 1, chk: 2, att: 3, sit: 4, rit: 5 };
     return E.sort(function (a, b) { return a.d - b.d || ord[a.k] - ord[b.k]; });
   }
-  var KIND = { att: 'Attività ed eventi', sca: 'Scadenze', pas: 'Passi delle pratiche', chk: 'Passi delle checklist', rit: 'Appuntamenti settimanali' };
-  function evA(e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '" title="' + esc(KIND[e.k] + ': ' + e.t) + '">' + esc(e.t) + '</a>'; }
+  var KIND = { att: 'Attività ed eventi', sca: 'Scadenze', pas: 'Passi delle pratiche', chk: 'Passi delle checklist', sit: 'Calendario del sito', rit: 'Appuntamenti settimanali' };
+  function evA(e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '" title="' + esc(KIND[e.k] + ': ' + e.t) + '"' + (e.c ? tintCat(e.c) : '') + '>' + esc(e.t) + '</a>'; }
   P.calendario = function (sub) {
     var y = base.getFullYear(), m = base.getMonth(), mm = /^(\d{4})-(\d{2})$/.exec(sub || '');
     if (mm) { y = +mm[1]; m = +mm[2] - 1; }
@@ -866,12 +899,12 @@ tr.ann td.mot { text-decoration: none; }
       cells += '<div class="day' + (d.getMonth() !== m ? ' out' : '') + (iso(d) === iso(base) ? ' today' : '') + '"><span class="n">' + d.getDate() + '</span>' + ev.slice(0, 4).map(evA).join('') + (ev.length > 4 ? '<span class="sub" style="font-size:13px">+' + (ev.length - 4) + ' altri</span>' : '') + '</div>';
     }
     var days = {}; E.forEach(function (e) { (days[iso(e.d)] = days[iso(e.d)] || []).push(e); });
-    var agenda = Object.keys(days).sort().map(function (k) { return '<div class="giorno"><b>' + fL.format(dt(k)) + '</b>' + days[k].map(function (e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '"><span class="sub" style="display:block;font-size:13px">' + KIND[e.k] + '</span>' + esc(e.t) + '</a>'; }).join('') + '</div>'; }).join('');
+    var agenda = Object.keys(days).sort().map(function (k) { return '<div class="giorno"><b>' + fL.format(dt(k)) + '</b>' + days[k].map(function (e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '"' + (e.c ? tintCat(e.c) : '') + '><span class="sub" style="display:block;font-size:13px">' + KIND[e.k] + '</span>' + esc(e.t) + '</a>'; }).join('') + '</div>'; }).join('');
     var senza = openScad().filter(function (x) { return !x.data; }).concat([]), attND = D.attivita.filter(function (a) { return !a.data && !a.ricorrenza; });
     var prossimi = []; [0, 1, 2].forEach(function (k) { var dd = new Date(base.getFullYear(), base.getMonth() + k, 1); calEvents(dd.getFullYear(), dd.getMonth()).forEach(function (e) { var n = dleft(e.d); if (n >= 0 && n <= 30 && !e.done && e.k !== 'rit') prossimi.push(e); }); });
     return head('Calendario', 'Tutto quello che ha una data: attività, scadenze, passi delle pratiche e delle checklist. Tocca una voce per aprirla.') +
       '<section class="box"><div class="calnav"><h2>' + MESI[m] + ' ' + y + '</h2><div class="chips"><a class="chip" href="#calendario/' + iso(prev).slice(0, 7) + '">← ' + MESI[prev.getMonth()] + '</a><a class="chip" href="#calendario">Oggi</a><a class="chip" href="#calendario/' + iso(next).slice(0, 7) + '">' + MESI[next.getMonth()] + ' →</a><button class="chip" type="button" data-act="weekly" aria-pressed="' + !!P.calendario.weekly + '">Appuntamenti settimanali</button></div></div>' +
-      '<div class="legend">' + ['sca', 'pas', 'chk', 'att', 'rit'].map(function (k) { return '<span><i class="ev ' + k + '"></i>' + KIND[k] + '</span>'; }).join('') + '</div>' +
+      '<div class="legend">' + ['sca', 'pas', 'chk', 'att', 'sit', 'rit'].map(function (k) { return '<span><i class="ev ' + k + '"' + (k === 'sit' ? tintCat('conv') : '') + '></i>' + KIND[k] + '</span>'; }).join('') + '</div>' +
       '<div class="cal">' + ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map(function (x) { return '<div class="dow">' + x + '</div>'; }).join('') + cells + '</div>' +
       '<div class="agenda">' + (agenda || '<p class="sub">Niente in calendario questo mese.</p>') + '</div></section>' +
       '<div class="cols"><section class="box"><header><h2>Prossimi 30 giorni</h2></header>' + (prossimi.length ? '<ul class="list">' + prossimi.sort(function (a, b) { return a.d - b.d; }).map(function (e) { return '<li><div><b><a href="' + e.h + '">' + esc(e.t) + '</a></b><span class="sub">' + fD.format(e.d) + ' · ' + KIND[e.k] + '</span></div><span class="pill ' + (dleft(e.d) <= 7 ? 'crit' : 'warn') + '">' + when(e.d) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Niente nei prossimi 30 giorni.</p>') + '</section>' +
@@ -932,18 +965,19 @@ tr.ann td.mot { text-decoration: none; }
   }
 
   /* ---------- registro: cosa ha fatto chi ---------- */
-  var TAB = { cariche: 'la carica', profili: 'l’account', documenti: 'il documento', documenti_versioni: 'una versione del documento', pratiche: 'la pratica', pratica_passi: 'il passo della pratica', scadenze: 'la scadenza', attivita: 'l’attività', decisioni: 'la decisione', comunicazioni: 'la comunicazione', testi: 'il testo pronto', regole_economiche: 'la regola economica', numeri: 'il numero', checklist: 'il passo della checklist', prima_nota: 'il movimento di prima nota' };
-  var CAMPI = { stato: 'stato', fatta: 'fatta', approvata: 'approvata', responsabile: 'chi', scadenza: 'entro il', data: 'data', testo: 'testo', titolo: 'titolo', mansioni: 'mansioni', nota: 'nota', note: 'note', annullato: 'annullato', annullato_motivo: 'motivo', file_nome: 'file', versione: 'versione', sostituto_id: 'sostituto', importo: 'importo', categoria: 'categoria', descrizione: 'descrizione', valore: 'valore' };
+  var TAB = { cariche: 'la carica', profili: 'l’account', documenti: 'il documento', documenti_versioni: 'una versione del documento', pratiche: 'la pratica', pratica_passi: 'il passo della pratica', scadenze: 'la scadenza', attivita: 'l’attività', decisioni: 'la decisione', comunicazioni: 'la comunicazione', testi: 'il testo pronto', regole_economiche: 'la regola economica', numeri: 'il numero', checklist: 'il passo della checklist', prima_nota: 'il movimento di prima nota', sito_slide: 'la slide «In primo piano» del sito', sito_corsi: 'il corso del sito', sito_calendario: 'l’appuntamento del calendario del sito', sito_testi: 'il testo del sito', sito_preiscrizioni: 'la preiscrizione', sito_richieste_socio: 'la richiesta di iscrizione', sito_messaggi: 'il messaggio' };
+  var CAMPI = { pubblicato: 'pubblicato', ordine: 'ordine', link: 'pulsante', bottone: 'scritta del pulsante', immagine: 'immagine', locandina: 'locandina', dettaglio: 'riga in evidenza', sottotitolo: 'sottotitolo', proposta: 'proposta', quota: 'quota', campo: 'campo', stato: 'stato', fatta: 'fatta', approvata: 'approvata', responsabile: 'chi', scadenza: 'entro il', data: 'data', testo: 'testo', titolo: 'titolo', mansioni: 'mansioni', nota: 'nota', note: 'note', annullato: 'annullato', annullato_motivo: 'motivo', file_nome: 'file', versione: 'versione', sostituto_id: 'sostituto', importo: 'importo', categoria: 'categoria', descrizione: 'descrizione', valore: 'valore' };
   var NOISE = ['aggiornato_il', 'aggiornata_il', 'aggiornato_da', 'aggiornata_da', 'annullato_il', 'annullato_da', 'file_path', 'contenuto'];
   function vv(v, k) {
     if (v === true) return 'sì'; if (v === false) return 'no'; if (v == null || v === '') return '—';
     if (Array.isArray(v)) return v.join('; ').slice(0, 120);
-    if (k === 'stato' && CLST[v]) return CLST[v][0]; if (k === 'stato' && PASSO[v]) return PASSO[v][0];
+    if (k === 'stato' && CLST[v]) return CLST[v][0]; if (k === 'stato' && PASSO[v]) return PASSO[v][0]; if (k === 'stato' && PRE_ST[v]) return PRE_ST[v][0]; if (k === 'stato' && SOC_ST[v]) return SOC_ST[v][0]; if (k === 'stato' && MSG_ST[v]) return MSG_ST[v][0]; if (k === 'stato' && CORSO_ST[v]) return CORSO_ST[v];
     if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return fD.format(dt(v));
     return String(typeof v === 'object' ? JSON.stringify(v) : v).replace(/\{\{DC\}\}/g, '…').slice(0, 120);
   }
   function auditText(e) {
     var what = TAB[e.tabella] || e.tabella, lab = e.etichetta ? ' «' + short(e.etichetta, 90) + '»' : '';
+    if (e.operazione === 'INSERT' && e.chi === 'Modulo del sito') return { t: 'È arrivata dal sito ' + what + lab, d: '' };
     if (e.operazione === 'INSERT') return { t: (e.tabella === 'prima_nota' ? 'Ha registrato ' : 'Ha aggiunto ') + what + lab, d: e.tabella === 'prima_nota' && e.dopo ? (e.dopo.tipo === 'entrata' ? 'Entrata' : 'Uscita') + ' di ' + eur2(e.dopo.importo) + ', ' + e.dopo.conto + ', ' + e.dopo.categoria : '' };
     if (e.operazione === 'DELETE') return { t: 'Ha cancellato ' + what + lab, d: '' };
     var ks = Object.keys(e.dopo || {}).filter(function (k) { return NOISE.indexOf(k) < 0; });
@@ -967,7 +1001,7 @@ tr.ann td.mot { text-decoration: none; }
     return G;
   }
   function regLi(e) {
-    var t = e.n > 1 ? 'Ha aggiunto ' + e.n + ' elementi: ' + (TAB[e.tab] || e.tab).replace(/^(il |la |l’|una )/, '') + ' e simili' : e.t;
+    var t = e.n > 1 ? 'Ha aggiunto ' + e.n + ' elementi (' + (TAB[e.tab] || e.tab).replace(/^(il |la |l’|una )/, '') + ')' : e.t;
     return '<li><time datetime="' + e.q.toISOString() + '">' + fT.format(e.q) + '</time><div><b>' + esc(e.chi) + '</b> · ' + esc(t) + (e.d && e.n === 1 ? '<span class="det">' + esc(e.d) + '</span>' : '') + '</div></li>';
   }
   function registroPage() {
@@ -981,12 +1015,220 @@ tr.ann td.mot { text-decoration: none; }
       '<p class="note">Ogni aggiunta, modifica e cancellazione la scrive il database da solo, nel momento in cui avviene: nessuno, neanche l’amministratore, può modificarla o cancellarla dal gestionale. Accessi, download e copie di sicurezza li annota il gestionale. «Manutenzione» indica un intervento fatto dal pannello tecnico del database.</p>';
   }
 
+  /* ---------- colori per categoria ---------- */
+  var CATS = { conv: 'Conversazioni', lez: 'Lezioni', corsi: 'Corsi', pratica: 'Pratica di determinazione', gite: 'Gite', mostre: 'Mostre', stage: 'Stage', eventi: 'Eventi conviviali', ist: 'Incontri istituzionali' };
+  var TIPO_CAT = { Conversazioni: 'conv', Lezioni: 'lez', Corsi: 'corsi', Pratica: 'pratica', Gite: 'gite', Mostre: 'mostre', Stage: 'stage', Eventi: 'eventi' };
+  function tintCat(c) { return ' style="--tint:var(--t-' + (CATS[c] ? c : 'ist') + ')"'; }
+  function tintTipo(t) { return tintCat(TIPO_CAT[t] || 'ist'); }
+  var CAR_T = { presidente: 'pres', vicepresidente: 'vice', tesoriere: 'tes', segretario: 'seg' };
+  function tintCarica(nome) { var k = low(nome); for (var id in CAR_T) if (k.indexOf(id) === 0 || k === id) return ' style="--tint:var(--t-' + CAR_T[id] + ')"'; return k.indexOf('consiglio') === 0 ? ' style="--tint:var(--t-cd)"' : ' style="--tint:var(--t-altro)"'; }
+
+  /* ---------- sito pubblico: dati, immagini, moduli ---------- */
+  var SITO_URL = '../';
+  function pubUrl(p) { if (!p) return ''; if (/^(https?:|data:)/.test(p)) return p; if (/^immagini\//.test(p)) return SB_URL + '/storage/v1/object/public/sito/' + p; return SITO_URL + p; }
+  var LINKS = [['home', 'Home'], ['corsi', 'Corsi'], ['attivita', 'Attività'], ['calendario', 'Calendario'], ['associati', 'Diventa socio'], ['contatti', 'Contatti'], ['chi-siamo', 'Chi siamo'],
+    ['attivita/conversazioni', 'Attività · Conversazioni'], ['attivita/lezioni', 'Attività · Lezioni'], ['attivita/pratica', 'Attività · Pratica'], ['attivita/corsi', 'Attività · Corsi'], ['attivita/gite', 'Attività · Gite'], ['attivita/mostre', 'Attività · Mostre'], ['attivita/stage', 'Attività · Stage'], ['attivita/eventi', 'Attività · Eventi']];
+  var PRE_ST = { preiscritto: ['Preiscritto', 'warn'], contattato: ['Contattato', 'warn'], confermato: ['Confermato', 'warn'], quota_versata: ['Quota versata', ''], frequentato: ['Ha frequentato', ''], attestato: ['Attestato consegnato', ''], attesa: ['In lista d’attesa', 'plain'], ritirato: ['Ritirato', 'plain'] };
+  var SOC_ST = { nuova: ['Nuova', 'crit'], contattata: ['Contattata', 'warn'], invitata: ['Invitata in sede', 'warn'], socio: ['È diventato socio', ''], non_prosegue: ['Non prosegue', 'plain'] };
+  var MSG_ST = { da_leggere: ['Da leggere', 'crit'], in_carico: ['In carico', 'warn'], risposto: ['Risposto', ''], archiviato: ['Archiviato', 'plain'] };
+  var CORSO_ST = { aperto: 'Iscrizioni aperte', in_attesa: 'Si raccolgono preiscrizioni', concluso: 'Concluso (archivio con locandina)' };
+  function nuoviDalSito() { return { pre: D.sito_preiscrizioni.filter(function (x) { return x.stato === 'preiscritto'; }).length, soc: D.sito_richieste_socio.filter(function (x) { return x.stato === 'nuova'; }).length, msg: D.sito_messaggi.filter(function (x) { return x.stato === 'da_leggere'; }).length }; }
+  function sel(name, opts, cur, extra) { return '<select name="' + name + '"' + (extra || '') + '>' + opts.map(function (o) { var v = Array.isArray(o) ? o[0] : o, t = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(v) + '"' + (String(v) === String(cur) ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select>'; }
+  function chk(name, on, label) { return '<label class="ck"><input type="checkbox" name="' + name + '"' + (on ? ' checked' : '') + '> ' + label + '</label>'; }
+  function calDayText(e) {
+    if (!e.data) return { d: '—', w: 'da definire' };
+    var a = dt(e.data), b = e.data_fine && dt(e.data_fine), W = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+    return b ? { d: a.getDate() + '–' + b.getDate(), w: W[a.getDay()] + '–' + W[b.getDay()] } : { d: String(a.getDate()), w: W[a.getDay()] };
+  }
+  async function resizeUpload(file) {
+    if (!file) return null;
+    if (!/^image\/(jpeg|png|webp|svg\+xml)$/.test(file.type)) throw new Error('Serve un’immagine JPG, PNG, WEBP o SVG.');
+    var blob = file, ext = file.type === 'image/svg+xml' ? 'svg' : 'jpg', type = file.type === 'image/svg+xml' ? file.type : 'image/jpeg';
+    if (ext === 'jpg') {
+      var img = await new Promise(function (ok, ko) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ko(new Error('Immagine non leggibile.')); }; i.src = URL.createObjectURL(file); });
+      var k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      blob = await new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.86); });
+    }
+    if (blob.size > 5 * 1024 * 1024) throw new Error('L’immagine è troppo grande anche dopo la riduzione.');
+    var path = 'immagini/' + Date.now() + '-' + slugify(file.name.replace(/\.[^.]+$/, '')) + '.' + ext;
+    var up = await sb.storage.from('sito').upload(path, blob, { contentType: type, upsert: false, cacheControl: '31536000' });
+    if (up.error) throw up.error;
+    return path;
+  }
+  function sitoTabs(sub) {
+    var n = nuoviDalSito();
+    var tabs = [['', 'Panoramica'], ['messaggi', 'Messaggi' + (n.msg ? ' (' + n.msg + ')' : '')], ['slide', 'In primo piano'], ['corsi', 'Corsi'], ['calendario', 'Calendario del sito'], ['testi', 'Contatti e avvisi']];
+    return '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#sito' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+  }
+  function delBtn(table, id) { return me.admin ? '<button class="btn alt" type="button" data-act="sitoDel" data-t="' + table + '" data-id="' + id + '">Elimina</button>' : ''; }
+  function slideForm(s) {
+    var id = s ? s.id : 'new';
+    return '<form class="sform" data-act="slideSave" data-id="' + id + '">' +
+      '<label class="wide">Titolo<input name="titolo" required maxlength="200" value="' + esc(s ? s.titolo : '') + '"></label>' +
+      '<label class="wide">Testo<textarea name="testo" maxlength="600">' + esc(s ? s.testo : '') + '</textarea></label>' +
+      '<label>Riga in evidenza<input name="dettaglio" maxlength="200" value="' + esc(s ? s.dettaglio : '') + '" placeholder="Es. Cefalù · 11-21 novembre"></label>' +
+      '<label>Il pulsante porta a' + sel('link', LINKS, s ? s.link : 'home') + '</label>' +
+      '<label>Scritta del pulsante<input name="bottone" maxlength="60" value="' + esc(s ? s.bottone : 'Scopri di più') + '"></label>' +
+      '<label>Ordine<input name="ordine" type="number" min="0" max="9999" value="' + (s ? s.ordine : 100) + '"></label>' +
+      '<label>' + (s && s.immagine ? 'Cambia immagine' : 'Immagine') + '<input name="file" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml"' + (s ? '' : ' required') + '></label>' +
+      '<label class="wide">Descrizione dell’immagine (per chi non vede)<input name="alt" maxlength="300" value="' + esc(s ? s.alt : '') + '"></label>' +
+      '<div class="wide chips">' + chk('logo', s && s.logo, 'L’immagine è un logo (si vede intera)') + chk('pubblicato', s ? s.pubblicato : true, 'Pubblicata sul sito') + '</div>' +
+      '<div class="wide chips"><button class="btn" type="submit">' + (s ? 'Salva' : 'Aggiungi la slide') + '</button>' + (s ? delBtn('sito_slide', s.id) : '') + '</div></form>';
+  }
+  function corsoForm(c) {
+    var id = c ? c.id : 'new';
+    return '<form class="sform" data-act="corsoSave" data-id="' + id + '">' +
+      '<label>Stato' + sel('stato', Object.keys(CORSO_ST).map(function (k) { return [k, CORSO_ST[k]]; }), c ? c.stato : 'aperto') + '</label>' +
+      '<label>Ordine<input name="ordine" type="number" min="0" max="9999" value="' + (c ? c.ordine : 100) + '"></label>' +
+      '<label class="wide">Titolo<input name="titolo" required maxlength="200" value="' + esc(c ? c.titolo : '') + '"></label>' +
+      '<label class="wide">Titolo breve per il modulo di preiscrizione (facoltativo)<input name="titolo_breve" maxlength="160" value="' + esc(c ? c.titolo_breve || '' : '') + '"></label>' +
+      '<label>Tipo<input name="tipo" maxlength="80" value="' + esc(c ? c.tipo || '' : '') + '" placeholder="Es. Raccolta funghi epigei"></label>' +
+      '<label>Città<input name="luogo" maxlength="120" value="' + esc(c ? c.luogo || '' : '') + '"></label>' +
+      '<label>Quando<input name="quando" maxlength="160" value="' + esc(c ? c.quando || '' : '') + '" placeholder="Es. 11 – 21 novembre 2026"></label>' +
+      '<label>Dove<input name="dove" maxlength="200" value="' + esc(c ? c.dove || '' : '') + '" placeholder="Es. Aula Consiliare, Piazza Duomo"></label>' +
+      '<label>Informazioni (telefono)<input name="info" maxlength="200" value="' + esc(c ? c.info || '' : '') + '"></label>' +
+      '<label>Soglia per partire<input name="soglia" type="number" min="1" max="200" value="' + (c ? c.soglia : 15) + '"></label>' +
+      '<label>Posti<input name="posti" type="number" min="1" max="500" value="' + (c ? c.posti : 20) + '"></label>' +
+      '<label class="wide">Descrizione<textarea name="descrizione" maxlength="800">' + esc(c ? c.descrizione || '' : '') + '</textarea></label>' +
+      '<label>' + (c && c.locandina ? 'Cambia locandina' : 'Locandina (facoltativa)') + '<input name="file" type="file" accept="image/jpeg,image/png,image/webp"></label>' +
+      '<label>Descrizione della locandina<input name="alt" maxlength="300" value="' + esc(c ? c.alt || '' : '') + '"></label>' +
+      '<div class="wide chips">' + chk('pubblicato', c ? c.pubblicato : true, 'Pubblicato sul sito') + '</div>' +
+      '<div class="wide chips"><button class="btn" type="submit">' + (c ? 'Salva' : 'Aggiungi il corso') + '</button>' + (c ? delBtn('sito_corsi', c.id) : '') + '</div></form>';
+  }
+  function calForm(e, anno) {
+    var id = e ? e.id : 'new', y = e ? e.anno : anno;
+    return '<form class="sform" data-act="calSave" data-id="' + id + '">' +
+      '<label>Data<input name="data" type="date" value="' + esc(e && e.data || '') + '"></label>' +
+      '<label>Fino al (se dura più giorni)<input name="data_fine" type="date" value="' + esc(e && e.data_fine || '') + '"></label>' +
+      '<label>Se la data non c’è ancora: mese' + sel('mese', MESI.map(function (n, i) { return [i, n]; }), e ? e.mese : base.getMonth()) + '</label>' +
+      '<label>Anno<input name="anno" type="number" min="2020" max="2100" value="' + y + '"></label>' +
+      '<label>Categoria' + sel('categoria', Object.keys(CATS).map(function (k) { return [k, CATS[k]]; }), e ? e.categoria : 'conv') + '</label>' +
+      '<label class="wide">Titolo<input name="titolo" required maxlength="200" value="' + esc(e ? e.titolo : '') + '"></label>' +
+      '<label class="wide">Sottotitolo (relatore, luogo, nota)<input name="sottotitolo" maxlength="300" value="' + esc(e ? e.sottotitolo || '' : '') + '"></label>' +
+      '<div class="wide chips">' + chk('proposta', e && e.proposta, 'È una proposta da votare in CD') + chk('pubblicato', e ? e.pubblicato : true, 'Pubblicato sul sito') + '</div>' +
+      '<div class="wide chips"><button class="btn" type="submit">' + (e ? 'Salva' : 'Aggiungi al calendario') + '</button>' + (e ? delBtn('sito_calendario', e.id) : '') + '</div></form>';
+  }
+  P.sito = function (sub) {
+    var t = sitoTabs(sub), n = nuoviDalSito();
+    var intro = '<p class="note">Quello che salvi qui compare sul sito pubblico entro un minuto: basta ricaricare la pagina del sito. Osservatorio, Didattica e Biblioteca non si gestiscono da qui finché il Comitato scientifico non li approva.</p>';
+    if (sub === 'messaggi') {
+      var ms = D.sito_messaggi.slice().sort(function (a, b) { return new Date(b.creato_il) - new Date(a.creato_il); });
+      return head('Messaggi dal sito', 'Quello che arriva dal modulo «Scrivici» della pagina Contatti. Rispondi dalla tua email e segna lo stato, così gli altri sanno che è stato fatto.') + t +
+        '<section class="box k-sito">' + (ms.length ? ms.map(function (m) {
+          return '<article class="msg"><header><div><b>' + esc(m.nome) + '</b> · <a href="mailto:' + esc(m.email) + '?subject=' + encodeURIComponent('Associazione Micologica Inzenga') + '">' + esc(m.email) + '</a><br><span class="sub">' + fT.format(new Date(m.creato_il)) + (m.aggiornato_da ? ' · ultimo aggiornamento: ' + esc(m.aggiornato_da) : '') + '</span></div><span class="pill ' + MSG_ST[m.stato][1] + '">' + MSG_ST[m.stato][0] + '</span></header>' +
+            '<p class="quote">' + esc(m.messaggio) + '</p><form class="up" data-act="msgSave" data-id="' + m.id + '"><label>Stato' + sel('stato', Object.keys(MSG_ST).map(function (k) { return [k, MSG_ST[k][0]]; }), m.stato) + '</label><label>Nota del CD<input name="note_cd" maxlength="2000" value="' + esc(m.note_cd || '') + '" placeholder="Es. Ha risposto il Segretario il 16/11"></label><button class="btn" type="submit">Salva</button>' + delBtn('sito_messaggi', m.id) + '</form></article>'; }).join('') : '<p class="sub">Nessun messaggio arrivato dal sito.</p>') + '</section>' +
+        '<p class="note">Secondo l’informativa del sito, i messaggi si conservano al massimo 12 mesi. L’amministratore può cancellarli.</p>';
+    }
+    if (sub === 'slide') {
+      var sl = D.sito_slide.slice().sort(function (a, b) { return a.ordine - b.ordine || a.id - b.id; });
+      return head('In primo piano', 'Le schede che scorrono in cima alla Home del sito, nell’ordine indicato. Una scheda non pubblicata resta qui ma non si vede sul sito.') + t +
+        sl.map(function (s) {
+          return '<section class="box sitem' + (s.pubblicato ? '' : ' off') + '"><div class="sthumb' + (s.logo ? ' logo' : '') + '">' + (s.immagine ? '<img src="' + esc(pubUrl(s.immagine)) + '" alt="" loading="lazy">' : '') + '</div><div class="sbody"><header><h2>' + esc(s.titolo) + '</h2><span class="pill ' + (s.pubblicato ? '' : 'plain') + '">' + (s.pubblicato ? 'Pubblicata' : 'Nascosta') + '</span></header>' +
+            '<p>' + esc(s.testo) + '</p><p class="sub"><b>' + esc(s.dettaglio) + '</b> · pulsante «' + esc(s.bottone) + '» → ' + esc(s.link) + ' · ordine ' + s.ordine + '</p>' +
+            '<details><summary>Modifica</summary>' + slideForm(s) + '</details></div></section>'; }).join('') +
+        '<section class="box"><h2>Aggiungi una slide</h2>' + slideForm(null) + '</section>' + intro;
+    }
+    if (sub === 'corsi') {
+      var groups = ['aperto', 'in_attesa', 'concluso'];
+      return head('Corsi sul sito', 'I corsi della pagina Corsi. «Iscrizioni aperte»: scheda completa con locandina. «Si raccolgono preiscrizioni»: solo nell’elenco del modulo. «Concluso»: nell’archivio con la locandina.') + t +
+        groups.map(function (g) {
+          var cs = D.sito_corsi.filter(function (c) { return c.stato === g; }).sort(function (a, b) { return a.ordine - b.ordine || a.id - b.id; });
+          return '<h2 class="grp">' + CORSO_ST[g] + ' <small>' + cs.length + '</small></h2>' + cs.map(function (c) {
+            var np = D.sito_preiscrizioni.filter(function (p) { return p.corso_id === c.id && p.stato !== 'ritirato'; }).length;
+            return '<section class="box sitem k-corsi' + (c.pubblicato ? '' : ' off') + '"><div class="sthumb">' + (c.locandina ? '<img src="' + esc(pubUrl(c.locandina)) + '" alt="" loading="lazy">' : '') + '</div><div class="sbody"><header><h2>' + esc(c.titolo) + '</h2><span class="pill ' + (c.pubblicato ? '' : 'plain') + '">' + (c.pubblicato ? 'Pubblicato' : 'Nascosto') + '</span></header>' +
+              '<p class="sub">' + [c.tipo, c.luogo, c.quando, c.dove].filter(Boolean).map(esc).join(' · ') + '</p>' + (c.descrizione ? '<p>' + esc(c.descrizione) + '</p>' : '') +
+              (g !== 'concluso' ? '<p><a href="#attivita/corsi">' + np + ' preiscritti</a> · soglia ' + c.soglia + ' · posti ' + c.posti + '</p>' : '') +
+              '<details><summary>Modifica</summary>' + corsoForm(c) + '</details></div></section>'; }).join('');
+        }).join('') + '<section class="box"><h2>Aggiungi un corso</h2>' + corsoForm(null) + '</section>' + intro;
+    }
+    if (sub === 'calendario') {
+      var anni = Array.from(new Set(D.sito_calendario.map(function (e) { return e.anno; }).concat([base.getFullYear() + 1]))).sort();
+      var y = +(P.sito.anno || anni.filter(function (a) { return D.sito_calendario.some(function (e) { return e.anno === a; }); })[0] || anni[0]);
+      var evs = D.sito_calendario.filter(function (e) { return e.anno === y; }).sort(function (a, b) { return a.mese - b.mese || (a.data || '9').localeCompare(b.data || '9') || a.id - b.id; });
+      var byM = {}; evs.forEach(function (e) { (byM[e.mese] = byM[e.mese] || []).push(e); });
+      return head('Calendario del sito', 'Gli appuntamenti della pagina Calendario del sito, divisi per mese. Il colore è la categoria, lo stesso del sito.') + t +
+        '<section class="box"><div class="chips">' + anni.map(function (a) { return '<button class="chip" type="button" data-act="sitoAnno" data-v="' + a + '" aria-pressed="' + (a === y) + '">' + a + '</button>'; }).join('') + '</div>' +
+        '<div class="legend">' + Object.keys(CATS).map(function (k) { return '<span><i class="sw"' + tintCat(k) + '></i>' + CATS[k] + '</span>'; }).join('') + '</div></section>' +
+        Object.keys(byM).map(function (mk) {
+          return '<section class="box"><h2 style="text-transform:capitalize">' + MESI[mk] + ' ' + y + ' <small class="sub">' + byM[mk].length + '</small></h2><ul class="calist">' + byM[mk].map(function (e) { var dd = calDayText(e);
+            return '<li class="ce' + (e.pubblicato ? '' : ' off') + '"' + tintCat(e.categoria) + '><div class="cd"><b>' + esc(dd.d) + '</b><span>' + esc(dd.w) + '</span></div><div><span class="sub">' + CATS[e.categoria] + (e.proposta ? ' · <b>proposta</b>' : '') + (e.pubblicato ? '' : ' · <b>nascosto</b>') + '</span><b class="ct">' + esc(e.titolo) + '</b>' + (e.sottotitolo ? '<span class="sub">' + esc(e.sottotitolo) + '</span>' : '') +
+              '<details><summary>Modifica</summary>' + calForm(e, y) + '</details></div></li>'; }).join('') + '</ul></section>';
+        }).join('') + '<section class="box"><h2>Aggiungi un appuntamento</h2>' + calForm(null, y) + '</section>' + intro;
+    }
+    if (sub === 'testi') {
+      var tx = D.sito_testi.slice().sort(function (a, b) { return a.ordine - b.ordine; });
+      return head('Contatti e avvisi', 'I testi del sito che cambiano più spesso. L’avviso compare in cima alla Home finché non lo svuoti.') + t +
+        '<section class="box k-sito"><form class="sform" data-act="testiSave">' + tx.map(function (x) {
+          var big = x.valore.length > 80 || x.chiave === 'avviso_home';
+          return '<label class="wide">' + esc(x.etichetta) + (big ? '<textarea name="' + esc(x.chiave) + '" maxlength="1000">' + esc(x.valore) + '</textarea>' : '<input name="' + esc(x.chiave) + '" maxlength="1000" value="' + esc(x.valore) + '">') + '<span class="sub">Ultima modifica: ' + esc(x.aggiornato_da || '') + ', ' + fT.format(new Date(x.aggiornato_il)) + '</span></label>'; }).join('') +
+        '<div class="wide"><button class="btn" type="submit">Salva i testi</button></div></form></section>' + intro;
+    }
+    var pub = function (arr) { return arr.filter(function (x) { return x.pubblicato; }).length; };
+    return head('Sito', 'Da qui si aggiorna il sito pubblico: le schede in primo piano, i corsi, il calendario, i contatti e gli avvisi. Qui arrivano anche le richieste dei visitatori.') + t +
+      '<div class="cols"><section class="box k-sito"><header><h2>Arrivati dal sito</h2></header><ul class="list">' +
+      '<li><div><b><a href="#attivita/corsi">Preiscrizioni ai corsi</a></b><span class="sub">' + D.sito_preiscrizioni.length + ' in tutto</span></div><span class="pill ' + (n.pre ? 'crit' : 'plain') + '">' + n.pre + ' da contattare</span></li>' +
+      '<li><div><b><a href="#soci">Richieste per diventare socio</a></b><span class="sub">' + D.sito_richieste_socio.length + ' in tutto</span></div><span class="pill ' + (n.soc ? 'crit' : 'plain') + '">' + n.soc + ' nuove</span></li>' +
+      '<li><div><b><a href="#sito/messaggi">Messaggi da «Scrivici»</a></b><span class="sub">' + D.sito_messaggi.length + ' in tutto</span></div><span class="pill ' + (n.msg ? 'crit' : 'plain') + '">' + n.msg + ' da leggere</span></li></ul></section>' +
+      '<section class="box"><header><h2>Sul sito adesso</h2><a href="' + SITO_URL + '" target="_blank" rel="noopener">Apri il sito</a></header><ul class="list">' +
+      '<li><div><b><a href="#sito/slide">In primo piano</a></b></div><span class="pill plain">' + pub(D.sito_slide) + ' schede</span></li>' +
+      '<li><div><b><a href="#sito/corsi">Corsi</a></b></div><span class="pill plain">' + D.sito_corsi.filter(function (c) { return c.pubblicato && c.stato === 'aperto'; }).length + ' aperti · ' + D.sito_corsi.filter(function (c) { return c.pubblicato && c.stato === 'concluso'; }).length + ' in archivio</span></li>' +
+      '<li><div><b><a href="#sito/calendario">Calendario</a></b></div><span class="pill plain">' + pub(D.sito_calendario) + ' appuntamenti</span></li>' +
+      '<li><div><b><a href="#sito/testi">Contatti e avvisi</a></b></div><span class="pill ' + ((D.sito_testi.filter(function (x) { return x.chiave === 'avviso_home'; })[0] || {}).valore ? 'warn">Avviso attivo' : 'plain">Nessun avviso') + '</span></li></ul></section></div>' + intro;
+  };
+
+  /* ---------- corsi e iscrizioni (dati veri) ---------- */
+  function corsiPage() {
+    var cs = D.sito_corsi.filter(function (c) { return c.stato !== 'concluso'; }).sort(function (a, b) { return a.ordine - b.ordine || a.id - b.id; });
+    var orfane = D.sito_preiscrizioni.filter(function (p) { return !p.corso_id || !cs.some(function (c) { return c.id === p.corso_id; }); });
+    var tot = D.sito_preiscrizioni.length, n = nuoviDalSito().pre;
+    function rows(list) {
+      if (!list.length) return '<p class="sub">Nessuna preiscrizione per ora.</p>';
+      return '<div class="tablew"><table class="pre"><thead><tr><th>Persona</th><th>Contatti</th><th>Arrivata il</th><th>Stato</th><th>Quota e note</th></tr></thead><tbody>' + list.sort(function (a, b) { return new Date(a.creato_il) - new Date(b.creato_il); }).map(function (p) {
+        return '<tr><td><b>' + esc(p.nome) + ' ' + esc(p.cognome) + '</b><br><span class="sub">' + esc(p.comune) + '</span>' + (p.note ? '<br><span class="sub">«' + esc(p.note) + '»</span>' : '') + '</td>' +
+          '<td><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' + (p.telefono ? '<br><a href="tel:' + esc(p.telefono.replace(/[^\d+]/g, '')) + '">' + esc(p.telefono) + '</a>' : '') + '</td>' +
+          '<td class="tn">' + fD.format(new Date(p.creato_il)) + '</td>' +
+          '<td><select data-act="preStato" data-id="' + p.id + '" aria-label="Stato di ' + esc(p.nome) + '">' + Object.keys(PRE_ST).map(function (k) { return '<option value="' + k + '"' + (k === p.stato ? ' selected' : '') + '>' + PRE_ST[k][0] + '</option>'; }).join('') + '</select>' + (p.aggiornato_da ? '<br><span class="sub">da ' + esc(p.aggiornato_da) + '</span>' : '') + (me.admin ? '<br>' + delBtn('sito_preiscrizioni', p.id) : '') + '</td>' +
+          '<td><form data-act="preNote" data-id="' + p.id + '" class="mini-f"><input name="quota" maxlength="120" placeholder="Quota: es. 50 € il 3/12, contanti" value="' + esc(p.quota || '') + '"><input name="note_cd" maxlength="2000" placeholder="Nota" value="' + esc(p.note_cd || '') + '"><button class="btn alt" type="submit">Salva</button></form></td></tr>'; }).join('') + '</tbody></table></div>';
+    }
+    return head('Corsi e iscrizioni', 'Le preiscrizioni arrivate dal sito, corso per corso. Segna lo stato di ogni persona: così il Consiglio sa chi è stato contattato, chi ha pagato e quando un corso può partire.') +
+      '<nav class="stats" aria-label="Riepilogo"><a href="#attivita/corsi"><b>' + tot + '</b><span>preiscrizioni in tutto</span></a><a href="#attivita/corsi"><b>' + n + '</b><span>da contattare</span></a><a href="#sito/corsi"><b>' + cs.length + '</b><span>corsi aperti o in raccolta</span></a></nav>' +
+      cs.map(function (c) {
+        var ps = D.sito_preiscrizioni.filter(function (p) { return p.corso_id === c.id; }), attivi = ps.filter(function (p) { return p.stato !== 'ritirato' && p.stato !== 'attesa'; }).length;
+        var ok = attivi >= c.soglia;
+        return '<section class="box k-corsi"><header><div><h2>' + esc(c.titolo_breve || c.titolo) + '</h2><span class="sub">' + esc(CORSO_ST[c.stato]) + (c.quando ? ' · ' + esc(c.quando) : '') + (c.luogo ? ' · ' + esc(c.luogo) : '') + '</span></div><span class="pill ' + (ok ? '' : 'warn') + '">' + attivi + ' su ' + c.soglia + (ok ? ' · si può partire' : ' · ne mancano ' + (c.soglia - attivi)) + '</span></header>' +
+          progBar(Math.min(attivi, c.posti), c.posti, 'posti') + rows(ps) +
+          '<div class="chips"><button class="btn alt" type="button" data-act="preCsv" data-id="' + c.id + '">Scarica l’elenco per Excel</button></div>' +
+          '<details><summary style="cursor:pointer;color:var(--link)">Aggiungi a mano una preiscrizione arrivata per telefono o in sede</summary><form class="sform" data-act="preNew" data-id="' + c.id + '" style="margin-top:10px"><label>Nome<input name="nome" required maxlength="80"></label><label>Cognome<input name="cognome" required maxlength="80"></label><label>Email<input name="email" type="email" required maxlength="160"></label><label>Telefono<input name="telefono" maxlength="40"></label><label>Comune<input name="comune" required maxlength="80"></label><div class="wide chips">' + chk('consenso', false, 'La persona ha dato il consenso al trattamento dei dati') + '<button class="btn" type="submit">Aggiungi</button></div></form></details></section>';
+      }).join('') +
+      (orfane.length ? '<section class="box"><h2>Preiscrizioni a corsi non più in elenco</h2>' + rows(orfane) + '</section>' : '') +
+      '<p class="note">I dati delle persone li vedono solo i membri del Consiglio Direttivo, come dice l’informativa del sito. Le preiscrizioni si conservano fino allo svolgimento del corso o, se il corso non parte, non oltre 12 mesi: dopo, l’amministratore le cancella. Il registro delle modifiche non copia mai nomi, email o telefoni.</p>';
+  }
+  function csvPre(cid) {
+    var c = D.sito_corsi.filter(function (x) { return x.id === cid; })[0], ps = D.sito_preiscrizioni.filter(function (p) { return p.corso_id === cid; });
+    function q(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    var out = [['Nome', 'Cognome', 'Email', 'Telefono', 'Comune', 'Arrivata il', 'Stato', 'Quota', 'Nota del CD', 'Note della persona'].join(';')].concat(ps.map(function (p) { return [p.nome, p.cognome, p.email, p.telefono, p.comune, fD.format(new Date(p.creato_il)), PRE_ST[p.stato][0], p.quota, p.note_cd, p.note].map(q).join(';'); }));
+    var blob = new Blob(['﻿' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'preiscrizioni-' + slugify(c ? (c.titolo_breve || c.titolo) : 'corso') + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    log('Ha scaricato l’elenco dei preiscritti di', c ? (c.titolo_breve || c.titolo) : '');
+  }
+  function richiesteSoci() {
+    var rs = D.sito_richieste_socio.slice().sort(function (a, b) { return new Date(b.creato_il) - new Date(a.creato_il); });
+    return '<section class="box k-soci"><header><h2>Richieste per diventare socio</h2><span class="sub">Dal modulo «Diventa socio» del sito</span></header>' + (rs.length ? rs.map(function (r) {
+      return '<article class="msg"><header><div><b>' + esc(r.nome) + ' ' + esc(r.cognome) + '</b> · ' + esc(r.comune) + '<br><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' + (r.telefono ? ' · <a href="tel:' + esc(r.telefono.replace(/[^\d+]/g, '')) + '">' + esc(r.telefono) + '</a>' : '') + '<br><span class="sub">' + fT.format(new Date(r.creato_il)) + (r.come ? ' · ci ha conosciuto: ' + esc(r.come) : '') + '</span></div><span class="pill ' + SOC_ST[r.stato][1] + '">' + SOC_ST[r.stato][0] + '</span></header>' +
+        (r.motivi.length ? '<p class="sub"><b>Perché:</b> ' + r.motivi.map(esc).join(', ') + '</p>' : '') + (r.interessi.length ? '<p class="sub"><b>Interessi:</b> ' + r.interessi.map(esc).join(', ') + '</p>' : '') + (r.livello ? '<p class="sub"><b>Esperienza:</b> ' + esc(r.livello) + '</p>' : '') + (r.messaggio ? '<p class="quote">' + esc(r.messaggio) + '</p>' : '') +
+        '<form class="up" data-act="socSave" data-id="' + r.id + '"><label>Stato' + sel('stato', Object.keys(SOC_ST).map(function (k) { return [k, SOC_ST[k][0]]; }), r.stato) + '</label><label>Nota del CD<input name="note_cd" maxlength="2000" value="' + esc(r.note_cd || '') + '" placeholder="Es. Invitato alla serata del 20/11"></label><button class="btn" type="submit">Salva</button>' + delBtn('sito_richieste_socio', r.id) + '</form></article>'; }).join('') : '<p class="sub">Nessuna richiesta arrivata dal sito.</p>') +
+      '<p class="sub">Quando una persona diventa socio, i suoi dati passano al libro soci, che resta fuori dal gestionale; la richiesta qui si può poi cancellare.</p></section>';
+  }
+
   /* ---------- router ---------- */
   var mainEl = document.getElementById('main'), tabsEl = document.getElementById('tabs');
   function route() { var h = (location.hash || '#oggi').slice(1).split('/'); return { a: h[0] || 'oggi', s: h.slice(1).join('/') }; }
   function badge(k) {
     if (k === 'pratiche') return D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); }).length;
     if (k === 'ruoli') return D.cariche.filter(function (c) { return !c.sostituto_id; }).length;
+    if (k === 'sito') { var nn = nuoviDalSito(); return nn.pre + nn.soc + nn.msg; }
     if (k === 'attivita') return myClOpen().filter(function (x) { return x.stato === 'in_corso' || (x.scadenza && dleft(dt(x.scadenza)) <= 30); }).length;
     return 0;
   }
@@ -1027,6 +1269,9 @@ tr.ann td.mot { text-decoration: none; }
     } else if (a === 'passo') {
       var p = await upd('pratica_passi', id, { stato: t.value, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
       if (p) { toast('Stato aggiornato.'); render(); }
+    } else if (a === 'preStato') {
+      var pr = await upd('sito_preiscrizioni', id, { stato: t.value, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+      if (pr) { toast('Stato salvato: ' + PRE_ST[pr.stato][0] + '.'); render(); var e3 = document.querySelector('[data-act="preStato"][data-id="' + id + '"]'); if (e3) e3.focus(); }
     } else if (a === 'clStato' || a === 'clResp' || a === 'clScad') {
       var patch = { aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome };
       patch[a === 'clStato' ? 'stato' : a === 'clResp' ? 'responsabile' : 'scadenza'] = t.value || null;
@@ -1047,6 +1292,9 @@ tr.ann td.mot { text-decoration: none; }
     else if (a === 'csv') { csvPN(b.getAttribute('data-v')); }
     else if (a === 'regWho') { P.archivio.who = b.getAttribute('data-v'); render(); }
     else if (a === 'regKind') { P.archivio.kind = b.getAttribute('data-v'); render(); }
+    else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
+    else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
+    else if (a === 'sitoDel') { sitoDel(b.getAttribute('data-t'), +b.getAttribute('data-id')); }
     else if (a === 'copy') {
       var q = document.getElementById('tx' + b.getAttribute('data-i')), txt = q.textContent;
       var ok = function () { toast('Testo copiato.'); };
@@ -1104,6 +1352,25 @@ tr.ann td.mot { text-decoration: none; }
         if (!confirm('Annullare questo movimento? Resta visibile, barrato, con il motivo.')) return;
         var m2 = await upd('prima_nota', +f.getAttribute('data-id'), { annullato: true, annullato_motivo: mot, annullato_da: me.nome });
         if (m2) { toast('Movimento annullato.'); render(); }
+      } else if (a === 'slideSave' || a === 'corsoSave' || a === 'calSave') {
+        await sitoSave(a, f);
+      } else if (a === 'testiSave') {
+        var changed = D.sito_testi.filter(function (x) { return f[x.chiave] && f[x.chiave].value.trim() !== x.valore; });
+        if (!changed.length) { toast('Nessun testo cambiato.'); return; }
+        for (var ti = 0; ti < changed.length; ti++) { var r6 = await upd('sito_testi', changed[ti].chiave, { valore: f[changed[ti].chiave].value.trim(), aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome }, 'chiave'); if (!r6) return; }
+        toast(changed.length === 1 ? 'Testo salvato: è già sul sito.' : changed.length + ' testi salvati: sono già sul sito.'); render();
+      } else if (a === 'msgSave' || a === 'socSave') {
+        var tb = a === 'msgSave' ? 'sito_messaggi' : 'sito_richieste_socio';
+        var r7 = await upd(tb, +f.getAttribute('data-id'), { stato: f.stato.value, note_cd: f.note_cd.value.trim() || null, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+        if (r7) { toast('Salvato.'); render(); }
+      } else if (a === 'preNote') {
+        var r8 = await upd('sito_preiscrizioni', +f.getAttribute('data-id'), { quota: f.quota.value.trim() || null, note_cd: f.note_cd.value.trim() || null, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+        if (r8) { toast('Salvato.'); render(); }
+      } else if (a === 'preNew') {
+        if (!f.consenso.checked) { toast('Serve il consenso della persona al trattamento dei dati.'); return; }
+        var cc = D.sito_corsi.filter(function (x) { return x.id === +f.getAttribute('data-id'); })[0];
+        var r9 = await sb.from('sito_preiscrizioni').insert({ corso_id: cc.id, corso_testo: (cc.titolo_breve || cc.titolo) + (cc.quando ? ' · ' + cc.quando : ''), nome: f.nome.value.trim(), cognome: f.cognome.value.trim(), email: f.email.value.trim(), telefono: f.telefono.value.trim() || null, comune: f.comune.value.trim(), consenso: true, note_cd: 'Inserita a mano da ' + me.nome, aggiornato_da: me.nome, aggiornato_il: new Date().toISOString() }).select().single();
+        if (r9.error) throw r9.error; D.sito_preiscrizioni.push(r9.data); toast('Preiscrizione aggiunta.'); render();
       } else if (a === 'pw') {
         if (f.p.value !== f.p2.value) { toast('Le due password non coincidono.'); return; }
         var u = await sb.auth.updateUser({ password: f.p.value });
@@ -1112,6 +1379,41 @@ tr.ann td.mot { text-decoration: none; }
     } catch (ex) { console.error(ex); toast('Non salvato: ' + (ex.message || ex)); }
     finally { if (btn) btn.disabled = false; }
   });
+  async function sitoSave(a, f) {
+    var tb = a === 'slideSave' ? 'sito_slide' : a === 'corsoSave' ? 'sito_corsi' : 'sito_calendario', id = f.getAttribute('data-id'), row;
+    function v(n) { return f[n] ? f[n].value.trim() : ''; }
+    function nz(n) { return v(n) || null; }
+    if (a === 'slideSave') row = { titolo: v('titolo'), testo: v('testo'), dettaglio: v('dettaglio'), link: v('link'), bottone: v('bottone') || 'Scopri di più', alt: v('alt'), ordine: +v('ordine') || 100, logo: f.logo.checked, pubblicato: f.pubblicato.checked };
+    else if (a === 'corsoSave') row = { stato: v('stato'), ordine: +v('ordine') || 100, titolo: v('titolo'), titolo_breve: nz('titolo_breve'), tipo: nz('tipo'), luogo: nz('luogo'), quando: nz('quando'), dove: nz('dove'), info: nz('info'), descrizione: nz('descrizione'), alt: nz('alt'), soglia: +v('soglia') || 15, posti: +v('posti') || 20, pubblicato: f.pubblicato.checked };
+    else {
+      var d1 = v('data'), d2 = v('data_fine'), anno = +v('anno'), mese = +v('mese');
+      if (d1) { anno = +d1.slice(0, 4); mese = +d1.slice(5, 7) - 1; }
+      if (d2 && !d1) { toast('Se c’è la data di fine, serve anche quella di inizio.'); return; }
+      if (d2 && d2 < d1) { toast('La data di fine viene prima di quella di inizio.'); return; }
+      row = { data: d1 || null, data_fine: d2 || null, anno: anno, mese: mese, categoria: v('categoria'), titolo: v('titolo'), sottotitolo: nz('sottotitolo'), proposta: f.proposta.checked, pubblicato: f.pubblicato.checked };
+    }
+    if (f.file && f.file.files[0]) {
+      toast('Carico l’immagine…');
+      var path = await resizeUpload(f.file.files[0]);
+      row[a === 'slideSave' ? 'immagine' : 'locandina'] = path;
+    }
+    row.aggiornato_il = new Date().toISOString(); row.aggiornato_da = me.nome;
+    if (id === 'new') {
+      var r = await sb.from(tb).insert(row).select().single();
+      if (r.error) throw r.error; D[tb].push(r.data); toast('Aggiunto: è già sul sito' + (row.pubblicato ? '' : ' (nascosto)') + '.');
+    } else {
+      var x = await upd(tb, +id, row); if (!x) return; toast('Salvato: il sito è già aggiornato.');
+    }
+    render();
+  }
+  async function sitoDel(tb, id) {
+    if (!me.admin) return;
+    if (!confirm('Eliminare definitivamente? Se vuoi solo toglierlo dal sito, togli la spunta «Pubblicato».')) return;
+    var r = await sb.from(tb).delete().eq('id', id).select();
+    if (r.error) { toast('Non eliminato: ' + r.error.message); return; }
+    if (!r.data.length) { toast('Non eliminato: permesso negato.'); return; }
+    D[tb] = D[tb].filter(function (x) { return x.id !== id; }); toast('Eliminato.'); render();
+  }
   async function uploadDoc(f) {
     var area = f.getAttribute('data-area'), title = f.t.value.trim(), file = f.f.files[0];
     if (!title || !file) return;
