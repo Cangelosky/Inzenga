@@ -44,6 +44,12 @@ button, select, input, textarea { font: inherit; color: inherit; }
 #login select { background: #24543F; }
 #login button { min-height: 50px; border: 0; border-radius: 999px; background: var(--gold); color: #1A2A20; font-weight: 600; font-size: 17px; cursor: pointer; }
 #login .err { color: #F4C987; min-height: 1.3em; font-size: 16px; }
+#login .quick { display: grid; gap: 8px; border-top: 1px solid #4B7A62; padding-top: 14px; }
+#login .quick span { color: #C9D8C6; font-size: 15px; }
+#login .qb { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#login .qb button { background: #F0F5E8; color: #14231B; font-size: 16px; }
+@media (max-width: 520px) { #search { flex-wrap: wrap; } #search input { flex: 1 1 100%; } #search .btn { flex: 1 1 0; } }
+#addBtn { white-space: nowrap; }
 
 /* intestazione */
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 14px 18px; background: var(--forest); color: var(--forest-ink); border-radius: 14px; }
@@ -161,9 +167,6 @@ ul.plain { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
 /* il foglio con il timbro */
 .back { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
 .foglio { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: clamp(18px, 4vw, 40px); overflow: hidden; display: grid; gap: 22px; }
-.foglio.bozza::before, .foglio.conf::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-repeat: repeat; background-size: min(640px, 100%) auto; }
-.foglio.bozza::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480'%3E%3Cg transform='rotate(-28 320 240)' opacity='.17'%3E%3Crect x='140' y='186' width='360' height='108' rx='10' fill='none' stroke='%23A8321C' stroke-width='6'/%3E%3Ctext x='320' y='264' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='78' letter-spacing='8' fill='%23A8321C'%3EBOZZA%3C/text%3E%3C/g%3E%3C/svg%3E"); }
-.foglio.conf::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480'%3E%3Cg transform='rotate(-28 320 240)' opacity='.17'%3E%3Crect x='70' y='186' width='500' height='108' rx='10' fill='none' stroke='%23A8321C' stroke-width='6'/%3E%3Ctext x='320' y='262' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='56' letter-spacing='6' fill='%23A8321C'%3EDA CONFERMARE%3C/text%3E%3C/g%3E%3C/svg%3E"); }
 .foglio > * { position: relative; z-index: 1; }
 .foglio .kick { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stamp); }
 .foglio .fh { display: grid; gap: 8px; }
@@ -171,6 +174,9 @@ ul.plain { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
 .fs h2 { font-size: 23px; }
 .fs ul, .fs ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
 .fs p { max-width: 70ch; }
+.doc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.stato-doc { display: inline-block; padding: 4px 14px; border: 2px solid var(--stamp); border-radius: 8px; color: var(--stamp); font-weight: 700; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; background: color-mix(in srgb, var(--stamp) 8%, var(--card)); }
+.stato-doc.ok { border-color: var(--ok-ink); color: var(--ok-ink); background: var(--ok-bg); }
 mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius: 3px; }
 
 /* spazi tra intestazione, menu e pagina */
@@ -338,17 +344,27 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       <label for="lgPass">Password<input id="lgPass" type="password" autocomplete="current-password" required></label>
       <button type="submit" id="lgBtn">Entra</button>
       <p class="err" id="lgErr" role="alert"></p>
+      <div class="quick" id="quick" hidden>
+        <b>Accesso rapido, provvisorio</b>
+        <span>Per la prova davanti al Consiglio si entra con un tocco, senza password. L’amministratore entra sempre con la password.</span>
+        <div class="qb">
+          <button type="button" data-quick="presidente">Presidente</button>
+          <button type="button" data-quick="vicepresidente">Vicepresidente</button>
+          <button type="button" data-quick="tesoriere">Tesoriere</button>
+          <button type="button" data-quick="segretario">Segretario</button>
+        </div>
+      </div>
     </form>
   </section>
 
   <div id="app" hidden>
     <header class="top">
       <div class="brand"><strong>Gestionale del Consiglio Direttivo</strong><span>Associazione Micologica Bresadola APS · Gruppo di Palermo «G. Inzenga» · <a href="../" style="color:inherit">torna al sito</a></span></div>
-      <div class="who"><span>Sei entrato come</span><b id="whoName"></b><a href="#account">Password</a><button type="button" id="logout">Esci</button></div>
+      <div class="who"><span>Sei entrato come</span><b id="whoName"></b><a href="#account" id="pwLink">Password</a><button type="button" id="logout">Esci</button></div>
     </header>
     <div class="bar2">
       <nav class="tabs" id="tabs" aria-label="Aree del gestionale"></nav>
-      <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Cerca in documenti, scadenze, attività, ruoli…" aria-label="Cerca nel gestionale"><button class="btn alt" type="submit">Cerca</button></form>
+      <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Cerca in documenti, scadenze, attività, ruoli…" aria-label="Cerca nel gestionale"><button class="btn alt" type="submit">Cerca</button><a class="btn" href="#nuovo" id="addBtn">＋ Aggiungi</a></form>
     </div>
     <main id="main" tabindex="-1"><p class="loading">Caricamento…</p></main>
     <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. Il libro soci resta fuori dal gestionale; qui arrivano solo le richieste inviate dal sito.</footer>
@@ -361,6 +377,10 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   'use strict';
   var SB_URL = 'https://vqmxyexwdxjbeakksypz.supabase.co';
   var SB_KEY = 'sb_publishable_jrmse0Bys256kjYFvNl9mQ_QBoECrd3';
+  /* Accesso rapido provvisorio: per la prova davanti al Consiglio le quattro cariche entrano con un tocco.
+     Prima dell'uso vero: DEMO_ACCESSO = false, togliere DEMO_PW e cambiare le password delle cariche. */
+  var DEMO_ACCESSO = true;
+  var DEMO_PW = { presidente: 'radura-castagno-ruscello-65', vicepresidente: 'muschio-leccio-ovolo-58', tesoriere: 'quercia-lamella-anello-82', segretario: 'sentiero-spora-tartufo-89' };
   var sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, storageKey: 'inz-gestionale-auth', autoRefreshToken: true } });
 
   var DAY = 86400000;
@@ -408,6 +428,17 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     D.cariche.sort(function (a, b) { return a.ordine - b.ordine; });
     ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi', 'checklist'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
   }
+  document.getElementById('quick').hidden = !DEMO_ACCESSO;
+  document.getElementById('quick').addEventListener('click', async function (e) {
+    var b = e.target.closest('[data-quick]'); if (!b) return;
+    var c = b.getAttribute('data-quick'), err = document.getElementById('lgErr');
+    err.textContent = ''; b.disabled = true; var t0 = b.textContent; b.textContent = 'Accesso…';
+    var r = await sb.auth.signInWithPassword({ email: c + '@inzenga.invalid', password: DEMO_PW[c] });
+    b.disabled = false; b.textContent = t0;
+    if (r.error) { err.textContent = 'Accesso rapido non riuscito per questa carica: forse la password è stata cambiata. Usa il modulo qui sopra.'; return; }
+    await start(r.data.session);
+    if (me) log('Ha effettuato l’accesso', '(accesso rapido)');
+  });
   async function start(session) {
     try {
       await load();
@@ -415,6 +446,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       if (!p) { await sb.auth.signOut(); document.getElementById('lgErr').textContent = 'Questo account non fa parte del Consiglio Direttivo.'; showLogin(); return; }
       me = { id: session.user.id, nome: p.nome_visualizzato, carica: p.carica_id, admin: p.is_admin };
       document.getElementById('whoName').textContent = me.nome;
+      document.getElementById('pwLink').hidden = DEMO_ACCESSO && !me.admin;
       loginEl.hidden = true; appEl.hidden = false;
       render();
     } catch (ex) {
@@ -435,6 +467,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   }
 
   /* ---------- helpers di resa ---------- */
+  function addLink(h, l) { return '<div><a class="btn" href="' + h + '">＋ ' + l + '</a></div>'; }
   function head(t, p) { return '<div class="head"><h1>' + t + '</h1>' + (p ? '<p>' + p + '</p>' : '') + '</div>'; }
   function tableH(head, rows, firstBold) {
     return '<div class="tablew"><table><thead><tr>' + head.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
@@ -488,7 +521,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     if (d.file_path) acts += '<button class="btn alt" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica</button>';
     if (!d.contenuto && !d.file_path) acts += '<span class="dc">File da caricare</span>';
     var date = d.data_doc ? fD.format(dt(d.data_doc)) : '';
-    return '<div class="file"><div><b>' + esc(d.titolo) + '</b><div class="sub">' + esc(d.categoria) + (date ? ' · ' + date : '') + ' · ' + esc(d.caricato_da) + (d.versione > 1 ? ' · versione ' + d.versione : '') + (d.sottotitolo ? '<br>' + esc(d.sottotitolo) : '') + '</div></div>' +
+    return '<div class="file"><div><b>' + esc(d.titolo) + '</b><div class="sub">' + esc(d.categoria) + (date ? ' · documento del ' + date : '') + '<br>Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + (d.sottotitolo ? '<br>' + esc(d.sottotitolo) : '') + '</div></div>' +
       '<div class="acts">' + acts + '</div>' + h + '</div>';
   }
   function upForm(area, cats, allowed, msg) {
@@ -503,9 +536,10 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   }
   function docPage(d) {
     if (!d) return head('Documento non trovato', '<a href="#archivio">Torna all’archivio</a>');
-    var c = d.contenuto || { secs: [] }, cls = d.stato === 'bozza' ? ' bozza' : d.stato === 'da_confermare' ? ' conf' : '';
-    var kick = d.stato === 'bozza' ? 'Bozza di lavoro, da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [''])[0];
-    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio' + cls + '"><div class="fh"><span class="kick">' + esc(kick) + '</span><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto ? '. Fonte: piano di lavoro su Notion.' : '') + '</p></div>' +
+    var c = d.contenuto || { secs: [] };
+    var kick = d.stato === 'bozza' ? 'Bozza · da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [d.stato])[0];
+    var ufficiale = d.stato === 'ufficiale' || d.stato === 'approvato';
+    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto ? '. Fonte: piano di lavoro su Notion.' : '') + '</p></div>' +
       (c.secs || []).map(function (s) {
         return '<section class="fs"><h2>' + esc(s.h) + '</h2>' + (s.p ? '<p>' + fm(s.p) + '</p>' : '') +
           (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ul>' : '') +
@@ -598,7 +632,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     var t = '<div class="chips" role="tablist">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#pratiche' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'scadenze') {
       var aperte = scSorted(openScad()), fatte = D.scadenze.filter(function (x) { return x.fatta; });
-      return head('Scadenze', 'Tutto quello che scade, in ordine. Il colore dice quanto è vicino. Spunta una scadenza quando è fatta.') + t +
+      return head('Scadenze', 'Tutto quello che scade, in ordine. Il colore dice quanto è vicino. Spunta una scadenza quando è fatta.') + t + addLink('#nuovo/scadenza', 'Nuova scadenza') +
         '<section class="box"><div>' + aperte.map(function (x) { var p = scState(x), d = scadDate(x);
           return '<div class="check"><input type="checkbox" id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Segna come fatta: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.titolo) + ' <span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></b><span class="sub">' + (d ? fD.format(d) : esc(x.etichetta || '')) + ' · ' + esc(x.categoria || '') + ' · responsabile: ' + esc(x.responsabile || 'Da assegnare') + (x.annuale ? ' · si ripete ogni anno' : '') + (x.note ? '<br>' + esc(x.note) : '') + '</span></label></div>'; }).join('') + '</div></section>' +
         (fatte.length ? '<section class="box"><details><summary>Scadenze fatte (' + fatte.length + ')</summary><div style="margin-top:10px">' + fatte.map(function (x) { return '<div class="check done"><input type="checkbox" checked id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Riapri: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="display:block">' + esc(x.titolo) + '</b></label></div>'; }).join('') + '</div></details></section>' : '') +
@@ -606,10 +640,10 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
         '<p class="note">Urgente: entro 15 giorni. In arrivo: entro 60 giorni. Le scadenze annuali vengono dalla pagina Normativa e guida alla gestione.</p>';
     }
     if (sub === 'decisioni') {
-      return head('Decisioni da votare', 'Le decisioni del piano si votano in Consiglio. Qui si segna l’esito: resta scritto chi l’ha segnata e quando.') + t +
+      return head('Decisioni da votare', 'Le decisioni del piano si votano in Consiglio. Qui si segna l’esito: resta scritto chi l’ha segnata e quando.') + t + addLink('#nuovo/decisione', 'Nuova decisione da votare') +
         '<section class="box"><header><h2>Da votare in CD</h2><span class="sub">' + openDec().length + ' su ' + D.decisioni.length + ' ancora da votare</span></header>' + decList(D.decisioni) + '</section>';
     }
-    return head('Pratiche', 'Ogni lavoro che ha più passi diventa una pratica: i passi in ordine, chi li fa, entro quando, e i documenti pronti. Cambia lo stato di un passo quando lo completi.') + t +
+    return head('Pratiche', 'Ogni lavoro che ha più passi diventa una pratica: i passi in ordine, chi li fa, entro quando, e i documenti pronti. Cambia lo stato di un passo quando lo completi.') + t + addLink('#nuovo/pratica', 'Nuova pratica') +
       D.pratiche.map(function (pr) {
         var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pr.id; });
         var done = ps.filter(function (x) { return x.stato === 'fatto'; }).length;
@@ -622,7 +656,8 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
               '<span class="sub">' + esc(x.responsabile || 'Da assegnare') + (d ? ' · entro il ' + fD.format(d) + ' (' + when(d) + ')' : '') + (x.aggiornato_da ? ' · aggiornato da ' + esc(x.aggiornato_da) : '') + '</span>' +
               (x.descrizione ? '<p style="margin-top:4px">' + esc(x.descrizione) + '</p>' : '') +
               (x.documenti_slug.length ? '<div class="docs">' + x.documenti_slug.map(function (s) { var dd = docBySlug(s); return dd ? (dd.file_path ? '<a href="#" data-act="dl" data-path="' + esc(dd.file_path) + '">📄 ' + esc(dd.titolo) + '</a>' : '<span class="sub">📄 ' + esc(dd.titolo) + ' <span class="dc">' + (dd.stato === 'da_firmare' ? 'Da firmare' : 'File da caricare') + '</span></span>') : ''; }).join('') + '</div>' : '') +
-              '</div></div>'; }).join('') + '</div></section>';
+              '</div></div>'; }).join('') + '</div>' +
+          '<details><summary style="cursor:pointer;color:var(--link);font-weight:600">＋ Aggiungi un passo a questa pratica</summary><form class="sform" data-act="nPasso" data-id="' + pr.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300"></label><label>Chi<select name="responsabile">' + respOpts(me.carica ? myName() : 'Da assegnare') + '</select></label><label>Entro il<input name="scadenza" type="date"></label><div class="wide"><button class="btn" type="submit">Aggiungi il passo</button></div></form></details></section>';
       }).join('');
   };
 
@@ -632,7 +667,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#attivita' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'corsi') return t + corsiPage();
     if (sub === 'chi') return head('Chi fa cosa', 'Cosa sta facendo ogni carica, cosa deve fare e cosa ha concluso di recente. Così ognuno sa a che punto sono gli altri.') + t + chiPage();
-    if (!sub) return head('Stato dei lavori', 'Ogni attività con la sua checklist, presa dal disciplinare: la barra dice quanti passi sono fatti. Tocca un’attività per aprire la checklist e aggiornarla.') + t + lavoriPage();
+    if (!sub) return head('Stato dei lavori', 'Ogni attività con la sua checklist, presa dal disciplinare: la barra dice quanti passi sono fatti. Tocca un’attività per aprire la checklist e aggiornarla.') + t + addLink('#nuovo/attivita', 'Nuova attività') + lavoriPage();
     return head('Elenco delle attività', 'Il calendario di lavoro, dal calendario 2027 già redatto. Ogni attività ha un responsabile e uno stato. I disciplinari sono in Come si fa.') + t +
       '<section class="box"><div class="tablew"><table><thead><tr><th>Data</th><th>Attività</th><th>Tipo</th><th>Responsabile</th><th>Stato</th><th>Note</th></tr></thead><tbody>' +
       attSorted().map(function (x) { var d = attDate(x); return '<tr><td class="tn">' + (x.ricorrenza ? esc(x.ricorrenza) : d ? fD.format(d) : '') + '</td><td><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b></td><td>' + esc(x.tipo) + '</td><td>' + esc(x.responsabile) + '</td><td><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></td><td>' + esc(x.note || '') + '</td></tr>'; }).join('') +
@@ -662,7 +697,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     var cats = ['Tutti'].concat(Array.from(new Set(all.map(function (d) { return d.categoria; }))).sort());
     var cur = P.archivio.cur || 'Tutti';
     var list = all.filter(function (d) { return cur === 'Tutti' || d.categoria === cur; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
-    return head('Archivio', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. I documenti in bozza si aprono come un foglio con il timbro BOZZA finché il Consiglio non li vota.') + t +
+    return head('Archivio', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. Ogni documento mostra in alto il suo stato (in rosso se è una bozza o da firmare), la versione e l’ultimo aggiornamento.') + t + addLink('#nuovo/documento', 'Carica un documento') +
       '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + cats.map(function (c) { return '<button class="chip" type="button" data-act="cat" data-v="' + esc(c) + '" aria-pressed="' + (c === cur) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
       '<div>' + list.map(fileRow).join('') + '</div></section>' +
       '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
@@ -703,7 +738,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     if (sub === 'comunicazioni') {
       return head('Comunicazioni', 'Per ogni attività, cosa va comunicato, da chi, a chi e quando. Viene dai disciplinari.') + t +
         ['Stage', 'Mostra', 'Corsi', 'Gite'].map(function (k) { var d = docBySlug('doc-' + k.toLowerCase()); return '<section class="box"><header><h2>' + k + '</h2>' + (d ? '<a href="' + docHref(d) + '">Disciplinare</a>' : '') + '</header>' + tableH(HEAD4, comsRows(k)) + '</section>'; }).join('') +
-        '<section class="box"><h2>Testi pronti</h2>' + D.testi.map(function (x, i) { return '<div class="copy"><div><b>' + esc(x.titolo) + '</b><q id="tx' + i + '">' + esc(x.testo) + '</q></div><button class="btn alt" type="button" data-act="copy" data-i="' + i + '">Copia</button></div>'; }).join('') + '</section>' +
+        addLink('#nuovo/testo', 'Nuovo testo pronto') + '<section class="box"><h2>Testi pronti</h2>' + D.testi.map(function (x, i) { return '<div class="copy"><div><b>' + esc(x.titolo) + '</b><q id="tx' + i + '">' + esc(x.testo) + '</q></div><button class="btn alt" type="button" data-act="copy" data-i="' + i + '">Copia</button></div>'; }).join('') + '</section>' +
         '<section class="box"><header><h2>Le chat dei soci</h2>' + (docBySlug('doc-community') ? '<a href="#doc/doc-community">Proposta completa</a>' : '') + '</header><ul class="list">' +
         [['Comunicazioni del CD', 'scrive solo il Consiglio Direttivo'], ['Attività ed eventi', 'scrivono tutti i soci in regola'], ['Comitato scientifico', 'foto da determinare e approfondimenti'], ['Chat amicologica', 'chiacchiere fuori tema'], ['Consiglio Direttivo', 'riservata al CD, visibile ma non accessibile ai soci']].map(function (c) { return '<li><div><b>' + c[0] + '</b><span class="sub">' + c[1] + '</span></div></li>'; }).join('') + '</ul></section>';
     }
@@ -736,6 +771,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   };
 
   P.account = function () {
+    if (DEMO_ACCESSO && !me.admin) return head('Password', 'Durante la prova si entra con l’accesso rapido, quindi le password delle cariche non si cambiano. Quando il gestionale passa all’uso vero, ognuno avrà la sua password personale.');
     return head('Cambia la password', 'La password vale per l’account «' + esc(me.nome) + '». Scegline una lunga, almeno 12 caratteri.') +
       '<section class="box"><form data-act="pw" class="up"><label>Nuova password<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label><button class="btn" type="submit">Salva</button></form></section>';
   };
@@ -1222,6 +1258,108 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       '<p class="sub">Quando una persona diventa socio, i suoi dati passano al libro soci, che resta fuori dal gestionale; la richiesta qui si può poi cancellare.</p></section>';
   }
 
+  /* ---------- aggiungere: un solo punto d'ingresso ---------- */
+  var RESP_SEL = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consiglio Direttivo', 'Comitato scientifico', 'Da assegnare'];
+  var NUOVI = [
+    ['scadenza', 'Una scadenza', 'Qualcosa da fare entro una data: una pratica, un rinnovo, un pagamento.', 'k-scad'],
+    ['attivita', 'Un’attività o un evento', 'Una gita, una mostra, un corso, una serata. Con la checklist dal disciplinare.', 'k-att'],
+    ['pratica', 'Una pratica con i suoi passi', 'Un lavoro in più passi, come il trasferimento della sede o il deposito al RUNTS.', 'k-dec'],
+    ['decisione', 'Una decisione da votare', 'Un punto da portare al prossimo Consiglio Direttivo.', 'k-dec'],
+    ['documento', 'Un documento o un verbale', 'Un file: verbale, regolamento, modulo, ricevuta, locandina.', 'k-doc'],
+    ['testo', 'Un testo pronto', 'Un messaggio da copiare e incollare nelle chat o nelle email.', 'k-altri'],
+    ['movimento', 'Un movimento di prima nota', 'Un’entrata o un’uscita di cassa o di banca. Solo il Tesoriere e il suo vice.', 'k-soldi'],
+    ['sito', 'Qualcosa sul sito', 'Una slide in primo piano, un corso, un appuntamento del calendario, un avviso.', 'k-sito']
+  ];
+  function respOpts(cur) { return RESP_SEL.map(function (r) { return '<option' + (r === cur ? ' selected' : '') + '>' + r + '</option>'; }).join(''); }
+  P.nuovo = function (sub) {
+    var back = '<a class="back" href="#nuovo">← Cosa vuoi aggiungere</a>';
+    var myR = me.carica ? myName() : 'Da assegnare';
+    if (sub === 'scadenza') return back + head('Nuova scadenza', 'Compare in Scadenze, nel Calendario e in «Oggi» di chi ne è responsabile.') +
+      '<section class="box k-scad"><form class="sform" data-act="nScad"><label class="wide">Cosa va fatto<input name="titolo" required maxlength="200" placeholder="Es. Rinnovo della polizza assicurativa"></label>' +
+      '<label>Entro il<input name="data" type="date"></label><label>Chi se ne occupa<select name="responsabile">' + respOpts(myR) + '</select></label>' +
+      '<label>Tipo<input name="categoria" maxlength="80" placeholder="Es. Burocrazia, Soldi, Eventi"></label>' +
+      '<label class="wide">Note<textarea name="note" maxlength="1000"></textarea></label>' +
+      '<div class="wide chips">' + chk('urgente', false, 'Urgente') + chk('annuale', false, 'Si ripete ogni anno') + '</div>' +
+      '<div class="wide"><button class="btn" type="submit">Aggiungi la scadenza</button></div></form></section>';
+    if (sub === 'attivita') {
+      var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
+      return back + head('Nuova attività', 'Compare in Stato dei lavori, nel Calendario e in Chi fa cosa. Se scegli un disciplinare, la checklist si crea da sola.') +
+        '<section class="box k-att"><form class="sform" data-act="nAtt"><label class="wide">Attività<input name="titolo" required maxlength="200" placeholder="Es. Gita a Ficuzza"></label>' +
+        '<label>Data<input name="data" type="date"></label><label>Tipo<select name="tipo">' + ['Conversazioni', 'Lezioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<option>' + k + '</option>'; }).join('') + '</select></label>' +
+        '<label>Responsabile<input name="responsabile" maxlength="120" value="' + esc(myR) + '"></label><label>Stato<select name="stato">' + ATT_STATI.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select></label>' +
+        '<label class="wide">Note<input name="note" maxlength="500"></label>' +
+        '<label class="wide">Checklist dal disciplinare<select name="disc"><option value="">Nessuna, la scrivo dopo</option>' + disc.map(function (x) { return '<option value="' + esc(x.slug) + '">' + esc(x.titolo.replace('Disciplinare operativo, ', '')) + '</option>'; }).join('') + '</select></label>' +
+        '<div class="wide"><button class="btn" type="submit">Aggiungi l’attività</button></div></form></section>';
+    }
+    if (sub === 'pratica') return back + head('Nuova pratica', 'Scrivi i passi uno per riga, nell’ordine in cui vanno fatti. Poi potrai segnare chi li fa e quando sono fatti.') +
+      '<section class="box k-dec"><form class="sform" data-act="nPratica"><label class="wide">Nome della pratica<input name="titolo" required maxlength="200" placeholder="Es. Deposito al RUNTS della variazione di sede"></label>' +
+      '<label class="wide">A cosa serve<textarea name="descrizione" maxlength="1500"></textarea></label>' +
+      '<label class="wide">I passi, uno per riga<textarea name="passi" required style="min-height:160px" placeholder="Preparare il verbale&#10;Raccogliere le firme&#10;Consegnare all’ufficio"></textarea></label>' +
+      '<label>Chi fa i passi (si cambia dopo per ognuno)<select name="responsabile">' + respOpts(myR) + '</select></label>' +
+      '<div class="wide"><button class="btn" type="submit">Crea la pratica</button></div></form></section>';
+    if (sub === 'decisione') return back + head('Nuova decisione da votare', 'Finisce nell’elenco «Da votare in CD». Quando il Consiglio vota, si spunta.') +
+      '<section class="box k-dec"><form class="sform" data-act="nDec"><label class="wide">Cosa si deve decidere<textarea name="testo" required maxlength="600" placeholder="Es. Approvare la quota del corso di Cefalù"></textarea></label>' +
+      '<label class="wide">Riferimento (facoltativo)<input name="rif" maxlength="200" placeholder="Es. Proposta del Tesoriere, 20 novembre"></label>' +
+      '<div class="wide"><button class="btn" type="submit">Aggiungi la decisione</button></div></form></section>';
+    if (sub === 'documento') return back + head('Nuovo documento', 'Scegli dove metterlo. Se c’è già un documento con lo stesso titolo, il nuovo file prende il suo posto e il vecchio resta tra le versioni.') +
+      '<section class="box k-doc"><h2>In Archivio</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
+      '<section class="box k-doc"><h2>Tra i Verbali</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>' +
+      '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], me.admin || me.carica === 'tesoriere' || me.carica === 'presidente', 'Qui caricano il Tesoriere e il Presidente.') + '</section>';
+    if (sub === 'testo') return back + head('Nuovo testo pronto', 'Compare in Come si fa → Comunicazioni, con il pulsante «Copia».') +
+      '<section class="box k-altri"><form class="sform" data-act="nTesto"><label class="wide">Titolo<input name="titolo" required maxlength="200" placeholder="Es. Promemoria della gita"></label>' +
+      '<label class="wide">Testo<textarea name="testo" required maxlength="3000" style="min-height:160px"></textarea></label><div class="wide"><button class="btn" type="submit">Aggiungi il testo</button></div></form></section>';
+    if (sub === 'movimento') { location.replace('#soldi/primanota'); return ''; }
+    if (sub === 'sito') return back + head('Aggiungi sul sito', 'Scegli cosa: ogni pagina ha il modulo «Aggiungi» in fondo.') +
+      '<div class="who-grid">' + [['#sito/slide', 'Una slide in primo piano', 'In cima alla Home, con foto.'], ['#sito/corsi', 'Un corso', 'Con le date, il luogo e la locandina.'], ['#sito/calendario', 'Un appuntamento del calendario', 'Una serata, una gita, una mostra.'], ['#sito/testi', 'Un avviso in Home', 'Per esempio una serata annullata.']].map(function (x) { return '<a class="card k-sito" href="' + x[0] + '"><h3>' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
+    return head('Aggiungi', 'Scegli cosa vuoi aggiungere. Tutto quello che aggiungi resta nel registro, con il tuo nome di carica e l’ora.') +
+      '<div class="who-grid">' + NUOVI.filter(function (x) { return x[0] !== 'movimento' || canPN(); }).map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>' +
+      '<p class="note">Si aggiungono anche: i passi di una checklist dentro ogni attività, i passi di una pratica in fondo a ogni pratica, le preiscrizioni arrivate per telefono in Attività → Corsi e iscrizioni.</p>';
+  };
+  async function nuovoSave(a, f) {
+    function v(n) { return f[n] ? f[n].value.trim() : ''; }
+    function nz(n) { return v(n) || null; }
+    var r;
+    if (a === 'nScad') {
+      r = await sb.from('scadenze').insert({ titolo: v('titolo'), data: nz('data'), responsabile: v('responsabile'), categoria: nz('categoria'), note: nz('note'), urgente: f.urgente.checked, annuale: f.annuale.checked, etichetta: v('data') ? null : 'Da fissare' }).select().single();
+      if (r.error) throw r.error; D.scadenze.push(r.data); toast('Scadenza aggiunta.'); location.hash = '#pratiche/scadenze'; return;
+    }
+    if (a === 'nAtt') {
+      r = await sb.from('attivita').insert({ titolo: v('titolo'), data: nz('data'), tipo: v('tipo'), responsabile: v('responsabile') || 'Da assegnare', stato: v('stato'), note: nz('note') }).select().single();
+      if (r.error) throw r.error; D.attivita.push(r.data);
+      var doc = v('disc') && docBySlug(v('disc')), sec = doc && doc.contenuto && (doc.contenuto.secs || []).filter(function (x) { return x.h === 'Passaggi in ordine'; })[0];
+      if (sec && sec.ol && sec.ol.length) {
+        var r2 = await sb.from('checklist').insert(sec.ol.map(function (txt, i) { return { attivita_id: r.data.id, ordine: i + 1, testo: txt, fonte: doc.slug, aggiornato_da: me.nome }; })).select();
+        if (!r2.error) D.checklist = D.checklist.concat(r2.data);
+      }
+      toast('Attività aggiunta' + (sec ? ', con la checklist del disciplinare.' : '.')); location.hash = '#attivita/' + r.data.id; return;
+    }
+    if (a === 'nPratica') {
+      var passi = v('passi').split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+      if (!passi.length) { toast('Scrivi almeno un passo.'); return; }
+      r = await sb.from('pratiche').insert({ titolo: v('titolo'), descrizione: nz('descrizione') }).select().single();
+      if (r.error) throw r.error; D.pratiche.push(r.data);
+      var r3 = await sb.from('pratica_passi').insert(passi.map(function (t, i) { return { pratica_id: r.data.id, ordine: i + 1, titolo: t.slice(0, 300), responsabile: v('responsabile'), aggiornato_da: me.nome }; })).select();
+      if (r3.error) throw r3.error; D.pratica_passi = D.pratica_passi.concat(r3.data);
+      toast('Pratica creata con ' + passi.length + ' passi.'); location.hash = '#pratiche'; return;
+    }
+    if (a === 'nDec') {
+      var ord = D.decisioni.reduce(function (m, x) { return Math.max(m, x.ordine); }, 0) + 1;
+      r = await sb.from('decisioni').insert({ testo: v('testo'), rif: nz('rif'), ordine: ord }).select().single();
+      if (r.error) throw r.error; D.decisioni.push(r.data); toast('Decisione aggiunta.'); location.hash = '#pratiche/decisioni'; return;
+    }
+    if (a === 'nTesto') {
+      var ot = D.testi.reduce(function (m, x) { return Math.max(m, x.ordine); }, 0) + 1;
+      r = await sb.from('testi').insert({ titolo: v('titolo'), testo: v('testo'), ordine: ot }).select().single();
+      if (r.error) throw r.error; D.testi.push(r.data); toast('Testo aggiunto.'); location.hash = '#comesifa/comunicazioni'; return;
+    }
+    if (a === 'nPasso') {
+      var pid = +f.getAttribute('data-id'), ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pid; });
+      r = await sb.from('pratica_passi').insert({ pratica_id: pid, ordine: ps.reduce(function (m, x) { return Math.max(m, x.ordine); }, 0) + 1, titolo: v('titolo'), responsabile: v('responsabile'), scadenza: nz('scadenza'), aggiornato_da: me.nome }).select().single();
+      if (r.error) throw r.error; D.pratica_passi.push(r.data); toast('Passo aggiunto.'); render(); return;
+    }
+  }
+
+
   /* ---------- router ---------- */
   var mainEl = document.getElementById('main'), tabsEl = document.getElementById('tabs');
   function route() { var h = (location.hash || '#oggi').slice(1).split('/'); return { a: h[0] || 'oggi', s: h.slice(1).join('/') }; }
@@ -1241,7 +1379,8 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       else html = P.oggi();
     } catch (ex) { console.error(ex); html = head('Qualcosa non va', 'Questa pagina non si è caricata. Torna a <a href="#oggi">Oggi</a>.'); }
     mainEl.innerHTML = html;
-    var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' ? '' : r.a;
+    var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' || r.a === 'nuovo' ? '' : r.a;
+    document.getElementById('addBtn').setAttribute('aria-current', r.a === 'nuovo' ? 'page' : 'false');
     var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
     tabsEl.innerHTML = aree.map(function (x) { var n = badge(x[0]); return '<a href="#' + x[0] + '"' + (x[0] === cur ? ' aria-current="page"' : '') + '>' + x[1] + (n ? '<span class="n" aria-label="' + n + ' da fare">' + n + '</span>' : '') + '</a>'; }).join('');
     var curA = tabsEl.querySelector('[aria-current]'); if (curA && tabsEl.scrollWidth > tabsEl.clientWidth) tabsEl.scrollLeft = Math.max(0, curA.offsetLeft - tabsEl.offsetLeft - 16);
@@ -1354,6 +1493,8 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
         if (m2) { toast('Movimento annullato.'); render(); }
       } else if (a === 'slideSave' || a === 'corsoSave' || a === 'calSave') {
         await sitoSave(a, f);
+      } else if (/^n(Scad|Att|Pratica|Dec|Testo|Passo)$/.test(a)) {
+        await nuovoSave(a, f);
       } else if (a === 'testiSave') {
         var changed = D.sito_testi.filter(function (x) { return f[x.chiave] && f[x.chiave].value.trim() !== x.valore; });
         if (!changed.length) { toast('Nessun testo cambiato.'); return; }
