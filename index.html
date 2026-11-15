@@ -617,7 +617,7 @@ footer a { color: var(--ink); }
   </defs>
 </svg>
 
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>10 novembre 2026, ore 15:48</span></div>
+<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>15 novembre 2026, ore 21:35</span></div>
 <div class="draft gut"><div class="wrap"><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 
 <header class="top gut">
@@ -1012,7 +1012,8 @@ footer a { color: var(--ink); }
           <h3>Osservatorio, area soci</h3>
           <p>Per i soci: ritrovamenti, piogge e segnalazioni. Si apre ai soci dopo un periodo di prova.</p>
           <h3 style="margin-top:8px">Gestionale</h3>
-          <p>Per il Consiglio Direttivo: documenti, ruoli, calendario, elenco soci e rimborsi.</p>
+          <p>Per il Consiglio Direttivo: ruoli e vice, scadenze e pratiche, calendario, stato dei lavori, documenti, prima nota e aggiornamento del sito.</p>
+          <p><a class="btn solid" href="gestionale-v2/">Entra nel gestionale</a></p>
         </div>
         <div class="box">
           <h3>Entra</h3>
@@ -1029,8 +1030,8 @@ footer a { color: var(--ink); }
           </form>
           <div class="demo-acc"><b>Accesso demo</b><span>Utenti inventati, solo per la presentazione.</span>
             <button type="button" class="chip" data-demo="0">Socia: Lucia Bellanti</button>
-            <button type="button" class="chip" data-demo="1">Consigliere: Matteo Corsaro</button>
-            <small>lucia.bellanti@example.org · bosco2027<br>matteo.corsaro@example.org · consiglio2027</small></div>
+            <small>lucia.bellanti@example.org · bosco2027</small>
+            <span>Il gestionale ha un accesso vero, con la carica e la password personale.</span></div>
         </div>
       </div>
       <div id="areaDemo" hidden></div>
@@ -1919,7 +1920,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     { area: 'Osservatorio', email: 'lucia.bellanti@example.org', pw: 'bosco2027', nome: 'Lucia Bellanti', ruolo: 'Socia (account demo)' },
     { area: 'Gestionale', email: 'matteo.corsaro@example.org', pw: 'consiglio2027', nome: 'Matteo Corsaro', ruolo: 'Consigliere (account demo)' }
   ];
-  var GEST_URL = 'gestionale/';
+  var GEST_URL = 'gestionale-v2/';
   var loginForm = document.getElementById('loginForm'), areaBox = document.getElementById('areaDemo'), loginCols = document.getElementById('loginCols');
   function fillDemo(i) {
     var a = DEMO[i];
@@ -1953,6 +1954,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
     var area = document.querySelector('input[name="area"]:checked').value;
+    if (area === 'Gestionale') { location.href = GEST_URL; return; }
     var em = document.getElementById('le').value.trim().toLowerCase(), pw = document.getElementById('lp').value;
     var m = document.getElementById('lmsg'); m.hidden = false;
     var acc = DEMO.filter(function (a) { return a.email === em && a.pw === pw; })[0];
