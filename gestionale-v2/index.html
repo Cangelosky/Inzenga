@@ -346,7 +346,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       <p class="err" id="lgErr" role="alert"></p>
       <div class="quick" id="quick" hidden>
         <b>Accesso rapido, provvisorio</b>
-        <span>Per la prova davanti al Consiglio si entra con un tocco, senza password. L’amministratore entra sempre con la password.</span>
+        <span>Per provare il gestionale si entra con un tocco, senza password. Con l’accesso rapido i dati delle persone (soci, iscritti, messaggi) restano nascosti: per vederli si entra con la password personale.</span>
         <div class="qb">
           <button type="button" data-quick="presidente">Presidente</button>
           <button type="button" data-quick="vicepresidente">Vicepresidente</button>
@@ -425,6 +425,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       return q;
     }));
     res.forEach(function (r, i) { if (r.error) throw r.error; D[TABLES[i]] = r.data; });
+    var cn = await sb.rpc('conteggi_moduli'); D.cnt = cn.error ? null : cn.data;
     D.cariche.sort(function (a, b) { return a.ordine - b.ordine; });
     ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi', 'checklist'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
   }
@@ -433,7 +434,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     var b = e.target.closest('[data-quick]'); if (!b) return;
     var c = b.getAttribute('data-quick'), err = document.getElementById('lgErr');
     err.textContent = ''; b.disabled = true; var t0 = b.textContent; b.textContent = 'Accesso…';
-    var r = await sb.auth.signInWithPassword({ email: c + '@inzenga.invalid', password: DEMO_PW[c] });
+    var r = await sb.auth.signInWithPassword({ email: c + '.prova@inzenga.invalid', password: DEMO_PW[c] });
     b.disabled = false; b.textContent = t0;
     if (r.error) { err.textContent = 'Accesso rapido non riuscito per questa carica: forse la password è stata cambiata. Usa il modulo qui sopra.'; return; }
     await start(r.data.session);
@@ -444,9 +445,9 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
       await load();
       var p = D.profili.filter(function (x) { return x.user_id === session.user.id; })[0];
       if (!p) { await sb.auth.signOut(); document.getElementById('lgErr').textContent = 'Questo account non fa parte del Consiglio Direttivo.'; showLogin(); return; }
-      me = { id: session.user.id, nome: p.nome_visualizzato, carica: p.carica_id, admin: p.is_admin };
-      document.getElementById('whoName').textContent = me.nome;
-      document.getElementById('pwLink').hidden = DEMO_ACCESSO && !me.admin;
+      me = { id: session.user.id, nome: p.nome_visualizzato, carica: p.carica_id, admin: p.is_admin, prova: !!p.prova };
+      document.getElementById('whoName').textContent = me.nome + (me.prova ? ' · accesso rapido' : '');
+      document.getElementById('pwLink').hidden = me.prova;
       loginEl.hidden = true; appEl.hidden = false;
       render();
     } catch (ex) {
@@ -454,7 +455,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     }
   }
   async function log(azione, oggetto) {
-    var row = { user_id: me.id, chi: me.nome, azione: azione, oggetto: oggetto };
+    var row = { user_id: me.id, chi: me.nome + (me.prova ? ' (accesso rapido)' : ''), azione: azione, oggetto: oggetto };
     var r = await sb.from('registro').insert(row).select().single();
     if (!r.error) D.registro.unshift(r.data);
   }
@@ -771,7 +772,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   };
 
   P.account = function () {
-    if (DEMO_ACCESSO && !me.admin) return head('Password', 'Durante la prova si entra con l’accesso rapido, quindi le password delle cariche non si cambiano. Quando il gestionale passa all’uso vero, ognuno avrà la sua password personale.');
+    if (me.prova) return head('Password', 'Sei entrato con l’accesso rapido di prova, che non ha una password personale. Per cambiare la password entra con la carica e la tua password personale.');
     return head('Cambia la password', 'La password vale per l’account «' + esc(me.nome) + '». Scegline una lunga, almeno 12 caratteri.') +
       '<section class="box"><form data-act="pw" class="up"><label>Nuova password<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label><button class="btn" type="submit">Salva</button></form></section>';
   };
@@ -1068,7 +1069,12 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   var SOC_ST = { nuova: ['Nuova', 'crit'], contattata: ['Contattata', 'warn'], invitata: ['Invitata in sede', 'warn'], socio: ['È diventato socio', ''], non_prosegue: ['Non prosegue', 'plain'] };
   var MSG_ST = { da_leggere: ['Da leggere', 'crit'], in_carico: ['In carico', 'warn'], risposto: ['Risposto', ''], archiviato: ['Archiviato', 'plain'] };
   var CORSO_ST = { aperto: 'Iscrizioni aperte', in_attesa: 'Si raccolgono preiscrizioni', concluso: 'Concluso (archivio con locandina)' };
-  function nuoviDalSito() { return { pre: D.sito_preiscrizioni.filter(function (x) { return x.stato === 'preiscritto'; }).length, soc: D.sito_richieste_socio.filter(function (x) { return x.stato === 'nuova'; }).length, msg: D.sito_messaggi.filter(function (x) { return x.stato === 'da_leggere'; }).length }; }
+  function nascosti() { return me && me.prova; }
+  function cntPre(corsoId, statiEsclusi) { if (!D.cnt) return 0; return (D.cnt.preiscrizioni || []).filter(function (x) { return (corsoId === undefined || x.corso_id === corsoId) && (!statiEsclusi || statiEsclusi.indexOf(x.stato) < 0); }).reduce(function (s, x) { return s + x.n; }, 0); }
+  function boxNascosti(cosa) { return '<section class="box k-altri"><h2>Dati delle persone nascosti</h2><p>Con l’accesso rapido di prova ' + cosa + ' non si vedono: contengono nomi, email e telefoni. Per vederli e gestirli entra con la carica e la tua password personale.</p></section>'; }
+  function nuoviDalSito() {
+    if (nascosti()) { var c = D.cnt || {}; return { pre: cntPre(undefined) - cntPre(undefined, ['preiscritto']), soc: (c.richieste || {}).nuova || 0, msg: (c.messaggi || {}).da_leggere || 0 }; }
+    return { pre: D.sito_preiscrizioni.filter(function (x) { return x.stato === 'preiscritto'; }).length, soc: D.sito_richieste_socio.filter(function (x) { return x.stato === 'nuova'; }).length, msg: D.sito_messaggi.filter(function (x) { return x.stato === 'da_leggere'; }).length }; }
   function sel(name, opts, cur, extra) { return '<select name="' + name + '"' + (extra || '') + '>' + opts.map(function (o) { var v = Array.isArray(o) ? o[0] : o, t = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(v) + '"' + (String(v) === String(cur) ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select>'; }
   function chk(name, on, label) { return '<label class="ck"><input type="checkbox" name="' + name + '"' + (on ? ' checked' : '') + '> ' + label + '</label>'; }
   function calDayText(e) {
@@ -1149,6 +1155,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
   P.sito = function (sub) {
     var t = sitoTabs(sub), n = nuoviDalSito();
     var intro = '<p class="note">Quello che salvi qui compare sul sito pubblico entro un minuto: basta ricaricare la pagina del sito. Osservatorio, Didattica e Biblioteca non si gestiscono da qui finché il Comitato scientifico non li approva.</p>';
+    if (sub === 'messaggi' && nascosti()) { var mc = (D.cnt || {}).messaggi || {}; return head('Messaggi dal sito', 'Quello che arriva dal modulo «Scrivici» della pagina Contatti.') + t + boxNascosti('i messaggi (' + (mc.da_leggere || 0) + ' da leggere)'); }
     if (sub === 'messaggi') {
       var ms = D.sito_messaggi.slice().sort(function (a, b) { return new Date(b.creato_il) - new Date(a.creato_il); });
       return head('Messaggi dal sito', 'Quello che arriva dal modulo «Scrivici» della pagina Contatti. Rispondi dalla tua email e segna lo stato, così gli altri sanno che è stato fatto.') + t +
@@ -1216,6 +1223,11 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
 
   /* ---------- corsi e iscrizioni (dati veri) ---------- */
   function corsiPage() {
+    if (nascosti()) {
+      var csn = D.sito_corsi.filter(function (c) { return c.stato !== 'concluso'; }).sort(function (a, b) { return a.ordine - b.ordine || a.id - b.id; });
+      return head('Corsi e iscrizioni', 'Le preiscrizioni arrivate dal sito, corso per corso.') + boxNascosti('i nomi dei preiscritti') +
+        csn.map(function (c) { var n = cntPre(c.id, ['ritirato', 'attesa']); return '<section class="box k-corsi"><header><div><h2>' + esc(c.titolo_breve || c.titolo) + '</h2><span class="sub">' + esc(CORSO_ST[c.stato]) + (c.quando ? ' · ' + esc(c.quando) : '') + '</span></div><span class="pill ' + (n >= c.soglia ? '' : 'warn') + '">' + n + ' su ' + c.soglia + '</span></header>' + progBar(Math.min(n, c.posti), c.posti, 'posti') + '</section>'; }).join('');
+    }
     var cs = D.sito_corsi.filter(function (c) { return c.stato !== 'concluso'; }).sort(function (a, b) { return a.ordine - b.ordine || a.id - b.id; });
     var orfane = D.sito_preiscrizioni.filter(function (p) { return !p.corso_id || !cs.some(function (c) { return c.id === p.corso_id; }); });
     var tot = D.sito_preiscrizioni.length, n = nuoviDalSito().pre;
@@ -1250,6 +1262,7 @@ table.pre td select { min-height: 40px; border: 2px solid var(--line); border-ra
     log('Ha scaricato l’elenco dei preiscritti di', c ? (c.titolo_breve || c.titolo) : '');
   }
   function richiesteSoci() {
+    if (nascosti()) { var rc = (D.cnt || {}).richieste || {}, tot = Object.keys(rc).reduce(function (s, k) { return s + rc[k]; }, 0); return '<section class="box k-soci"><header><h2>Richieste per diventare socio</h2><span class="pill ' + (rc.nuova ? 'crit' : 'plain') + '">' + (rc.nuova || 0) + ' nuove su ' + tot + '</span></header><p>Con l’accesso rapido di prova i nomi non si vedono. Per gestire le richieste entra con la tua password personale.</p></section>'; }
     var rs = D.sito_richieste_socio.slice().sort(function (a, b) { return new Date(b.creato_il) - new Date(a.creato_il); });
     return '<section class="box k-soci"><header><h2>Richieste per diventare socio</h2><span class="sub">Dal modulo «Diventa socio» del sito</span></header>' + (rs.length ? rs.map(function (r) {
       return '<article class="msg"><header><div><b>' + esc(r.nome) + ' ' + esc(r.cognome) + '</b> · ' + esc(r.comune) + '<br><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' + (r.telefono ? ' · <a href="tel:' + esc(r.telefono.replace(/[^\d+]/g, '')) + '">' + esc(r.telefono) + '</a>' : '') + '<br><span class="sub">' + fT.format(new Date(r.creato_il)) + (r.come ? ' · ci ha conosciuto: ' + esc(r.come) : '') + '</span></div><span class="pill ' + SOC_ST[r.stato][1] + '">' + SOC_ST[r.stato][0] + '</span></header>' +
