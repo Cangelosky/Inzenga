@@ -63,7 +63,7 @@ form.search input { flex: 1; min-width: 0; min-height: 46px; padding: 8px 14px; 
 /* pagine */
 main { min-width: 0; display: grid; gap: 20px; }
 main:focus { outline: none; }
-.head { display: grid; gap: 6px; margin-top: 14px; }
+.head { display: grid; gap: 6px; margin-top: 6px; }
 .head p { color: var(--ink-2); max-width: 70ch; }
 .cols { display: grid; gap: 20px; grid-template-columns: 1fr; }
 @media (min-width: 1000px) { .cols { grid-template-columns: 1fr 1fr; } }
@@ -108,7 +108,7 @@ form.up input, form.up select, .field input, .field select, .field textarea { mi
 .field textarea { min-height: 140px; line-height: 1.5; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 40px; padding: 4px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); cursor: pointer; }
-.chip[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink); border-color: var(--forest); }
+.chip[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink) !important; border-color: var(--forest); }
 .barsx { display: grid; gap: 12px; }
 .barx { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) 84px; gap: 12px; align-items: center; }
 .barx .t { height: 22px; border-radius: 6px; background: var(--bg); overflow: hidden; }
@@ -172,6 +172,103 @@ ul.plain { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
 .fs ul, .fs ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
 .fs p { max-width: 70ch; }
 mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius: 3px; }
+
+/* spazi tra intestazione, menu e pagina */
+#app { display: grid; gap: 18px; min-width: 0; }
+@media (max-width: 700px) {
+  nav.tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs a { flex: none; }
+}
+
+/* numeri di Oggi: ogni riquadro porta alla sua pagina */
+.stats a { display: block; padding: 16px 20px; border-left: 1px solid var(--line); color: inherit; text-decoration: none; }
+.stats a:first-child { border-left: 0; border-radius: 14px 0 0 14px; }
+.stats a:last-child { border-radius: 0 14px 14px 0; }
+.stats a:hover { background: var(--ok-bg); }
+.stats a span::after { content: " →"; color: var(--link); }
+@media (max-width: 700px) { .stats a { border-left: 0; border-top: 1px solid var(--line); border-radius: 0 !important; } .stats a:first-child { border-top: 0; } }
+
+/* stato dei lavori */
+.board { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 1000px) { .board { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.lane { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.lane > h2 { font-size: 22px; display: flex; align-items: baseline; gap: 10px; }
+.lane > h2 small { font-family: var(--font-body); font-size: 15px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 8px; color: inherit; text-decoration: none; }
+a.card:hover { border-color: var(--link); }
+.card h3 { font-size: 19px; }
+.card .sub b { font-weight: 600; color: var(--ink); }
+.prog { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.prog .progress { height: 12px; }
+.prog em { font-style: normal; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+.who-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.mini { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mini li { font-size: 16.5px; line-height: 1.45; padding-left: 14px; border-left: 3px solid var(--line); }
+.mini li.corso { border-left-color: var(--gold); }
+.mini li.fatto { border-left-color: var(--fill); color: var(--ink-2); }
+.mini li .sub { display: block; font-size: 14.5px; }
+.lbl { font-size: 14px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); margin-top: 4px; }
+
+/* checklist di un'attività */
+.cl { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+.cl:first-child { border-top: 0; padding-top: 0; }
+.cl .num { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--link); }
+.cl.fatto .txt, .cl.non_serve .txt { color: var(--ink-2); }
+.cl.non_serve .txt { text-decoration: line-through; }
+.cl .ctl { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 8px; align-items: center; }
+.cl .ctl label { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; color: var(--ink-2); }
+.cl select, .cl input[type=date] { min-height: 42px; padding: 4px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); font-weight: 600; font-size: 16px; color: var(--ink); }
+.cl details { margin-top: 6px; font-size: 16px; }
+.cl summary { cursor: pointer; color: var(--link); width: fit-content; }
+
+/* calendario */
+.calnav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.calnav h2 { text-transform: capitalize; }
+.calnav .chips a { display: inline-flex; align-items: center; text-decoration: none; color: inherit; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); }
+.cal .dow { padding: 8px 10px; font-size: 14px; font-weight: 600; color: var(--ink-2); background: var(--bg); border-bottom: 1px solid var(--line); }
+.cal .day { min-height: 118px; padding: 6px 8px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); display: grid; gap: 4px; align-content: start; min-width: 0; }
+.cal .day:nth-child(7n+1) { border-left: 0; }
+.cal .day.out { background: var(--bg); color: var(--ink-2); }
+.cal .day .n { font-size: 14px; font-weight: 600; }
+.cal .day.today .n { background: var(--forest); color: var(--forest-ink); border-radius: 999px; width: 28px; height: 28px; display: inline-grid; place-items: center; }
+.ev { display: block; font-size: 13.5px; line-height: 1.3; padding: 3px 6px; border-radius: 6px; text-decoration: none; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-left: 4px solid; }
+.ev.att { background: var(--ok-bg); border-color: var(--fill); }
+.ev.rit { background: transparent; border-color: var(--line); color: var(--ink-2); }
+.ev.sca { background: var(--crit-bg); border-color: var(--stamp); }
+.ev.pas { background: var(--warn-bg); border-color: var(--gold); }
+.ev.chk { background: #E4E9F2; border-color: #4C6A92; }
+.ev.done { text-decoration: line-through; opacity: .65; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 15px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; border-left: 4px solid; }
+.agenda { display: none; }
+@media (max-width: 760px) { .cal { display: none; } .agenda { display: grid; } }
+.agenda .giorno { padding: 12px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+.agenda .giorno:first-child { border-top: 0; padding-top: 0; }
+.agenda .giorno .ev { white-space: normal; font-size: 16px; padding: 6px 10px; }
+
+/* prima nota */
+.saldi { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.saldi div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+.saldi b { display: block; font-family: var(--font-display); font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.saldi span { font-size: 15.5px; color: var(--ink-2); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.ann td { color: var(--ink-2); text-decoration: line-through; }
+tr.ann td.mot { text-decoration: none; }
+.pnform { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); align-items: end; }
+.pnform label { display: grid; gap: 4px; font-size: 16px; font-weight: 500; }
+.pnform input, .pnform select { min-height: 46px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); width: 100%; min-width: 0; }
+.pnform .wide { grid-column: 1 / -1; }
+
+/* registro */
+.reg { list-style: none; margin: 0; padding: 0; display: grid; }
+.reg li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 14px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 16.5px; }
+.reg li:first-child { border-top: 0; }
+.reg time { color: var(--ink-2); font-size: 15px; font-variant-numeric: tabular-nums; }
+.reg .det { display: block; color: var(--ink-2); font-size: 15px; }
+@media (max-width: 600px) { .reg li { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -234,7 +331,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   function slugify(s) { return low(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'file'; }
 
   var me = null, D = {};
-  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro'];
+  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro', 'checklist', 'prima_nota', 'audit'];
 
   /* ---------- accesso ---------- */
   var loginEl = document.getElementById('login'), appEl = document.getElementById('app');
@@ -247,6 +344,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     if (r.error) { err.textContent = 'Carica o password non corretta.'; return; }
     document.getElementById('lgPass').value = '';
     await start(r.data.session);
+    if (me) log('Ha effettuato l’accesso', '');
   });
   document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; showLogin(); });
   function showLogin() { appEl.hidden = true; loginEl.hidden = false; document.getElementById('lgPass').focus(); }
@@ -254,12 +352,12 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   async function load() {
     var res = await Promise.all(TABLES.map(function (t) {
       var q = sb.from(t).select('*');
-      if (t === 'registro') q = q.order('quando', { ascending: false }).limit(300);
+      if (t === 'registro' || t === 'audit') q = q.order('quando', { ascending: false }).limit(t === 'audit' ? 1000 : 300);
       return q;
     }));
     res.forEach(function (r, i) { if (r.error) throw r.error; D[TABLES[i]] = r.data; });
     D.cariche.sort(function (a, b) { return a.ordine - b.ordine; });
-    ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
+    ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi', 'checklist'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
   }
   async function start(session) {
     try {
@@ -369,7 +467,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   }
 
   /* ---------- pagine ---------- */
-  var AREE = [['oggi', 'Oggi'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['comesifa', 'Come si fa']];
+  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['comesifa', 'Come si fa']];
   var P = {};
 
   P.oggi = function () {
@@ -379,6 +477,8 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     var s30 = openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 30); }).length;
     var a30 = D.attivita.filter(function (x) { var d = attDate(x); return d && dleft(d) <= 30 && dleft(d) >= 0; }).length;
     var bozze = D.documenti.filter(function (d) { return d.stato === 'bozza' || d.stato === 'da_firmare'; }).length;
+    var myCl = myClOpen().sort(function (a, b) { return (a.scadenza || '9').localeCompare(b.scadenza || '9') || a.attivita_id - b.attivita_id || a.ordine - b.ordine; });
+    var altri = regEntries().filter(function (e) { return e.uid && e.uid !== me.id && e.op !== 'LOG'; }).slice(0, 6);
     var last = D.documenti.slice().sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
     var card = '';
     if (mine) {
@@ -392,11 +492,13 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       card = '<section class="box"><header><h2>Amministratore</h2><a href="#admin">Amministrazione</a></header><p>Vedi le cose da fare di tutte le cariche. Da Amministrazione scarichi la copia di sicurezza di tutti i dati.</p></section>';
     }
     return head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui trovi solo quello che riguarda ' + (me.admin ? 'tutto il Consiglio' : 'la tua carica') + ': le cose da fare, le scadenze vicine e le prossime attività.') +
-      '<div class="stats"><div><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></div><div><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></div>' +
-      '<div><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></div><div><b>' + bozze + '</b><span>documenti in bozza o da firmare</span></div></div>' +
+      '<nav class="stats" aria-label="Riepilogo"><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
+      '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti in bozza o da firmare</span></a></nav>' +
       card +
       '<div class="cols"><div class="col">' +
-      '<section class="box"><header><h2>Da fare per te</h2><a href="#pratiche">Pratiche</a></header>' +
+      '<section class="box"><header><h2>Da fare per te</h2><a href="#attivita/chi">Chi fa cosa</a></header>' +
+      (myCl.length ? '<div class="lbl">Nelle attività</div><ul class="list">' + myCl.slice(0, 8).map(function (x) { var a = att(x.attivita_id), d = x.scadenza && dt(x.scadenza);
+        return '<li><div><b><a href="#attivita/' + x.attivita_id + '">' + esc(short(x.testo, 100)) + '</a></b><span class="sub">' + esc(a ? a.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' + (myCl.length > 8 ? '<p class="sub">e altri ' + (myCl.length - 8) + ' in <a href="#attivita/chi">Chi fa cosa</a>.</p>' : '') + '<div class="lbl">Nelle pratiche</div>' : '') +
       (passi.length ? '<ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
         return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + esc(pr ? pr.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun passo aperto assegnato alla tua carica.</p>') + '</section>' +
       '<section class="box"><header><h2>Scadenze vicine</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
@@ -405,6 +507,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       '<section class="box"><header><h2>Prossime attività</h2><a href="#attivita">Tutte</a></header><ul class="list">' +
       attSorted().filter(function (x) { var d = attDate(x); return d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d) + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
       '<section class="box"><header><h2>Da votare in CD</h2><a href="#pratiche/decisioni">Tutte le ' + D.decisioni.length + '</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
+      '<section class="box"><header><h2>Cosa stanno facendo gli altri</h2><a href="#archivio/registro">Registro</a></header>' + (altri.length ? '<ul class="reg">' + altri.map(regLi).join('') + '</ul>' : '<p class="sub">Ancora nessuna modifica dagli altri membri del Consiglio.</p>') + '</section>' +
       '<section class="box"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
       last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + fD.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
   };
@@ -432,7 +535,8 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       mappa + cards +
       '<section class="box"><header><h2>Le decisioni sui ruoli</h2><a href="#pratiche/decisioni">Tutte le decisioni</a></header>' +
       decList(D.decisioni.filter(function (x) { return /ruol|vice|tutor|responsabile/i.test(x.testo); })) + '</section>' +
-      '<p class="note">Le altre figure (consiglieri, revisori, comitato scientifico, responsabili di mostra, stage e uscite) si aggiungono quando il Consiglio le nomina. Statuto: art. 18 per il Consiglio, art. 19 per l’organo di controllo, art. 21 per il Comitato scientifico.</p>';
+      '<p class="note">Le altre figure (consiglieri, revisori, comitato scientifico, responsabili di mostra, stage e uscite) si aggiungono quando il Consiglio le nomina. Statuto: art. 18 per il Consiglio, art. 19 per l’organo di controllo, art. 21 per il Comitato scientifico.</p>' +
+      '<p class="note">Prima nota: scrive solo il Tesoriere e il suo vice. Il vice lo imposta l’amministratore dopo il voto del Consiglio; da quel momento può registrare movimenti anche lui.</p>';
   };
 
   P.pratiche = function (sub) {
@@ -469,12 +573,15 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   };
 
   P.attivita = function (sub) {
-    var tabs = [['', 'Calendario'], ['corsi', 'Corsi e iscrizioni']];
+    if (/^\d+$/.test(sub || '')) return attDetail(sub);
+    var tabs = [['', 'Stato dei lavori'], ['chi', 'Chi fa cosa'], ['elenco', 'Elenco'], ['corsi', 'Corsi e iscrizioni']];
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#attivita' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'corsi') return t + corsiPage();
-    return head('Attività ed eventi', 'Il calendario di lavoro, dal calendario 2027 già redatto. Ogni attività ha un responsabile e uno stato. I disciplinari sono in Come si fa.') + t +
+    if (sub === 'chi') return head('Chi fa cosa', 'Cosa sta facendo ogni carica, cosa deve fare e cosa ha concluso di recente. Così ognuno sa a che punto sono gli altri.') + t + chiPage();
+    if (!sub) return head('Stato dei lavori', 'Ogni attività con la sua checklist, presa dal disciplinare: la barra dice quanti passi sono fatti. Tocca un’attività per aprire la checklist e aggiornarla.') + t + lavoriPage();
+    return head('Elenco delle attività', 'Il calendario di lavoro, dal calendario 2027 già redatto. Ogni attività ha un responsabile e uno stato. I disciplinari sono in Come si fa.') + t +
       '<section class="box"><div class="tablew"><table><thead><tr><th>Data</th><th>Attività</th><th>Tipo</th><th>Responsabile</th><th>Stato</th><th>Note</th></tr></thead><tbody>' +
-      attSorted().map(function (x) { var d = attDate(x); return '<tr><td class="tn">' + (x.ricorrenza ? esc(x.ricorrenza) : d ? fD.format(d) : '') + '</td><td><b>' + esc(x.titolo) + '</b></td><td>' + esc(x.tipo) + '</td><td>' + esc(x.responsabile) + '</td><td><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></td><td>' + esc(x.note || '') + '</td></tr>'; }).join('') +
+      attSorted().map(function (x) { var d = attDate(x); return '<tr><td class="tn">' + (x.ricorrenza ? esc(x.ricorrenza) : d ? fD.format(d) : '') + '</td><td><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b></td><td>' + esc(x.tipo) + '</td><td>' + esc(x.responsabile) + '</td><td><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></td><td>' + esc(x.note || '') + '</td></tr>'; }).join('') +
       '</tbody></table></div></section>' +
       '<section class="box"><h2>Aggiungi un’attività</h2><form class="up" data-act="newAtt"><label>Attività<input name="t" required placeholder="Es. Gita a Ficuzza"></label><label>Data<input name="d" type="date" required></label><label>Tipo<select name="k">' + ['Conversazioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<option>' + k + '</option>'; }).join('') + '</select></label><label>Responsabile<input name="r" placeholder="Es. Segretario"></label><label>Stato<select name="s"><option>Da confermare</option><option>Confermata</option></select></label><button class="btn" type="submit">Aggiungi</button></form></section>' +
       '<div class="cols"><section class="box"><h2>Da votare per il 2027</h2><ul class="list"><li><div><b style="font-weight:500">Almeno tre mostre micologiche, tra Palermo e il resto della Sicilia</b></div></li><li><div><b style="font-weight:500">Programma a orari e determinazione dal vivo alla mostra</b></div></li><li><div><b style="font-weight:500">Weekend amicologico, festa di primavera a fine marzo</b></div></li></ul></section>' +
@@ -509,9 +616,12 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']];
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'registro') {
-      return head('Registro delle modifiche', 'Chi ha fatto cosa e quando. Lo vedono tutti i membri del Consiglio Direttivo. Il registro non si può modificare né cancellare.') + t +
-        '<section class="box"><div class="tablew"><table><thead><tr><th>Quando</th><th>Chi</th><th>Cosa</th></tr></thead><tbody>' +
-        D.registro.map(function (l) { return '<tr><td class="tn">' + fT.format(new Date(l.quando)) + '</td><td>' + esc(l.chi) + '</td><td>' + esc(l.azione) + ' <b>' + esc(l.oggetto || '') + '</b></td></tr>'; }).join('') + '</tbody></table></div></section>';
+      return head('Registro delle modifiche', 'Chi ha fatto cosa e quando, con il prima e il dopo di ogni modifica. Lo vedono tutti i membri del Consiglio Direttivo.') + t + registroPage();
+    }
+    if (sub === 'dafirmare') {
+      var df = D.documenti.filter(function (d) { return d.stato === 'bozza' || d.stato === 'da_firmare'; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
+      return head('In bozza o da firmare', 'I documenti non ancora definitivi, di tutte le sezioni. Quando un documento è firmato, caricalo con lo stesso titolo e stato «Ufficiale».') + t +
+        '<section class="box">' + (df.length ? df.map(fileRow).join('') : '<p class="sub">Nessun documento in bozza o da firmare.</p>') + '</section>';
     }
     if (sub === 'verbali') {
       var vb = D.documenti.filter(function (d) { return d.area === 'verbali'; }).sort(function (a, b) { return (b.data_doc || '').localeCompare(a.data_doc || ''); });
@@ -529,17 +639,22 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
   };
 
-  P.soldi = function () {
+  P.soldi = function (sub) {
+    var tabsS = [['', 'Riepilogo'], ['primanota', 'Prima nota']];
+    var tS = '<div class="chips">' + tabsS.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soldi' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (sub === 'primanota') return head('Prima nota', 'Il registro di cassa e banca dell’associazione: ogni entrata e ogni uscita, con data, categoria e riferimento. Lo tiene il Tesoriere; tutto il Consiglio lo legge.') + tS + primaNota();
+    var hasPN = D.prima_nota.length > 0, Ty = pnYearTot(base.getFullYear());
     var sp = [['Corsi', 820], ['Mostre', 640], ['Stage', 530], ['Sede e assicurazioni', 460], ['Gite', 410], ['Conversazioni', 120]];
     var en = [['Quote dei soci', 3100], ['Iscrizioni ai corsi', 900], ['Contributi', 250]];
     function bars(a) { return '<div class="barsx">' + a.map(function (r) { return '<div class="barx"><span>' + r[0] + '</span><div class="t"><i style="width:' + (r[1] / 3100 * 100).toFixed(1) + '%"></i></div><em>' + eur(r[1]) + '</em></div>'; }).join('') + '</div>'; }
     var canUp = me.admin || me.carica === 'tesoriere' || me.carica === 'presidente';
     var docs = D.documenti.filter(function (d) { return d.area === 'contabilita'; });
-    return head('Soldi', 'Qui si consultano le regole e i riepiloghi che carica il Tesoriere. Non è un programma di contabilità: i conti si tengono sui computer dell’associazione.') +
+    return head('Soldi', 'Saldi e prima nota tenuti dal Tesoriere, regole economiche e documenti contabili. Tutto il Consiglio legge; scrive il Tesoriere.') + tS +
+      '<section class="box"><header><h2>Prima nota</h2><a href="#soldi/primanota">Apri la prima nota</a></header>' + (hasPN ? '<div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(Ty.en) + '</b><span>entrate del ' + base.getFullYear() + '</span></div><div><b>' + eur2(Ty.us) + '</b><span>uscite del ' + base.getFullYear() + '</span></div></div>' : '<p class="sub">Nessun movimento registrato. Il primo movimento da inserire è il «Saldo di apertura» di cassa e di banca.</p>') + '</section>' +
       '<section class="box"><h2>Regole economiche già definite</h2><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b></div><span class="pill plain">' + esc(r.valore) + '</span></li>'; }).join('') + '</ul></section>' +
       '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
       ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
-      '<section class="box"><header><h2>Come apparirà il riepilogo</h2><span class="pill warn">Esempio con importi inventati</span></header><div class="cols"><div><h3 style="margin-bottom:12px">Entrate ' + eur(4250) + '</h3>' + bars(en) + '</div><div><h3 style="margin-bottom:12px">Uscite per attività ' + eur(2980) + '</h3>' + bars(sp) + '</div></div></section>' +
+      (hasPN ? '' : '<section class="box"><header><h2>Come apparirà il riepilogo</h2><span class="pill warn">Esempio con importi inventati</span></header><div class="cols"><div><h3 style="margin-bottom:12px">Entrate ' + eur(4250) + '</h3>' + bars(en) + '</div><div><h3 style="margin-bottom:12px">Uscite per attività ' + eur(2980) + '</h3>' + bars(sp) + '</div></div></section>') +
       '<section class="box"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Il rendiconto annuale e la prima nota si caricano qui.</p>') +
       upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], canUp, 'Qui caricano il Tesoriere e il Presidente. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
   };
@@ -588,7 +703,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       '<div class="cols"><section class="box"><h2>Quattro livelli di accesso</h2><ol class="steps">' +
       [['Pubblico', 'La vetrina, senza accesso.'], ['Socio', 'Archivio dei ritrovamenti e modulo di invio. Solo i soci in regola. (Da fare)'], ['Consiglio Direttivo', 'Questo gestionale.'], ['Amministratore', 'Account, cancellazioni e copie di sicurezza.']].map(function (x) { return '<li><div><b>' + x[0] + '</b><br><span class="sub">' + x[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
       '<section class="box"><h2>Da decidere con il Consiglio Direttivo</h2><ul class="list">' +
-      ['Dominio e hosting intestati all’associazione (ipotesi: Serverplan, piano Startup, circa 76 € l’anno più IVA, da verificare)', 'Chi sono i due amministratori e chi tiene le credenziali di riserva', 'Codice sul telefono per tutti, o solo per le parti con dati sensibili', 'Ogni quanto scaricare una copia di sicurezza da conservare fuori dal sito', 'Quali sezioni sviluppare dopo: area soci, libro soci, iscrizioni ai corsi'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div></li>'; }).join('') + '</ul></section></div>';
+      ['Dominio e hosting intestati all’associazione (ipotesi: Serverplan, piano Startup, circa 76 € l’anno più IVA, da verificare)', 'Chi sono i due amministratori e chi tiene le credenziali di riserva', 'Chi è il vice del Tesoriere, che potrà scrivere nella prima nota', 'Codice sul telefono per tutti, o solo per le parti con dati sensibili', 'Ogni quanto scaricare una copia di sicurezza da conservare fuori dal sito', 'Quali sezioni sviluppare dopo: area soci, libro soci, iscrizioni ai corsi'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div></li>'; }).join('') + '</ul></section></div>';
   };
 
   P.account = function () {
@@ -610,9 +725,261 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     D.cariche.forEach(function (c) { if (hit(c.nome) || hit(c.compiti_statuto.join(' ')) || hit(c.mansioni.join(' ')) || hit(c.sostituto_nota)) R.push(['Ruolo', c.nome, '#ruoli']); });
     D.comunicazioni.forEach(function (c) { if (hit(c.contenuto) || hit(c.quando)) R.push(['Comunicazione (' + c.attivita + ')', c.quando + ': ' + c.contenuto, '#comesifa/comunicazioni']); });
     D.testi.forEach(function (x) { if (hit(x.titolo) || hit(x.testo)) R.push(['Testo pronto', x.titolo, '#comesifa/comunicazioni']); });
+    D.checklist.forEach(function (x) { if (hit(x.testo) || hit(x.nota)) { var a = att(x.attivita_id); R.push(['Passo della checklist' + (a ? ' · ' + a.titolo : ''), String(x.testo).replace(/\{\{DC\}\}/g, '…'), '#attivita/' + x.attivita_id]); } });
+    D.prima_nota.forEach(function (x) { if (hit(x.descrizione) || hit(x.riferimento) || hit(x.categoria)) R.push(['Prima nota · ' + fD.format(dt(x.data)) + ' · ' + eur2(x.importo), x.descrizione, '#soldi/primanota']); });
     return head('Risultati per «' + esc(decodeURIComponent(qs)) + '»', R.length + ' risultati') +
       '<section class="box">' + (R.length ? '<ul class="list">' + R.map(function (r) { return '<li><div><b><a href="' + r[2] + '">' + mk(r[1]) + '</a></b><span class="sub">' + esc(r[0]) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun risultato.</p>') + '</section>';
   };
+
+  /* ---------- attività: checklist, stato dei lavori, chi fa cosa ---------- */
+  var RESP = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consiglio Direttivo', 'Comitato scientifico', 'Consigliere referente', 'Da assegnare'];
+  var CLST = { da_fare: ['Da fare', 'warn'], in_corso: ['In corso', 'warn'], fatto: ['Fatto', ''], non_serve: ['Non serve', 'plain'] };
+  var ATT_STATI = ['Da confermare', 'Confermata', 'In uso', 'Anno da chiarire', 'Conclusa', 'Annullata'];
+  var DISC = { Stage: 'doc-stage', Mostre: 'doc-mostra', Corsi: 'doc-corsi', Gite: 'doc-gite' };
+  function short(t, n) { t = String(t || '').replace(/\{\{DC\}\}/g, '…'); if (t.length <= n) return t; t = t.slice(0, n); var k = t.lastIndexOf(' '); return (k > n * 0.6 ? t.slice(0, k) : t).replace(/[\s,;:.(]+$/, '') + '…'; }
+  function att(id) { return D.attivita.filter(function (a) { return a.id === id; })[0]; }
+  function clOf(id) { return D.checklist.filter(function (x) { return x.attivita_id === id; }).sort(function (a, b) { return a.ordine - b.ordine; }); }
+  function clProg(cl) { var v = cl.filter(function (x) { return x.stato !== 'non_serve'; }); return { done: v.filter(function (x) { return x.stato === 'fatto'; }).length, tot: v.length }; }
+  function progBar(done, tot, what) {
+    if (!tot) return '<p class="sub">Nessuna checklist ancora.</p>';
+    var pc = Math.round(done / tot * 100);
+    return '<div class="prog"><div class="progress" role="img" aria-label="' + done + ' ' + what + ' fatti su ' + tot + '"><i style="width:' + pc + '%"></i></div><em>' + done + ' di ' + tot + ' · ' + pc + '%</em></div>';
+  }
+  function attPhase(a) {
+    if (a.stato === 'Conclusa' || a.stato === 'Annullata') return 'concluse';
+    var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
+    if (!a.ricorrenza && d && dleft(d) < 0) return (p.tot && p.done < p.tot) ? 'corso' : 'concluse';
+    if (a.ricorrenza || cl.some(function (x) { return x.stato === 'fatto' || x.stato === 'in_corso'; })) return 'corso';
+    return 'programmate';
+  }
+  function respMatch(resp, who) { var r = low(resp); return who === 'Da assegnare' ? (!r || r === 'da assegnare') : r.indexOf(low(who)) >= 0; }
+  function myClOpen() { return D.checklist.filter(function (x) { return (x.stato === 'da_fare' || x.stato === 'in_corso') && !me.admin && isMine(x.responsabile); }); }
+  function attCard(a) {
+    var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
+    var next = cl.filter(function (x) { return x.stato === 'in_corso'; })[0] || cl.filter(function (x) { return x.stato === 'da_fare'; })[0];
+    return '<a class="card" href="#attivita/' + a.id + '"><h3>' + esc(a.titolo) + '</h3><span class="sub">' + (a.ricorrenza ? esc(a.ricorrenza) : d ? fD.format(d) + ' (' + when(d) + ')' : 'Data da fissare') + ' · ' + esc(a.responsabile || 'Da assegnare') + '</span>' +
+      '<div><span class="pill ' + pillCls(a.stato) + '">' + esc(a.stato || '') + '</span> <span class="pill plain">' + esc(a.tipo) + '</span></div>' +
+      (a.ricorrenza && !cl.length ? '<p class="sub">Appuntamento settimanale, senza checklist.</p>' : progBar(p.done, p.tot, 'passi')) +
+      (next ? '<span class="sub">' + (next.stato === 'in_corso' ? 'In corso' : 'Prossimo passo') + ': <b>' + esc(short(next.testo, 90)) + '</b> · ' + esc(next.responsabile) + '</span>' : '') + '</a>';
+  }
+  function lavoriPage() {
+    var L = { corso: [], programmate: [], concluse: [] };
+    attSorted().forEach(function (a) { L[attPhase(a)].push(a); });
+    L.concluse.reverse();
+    var tot = D.checklist.filter(function (x) { return x.stato !== 'non_serve'; }), fatti = tot.filter(function (x) { return x.stato === 'fatto'; }).length;
+    var pr = D.pratiche.map(function (p) { var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === p.id; }); return [p, ps.filter(function (x) { return x.stato === 'fatto'; }).length, ps.length]; });
+    return '<section class="box"><header><h2>A che punto siamo</h2><span class="sub">Passi delle attività e delle pratiche</span></header>' +
+      '<div><b>Attività, tutte insieme</b>' + progBar(fatti, tot.length, 'passi') + '</div>' +
+      pr.map(function (x) { return '<div><b><a href="#pratiche">' + esc(x[0].titolo) + '</a></b>' + progBar(x[1], x[2], 'passi') + '</div>'; }).join('') + '</section>' +
+      '<div class="board">' + [['corso', 'In corso'], ['programmate', 'In programma'], ['concluse', 'Concluse']].map(function (l) {
+        return '<section class="lane"><h2>' + l[1] + ' <small>' + L[l[0]].length + '</small></h2>' + (L[l[0]].length ? L[l[0]].map(attCard).join('') : '<p class="note">Nessuna attività.</p>') + '</section>'; }).join('') + '</div>' +
+      '<p class="note">«In corso»: almeno un passo avviato, gli appuntamenti settimanali, oppure un’attività già passata con passi ancora aperti. «Concluse»: segnate come concluse o annullate, oppure passate con tutti i passi fatti.</p>';
+  }
+  function chiPage() {
+    var groups = RESP.slice();
+    var recent = base.getTime() - 21 * DAY;
+    function itemsFor(who) {
+      var I = [];
+      D.checklist.forEach(function (x) { if (!respMatch(x.responsabile, who)) return; var a = att(x.attivita_id); if (!a) return;
+        if (x.stato === 'fatto' && new Date(x.aggiornato_il).getTime() < recent) return; if (x.stato === 'non_serve') return;
+        I.push({ st: x.stato, t: x.testo, ctx: a.titolo, href: '#attivita/' + a.id, d: x.scadenza && dt(x.scadenza), by: x.aggiornato_da }); });
+      D.pratica_passi.forEach(function (x) { if (!respMatch(x.responsabile, who) || x.stato === 'non_ancora') return; var p = D.pratiche.filter(function (y) { return y.id === x.pratica_id; })[0];
+        if (x.stato === 'fatto' && new Date(x.aggiornato_il).getTime() < recent) return;
+        I.push({ st: x.stato, t: x.titolo, ctx: p ? p.titolo : 'Pratica', href: '#pratiche', d: x.scadenza && dt(x.scadenza), by: x.aggiornato_da }); });
+      openScad().forEach(function (x) { if (!respMatch(x.responsabile, who)) return; I.push({ st: 'da_fare', t: x.titolo, ctx: 'Scadenza', href: '#pratiche/scadenze', d: scadDate(x) }); });
+      return I;
+    }
+    function li(i) { var cls = i.st === 'in_corso' ? 'corso' : i.st === 'fatto' ? 'fatto' : '';
+      return '<li class="' + cls + '"><a href="' + i.href + '" style="color:inherit">' + esc(short(i.t, 110)) + '</a><span class="sub">' + esc(i.ctx) + (i.d ? ' · entro il ' + fD.format(i.d) : '') + (i.st === 'fatto' && i.by ? ' · segnato da ' + esc(i.by) : '') + '</span></li>'; }
+    var cards = groups.map(function (g) {
+      var I = itemsFor(g); if (!I.length && RESP.indexOf(g) > 3) return '';
+      I.sort(function (a, b) { return (a.d || 9e15) - (b.d || 9e15); });
+      var c = I.filter(function (i) { return i.st === 'in_corso'; }), f = I.filter(function (i) { return i.st === 'da_fare'; }), k = I.filter(function (i) { return i.st === 'fatto'; });
+      return '<section class="box' + (me.carica && g === myName() ? '" style="border:2px solid var(--forest)' : '') + '"><header><h2>' + esc(g) + '</h2><span class="sub">' + c.length + ' in corso · ' + f.length + ' da fare</span></header>' +
+        (c.length ? '<div class="lbl">Sta facendo</div><ul class="mini">' + c.map(li).join('') + '</ul>' : '') +
+        (f.length ? '<div class="lbl">Da fare</div><ul class="mini">' + f.slice(0, 8).map(li).join('') + '</ul>' + (f.length > 8 ? '<p class="sub">e altri ' + (f.length - 8) + '.</p>' : '') : '') +
+        (k.length ? '<div class="lbl">Fatto nelle ultime tre settimane</div><ul class="mini">' + k.map(li).join('') + '</ul>' : '') +
+        (!I.length ? '<p class="sub">Niente assegnato per ora.</p>' : '') + '</section>';
+    }).join('');
+    return '<div class="who-grid">' + cards + '</div><p class="note">Qui finiscono i passi delle checklist, i passi delle pratiche e le scadenze, divisi per chi li deve fare. «Da assegnare» raccoglie quello che il Consiglio deve ancora affidare a qualcuno.</p>';
+  }
+  function respSel(cur, act, id, lab) {
+    var opts = RESP.indexOf(cur) < 0 && cur ? [cur].concat(RESP) : RESP;
+    return '<select data-act="' + act + '" data-id="' + id + '" aria-label="' + esc(lab) + '">' + opts.map(function (r) { return '<option' + (r === cur ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select>';
+  }
+  function attDetail(id) {
+    var a = att(+id); if (!a) return head('Attività non trovata', '<a href="#attivita">Torna allo stato dei lavori</a>');
+    var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
+    var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
+    var mov = D.prima_nota.filter(function (m) { return m.attivita_id === a.id && !m.annullato; });
+    var en = mov.filter(function (m) { return m.tipo === 'entrata'; }).reduce(function (s, m) { return s + +m.importo; }, 0), us = mov.filter(function (m) { return m.tipo === 'uscita'; }).reduce(function (s, m) { return s + +m.importo; }, 0);
+    var src = cl.length && cl[0].fonte ? docBySlug(cl[0].fonte) : null;
+    return '<a class="back" href="#attivita">← Stato dei lavori</a>' + head(esc(a.titolo), (a.ricorrenza ? esc(a.ricorrenza) : d ? fL.format(d) + ' (' + when(d) + ')' : 'Data da fissare') + ' · ' + esc(a.tipo) + ' · responsabile: ' + esc(a.responsabile || 'Da assegnare')) +
+      '<section class="box"><header><h2>Checklist</h2>' + (src ? '<a href="' + docHref(src) + '">Dal disciplinare: ' + esc(src.titolo.replace('Disciplinare operativo, ', '')) + '</a>' : '') + '</header>' + progBar(p.done, p.tot, 'passi') +
+      (cl.length ? '<div>' + cl.map(function (x) {
+        return '<div class="cl ' + x.stato + '" id="cl' + x.id + '"><span class="num">' + x.ordine + '</span><div><div class="txt">' + fm(x.testo) + '</div>' +
+          (x.nota ? '<p class="sub" style="margin-top:4px">Nota: ' + esc(x.nota) + '</p>' : '') +
+          '<div class="ctl"><label>Stato <select data-act="clStato" data-id="' + x.id + '" aria-label="Stato del passo ' + x.ordine + '">' + Object.keys(CLST).map(function (k) { return '<option value="' + k + '"' + (k === x.stato ? ' selected' : '') + '>' + CLST[k][0] + '</option>'; }).join('') + '</select></label>' +
+          '<label>Chi ' + respSel(x.responsabile, 'clResp', x.id, 'Responsabile del passo ' + x.ordine) + '</label>' +
+          '<label>Entro il <input type="date" data-act="clScad" data-id="' + x.id + '" value="' + esc(x.scadenza || '') + '" aria-label="Scadenza del passo ' + x.ordine + '"></label></div>' +
+          '<span class="sub">' + (x.aggiornato_da ? 'Ultima modifica: ' + esc(x.aggiornato_da) + ', ' + fT.format(new Date(x.aggiornato_il)) : '') + '</span>' +
+          '<details><summary>Modifica il testo o aggiungi una nota</summary><form data-act="clEdit" data-id="' + x.id + '" class="field" style="display:grid;gap:8px;margin-top:8px"><label class="field">Testo<textarea name="t" style="min-height:90px">' + esc(x.testo) + '</textarea></label><label class="field">Nota<input name="n" value="' + esc(x.nota || '') + '"></label><div><button class="btn" type="submit">Salva</button></div></form></details>' +
+          '</div></div>'; }).join('') + '</div>' : '<p class="sub">Questa attività non ha ancora una checklist.</p>') +
+      (!cl.length && disc.length ? '<form class="up" data-act="fromDisc" data-id="' + a.id + '"><label>Crea la checklist dal disciplinare<select name="s">' + disc.map(function (x) { return '<option value="' + esc(x.slug) + '"' + (DISC[a.tipo] === x.slug ? ' selected' : '') + '>' + esc(x.titolo.replace('Disciplinare operativo, ', '')) + '</option>'; }).join('') + '</select></label><button class="btn" type="submit">Crea la checklist</button></form>' : '') +
+      '<details><summary style="cursor:pointer;color:var(--link)">Aggiungi un passo</summary><form class="up" data-act="newCl" data-id="' + a.id + '" style="margin-top:10px"><label>Cosa fare<input name="t" required></label><label>Chi<select name="r">' + RESP.map(function (r) { return '<option>' + r + '</option>'; }).join('') + '</select></label><label>Entro il<input name="d" type="date"></label><button class="btn" type="submit">Aggiungi</button></form></details>' +
+      '<p class="sub">I passi non si cancellano: se uno non serve, scegli «Non serve». Ogni cambio resta nel registro.</p></section>' +
+      '<div class="cols"><section class="box"><h2>Dati dell’attività</h2><form class="up" data-act="saveAtt" data-id="' + a.id + '"><label>Data<input name="d" type="date" value="' + esc(a.data || '') + '"' + (a.ricorrenza ? ' disabled' : '') + '></label>' +
+      '<label>Stato<select name="s">' + (ATT_STATI.indexOf(a.stato) < 0 ? [a.stato].concat(ATT_STATI) : ATT_STATI).map(function (s) { return '<option' + (s === a.stato ? ' selected' : '') + '>' + esc(s) + '</option>'; }).join('') + '</select></label>' +
+      '<label>Responsabile<input name="r" value="' + esc(a.responsabile || '') + '"></label><label>Note<input name="n" value="' + esc(a.note || '') + '"></label><button class="btn" type="submit">Salva</button></form></section>' +
+      '<section class="box"><header><h2>Soldi di questa attività</h2><a href="#soldi/primanota">Prima nota</a></header>' + (mov.length ? '<div class="saldi"><div><b>' + eur2(en) + '</b><span>entrate</span></div><div><b>' + eur2(us) + '</b><span>uscite</span></div><div><b>' + eur2(en - us) + '</b><span>differenza</span></div></div>' : '<p class="sub">Nessun movimento di prima nota collegato a questa attività.</p>') + '</section></div>';
+  }
+
+  /* ---------- calendario ---------- */
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function calEvents(y, m) {
+    var E = [], first = new Date(y, m, 1, 12), last = new Date(y, m + 1, 0, 12);
+    function inM(d) { return d && d.getFullYear() === y && d.getMonth() === m; }
+    D.attivita.forEach(function (a) {
+      if (a.data && inM(dt(a.data))) E.push({ d: dt(a.data), k: 'att', t: a.titolo, h: '#attivita/' + a.id, done: a.stato === 'Conclusa' || a.stato === 'Annullata' });
+      if (a.ricorrenza && P.calendario.weekly) { var w = /luned/i.test(a.ricorrenza) ? 1 : /gioved/i.test(a.ricorrenza) ? 4 : -1;
+        if (w >= 0) for (var d = new Date(first); d <= last; d = new Date(d.getTime() + DAY)) if (d.getDay() === w) E.push({ d: new Date(d), k: 'rit', t: a.titolo, h: '#attivita/' + a.id }); }
+    });
+    D.scadenze.forEach(function (x) { var d = scadDate(x); if (inM(d)) E.push({ d: d, k: 'sca', t: x.titolo, h: '#pratiche/scadenze', done: x.fatta }); });
+    D.pratica_passi.forEach(function (x) { var d = x.scadenza && dt(x.scadenza); if (inM(d)) E.push({ d: d, k: 'pas', t: x.titolo, h: '#pratiche', done: x.stato === 'fatto' }); });
+    D.checklist.forEach(function (x) { var d = x.scadenza && dt(x.scadenza), a = att(x.attivita_id); if (inM(d)) E.push({ d: d, k: 'chk', t: (a ? a.titolo + ': ' : '') + String(x.testo).replace(/\{\{DC\}\}/g, '…'), h: '#attivita/' + x.attivita_id, done: x.stato === 'fatto' || x.stato === 'non_serve' }); });
+    var ord = { sca: 0, pas: 1, chk: 2, att: 3, rit: 4 };
+    return E.sort(function (a, b) { return a.d - b.d || ord[a.k] - ord[b.k]; });
+  }
+  var KIND = { att: 'Attività ed eventi', sca: 'Scadenze', pas: 'Passi delle pratiche', chk: 'Passi delle checklist', rit: 'Appuntamenti settimanali' };
+  function evA(e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '" title="' + esc(KIND[e.k] + ': ' + e.t) + '">' + esc(e.t) + '</a>'; }
+  P.calendario = function (sub) {
+    var y = base.getFullYear(), m = base.getMonth(), mm = /^(\d{4})-(\d{2})$/.exec(sub || '');
+    if (mm) { y = +mm[1]; m = +mm[2] - 1; }
+    var prev = new Date(y, m - 1, 1), next = new Date(y, m + 1, 1), E = calEvents(y, m);
+    var start = new Date(y, m, 1, 12); start = new Date(start.getTime() - ((start.getDay() + 6) % 7) * DAY);
+    var cells = '';
+    var ncell = Math.ceil(((new Date(y, m, 1).getDay() + 6) % 7 + new Date(y, m + 1, 0).getDate()) / 7) * 7;
+    for (var i = 0; i < ncell; i++) {
+      var d = new Date(start.getTime() + i * DAY);
+      var ev = E.filter(function (e) { return iso(e.d) === iso(d); });
+      cells += '<div class="day' + (d.getMonth() !== m ? ' out' : '') + (iso(d) === iso(base) ? ' today' : '') + '"><span class="n">' + d.getDate() + '</span>' + ev.slice(0, 4).map(evA).join('') + (ev.length > 4 ? '<span class="sub" style="font-size:13px">+' + (ev.length - 4) + ' altri</span>' : '') + '</div>';
+    }
+    var days = {}; E.forEach(function (e) { (days[iso(e.d)] = days[iso(e.d)] || []).push(e); });
+    var agenda = Object.keys(days).sort().map(function (k) { return '<div class="giorno"><b>' + fL.format(dt(k)) + '</b>' + days[k].map(function (e) { return '<a class="ev ' + e.k + (e.done ? ' done' : '') + '" href="' + e.h + '"><span class="sub" style="display:block;font-size:13px">' + KIND[e.k] + '</span>' + esc(e.t) + '</a>'; }).join('') + '</div>'; }).join('');
+    var senza = openScad().filter(function (x) { return !x.data; }).concat([]), attND = D.attivita.filter(function (a) { return !a.data && !a.ricorrenza; });
+    var prossimi = []; [0, 1, 2].forEach(function (k) { var dd = new Date(base.getFullYear(), base.getMonth() + k, 1); calEvents(dd.getFullYear(), dd.getMonth()).forEach(function (e) { var n = dleft(e.d); if (n >= 0 && n <= 30 && !e.done && e.k !== 'rit') prossimi.push(e); }); });
+    return head('Calendario', 'Tutto quello che ha una data: attività, scadenze, passi delle pratiche e delle checklist. Tocca una voce per aprirla.') +
+      '<section class="box"><div class="calnav"><h2>' + MESI[m] + ' ' + y + '</h2><div class="chips"><a class="chip" href="#calendario/' + iso(prev).slice(0, 7) + '">← ' + MESI[prev.getMonth()] + '</a><a class="chip" href="#calendario">Oggi</a><a class="chip" href="#calendario/' + iso(next).slice(0, 7) + '">' + MESI[next.getMonth()] + ' →</a><button class="chip" type="button" data-act="weekly" aria-pressed="' + !!P.calendario.weekly + '">Appuntamenti settimanali</button></div></div>' +
+      '<div class="legend">' + ['sca', 'pas', 'chk', 'att', 'rit'].map(function (k) { return '<span><i class="ev ' + k + '"></i>' + KIND[k] + '</span>'; }).join('') + '</div>' +
+      '<div class="cal">' + ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map(function (x) { return '<div class="dow">' + x + '</div>'; }).join('') + cells + '</div>' +
+      '<div class="agenda">' + (agenda || '<p class="sub">Niente in calendario questo mese.</p>') + '</div></section>' +
+      '<div class="cols"><section class="box"><header><h2>Prossimi 30 giorni</h2></header>' + (prossimi.length ? '<ul class="list">' + prossimi.sort(function (a, b) { return a.d - b.d; }).map(function (e) { return '<li><div><b><a href="' + e.h + '">' + esc(e.t) + '</a></b><span class="sub">' + fD.format(e.d) + ' · ' + KIND[e.k] + '</span></div><span class="pill ' + (dleft(e.d) <= 7 ? 'crit' : 'warn') + '">' + when(e.d) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Niente nei prossimi 30 giorni.</p>') + '</section>' +
+      '<section class="box"><header><h2>Ancora senza data</h2></header>' + ((senza.length + attND.length) ? '<ul class="list">' + senza.map(function (x) { return '<li><div><b><a href="#pratiche/scadenze">' + esc(x.titolo) + '</a></b><span class="sub">Scadenza · ' + esc(x.etichetta || 'Da fissare') + '</span></div></li>'; }).join('') + attND.map(function (a) { return '<li><div><b><a href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a></b><span class="sub">Attività</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Tutto ha una data.</p>') + '</section></div>';
+  };
+
+  /* ---------- prima nota ---------- */
+  var PN_E = ['Quote associative', 'Iscrizioni ai corsi', 'Quote di stage e gite', 'Erogazioni liberali', 'Contributi di enti pubblici', '5 per mille', 'Altre entrate'];
+  var PN_U = ['Sede e utenze', 'Assicurazioni', 'Materiale e attrezzature', 'Spese per corsi', 'Spese per stage e gite', 'Spese per mostre', 'Rimborsi spese', 'Spese bancarie', 'Altre uscite'];
+  var PN_X = ['Saldo di apertura', 'Giroconto tra cassa e banca'];
+  function eur2(n) { return (+n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'; }
+  function canPN() { if (!me.carica) return false; var t = carica('tesoriere'); return me.carica === 'tesoriere' || (t && t.sostituto_id && me.carica === t.sostituto_id); }
+  function pnValid() { return D.prima_nota.filter(function (m) { return !m.annullato; }); }
+  function saldo(conto) { return pnValid().filter(function (m) { return !conto || m.conto === conto; }).reduce(function (s, m) { return s + (m.tipo === 'entrata' ? 1 : -1) * +m.importo; }, 0); }
+  function pnYearTot(y) {
+    var v = pnValid().filter(function (m) { return m.data.slice(0, 4) === String(y) && PN_X.indexOf(m.categoria) < 0; });
+    var cat = {}; v.forEach(function (m) { var k = m.tipo + '|' + m.categoria; cat[k] = (cat[k] || 0) + +m.importo; });
+    return { en: v.filter(function (m) { return m.tipo === 'entrata'; }).reduce(function (s, m) { return s + +m.importo; }, 0), us: v.filter(function (m) { return m.tipo === 'uscita'; }).reduce(function (s, m) { return s + +m.importo; }, 0), cat: cat };
+  }
+  function primaNota() {
+    var years = Array.from(new Set(D.prima_nota.map(function (m) { return m.data.slice(0, 4); }).concat([String(base.getFullYear())]))).sort().reverse();
+    var y = P.soldi.year || years[0], T = pnYearTot(y);
+    var rows = D.prima_nota.filter(function (m) { return m.data.slice(0, 4) === y; }).sort(function (a, b) { return a.data.localeCompare(b.data) || a.id - b.id; });
+    var tes = carica('tesoriere'), vice = tes && tes.sostituto_id ? carica(tes.sostituto_id) : null;
+    function bars(tipo) { var ks = Object.keys(T.cat).filter(function (k) { return k.indexOf(tipo + '|') === 0; }).sort(function (a, b) { return T.cat[b] - T.cat[a]; }); var mx = Math.max.apply(null, ks.map(function (k) { return T.cat[k]; }).concat([1]));
+      return ks.length ? '<div class="barsx">' + ks.map(function (k) { return '<div class="barx"><span>' + esc(k.split('|')[1]) + '</span><div class="t"><i style="width:' + (T.cat[k] / mx * 100).toFixed(1) + '%"></i></div><em>' + eur2(T.cat[k]) + '</em></div>'; }).join('') + '</div>' : '<p class="sub">Nessun movimento.</p>'; }
+    var form = canPN() ? '<section class="box"><h2>Registra un movimento</h2><form class="pnform" data-act="pn">' +
+      '<label>Data<input name="d" type="date" required value="' + iso(base) + '"></label>' +
+      '<label>Entrata o uscita<select name="k" required><option value="entrata">Entrata</option><option value="uscita">Uscita</option></select></label>' +
+      '<label>Importo in euro<input name="i" required inputmode="decimal" placeholder="Es. 25,00" pattern="[0-9]+([.,][0-9]{1,2})?"></label>' +
+      '<label>Cassa o banca<select name="c"><option value="cassa">Cassa (contanti)</option><option value="banca">Banca</option></select></label>' +
+      '<label>Categoria<select name="g" required><optgroup label="Entrate">' + PN_E.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup><optgroup label="Uscite">' + PN_U.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup><optgroup label="Speciali">' + PN_X.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup></select></label>' +
+      '<label>Attività collegata<select name="a"><option value="">Nessuna</option>' + attSorted().map(function (a) { return '<option value="' + a.id + '">' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>' +
+      '<label class="wide">Descrizione<input name="t" required placeholder="Es. Quota associativa 2027, socio n. 12"></label>' +
+      '<label>Riferimento (ricevuta, fattura)<input name="r" placeholder="Es. Ricevuta n. 34"></label>' +
+      '<button class="btn" type="submit">Registra</button></form>' +
+      '<p class="sub">Un movimento registrato non si modifica e non si cancella: se c’è un errore si annulla, con il motivo, e si registra quello giusto. Per un giroconto registra due movimenti: un’uscita da un conto e un’entrata nell’altro, con la categoria «Giroconto».</p></section>'
+      : '<p class="note">Nella prima nota scrive solo il Tesoriere' + (vice ? ' e il suo vice (' + esc(vice.nome) + ')' : '; il suo vice potrà scrivere quando il Consiglio lo avrà nominato') + '. Tutto il Consiglio può leggerla.</p>';
+    return '<section class="box"><header><h2>Saldi</h2><span class="sub">Tutti gli anni, movimenti annullati esclusi</span></header><div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(saldo()) + '</b><span>totale disponibile</span></div></div></section>' +
+      form +
+      '<section class="box"><header><h2>Movimenti del ' + esc(y) + '</h2><div class="chips">' + years.map(function (x) { return '<button class="chip" type="button" data-act="pnYear" data-v="' + x + '" aria-pressed="' + (x === y) + '">' + x + '</button>'; }).join('') + '<button class="btn alt" type="button" data-act="csv" data-v="' + esc(y) + '">Scarica per Excel</button></div></header>' +
+      (rows.length ? '<div class="tablew"><table><thead><tr><th>Data</th><th>Descrizione</th><th>Categoria</th><th>Conto</th><th class="num">Entrata</th><th class="num">Uscita</th><th>Rif.</th><th>Registrato da</th></tr></thead><tbody>' +
+        rows.map(function (m) { var a = m.attivita_id && att(m.attivita_id);
+          return '<tr class="' + (m.annullato ? 'ann' : '') + '"><td class="tn">' + fD.format(dt(m.data)) + '</td><td><b>' + esc(m.descrizione) + '</b>' + (a ? '<br><a class="sub" href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a>' : '') + '</td><td>' + esc(m.categoria) + '</td><td>' + (m.conto === 'cassa' ? 'Cassa' : 'Banca') + '</td><td class="num">' + (m.tipo === 'entrata' ? eur2(m.importo) : '') + '</td><td class="num">' + (m.tipo === 'uscita' ? eur2(m.importo) : '') + '</td><td>' + esc(m.riferimento || '') + '</td><td class="mot">' + esc(m.creato_da) +
+            (m.annullato ? '<br><span class="pill crit">Annullato</span> <span class="sub">da ' + esc(m.annullato_da || '') + ': ' + esc(m.annullato_motivo || '') + '</span>' : (canPN() ? '<details><summary class="sub" style="cursor:pointer;color:var(--link)">Annulla</summary><form data-act="pnAnn" data-id="' + m.id + '" style="display:grid;gap:6px;margin-top:6px"><input name="m" required placeholder="Motivo" style="min-height:40px;border:2px solid var(--line);border-radius:8px;padding:4px 8px"><button class="btn alt" type="submit">Annulla il movimento</button></form></details>' : '')) + '</td></tr>'; }).join('') +
+        '</tbody></table></div>' : '<p class="sub">Nessun movimento nel ' + esc(y) + '.</p>') + '</section>' +
+      '<section class="box"><header><h2>Riepilogo del ' + esc(y) + '</h2><span class="sub">Esclusi saldo di apertura e giroconti</span></header><div class="saldi"><div><b>' + eur2(T.en) + '</b><span>entrate</span></div><div><b>' + eur2(T.us) + '</b><span>uscite</span></div><div><b>' + eur2(T.en - T.us) + '</b><span>' + (T.en - T.us >= 0 ? 'avanzo' : 'disavanzo') + '</span></div></div><div class="cols"><div><h3 style="margin-bottom:12px">Entrate per categoria</h3>' + bars('entrata') + '</div><div><h3 style="margin-bottom:12px">Uscite per categoria</h3>' + bars('uscita') + '</div></div></section>';
+  }
+  function csvPN(y) {
+    var rows = D.prima_nota.filter(function (m) { return m.data.slice(0, 4) === y; }).sort(function (a, b) { return a.data.localeCompare(b.data) || a.id - b.id; });
+    function c(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    function n(v) { return v === '' ? '' : (+v).toFixed(2).replace('.', ','); }
+    var out = [['Numero', 'Data', 'Descrizione', 'Categoria', 'Conto', 'Entrata', 'Uscita', 'Riferimento', 'Attività', 'Registrato da', 'Annullato', 'Motivo annullamento'].join(';')].concat(rows.map(function (m) { var a = m.attivita_id && att(m.attivita_id);
+      return [m.id, m.data.split('-').reverse().join('/'), m.descrizione, m.categoria, m.conto, m.tipo === 'entrata' ? n(m.importo) : '', m.tipo === 'uscita' ? n(m.importo) : '', m.riferimento || '', a ? a.titolo : '', m.creato_da, m.annullato ? 'sì' : '', m.annullato_motivo || ''].map(c).join(';'); }));
+    var blob = new Blob(['﻿' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prima-nota-' + y + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    log('Ha scaricato la prima nota del ' + y, '');
+  }
+
+  /* ---------- registro: cosa ha fatto chi ---------- */
+  var TAB = { cariche: 'la carica', profili: 'l’account', documenti: 'il documento', documenti_versioni: 'una versione del documento', pratiche: 'la pratica', pratica_passi: 'il passo della pratica', scadenze: 'la scadenza', attivita: 'l’attività', decisioni: 'la decisione', comunicazioni: 'la comunicazione', testi: 'il testo pronto', regole_economiche: 'la regola economica', numeri: 'il numero', checklist: 'il passo della checklist', prima_nota: 'il movimento di prima nota' };
+  var CAMPI = { stato: 'stato', fatta: 'fatta', approvata: 'approvata', responsabile: 'chi', scadenza: 'entro il', data: 'data', testo: 'testo', titolo: 'titolo', mansioni: 'mansioni', nota: 'nota', note: 'note', annullato: 'annullato', annullato_motivo: 'motivo', file_nome: 'file', versione: 'versione', sostituto_id: 'sostituto', importo: 'importo', categoria: 'categoria', descrizione: 'descrizione', valore: 'valore' };
+  var NOISE = ['aggiornato_il', 'aggiornata_il', 'aggiornato_da', 'aggiornata_da', 'annullato_il', 'annullato_da', 'file_path', 'contenuto'];
+  function vv(v, k) {
+    if (v === true) return 'sì'; if (v === false) return 'no'; if (v == null || v === '') return '—';
+    if (Array.isArray(v)) return v.join('; ').slice(0, 120);
+    if (k === 'stato' && CLST[v]) return CLST[v][0]; if (k === 'stato' && PASSO[v]) return PASSO[v][0];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return fD.format(dt(v));
+    return String(typeof v === 'object' ? JSON.stringify(v) : v).replace(/\{\{DC\}\}/g, '…').slice(0, 120);
+  }
+  function auditText(e) {
+    var what = TAB[e.tabella] || e.tabella, lab = e.etichetta ? ' «' + short(e.etichetta, 90) + '»' : '';
+    if (e.operazione === 'INSERT') return { t: (e.tabella === 'prima_nota' ? 'Ha registrato ' : 'Ha aggiunto ') + what + lab, d: e.tabella === 'prima_nota' && e.dopo ? (e.dopo.tipo === 'entrata' ? 'Entrata' : 'Uscita') + ' di ' + eur2(e.dopo.importo) + ', ' + e.dopo.conto + ', ' + e.dopo.categoria : '' };
+    if (e.operazione === 'DELETE') return { t: 'Ha cancellato ' + what + lab, d: '' };
+    var ks = Object.keys(e.dopo || {}).filter(function (k) { return NOISE.indexOf(k) < 0; });
+    var d = ks.map(function (k) { return (CAMPI[k] || k) + ': ' + vv(e.prima[k], k) + ' → ' + vv(e.dopo[k], k); }).join(' · ');
+    var verb = 'Ha aggiornato ';
+    if (ks.length === 1 && ks[0] === 'fatta') { verb = e.dopo.fatta ? 'Ha segnato come fatta ' : 'Ha riaperto '; d = ''; }
+    if (ks.length === 1 && ks[0] === 'approvata') { verb = e.dopo.approvata ? 'Ha segnato come approvata ' : 'Ha riaperto '; d = ''; }
+    if (e.dopo && e.dopo.annullato === true) { verb = 'Ha annullato '; d = 'Motivo: ' + (e.dopo.annullato_motivo || ''); }
+    if (!ks.length) return null;
+    return { t: verb + what + lab, d: d };
+  }
+  function regEntries() {
+    var E = [];
+    D.audit.forEach(function (e) { if (e.tabella === 'registro') return; var x = auditText(e); if (x) E.push({ q: new Date(e.quando), chi: e.chi, t: x.t, d: x.d, tab: e.tabella, op: e.operazione, uid: e.user_id }); });
+    D.registro.forEach(function (r) { E.push({ q: new Date(r.quando), chi: r.chi, t: r.azione + (r.oggetto ? ' «' + r.oggetto + '»' : ''), d: '', tab: 'registro', op: 'LOG', uid: r.user_id }); });
+    E.sort(function (a, b) { return b.q - a.q; });
+    var G = [];
+    E.forEach(function (e) { var g = G[G.length - 1];
+      if (g && e.op === 'INSERT' && g.op === 'INSERT' && g.chi === e.chi && g.tab === e.tab && Math.abs(g.q2 - e.q) < 120000) { g.n++; g.q2 = e.q; return; }
+      e.n = 1; e.q2 = e.q; G.push(e); });
+    return G;
+  }
+  function regLi(e) {
+    var t = e.n > 1 ? 'Ha aggiunto ' + e.n + ' elementi: ' + (TAB[e.tab] || e.tab).replace(/^(il |la |l’|una )/, '') + ' e simili' : e.t;
+    return '<li><time datetime="' + e.q.toISOString() + '">' + fT.format(e.q) + '</time><div><b>' + esc(e.chi) + '</b> · ' + esc(t) + (e.d && e.n === 1 ? '<span class="det">' + esc(e.d) + '</span>' : '') + '</div></li>';
+  }
+  function registroPage() {
+    var all = regEntries(), f = P.archivio.who || 'Tutti', k = P.archivio.kind || 'tutto';
+    var whos = ['Tutti'].concat(Array.from(new Set(all.map(function (e) { return e.chi; }))).sort());
+    var kinds = [['tutto', 'Tutto'], ['modifiche', 'Solo modifiche ai dati'], ['soldi', 'Solo prima nota'], ['accessi', 'Accessi e download']];
+    var list = all.filter(function (e) { return (f === 'Tutti' || e.chi === f) && (k === 'tutto' || (k === 'modifiche' && e.op !== 'LOG') || (k === 'soldi' && (e.tab === 'prima_nota' || /prima nota/.test(e.t))) || (k === 'accessi' && e.op === 'LOG')); });
+    return '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + kinds.map(function (x) { return '<button class="chip" type="button" data-act="regKind" data-v="' + x[0] + '" aria-pressed="' + (x[0] === k) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="chips" role="group" aria-label="Filtra per chi">' + whos.map(function (w) { return '<button class="chip" type="button" data-act="regWho" data-v="' + esc(w) + '" aria-pressed="' + (w === f) + '">' + esc(w) + '</button>'; }).join('') + '</div>' +
+      (list.length ? '<ul class="reg">' + list.slice(0, 300).map(regLi).join('') + '</ul>' : '<p class="sub">Nessuna voce.</p>') + '</section>' +
+      '<p class="note">Ogni aggiunta, modifica e cancellazione la scrive il database da solo, nel momento in cui avviene: nessuno, neanche l’amministratore, può modificarla o cancellarla dal gestionale. Accessi, download e copie di sicurezza li annota il gestionale. «Manutenzione» indica un intervento fatto dal pannello tecnico del database.</p>';
+  }
 
   /* ---------- router ---------- */
   var mainEl = document.getElementById('main'), tabsEl = document.getElementById('tabs');
@@ -620,6 +987,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   function badge(k) {
     if (k === 'pratiche') return D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); }).length;
     if (k === 'ruoli') return D.cariche.filter(function (c) { return !c.sostituto_id; }).length;
+    if (k === 'attivita') return myClOpen().filter(function (x) { return x.stato === 'in_corso' || (x.scadenza && dleft(dt(x.scadenza)) <= 30); }).length;
     return 0;
   }
   function render() {
@@ -634,6 +1002,7 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' ? '' : r.a;
     var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
     tabsEl.innerHTML = aree.map(function (x) { var n = badge(x[0]); return '<a href="#' + x[0] + '"' + (x[0] === cur ? ' aria-current="page"' : '') + '>' + x[1] + (n ? '<span class="n" aria-label="' + n + ' da fare">' + n + '</span>' : '') + '</a>'; }).join('');
+    var curA = tabsEl.querySelector('[aria-current]'); if (curA && tabsEl.scrollWidth > tabsEl.clientWidth) tabsEl.scrollLeft = Math.max(0, curA.offsetLeft - tabsEl.offsetLeft - 16);
   }
   window.addEventListener('hashchange', function () { render(); window.scrollTo(0, 0); mainEl.focus({ preventScroll: true }); });
   document.getElementById('search').addEventListener('submit', function (e) { e.preventDefault(); var q = document.getElementById('q').value.trim(); if (q) location.hash = '#cerca/' + encodeURIComponent(q); });
@@ -644,18 +1013,25 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     var r = await sb.storage.from('archivio').createSignedUrl(path, 300);
     if (r.error) { if (w) w.close(); toast('Il file non si apre: ' + r.error.message); return; }
     if (w) { w.opener = null; w.location.href = r.data.signedUrl; } else location.href = r.data.signedUrl;
+    var dd = D.documenti.filter(function (x) { return x.file_path === path; })[0] || D.documenti_versioni.filter(function (x) { return x.file_path === path; })[0];
+    log('Ha scaricato', dd ? (dd.titolo || dd.file_nome || path) : path);
   }
   mainEl.addEventListener('change', async function (e) {
     var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
     if (a === 'dec') {
       var x = await upd('decisioni', id, { approvata: t.checked, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome });
-      if (x) { await log(x.approvata ? 'Ha segnato come approvata' : 'Ha riaperto', x.testo); render(); var el = document.getElementById('dec' + id); if (el) el.focus(); }
+      if (x) { render(); var el = document.getElementById('dec' + id); if (el) el.focus(); }
     } else if (a === 'scad') {
       var s = await upd('scadenze', id, { fatta: t.checked });
-      if (s) { await log(s.fatta ? 'Ha segnato come fatta' : 'Ha riaperto la scadenza', s.titolo); toast(s.fatta ? 'Segnata come fatta.' : 'Scadenza riaperta.'); render(); }
+      if (s) { toast(s.fatta ? 'Segnata come fatta.' : 'Scadenza riaperta.'); render(); }
     } else if (a === 'passo') {
       var p = await upd('pratica_passi', id, { stato: t.value, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
-      if (p) { await log('Ha cambiato in «' + PASSO[p.stato][0] + '» il passo', p.titolo); toast('Stato aggiornato.'); render(); }
+      if (p) { toast('Stato aggiornato.'); render(); }
+    } else if (a === 'clStato' || a === 'clResp' || a === 'clScad') {
+      var patch = { aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome };
+      patch[a === 'clStato' ? 'stato' : a === 'clResp' ? 'responsabile' : 'scadenza'] = t.value || null;
+      var c = await upd('checklist', id, patch);
+      if (c) { toast(a === 'clStato' ? 'Passo segnato come «' + CLST[c.stato][0] + '».' : 'Salvato.'); render(); var el2 = document.querySelector('[data-act="' + a + '"][data-id="' + id + '"]'); if (el2) el2.focus(); }
     }
   });
   mainEl.addEventListener('click', function (e) {
@@ -666,6 +1042,11 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     else if (a === 'editRuolo') { P.ruoli.edit = b.getAttribute('data-id'); render(); var ta = document.getElementById('m-' + P.ruoli.edit); if (ta) ta.focus(); }
     else if (a === 'cancelRuolo') { P.ruoli.edit = null; render(); }
     else if (a === 'backup') { backup(); }
+    else if (a === 'weekly') { P.calendario.weekly = !P.calendario.weekly; render(); }
+    else if (a === 'pnYear') { P.soldi.year = b.getAttribute('data-v'); render(); }
+    else if (a === 'csv') { csvPN(b.getAttribute('data-v')); }
+    else if (a === 'regWho') { P.archivio.who = b.getAttribute('data-v'); render(); }
+    else if (a === 'regKind') { P.archivio.kind = b.getAttribute('data-v'); render(); }
     else if (a === 'copy') {
       var q = document.getElementById('tx' + b.getAttribute('data-i')), txt = q.textContent;
       var ok = function () { toast('Testo copiato.'); };
@@ -682,13 +1063,47 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
       else if (a === 'saveRuolo') {
         var id = f.getAttribute('data-id'), m = f.m.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
         var c = await upd('cariche', id, { mansioni: m });
-        if (c) { await log('Ha modificato le mansioni di', c.nome); P.ruoli.edit = null; toast('Mansioni salvate.'); render(); }
+        if (c) { P.ruoli.edit = null; toast('Mansioni salvate.'); render(); }
       } else if (a === 'newScad') {
         var r = await sb.from('scadenze').insert({ titolo: f.t.value.trim(), data: f.d.value || null, responsabile: f.r.value, categoria: f.c.value.trim() || null }).select().single();
-        if (r.error) throw r.error; D.scadenze.push(r.data); await log('Ha aggiunto la scadenza', r.data.titolo); toast('Scadenza aggiunta.'); render();
+        if (r.error) throw r.error; D.scadenze.push(r.data); toast('Scadenza aggiunta.'); render();
       } else if (a === 'newAtt') {
         var r2 = await sb.from('attivita').insert({ titolo: f.t.value.trim(), data: f.d.value, tipo: f.k.value, responsabile: f.r.value.trim() || 'Da assegnare', stato: f.s.value }).select().single();
-        if (r2.error) throw r2.error; D.attivita.push(r2.data); await log('Ha aggiunto l’attività', r2.data.titolo); toast('Attività aggiunta.'); render();
+        if (r2.error) throw r2.error; D.attivita.push(r2.data); toast('Attività aggiunta.'); location.hash = '#attivita/' + r2.data.id;
+      } else if (a === 'saveAtt') {
+        var pa = { stato: f.s.value, responsabile: f.r.value.trim() || 'Da assegnare', note: f.n.value.trim() || null };
+        if (!f.d.disabled) pa.data = f.d.value || null;
+        var x2 = await upd('attivita', +f.getAttribute('data-id'), pa);
+        if (x2) { toast('Attività salvata.'); render(); }
+      } else if (a === 'newCl') {
+        var aid = +f.getAttribute('data-id'), cl = clOf(aid);
+        var r3 = await sb.from('checklist').insert({ attivita_id: aid, ordine: cl.length ? cl[cl.length - 1].ordine + 1 : 1, testo: f.t.value.trim(), responsabile: f.r.value, scadenza: f.d.value || null, aggiornato_da: me.nome }).select().single();
+        if (r3.error) throw r3.error; D.checklist.push(r3.data); toast('Passo aggiunto.'); render();
+      } else if (a === 'fromDisc') {
+        var aid2 = +f.getAttribute('data-id'), doc = docBySlug(f.s.value);
+        var sec = doc && doc.contenuto && (doc.contenuto.secs || []).filter(function (x) { return x.h === 'Passaggi in ordine'; })[0];
+        if (!sec || !sec.ol || !sec.ol.length) { toast('Il disciplinare non ha ancora i passaggi in ordine.'); return; }
+        if (clOf(aid2).length) { toast('Questa attività ha già una checklist.'); return; }
+        var r4 = await sb.from('checklist').insert(sec.ol.map(function (txt, i) { return { attivita_id: aid2, ordine: i + 1, testo: txt, fonte: doc.slug, aggiornato_da: me.nome }; })).select();
+        if (r4.error) throw r4.error; D.checklist = D.checklist.concat(r4.data); toast('Checklist creata: ' + r4.data.length + ' passi. Ora assegna chi fa cosa.'); render();
+      } else if (a === 'clEdit') {
+        var c2 = await upd('checklist', +f.getAttribute('data-id'), { testo: f.t.value.trim(), nota: f.n.value.trim() || null, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+        if (c2) { toast('Passo salvato.'); render(); }
+      } else if (a === 'pn') {
+        var imp = parseFloat(String(f.i.value).replace(/\./g, '').replace(',', '.'));
+        if (/^\d+\.\d{1,2}$/.test(f.i.value)) imp = parseFloat(f.i.value);
+        if (!(imp > 0)) { toast('Scrivi un importo valido, per esempio 25,00.'); return; }
+        var tipo = f.k.value, cat = f.g.value;
+        if (PN_E.indexOf(cat) >= 0 && tipo !== 'entrata') { toast('«' + cat + '» è una categoria di entrata: controlla entrata o uscita.'); return; }
+        if (PN_U.indexOf(cat) >= 0 && tipo !== 'uscita') { toast('«' + cat + '» è una categoria di uscita: controlla entrata o uscita.'); return; }
+        if (!confirm('Registrare ' + (tipo === 'entrata' ? 'un’entrata' : 'un’uscita') + ' di ' + eur2(imp) + ' in ' + f.c.value + ', del ' + f.d.value.split('-').reverse().join('/') + '?\n\nUna volta registrato, il movimento non si modifica: si può solo annullare.')) return;
+        var r5 = await sb.from('prima_nota').insert({ data: f.d.value, tipo: tipo, importo: imp, conto: f.c.value, categoria: cat, descrizione: f.t.value.trim(), riferimento: f.r.value.trim() || null, attivita_id: f.a.value ? +f.a.value : null, creato_da: me.nome, user_id: me.id }).select().single();
+        if (r5.error) throw r5.error; D.prima_nota.push(r5.data); P.soldi.year = f.d.value.slice(0, 4); toast('Movimento registrato.'); render();
+      } else if (a === 'pnAnn') {
+        var mot = f.m.value.trim(); if (!mot) return;
+        if (!confirm('Annullare questo movimento? Resta visibile, barrato, con il motivo.')) return;
+        var m2 = await upd('prima_nota', +f.getAttribute('data-id'), { annullato: true, annullato_motivo: mot, annullato_da: me.nome });
+        if (m2) { toast('Movimento annullato.'); render(); }
       } else if (a === 'pw') {
         if (f.p.value !== f.p2.value) { toast('Le due password non coincidono.'); return; }
         var u = await sb.auth.updateUser({ password: f.p.value });
@@ -707,17 +1122,17 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
     if (ex && !ex.file_path) {
       var u0 = await upd('documenti', ex.id, { file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc });
       if (!u0) return;
-      await log('Ha caricato il file di', u0.titolo + ' (' + file.name + ')'); toast('Caricato. Il documento ora ha il suo file.');
+      toast('Caricato. Il documento ora ha il suo file.');
     } else if (ex) {
       var v = await sb.from('documenti_versioni').insert({ documento_id: ex.id, versione: ex.versione, file_path: ex.file_path, file_nome: ex.file_nome, caricato_da: ex.caricato_da, data: ex.aggiornato_il }).select().single();
       if (v.error) throw v.error; D.documenti_versioni.push(v.data);
       var u = await upd('documenti', ex.id, { versione: ex.versione + 1, file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc });
       if (!u) return;
-      await log('Ha sostituito, ora versione ' + u.versione + ':', u.titolo); toast('Caricato. La versione ' + (u.versione - 1) + ' resta tra le versioni precedenti.');
+      toast('Caricato. La versione ' + (u.versione - 1) + ' resta tra le versioni precedenti.');
     } else {
       var r = await sb.from('documenti').insert({ area: area, categoria: f.c.value, titolo: title, stato: f.s.value, file_path: path, file_nome: file.name, data_doc: f.d.value || null, caricato_da: me.nome }).select().single();
       if (r.error) throw r.error; D.documenti.push(r.data);
-      await log('Ha caricato', title + ' (' + file.name + ')'); toast('Caricato. Lo trovi nella lista.');
+      toast('Caricato. Lo trovi nella lista.');
     }
     render();
   }
@@ -734,6 +1149,16 @@ mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius
   }
 
   /* ---------- avvio ---------- */
+  /* aggiornamento automatico: le modifiche degli altri compaiono da sole */
+  async function refresh() {
+    if (!me || document.visibilityState !== 'visible') return;
+    var ae = document.activeElement;
+    if (ae && mainEl.contains(ae) && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) return;
+    if (mainEl.querySelector('details[open] form, form[data-act="saveRuolo"]')) return;
+    try { await load(); var y = window.scrollY; render(); window.scrollTo(0, y); } catch (ex) { console.warn('aggiornamento non riuscito', ex); }
+  }
+  setInterval(refresh, 120000);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refresh(); });
   sb.auth.getSession().then(function (r) { if (r.data && r.data.session) start(r.data.session); else showLogin(); });
 })();
 </script>
