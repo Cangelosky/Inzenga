@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Gestionale del Consiglio Direttivo</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../img/fungo-32.png?v=4">
+<link rel="apple-touch-icon" href="../img/fungo-180.png?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+/* Gestionale del Consiglio Direttivo. Palette Radura come il sito pubblico.
+   Si apre su "Oggi"; aree per compiti, al massimo due livelli. */
+:root {
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+  --bg: #EAF0DF; --card: #FAFCF4; --ink: #14231B; --ink-2: #33453A; --line: #C0CFB0;
+  --link: #1B5C3A; --forest: #1F4A38; --forest-ink: #F0F5E8; --fill: #2A6048;
+  --ok-bg: #D7EBDF; --ok-ink: #1B5C3A; --warn-bg: #F4EAC2; --warn-ink: #6B4A06; --crit-bg: #F5D9B8; --crit-ink: #7A3410;
+  --stamp: #A8321C; --focus: #1B5C3A; --gold: #E2AB3C;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 18px; line-height: 1.6;
+  padding-block: 16px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(30px, 4.4vw, 40px); } h2 { font-size: 25px; } h3 { font-size: 21px; }
+p { margin: 0; } a { color: var(--link); }
+button, select, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.shell { max-width: 1120px; margin: 0 auto; display: grid; gap: 16px; }
+
+/* accesso */
+#login { min-height: calc(100vh - 80px); display: grid; place-items: center; }
+#login form { width: min(420px, 100%); background: var(--forest); color: var(--forest-ink); border-radius: 18px; padding: 28px; display: grid; gap: 16px; }
+#login h1 { font-size: 30px; }
+#login p { color: #C9D8C6; font-size: 16.5px; }
+#login label { display: grid; gap: 6px; font-weight: 600; }
+#login select, #login input { min-height: 50px; padding: 10px 14px; border-radius: 12px; border: 1px solid #4B7A62; background: #1F4A38; color: #fff; font-size: 17px; }
+#login select { background: #24543F; }
+#login button { min-height: 50px; border: 0; border-radius: 999px; background: var(--gold); color: #1A2A20; font-weight: 600; font-size: 17px; cursor: pointer; }
+#login .err { color: #F4C987; min-height: 1.3em; font-size: 16px; }
+
+/* intestazione */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 14px 18px; background: var(--forest); color: var(--forest-ink); border-radius: 14px; }
+.top .brand strong { display: block; font-family: var(--font-display); font-size: 21px; line-height: 1.15; letter-spacing: -0.02em; }
+.top .brand span { font-size: 15px; opacity: .9; }
+.top .who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 16px; }
+.top .who b { background: rgba(255,255,255,.12); padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+.top .who a, .top .who button { color: var(--forest-ink); background: none; border: 1px solid rgba(240,245,232,.5); border-radius: 999px; padding: 4px 12px; cursor: pointer; text-decoration: none; font-size: 15px; }
+.bar2 { display: grid; gap: 10px; }
+nav.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+nav.tabs a { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 16.5px; }
+nav.tabs a[aria-current="page"] { background: var(--forest); color: var(--forest-ink); border-color: var(--forest); }
+nav.tabs .n { font-size: 13.5px; min-width: 24px; padding: 0 7px; border-radius: 999px; background: var(--crit-bg); color: var(--crit-ink); text-align: center; }
+form.search { display: flex; gap: 8px; }
+form.search input { flex: 1; min-width: 0; min-height: 46px; padding: 8px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--card); }
+
+/* pagine */
+main { min-width: 0; display: grid; gap: 20px; }
+main:focus { outline: none; }
+.head { display: grid; gap: 6px; margin-top: 14px; }
+.head p { color: var(--ink-2); max-width: 70ch; }
+.cols { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 1000px) { .cols { grid-template-columns: 1fr 1fr; } }
+.col { display: grid; gap: 20px; align-content: start; min-width: 0; }
+.box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.box > header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+.box > header a { font-size: 16px; }
+.list { list-style: none; margin: 0; padding: 0; display: grid; }
+.list > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.list > li:first-child { border-top: 0; padding-top: 0; }
+.list > li:last-child { padding-bottom: 0; }
+.list b { font-weight: 600; display: block; }
+.sub { color: var(--ink-2); font-size: 16px; }
+.pill { display: inline-block; padding: 2px 12px; border-radius: 999px; font-size: 15px; font-weight: 600; white-space: nowrap; background: var(--ok-bg); color: var(--ok-ink); }
+.pill.warn { background: var(--warn-bg); color: var(--warn-ink); }
+.pill.crit { background: var(--crit-bg); color: var(--crit-ink); }
+.pill.plain { background: transparent; border: 1px solid var(--line); color: var(--ink-2); }
+.pill.bozza { background: transparent; border: 2px solid var(--stamp); color: var(--stamp); letter-spacing: .06em; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+.stats > div { padding: 16px 20px; border-left: 1px solid var(--line); }
+.stats > div:first-child { border-left: 0; }
+@media (max-width: 700px) { .stats > div { border-left: 0; border-top: 1px solid var(--line); } .stats > div:first-child { border-top: 0; } }
+.stats b { display: block; font-family: var(--font-display); font-size: 34px; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 16px; color: var(--ink-2); }
+.check { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--line); }
+.check:first-child { border-top: 0; padding-top: 0; }
+.check input { width: 26px; height: 26px; margin: 2px 0 0; accent-color: var(--forest); }
+.check.done b { text-decoration: line-through; color: var(--ink-2); }
+.btn { min-height: 46px; padding: 8px 20px; border-radius: 12px; border: 2px solid var(--forest); background: var(--forest); color: var(--forest-ink); font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.btn.alt { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.alt:hover { border-color: var(--link); }
+.btn[disabled] { opacity: .6; cursor: wait; }
+.file { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+.file:first-child { border-top: 0; padding-top: 0; }
+.file b { font-weight: 600; font-size: 19px; }
+.file .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end; }
+.file details { grid-column: 1 / -1; font-size: 16px; color: var(--ink-2); }
+.file summary { cursor: pointer; width: fit-content; color: var(--link); }
+form.up { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); align-items: end; }
+form.up label, .field { display: grid; gap: 4px; font-size: 16px; font-weight: 500; }
+form.up input, form.up select, .field input, .field select, .field textarea { min-height: 46px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); width: 100%; min-width: 0; }
+.field textarea { min-height: 140px; line-height: 1.5; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 40px; padding: 4px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink); border-color: var(--forest); }
+.barsx { display: grid; gap: 12px; }
+.barx { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) 84px; gap: 12px; align-items: center; }
+.barx .t { height: 22px; border-radius: 6px; background: var(--bg); overflow: hidden; }
+.barx .t i { display: block; height: 100%; background: var(--fill); border-radius: 6px; }
+.barx em { font-style: normal; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+@media (max-width: 520px) { .barx { grid-template-columns: minmax(0, 1fr) 76px; } .barx .t { grid-column: 1 / -1; grid-row: 2; } .file, .list > li { grid-template-columns: 1fr; } .file .acts { justify-content: flex-start; } }
+.tablew { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 600px; }
+th, td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; font-size: 17px; }
+th { font-size: 15px; font-weight: 600; color: var(--ink-2); border-top: 0; }
+td.tn { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.copy { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line); }
+.copy:first-child { border-top: 0; padding-top: 0; }
+.copy q { quotes: none; display: block; background: var(--bg); padding: 10px 14px; border-radius: 10px; margin-top: 6px; font-size: 17px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: st; }
+.steps > li { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: start; }
+.steps > li::before { counter-increment: st; content: counter(st) " –"; font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--link); }
+.note { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; font-size: 16.5px; color: var(--ink-2); }
+.dc { display: inline-block; padding: 0 10px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-ink); font-size: 15px; font-weight: 600; white-space: nowrap; line-height: 1.5; }
+#toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--forest); color: var(--forest-ink); padding: 12px 20px; border-radius: 12px; max-width: min(92vw, 520px); z-index: 20; font-weight: 500; }
+footer { color: var(--ink-2); font-size: 15px; text-align: center; padding-top: 8px; }
+.loading { padding: 40px; text-align: center; color: var(--ink-2); }
+
+/* pratiche: lista di compiti */
+.task { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+.task:first-child { border-top: 0; padding-top: 0; }
+.task .num { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--link); }
+.task .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
+.task select { min-height: 42px; padding: 4px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); font-weight: 600; }
+.task.fatto b { color: var(--ink-2); }
+.task .docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.task .docs a { font-size: 15.5px; }
+.progress { height: 10px; border-radius: 999px; background: var(--bg); overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--fill); }
+
+/* ruoli */
+.ruoli { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.ruolo { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+.ruolo h3 { font-size: 22px; }
+.ruolo .sost { font-size: 16px; padding: 10px 12px; border-radius: 10px; background: var(--bg); }
+.ruolo .sost b { display: block; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+.ruolo.me { border: 2px solid var(--forest); }
+.mappa { display: grid; gap: 10px; }
+.mappa .r { display: grid; grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); align-items: center; gap: 10px; }
+.mappa .c { padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); font-weight: 600; }
+.mappa .c.vuoto { border-style: dashed; color: var(--warn-ink); background: var(--warn-bg); font-weight: 500; font-size: 16px; }
+.mappa .ar { text-align: center; font-size: 22px; color: var(--link); }
+ul.plain { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+
+/* il foglio con il timbro */
+.back { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+.foglio { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: clamp(18px, 4vw, 40px); overflow: hidden; display: grid; gap: 22px; }
+.foglio.bozza::before, .foglio.conf::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-repeat: repeat; background-size: min(640px, 100%) auto; }
+.foglio.bozza::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480'%3E%3Cg transform='rotate(-28 320 240)' opacity='.17'%3E%3Crect x='140' y='186' width='360' height='108' rx='10' fill='none' stroke='%23A8321C' stroke-width='6'/%3E%3Ctext x='320' y='264' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='78' letter-spacing='8' fill='%23A8321C'%3EBOZZA%3C/text%3E%3C/g%3E%3C/svg%3E"); }
+.foglio.conf::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480'%3E%3Cg transform='rotate(-28 320 240)' opacity='.17'%3E%3Crect x='70' y='186' width='500' height='108' rx='10' fill='none' stroke='%23A8321C' stroke-width='6'/%3E%3Ctext x='320' y='262' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='56' letter-spacing='6' fill='%23A8321C'%3EDA CONFERMARE%3C/text%3E%3C/g%3E%3C/svg%3E"); }
+.foglio > * { position: relative; z-index: 1; }
+.foglio .kick { font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stamp); }
+.foglio .fh { display: grid; gap: 8px; }
+.fs { display: grid; gap: 10px; }
+.fs h2 { font-size: 23px; }
+.fs ul, .fs ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
+.fs p { max-width: 70ch; }
+mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <section id="login" hidden>
+    <form id="loginForm" autocomplete="on">
+      <h1>Gestionale del Consiglio Direttivo</h1>
+      <p>Associazione Micologica Bresadola APS, Gruppo di Palermo «G. Inzenga». Entra con la tua carica e la password che ti è stata data.</p>
+      <label for="lgCarica">Carica
+        <select id="lgCarica" required>
+          <option value="presidente">Presidente</option>
+          <option value="vicepresidente">Vicepresidente</option>
+          <option value="tesoriere">Tesoriere</option>
+          <option value="segretario">Segretario</option>
+          <option value="amministratore">Amministratore</option>
+        </select>
+      </label>
+      <label for="lgPass">Password<input id="lgPass" type="password" autocomplete="current-password" required></label>
+      <button type="submit" id="lgBtn">Entra</button>
+      <p class="err" id="lgErr" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="app" hidden>
+    <header class="top">
+      <div class="brand"><strong>Gestionale del Consiglio Direttivo</strong><span>Associazione Micologica Bresadola APS · Gruppo di Palermo «G. Inzenga» · <a href="../" style="color:inherit">torna al sito</a></span></div>
+      <div class="who"><span>Sei entrato come</span><b id="whoName"></b><a href="#account">Password</a><button type="button" id="logout">Esci</button></div>
+    </header>
+    <div class="bar2">
+      <nav class="tabs" id="tabs" aria-label="Aree del gestionale"></nav>
+      <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Cerca in documenti, scadenze, attività, ruoli…" aria-label="Cerca nel gestionale"><button class="btn alt" type="submit">Cerca</button></form>
+    </div>
+    <main id="main" tabindex="-1"><p class="loading">Caricamento…</p></main>
+    <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. Nessun dato personale dei soci è presente.</footer>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var SB_URL = 'https://vqmxyexwdxjbeakksypz.supabase.co';
+  var SB_KEY = 'sb_publishable_jrmse0Bys256kjYFvNl9mQ_QBoECrd3';
+  var sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, storageKey: 'inz-gestionale-auth', autoRefreshToken: true } });
+
+  var DAY = 86400000;
+  var base = new Date(); base.setHours(12, 0, 0, 0);
+  var fD = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+  var fL = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  var fT = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function fm(s) { return esc(s).replace(/\{\{DC\}\}/g, '<span class="dc">Da completare</span>'); }
+  function eur(n) { return n.toLocaleString('it-IT') + ' €'; }
+  function dt(s) { if (!s) return null; var p = String(s).slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2], 12); }
+  function dleft(d) { return Math.round((d - base) / DAY); }
+  function when(d) { var n = dleft(d); return n === 0 ? 'oggi' : n === 1 ? 'domani' : n < 0 ? Math.abs(n) + ' giorni fa' : 'tra ' + n + ' giorni'; }
+  function nextDow(w) { var n = (w - base.getDay() + 7) % 7; return new Date(base.getTime() + n * DAY); }
+  function attDate(a) { if (a.data) return dt(a.data); if (/luned/i.test(a.ricorrenza || '')) return nextDow(1); if (/gioved/i.test(a.ricorrenza || '')) return nextDow(4); return null; }
+  function low(s) { return String(s || '').toLowerCase(); }
+  function slugify(s) { return low(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'file'; }
+
+  var me = null, D = {};
+  var TABLES = ['cariche', 'profili', 'documenti', 'documenti_versioni', 'pratiche', 'pratica_passi', 'scadenze', 'attivita', 'decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'registro'];
+
+  /* ---------- accesso ---------- */
+  var loginEl = document.getElementById('login'), appEl = document.getElementById('app');
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('lgBtn'), err = document.getElementById('lgErr');
+    err.textContent = ''; btn.disabled = true; btn.textContent = 'Accesso…';
+    var r = await sb.auth.signInWithPassword({ email: document.getElementById('lgCarica').value + '@inzenga.invalid', password: document.getElementById('lgPass').value });
+    btn.disabled = false; btn.textContent = 'Entra';
+    if (r.error) { err.textContent = 'Carica o password non corretta.'; return; }
+    document.getElementById('lgPass').value = '';
+    await start(r.data.session);
+  });
+  document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; showLogin(); });
+  function showLogin() { appEl.hidden = true; loginEl.hidden = false; document.getElementById('lgPass').focus(); }
+
+  async function load() {
+    var res = await Promise.all(TABLES.map(function (t) {
+      var q = sb.from(t).select('*');
+      if (t === 'registro') q = q.order('quando', { ascending: false }).limit(300);
+      return q;
+    }));
+    res.forEach(function (r, i) { if (r.error) throw r.error; D[TABLES[i]] = r.data; });
+    D.cariche.sort(function (a, b) { return a.ordine - b.ordine; });
+    ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
+  }
+  async function start(session) {
+    try {
+      await load();
+      var p = D.profili.filter(function (x) { return x.user_id === session.user.id; })[0];
+      if (!p) { await sb.auth.signOut(); document.getElementById('lgErr').textContent = 'Questo account non fa parte del Consiglio Direttivo.'; showLogin(); return; }
+      me = { id: session.user.id, nome: p.nome_visualizzato, carica: p.carica_id, admin: p.is_admin };
+      document.getElementById('whoName').textContent = me.nome;
+      loginEl.hidden = true; appEl.hidden = false;
+      render();
+    } catch (ex) {
+      console.error(ex); toast('Errore di caricamento: riprova tra poco.'); showLogin();
+    }
+  }
+  async function log(azione, oggetto) {
+    var row = { user_id: me.id, chi: me.nome, azione: azione, oggetto: oggetto };
+    var r = await sb.from('registro').insert(row).select().single();
+    if (!r.error) D.registro.unshift(r.data);
+  }
+  function toast(m) { var t = document.getElementById('toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.k); toast.k = setTimeout(function () { t.hidden = true; }, 3800); }
+  async function upd(table, id, patch, idcol) {
+    var r = await sb.from(table).update(patch).eq(idcol || 'id', id).select().single();
+    if (r.error) { toast('Non salvato: ' + r.error.message); return null; }
+    var arr = D[table]; for (var i = 0; i < arr.length; i++) if (arr[i][idcol || 'id'] === id) arr[i] = r.data;
+    return r.data;
+  }
+
+  /* ---------- helpers di resa ---------- */
+  function head(t, p) { return '<div class="head"><h1>' + t + '</h1>' + (p ? '<p>' + p + '</p>' : '') + '</div>'; }
+  function tableH(head, rows, firstBold) {
+    return '<div class="tablew"><table><thead><tr>' + head.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr>' + r.map(function (c, i) { return '<td>' + (i === 0 && firstBold !== false ? '<b>' + fm(c) + '</b>' : fm(c)) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+  }
+  var HEAD4 = ['Quando', 'Chi la dà', 'A chi e dove', 'Cosa deve contenere'];
+  function comsRows(k) { return D.comunicazioni.filter(function (c) { return c.attivita === k; }).map(function (c) { return [c.quando, c.chi, c.a_chi, c.contenuto]; }); }
+  var STATO_DOC = { bozza: ['BOZZA', 'bozza'], da_confermare: ['Da confermare', 'warn'], approvato: ['Approvato', ''], da_firmare: ['Da firmare', 'warn'], ufficiale: ['Ufficiale', ''] };
+  function docTag(d) { var s = STATO_DOC[d.stato] || [d.stato, 'plain']; return '<span class="pill ' + s[1] + '">' + esc(s[0]) + '</span>'; }
+  function docBySlug(s) { return D.documenti.filter(function (d) { return d.slug === s; })[0]; }
+  function docHref(d) { return '#doc/' + (d.slug || d.id); }
+  function carica(id) { return D.cariche.filter(function (c) { return c.id === id; })[0]; }
+  function myName() { var c = me.carica && carica(me.carica); return c ? c.nome : me.nome; }
+  function isMine(resp) { if (me.admin) return true; return low(resp).indexOf(low(myName())) >= 0 || low(resp) === 'consiglio direttivo'; }
+  function scadDate(x) { return x.data ? dt(x.data) : null; }
+  function scState(x) {
+    if (x.fatta) return ['', 'Fatta'];
+    if (x.urgente) return ['crit', x.etichetta || 'Urgente'];
+    var d = scadDate(x);
+    if (d) { var n = dleft(d); return [n < 0 ? 'crit' : n <= 15 ? 'crit' : n <= 60 ? 'warn' : 'plain', (x.chiarire ? 'Anno da chiarire, ' : '') + when(d)]; }
+    return ['plain', x.etichetta || 'Senza data'];
+  }
+  function scSorted(arr) {
+    return arr.slice().sort(function (a, b) {
+      if (a.urgente !== b.urgente) return a.urgente ? -1 : 1;
+      var da = scadDate(a), db = scadDate(b);
+      if (da && db) return da - db; if (da) return -1; if (db) return 1; return 0;
+    });
+  }
+  function openScad() { return D.scadenze.filter(function (x) { return !x.fatta; }); }
+  function openDec() { return D.decisioni.filter(function (x) { return !x.approvata; }); }
+  function attSorted() { return D.attivita.slice().sort(function (a, b) { return (attDate(a) || 0) - (attDate(b) || 0); }); }
+  function pillCls(s) { return s === 'Confermata' || s === 'In uso' ? '' : 'warn'; }
+  var PASSO = { da_fare: ['Da fare', 'warn'], in_corso: ['In corso', 'warn'], fatto: ['Fatto', ''], non_ancora: ['Non ancora possibile', 'plain'] };
+  function scadItem(x, withNote) {
+    var p = scState(x), d = scadDate(x);
+    return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (d ? fD.format(d) : esc(x.etichetta || '')) + ' · ' + esc(x.categoria || '') + ' · ' + esc(x.responsabile || 'Da assegnare') +
+      (withNote && x.note ? '<br>' + esc(x.note) : '') + (x.pratica_id ? '<br><a href="#pratiche">Fa parte di una pratica</a>' : '') + '</span></div><span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></li>';
+  }
+  function decList(arr) {
+    if (!arr.length) return '<p class="sub">Tutte le decisioni sono state approvate.</p>';
+    return '<div>' + arr.map(function (x) {
+      return '<div class="check' + (x.approvata ? ' done' : '') + '"><input type="checkbox" id="dec' + x.id + '" data-act="dec" data-id="' + x.id + '" ' + (x.approvata ? 'checked' : '') + ' aria-label="Segna come approvata: ' + esc(x.testo) + '"><label for="dec' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.testo) + '</b><span class="sub">' + esc(x.rif || '') + ' · ' + (x.approvata ? 'approvata' + (x.aggiornata_da ? ' (segnata da ' + esc(x.aggiornata_da) + ')' : '') : 'da votare') + '</span></label></div>'; }).join('') + '</div>';
+  }
+  function fileRow(d) {
+    var vers = D.documenti_versioni.filter(function (v) { return v.documento_id === d.id; }).sort(function (a, b) { return b.versione - a.versione; });
+    var h = vers.length ? '<details><summary>Versioni precedenti (' + vers.length + ')</summary><ul>' + vers.map(function (o) {
+      return '<li>Versione ' + o.versione + ', del ' + fT.format(new Date(o.data)) + ', caricata da ' + esc(o.caricato_da) + (o.file_path ? ' · <a href="#" data-act="dl" data-path="' + esc(o.file_path) + '">scarica</a>' : '') + '</li>'; }).join('') + '</ul></details>' : '';
+    var acts = docTag(d);
+    if (d.contenuto) acts += '<a class="btn alt" href="' + docHref(d) + '">Apri</a>';
+    if (d.file_path) acts += '<button class="btn alt" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica</button>';
+    if (!d.contenuto && !d.file_path) acts += '<span class="dc">File da caricare</span>';
+    var date = d.data_doc ? fD.format(dt(d.data_doc)) : '';
+    return '<div class="file"><div><b>' + esc(d.titolo) + '</b><div class="sub">' + esc(d.categoria) + (date ? ' · ' + date : '') + ' · ' + esc(d.caricato_da) + (d.versione > 1 ? ' · versione ' + d.versione : '') + (d.sottotitolo ? '<br>' + esc(d.sottotitolo) : '') + '</div></div>' +
+      '<div class="acts">' + acts + '</div>' + h + '</div>';
+  }
+  function upForm(area, cats, allowed, msg) {
+    if (!allowed) return '<p class="note">' + (msg || 'Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</p>';
+    return '<form class="up" data-area="' + area + '"><label for="u-t-' + area + '">Titolo<input id="u-t-' + area + '" name="t" required placeholder="Es. Verbale CD del 20 novembre 2026"></label>' +
+      '<label for="u-c-' + area + '">Tipo<select id="u-c-' + area + '" name="c">' + cats.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join('') + '</select></label>' +
+      '<label for="u-s-' + area + '">Stato<select id="u-s-' + area + '" name="s"><option value="ufficiale">Ufficiale</option><option value="bozza">Bozza</option><option value="da_firmare">Da firmare</option><option value="da_confermare">Da confermare</option></select></label>' +
+      '<label for="u-d-' + area + '">Data del documento<input id="u-d-' + area + '" name="d" type="date"></label>' +
+      '<label for="u-f-' + area + '">File<input id="u-f-' + area + '" name="f" type="file" required></label>' +
+      '<button class="btn" type="submit">Carica</button></form>' +
+      '<p class="sub">Se il titolo è già presente, il file nuovo prende il posto del vecchio e il vecchio resta nelle versioni precedenti.</p>';
+  }
+  function docPage(d) {
+    if (!d) return head('Documento non trovato', '<a href="#archivio">Torna all’archivio</a>');
+    var c = d.contenuto || { secs: [] }, cls = d.stato === 'bozza' ? ' bozza' : d.stato === 'da_confermare' ? ' conf' : '';
+    var kick = d.stato === 'bozza' ? 'Bozza di lavoro, da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [''])[0];
+    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio' + cls + '"><div class="fh"><span class="kick">' + esc(kick) + '</span><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto ? '. Fonte: piano di lavoro su Notion.' : '') + '</p></div>' +
+      (c.secs || []).map(function (s) {
+        return '<section class="fs"><h2>' + esc(s.h) + '</h2>' + (s.p ? '<p>' + fm(s.p) + '</p>' : '') +
+          (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ul>' : '') +
+          (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ol>' : '') +
+          (s.table ? tableH(s.table[0], s.table[1]) : '') +
+          (s.comunicazioni ? tableH(HEAD4, comsRows(s.comunicazioni)) : '') + '</section>'; }).join('') +
+      (d.file_path ? '<div><button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button></div>' : '') + '</article>';
+  }
+
+  /* ---------- pagine ---------- */
+  var AREE = [['oggi', 'Oggi'], ['ruoli', 'Ruoli e vice'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['comesifa', 'Come si fa']];
+  var P = {};
+
+  P.oggi = function () {
+    var mine = me.admin ? null : carica(me.carica);
+    var passi = D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); });
+    var scad = scSorted(openScad().filter(function (x) { var d = scadDate(x); return (x.urgente || (d && dleft(d) <= 60)) && isMine(x.responsabile); }));
+    var s30 = openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 30); }).length;
+    var a30 = D.attivita.filter(function (x) { var d = attDate(x); return d && dleft(d) <= 30 && dleft(d) >= 0; }).length;
+    var bozze = D.documenti.filter(function (d) { return d.stato === 'bozza' || d.stato === 'da_firmare'; }).length;
+    var last = D.documenti.slice().sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
+    var card = '';
+    if (mine) {
+      var sost = mine.sostituto_id ? carica(mine.sostituto_id).nome : null;
+      var copro = D.cariche.filter(function (c) { return c.sostituto_id === mine.id; }).map(function (c) { return c.nome; });
+      card = '<section class="box"><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Tutti i ruoli</a></header>' +
+        '<div class="cols"><div><b>Cosa ti chiede lo statuto</b><ul class="plain">' + mine.compiti_statuto.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="ruolo" style="border:0;padding:0;background:none"><div class="sost"><b>Se manchi, ti sostituisce</b>' + esc(mine.sostituto_nota || sost || 'Da decidere in CD.') + '</div>' +
+        (copro.length ? '<div class="sost"><b>Tu sostituisci</b>' + esc(copro.join(', ')) + '</div>' : '') + '</div></div></section>';
+    } else {
+      card = '<section class="box"><header><h2>Amministratore</h2><a href="#admin">Amministrazione</a></header><p>Vedi le cose da fare di tutte le cariche. Da Amministrazione scarichi la copia di sicurezza di tutti i dati.</p></section>';
+    }
+    return head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui trovi solo quello che riguarda ' + (me.admin ? 'tutto il Consiglio' : 'la tua carica') + ': le cose da fare, le scadenze vicine e le prossime attività.') +
+      '<div class="stats"><div><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></div><div><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></div>' +
+      '<div><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></div><div><b>' + bozze + '</b><span>documenti in bozza o da firmare</span></div></div>' +
+      card +
+      '<div class="cols"><div class="col">' +
+      '<section class="box"><header><h2>Da fare per te</h2><a href="#pratiche">Pratiche</a></header>' +
+      (passi.length ? '<ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
+        return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + esc(pr ? pr.titolo : '') + (d ? ' · entro il ' + fD.format(d) : '') + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun passo aperto assegnato alla tua carica.</p>') + '</section>' +
+      '<section class="box"><header><h2>Scadenze vicine</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
+      (scad.length ? '<ul class="list">' + scad.slice(0, 6).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza nei prossimi 60 giorni per la tua carica.</p>') + '</section></div>' +
+      '<div class="col">' +
+      '<section class="box"><header><h2>Prossime attività</h2><a href="#attivita">Tutte</a></header><ul class="list">' +
+      attSorted().filter(function (x) { var d = attDate(x); return d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b>' + esc(x.titolo) + '</b><span class="sub">' + (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d) + ' · ' + esc(x.responsabile) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
+      '<section class="box"><header><h2>Da votare in CD</h2><a href="#pratiche/decisioni">Tutte le ' + D.decisioni.length + '</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
+      '<section class="box"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
+      last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + fD.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
+  };
+
+  P.ruoli = function () {
+    var editing = P.ruoli.edit;
+    var mappa = '<section class="box"><header><h2>Chi sostituisce chi</h2><span class="sub">Se una carica manca, chi la copre</span></header><div class="mappa">' +
+      D.cariche.map(function (c) { var s = c.sostituto_id && carica(c.sostituto_id);
+        return '<div class="r"><div class="c">' + esc(c.nome) + '</div><div class="ar" aria-hidden="true">→</div>' + (s ? '<div class="c">' + esc(s.nome) + '</div>' : '<div class="c vuoto">Vice da nominare in CD</div>') + '</div>'; }).join('') +
+      '</div><p class="sub">Freccia: «se manca, lo sostituisce». Le caselle gialle sono le nomine che il Consiglio deve votare.</p></section>';
+    var cards = '<div class="ruoli">' + D.cariche.map(function (c) {
+      var s = c.sostituto_id && carica(c.sostituto_id);
+      var copro = D.cariche.filter(function (x) { return x.sostituto_id === c.id; }).map(function (x) { return x.nome; });
+      var ed = editing === c.id;
+      return '<article class="ruolo' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"><h3>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h3>' +
+        '<div class="sost"><b>Se manca, lo sostituisce</b>' + esc(c.sostituto_nota || (s ? s.nome : '') || 'Da decidere in CD.') + '</div>' +
+        (copro.length ? '<div class="sost"><b>Sostituisce</b>' + esc(copro.join(', ')) + '</div>' : '') +
+        '<b>Cosa dice lo statuto</b><ul class="plain">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+        '<b>Cosa fa oggi</b>' + (ed ? '<form data-act="saveRuolo" data-id="' + c.id + '" class="field" style="display:grid;gap:8px"><label class="field" for="m-' + c.id + '">Una mansione per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label><div class="chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
+          : '<ul class="plain">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul><div><button class="btn alt" type="button" data-act="editRuolo" data-id="' + c.id + '">Modifica le mansioni</button></div>') +
+        (c.da_decidere.length ? '<b>Da decidere in CD</b><ul class="plain">' + c.da_decidere.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
+        '<p class="sub">Riferimento: statuto, ' + esc(c.rif_statuto || '') + '.</p></article>';
+    }).join('') + '</div>';
+    return head('Ruoli e vice', 'Per ogni carica: cosa chiede lo statuto, cosa fa oggi e chi la sostituisce. Per ora ci sono solo le cariche, senza nomi: i nomi si aggiungono dopo il voto del Consiglio.') +
+      mappa + cards +
+      '<section class="box"><header><h2>Le decisioni sui ruoli</h2><a href="#pratiche/decisioni">Tutte le decisioni</a></header>' +
+      decList(D.decisioni.filter(function (x) { return /ruol|vice|tutor|responsabile/i.test(x.testo); })) + '</section>' +
+      '<p class="note">Le altre figure (consiglieri, revisori, comitato scientifico, responsabili di mostra, stage e uscite) si aggiungono quando il Consiglio le nomina. Statuto: art. 18 per il Consiglio, art. 19 per l’organo di controllo, art. 21 per il Comitato scientifico.</p>';
+  };
+
+  P.pratiche = function (sub) {
+    var tabs = [['', 'Pratiche in corso'], ['scadenze', 'Scadenze'], ['decisioni', 'Decisioni da votare']];
+    var t = '<div class="chips" role="tablist">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#pratiche' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (sub === 'scadenze') {
+      var aperte = scSorted(openScad()), fatte = D.scadenze.filter(function (x) { return x.fatta; });
+      return head('Scadenze', 'Tutto quello che scade, in ordine. Il colore dice quanto è vicino. Spunta una scadenza quando è fatta.') + t +
+        '<section class="box"><div>' + aperte.map(function (x) { var p = scState(x), d = scadDate(x);
+          return '<div class="check"><input type="checkbox" id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Segna come fatta: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.titolo) + ' <span class="pill ' + p[0] + '">' + esc(p[1]) + '</span></b><span class="sub">' + (d ? fD.format(d) : esc(x.etichetta || '')) + ' · ' + esc(x.categoria || '') + ' · responsabile: ' + esc(x.responsabile || 'Da assegnare') + (x.annuale ? ' · si ripete ogni anno' : '') + (x.note ? '<br>' + esc(x.note) : '') + '</span></label></div>'; }).join('') + '</div></section>' +
+        (fatte.length ? '<section class="box"><details><summary>Scadenze fatte (' + fatte.length + ')</summary><div style="margin-top:10px">' + fatte.map(function (x) { return '<div class="check done"><input type="checkbox" checked id="sc' + x.id + '" data-act="scad" data-id="' + x.id + '" aria-label="Riapri: ' + esc(x.titolo) + '"><label for="sc' + x.id + '"><b style="display:block">' + esc(x.titolo) + '</b></label></div>'; }).join('') + '</div></details></section>' : '') +
+        '<section class="box"><h2>Aggiungi una scadenza</h2><form class="up" data-act="newScad"><label>Cosa<input name="t" required placeholder="Es. Rinnovo della polizza"></label><label>Entro il<input name="d" type="date"></label><label>Responsabile<select name="r"><option>Presidente</option><option>Vicepresidente</option><option>Tesoriere</option><option>Segretario</option><option>Consiglio Direttivo</option><option>Da assegnare</option></select></label><label>Tipo<input name="c" placeholder="Es. Burocrazia"></label><button class="btn" type="submit">Aggiungi</button></form></section>' +
+        '<p class="note">Urgente: entro 15 giorni. In arrivo: entro 60 giorni. Le scadenze annuali vengono dalla pagina Normativa e guida alla gestione.</p>';
+    }
+    if (sub === 'decisioni') {
+      return head('Decisioni da votare', 'Le decisioni del piano si votano in Consiglio. Qui si segna l’esito: resta scritto chi l’ha segnata e quando.') + t +
+        '<section class="box"><header><h2>Da votare in CD</h2><span class="sub">' + openDec().length + ' su ' + D.decisioni.length + ' ancora da votare</span></header>' + decList(D.decisioni) + '</section>';
+    }
+    return head('Pratiche', 'Ogni lavoro che ha più passi diventa una pratica: i passi in ordine, chi li fa, entro quando, e i documenti pronti. Cambia lo stato di un passo quando lo completi.') + t +
+      D.pratiche.map(function (pr) {
+        var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pr.id; });
+        var done = ps.filter(function (x) { return x.stato === 'fatto'; }).length;
+        return '<section class="box"><header><div><h2>' + esc(pr.titolo) + '</h2><span class="sub">' + done + ' passi fatti su ' + ps.length + '</span></div><span class="pill ' + (pr.stato === 'chiusa' ? '' : 'warn') + '">' + (pr.stato === 'chiusa' ? 'Chiusa' : 'In corso') + '</span></header>' +
+          '<div class="progress" role="img" aria-label="' + done + ' su ' + ps.length + ' passi fatti"><i style="width:' + (ps.length ? done / ps.length * 100 : 0).toFixed(0) + '%"></i></div>' +
+          '<p>' + esc(pr.descrizione || '') + '</p><div>' +
+          ps.map(function (x) { var d = x.scadenza && dt(x.scadenza);
+            return '<div class="task ' + x.stato + '"><span class="num">' + x.ordine + '</span><div><div class="row"><b>' + esc(x.titolo) + '</b>' +
+              '<label><span class="sub" style="margin-right:6px">Stato</span><select data-act="passo" data-id="' + x.id + '" aria-label="Stato del passo: ' + esc(x.titolo) + '">' + Object.keys(PASSO).map(function (k) { return '<option value="' + k + '"' + (k === x.stato ? ' selected' : '') + '>' + PASSO[k][0] + '</option>'; }).join('') + '</select></label></div>' +
+              '<span class="sub">' + esc(x.responsabile || 'Da assegnare') + (d ? ' · entro il ' + fD.format(d) + ' (' + when(d) + ')' : '') + (x.aggiornato_da ? ' · aggiornato da ' + esc(x.aggiornato_da) : '') + '</span>' +
+              (x.descrizione ? '<p style="margin-top:4px">' + esc(x.descrizione) + '</p>' : '') +
+              (x.documenti_slug.length ? '<div class="docs">' + x.documenti_slug.map(function (s) { var dd = docBySlug(s); return dd ? (dd.file_path ? '<a href="#" data-act="dl" data-path="' + esc(dd.file_path) + '">📄 ' + esc(dd.titolo) + '</a>' : '<span class="sub">📄 ' + esc(dd.titolo) + ' <span class="dc">' + (dd.stato === 'da_firmare' ? 'Da firmare' : 'File da caricare') + '</span></span>') : ''; }).join('') + '</div>' : '') +
+              '</div></div>'; }).join('') + '</div></section>';
+      }).join('');
+  };
+
+  P.attivita = function (sub) {
+    var tabs = [['', 'Calendario'], ['corsi', 'Corsi e iscrizioni']];
+    var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#attivita' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (sub === 'corsi') return t + corsiPage();
+    return head('Attività ed eventi', 'Il calendario di lavoro, dal calendario 2027 già redatto. Ogni attività ha un responsabile e uno stato. I disciplinari sono in Come si fa.') + t +
+      '<section class="box"><div class="tablew"><table><thead><tr><th>Data</th><th>Attività</th><th>Tipo</th><th>Responsabile</th><th>Stato</th><th>Note</th></tr></thead><tbody>' +
+      attSorted().map(function (x) { var d = attDate(x); return '<tr><td class="tn">' + (x.ricorrenza ? esc(x.ricorrenza) : d ? fD.format(d) : '') + '</td><td><b>' + esc(x.titolo) + '</b></td><td>' + esc(x.tipo) + '</td><td>' + esc(x.responsabile) + '</td><td><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></td><td>' + esc(x.note || '') + '</td></tr>'; }).join('') +
+      '</tbody></table></div></section>' +
+      '<section class="box"><h2>Aggiungi un’attività</h2><form class="up" data-act="newAtt"><label>Attività<input name="t" required placeholder="Es. Gita a Ficuzza"></label><label>Data<input name="d" type="date" required></label><label>Tipo<select name="k">' + ['Conversazioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<option>' + k + '</option>'; }).join('') + '</select></label><label>Responsabile<input name="r" placeholder="Es. Segretario"></label><label>Stato<select name="s"><option>Da confermare</option><option>Confermata</option></select></label><button class="btn" type="submit">Aggiungi</button></form></section>' +
+      '<div class="cols"><section class="box"><h2>Da votare per il 2027</h2><ul class="list"><li><div><b style="font-weight:500">Almeno tre mostre micologiche, tra Palermo e il resto della Sicilia</b></div></li><li><div><b style="font-weight:500">Programma a orari e determinazione dal vivo alla mostra</b></div></li><li><div><b style="font-weight:500">Weekend amicologico, festa di primavera a fine marzo</b></div></li></ul></section>' +
+      '<section class="box"><h2>I sette tipi di attività</h2><div class="chips">' + ['Conversazioni', 'Corsi', 'Pratica', 'Gite', 'Mostre', 'Stage', 'Eventi'].map(function (k) { return '<span class="pill plain" style="font-size:16px;padding:6px 16px">' + k + '</span>'; }).join('') + '</div><p class="sub">Sono gli stessi del sito pubblico, così ogni attività ha lo stesso nome ovunque.</p></section></div>';
+  };
+  function corsiPage() {
+    function dd(n) { var d = new Date(base); d.setDate(d.getDate() + n); return d; }
+    var CORSI = [
+      { t: 'Corso base di micologia (epigei), Cefalù', q: 'dall’11 al 21 novembre 2026', righe: [
+        ['Esempio 01', 'Cefalù', -40, 'Quota versata', 'Versata', 'Sì', 'Email e telefono', ''], ['Esempio 02', 'Cefalù', -38, 'Quota versata', 'Versata', 'Sì', 'Email', ''],
+        ['Esempio 03', 'Pollina', -33, 'Confermato', 'Da versare', 'Sì', 'Email e telefono', 'Ricontattare per la quota'], ['Esempio 04', 'Palermo', -30, 'Confermato', 'Da versare', 'Sì', 'Email', ''],
+        ['Esempio 05', 'Cefalù', -27, 'Contattato', 'Da versare', 'Sì', 'Email e telefono', 'Chiede se può portare un amico'], ['Esempio 06', 'Castelbuono', -21, 'Preiscritto', 'Da versare', 'Sì', 'Email', ''],
+        ['Esempio 07', 'Palermo', -12, 'Preiscritto', 'Da versare', 'Sì', 'Email e telefono', ''], ['Esempio 08', 'Termini Imerese', -6, 'Preiscritto', 'Da versare', 'Sì', 'Email', ''], ['Esempio 09', 'Cefalù', -2, 'Preiscritto', 'Da versare', 'Sì', 'Email', '']] },
+      { t: 'Corso per il tesserino dei tartufi (ipogei)', q: 'date da fissare', righe: [['Esempio 10', 'Godrano', -20, 'Preiscritto', 'Da versare', 'Sì', 'Email e telefono', 'Cavatore esperto'], ['Esempio 11', 'Piana degli Albanesi', -9, 'Preiscritto', 'Da versare', 'Sì', 'Email', '']] }];
+    var SOG = 15, MAX = 20, tot = 0, quote = 0;
+    CORSI.forEach(function (c) { c.righe.forEach(function (r) { tot++; if (r[3] !== 'Quota versata') quote++; }); });
+    function st(s) { return s === 'Quota versata' ? '' : (s === 'Confermato' ? 'warn' : 'plain'); }
+    return head('Corsi e iscrizioni', 'Le preiscrizioni dal sito arriveranno qui in lista. Per ogni persona si segue lo stato, la quota e ciò che manca. <b>I nomi sono inventati</b>: questa sezione è ancora dimostrativa, perché un elenco di persone è un dato personale.') +
+      '<div class="stats"><div><b>' + tot + '</b><span>preiscrizioni di esempio</span></div><div><b>' + quote + '</b><span>quote ancora da incassare</span></div><div><b>' + CORSI.length + '</b><span>corsi con preiscrizioni aperte</span></div><div><b>' + SOG + ' / ' + MAX + '</b><span>soglia per attivarlo / posti massimi</span></div></div>' +
+      CORSI.map(function (c) { var n = c.righe.length, ok = n >= SOG;
+        return '<section class="box"><header><div><h2>' + esc(c.t) + '</h2><span class="sub">' + esc(c.q) + '</span></div><span class="pill ' + (ok ? '' : 'warn') + '">' + n + ' su ' + SOG + (ok ? ' · si organizza' : ' · ne mancano ' + (SOG - n)) + '</span></header>' +
+          '<div class="tablew"><table><thead><tr><th>Persona</th><th>Comune</th><th>Preiscritta il</th><th>Stato</th><th>Quota</th><th>Consenso privacy</th><th>Contatti</th><th>Note</th></tr></thead><tbody>' +
+          c.righe.map(function (r) { return '<tr><td><b>' + esc(r[0]) + '</b></td><td>' + esc(r[1]) + '</td><td class="tn">' + fD.format(dd(r[2])) + '</td><td><span class="pill ' + st(r[3]) + '">' + esc(r[3]) + '</span></td><td>' + esc(r[4]) + '</td><td>' + esc(r[5]) + '</td><td>' + esc(r[6]) + '</td><td>' + esc(r[7]) + '</td></tr>'; }).join('') + '</tbody></table></div></section>'; }).join('') +
+      '<div class="cols"><section class="box"><h2>Gli stati, in ordine</h2><ol class="steps">' +
+      [['Preiscritto', 'Ha compilato il modulo sul sito. Il contatore del corso sale da solo.'], ['Contattato', 'La segreteria gli ha scritto con date, luogo e quota.'], ['Confermato', 'Ha detto sì. Resta da incassare la quota.'], ['Quota versata', 'Pagamento registrato, con data e metodo. Ha un posto.'], ['Ha frequentato', 'Presenze segnate. Diventa socio, come richiede la legge.'], ['Attestato consegnato', 'Fine corso: attestato e questionario di fine corso.'], ['In lista d’attesa / Ritirato', 'Oltre i 20 posti, o se rinuncia: la quota si gestisce secondo regola da decidere.']].map(function (a) { return '<li><div><b>' + a[0] + '</b><br><span class="sub">' + a[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
+      '<section class="box"><h2>Cosa potrà fare in automatico</h2><ul class="list">' +
+      ['Avviso al segretario quando un corso arriva a 15 preiscritti', 'Email di conferma con date, luogo e coordinate per la quota', 'Promemoria a chi non ha ancora versato', 'Lista d’attesa oltre i 20 posti', 'Passaggio a socio per chi frequenta', 'Invio del questionario di fine corso', 'Cancellazione dei dati di chi non prosegue, dopo un tempo stabilito'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Dopo il voto del CD</span></li>'; }).join('') + '</ul></section></div>' +
+      '<p class="note">Importo della quota, regola per chi rinuncia e per quanto tempo si conservano i dati: da decidere con tesoriere e presidente. Prima di inserire persone vere servono informativa e registro dei trattamenti.</p>';
+  }
+
+  P.archivio = function (sub) {
+    var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']];
+    var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (sub === 'registro') {
+      return head('Registro delle modifiche', 'Chi ha fatto cosa e quando. Lo vedono tutti i membri del Consiglio Direttivo. Il registro non si può modificare né cancellare.') + t +
+        '<section class="box"><div class="tablew"><table><thead><tr><th>Quando</th><th>Chi</th><th>Cosa</th></tr></thead><tbody>' +
+        D.registro.map(function (l) { return '<tr><td class="tn">' + fT.format(new Date(l.quando)) + '</td><td>' + esc(l.chi) + '</td><td>' + esc(l.azione) + ' <b>' + esc(l.oggetto || '') + '</b></td></tr>'; }).join('') + '</tbody></table></div></section>';
+    }
+    if (sub === 'verbali') {
+      var vb = D.documenti.filter(function (d) { return d.area === 'verbali'; }).sort(function (a, b) { return (b.data_doc || '').localeCompare(a.data_doc || ''); });
+      return head('Verbali', 'Verbali del Consiglio Direttivo e delle Assemblee. Secondo lo statuto (art. 16.3) i verbali delle Assemblee sono in libera visione a tutti i soci.') + t +
+        '<section class="box">' + vb.map(fileRow).join('') + '</section>' +
+        '<section class="box"><h2>Carica un verbale</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>';
+    }
+    var all = D.documenti.filter(function (d) { return d.area === 'archivio'; });
+    var cats = ['Tutti'].concat(Array.from(new Set(all.map(function (d) { return d.categoria; }))).sort());
+    var cur = P.archivio.cur || 'Tutti';
+    var list = all.filter(function (d) { return cur === 'Tutti' || d.categoria === cur; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
+    return head('Archivio', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. I documenti in bozza si aprono come un foglio con il timbro BOZZA finché il Consiglio non li vota.') + t +
+      '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + cats.map(function (c) { return '<button class="chip" type="button" data-act="cat" data-v="' + esc(c) + '" aria-pressed="' + (c === cur) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
+      '<div>' + list.map(fileRow).join('') + '</div></section>' +
+      '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
+  };
+
+  P.soldi = function () {
+    var sp = [['Corsi', 820], ['Mostre', 640], ['Stage', 530], ['Sede e assicurazioni', 460], ['Gite', 410], ['Conversazioni', 120]];
+    var en = [['Quote dei soci', 3100], ['Iscrizioni ai corsi', 900], ['Contributi', 250]];
+    function bars(a) { return '<div class="barsx">' + a.map(function (r) { return '<div class="barx"><span>' + r[0] + '</span><div class="t"><i style="width:' + (r[1] / 3100 * 100).toFixed(1) + '%"></i></div><em>' + eur(r[1]) + '</em></div>'; }).join('') + '</div>'; }
+    var canUp = me.admin || me.carica === 'tesoriere' || me.carica === 'presidente';
+    var docs = D.documenti.filter(function (d) { return d.area === 'contabilita'; });
+    return head('Soldi', 'Qui si consultano le regole e i riepiloghi che carica il Tesoriere. Non è un programma di contabilità: i conti si tengono sui computer dell’associazione.') +
+      '<section class="box"><h2>Regole economiche già definite</h2><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b></div><span class="pill plain">' + esc(r.valore) + '</span></li>'; }).join('') + '</ul></section>' +
+      '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
+      ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
+      '<section class="box"><header><h2>Come apparirà il riepilogo</h2><span class="pill warn">Esempio con importi inventati</span></header><div class="cols"><div><h3 style="margin-bottom:12px">Entrate ' + eur(4250) + '</h3>' + bars(en) + '</div><div><h3 style="margin-bottom:12px">Uscite per attività ' + eur(2980) + '</h3>' + bars(sp) + '</div></div></section>' +
+      '<section class="box"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Il rendiconto annuale e la prima nota si caricano qui.</p>') +
+      upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], canUp, 'Qui caricano il Tesoriere e il Presidente. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
+  };
+
+  P.soci = function () {
+    return head('Soci, solo numeri', 'Nomi, indirizzi e telefoni dei soci restano sui computer dell’associazione. Qui compaiono solo i totali, finché il Consiglio non decide chi può vedere cosa.') +
+      '<div class="stats">' + D.numeri.map(function (n) { return '<div><b>' + esc(n.valore) + '</b><span>' + esc(n.descrizione) + '</span></div>'; }).join('') + '</div>' +
+      '<section class="box"><h2>Numeri da raccogliere</h2><ul class="list">' +
+      ['Soci in regola con la quota', 'Soci in scadenza', 'Nuovi soci dell’anno', 'Permanenza dei corsisti dopo il corso (oggi stima a occhio: 1 su 10 il primo anno, 1 su 30 a lungo termine)'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
+      '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati anagrafici completi (proposta: Presidente, Segretario, Tesoriere)</b></div></li><li><div><b style="font-weight:500">Quando caricare il libro soci nel gestionale, con informativa e registro dei trattamenti</b></div></li></ul></section>' +
+      '<p class="note">Quando servirà un elenco con i nomi, si prepara fuori dal gestionale e si porta in riunione. Così il gestionale non conserva dati personali finché il Consiglio non lo approva.</p>';
+  };
+
+  P.comesifa = function (sub) {
+    var tabs = [['', 'Disciplinari'], ['comunicazioni', 'Comunicazioni'], ['piano', 'Piano operativo']];
+    var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#comesifa' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (sub === 'comunicazioni') {
+      return head('Comunicazioni', 'Per ogni attività, cosa va comunicato, da chi, a chi e quando. Viene dai disciplinari.') + t +
+        ['Stage', 'Mostra', 'Corsi', 'Gite'].map(function (k) { var d = docBySlug('doc-' + k.toLowerCase()); return '<section class="box"><header><h2>' + k + '</h2>' + (d ? '<a href="' + docHref(d) + '">Disciplinare</a>' : '') + '</header>' + tableH(HEAD4, comsRows(k)) + '</section>'; }).join('') +
+        '<section class="box"><h2>Testi pronti</h2>' + D.testi.map(function (x, i) { return '<div class="copy"><div><b>' + esc(x.titolo) + '</b><q id="tx' + i + '">' + esc(x.testo) + '</q></div><button class="btn alt" type="button" data-act="copy" data-i="' + i + '">Copia</button></div>'; }).join('') + '</section>' +
+        '<section class="box"><header><h2>Le chat dei soci</h2>' + (docBySlug('doc-community') ? '<a href="#doc/doc-community">Proposta completa</a>' : '') + '</header><ul class="list">' +
+        [['Comunicazioni del CD', 'scrive solo il Consiglio Direttivo'], ['Attività ed eventi', 'scrivono tutti i soci in regola'], ['Comitato scientifico', 'foto da determinare e approfondimenti'], ['Chat amicologica', 'chiacchiere fuori tema'], ['Consiglio Direttivo', 'riservata al CD, visibile ma non accessibile ai soci']].map(function (c) { return '<li><div><b>' + c[0] + '</b><span class="sub">' + c[1] + '</span></div></li>'; }).join('') + '</ul></section>';
+    }
+    if (sub === 'piano') {
+      var obj = [['Obiettivo 1 · Un’organizzazione impeccabile e snella', ['Quota dei ruoli principali con responsabile e vice nominati in CD', 'Numero di disciplinari e schede ruolo scritti e approvati', 'Quota degli eventi organizzati seguendo il disciplinare']], ['Obiettivo 2 · Un’associazione più visibile e riconosciuta', ['Presenza sulla stampa locale', 'Persone esterne agli eventi aperti', 'Quota dei nuovi corsisti arrivati da social o passaparola']]];
+      var seq = [['Raccogliere i dati veri dal tesoriere e dal presidente', 'Da fare'], ['Votare in CD ruoli e vice, e le priorità', 'Da fare'], ['Scrivere le schede ruolo e completare i disciplinari, cominciando dallo stage', 'In corso: schede ruolo nel gestionale, quattro disciplinari in bozza'], ['Avviare tutor, inventario e regole sui dati', 'Da fare'], ['Costruire identità visiva e comunicazione', 'In corso: sito e community in bozza'], ['Strumenti digitali e ricerca', 'In corso: gestionale con accesso protetto; Osservatorio in bozza']];
+      return head('Piano operativo', 'Dove siamo rispetto al piano. Il testo completo è in Archivio.') + t +
+        '<section class="box"><h2>La visione</h2><p>Diventare il punto di riferimento della micologia siciliana: un faro affidabile dove studiare, conoscere e scambiare saperi su micologia, ambiente e boschi del Mediterraneo. Principio trasversale: pochi ma buoni.</p><div><a class="btn alt" href="#doc/doc-piano">Leggi il piano</a></div></section>' +
+        '<div class="cols">' + obj.map(function (o) { return '<section class="box"><h3>' + o[0] + '</h3><ul class="list">' + o[1].map(function (i) { return '<li><div><b style="font-weight:500">' + i + '</b></div><span class="dc">Valore atteso da definire</span></li>'; }).join('') + '</ul></section>'; }).join('') + '</div>' +
+        '<section class="box"><h2>Sequenza degli interventi</h2><ol class="steps">' + seq.map(function (s) { return '<li><div><b>' + s[0] + '</b></div><span class="pill ' + (s[1] === 'Da fare' ? 'plain' : 'warn') + '">' + s[1] + '</span></li>'; }).join('') + '</ol></section>' +
+        '<p class="note">Le decisioni da votare per far avanzare la sequenza sono in Pratiche, Decisioni da votare.</p>';
+    }
+    var dis = D.documenti.filter(function (d) { return d.categoria === 'Disciplinari' || d.categoria === 'Questionari'; });
+    return head('Come si fa', 'I disciplinari spiegano come si organizza ogni attività: scopo, responsabili, passaggi in ordine, comunicazioni, materiale. Le schede delle cariche sono in Ruoli e vice.') + t +
+      '<section class="box"><header><h2>Disciplinari e questionari</h2><a href="#ruoli">Ruoli e vice</a></header>' + dis.map(fileRow).join('') + '</section>' +
+      '<section class="box"><h2>Struttura fissa di ogni disciplinare</h2><ol class="steps">' + ['Scopo', 'Responsabile e vice', 'Passaggi in ordine', 'Comunicazioni', 'Materiale', 'Da chiedere a presidente, tesoriere e segretario'].map(function (x) { return '<li><div><b>' + x + '</b></div></li>'; }).join('') + '</ol></section>';
+  };
+
+  P.admin = function () {
+    if (!me.admin) return head('Amministrazione', 'Questa area è riservata all’amministratore.');
+    return head('Amministrazione', 'Solo per l’amministratore. Gli account non si creano dal sito: non c’è iscrizione libera.') +
+      '<section class="box"><header><h2>Account</h2><span class="sub">' + D.profili.length + ' account</span></header><div class="tablew"><table><thead><tr><th>Account</th><th>Carica</th><th>Permessi</th></tr></thead><tbody>' +
+      D.profili.map(function (p) { var c = p.carica_id && carica(p.carica_id); return '<tr><td><b>' + esc(p.nome_visualizzato) + '</b></td><td>' + esc(c ? c.nome : '—') + '</td><td>' + (p.is_admin ? 'Tutto, compresi account e cancellazioni' : 'Legge e modifica; non cancella') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="sub">Per creare, disattivare o reimpostare un account serve il pannello di Supabase (progetto «inzenga-gestionale»).</p></section>' +
+      '<section class="box"><h2>Copia di sicurezza</h2><p>Scarica in un solo file tutti i dati del gestionale (tabelle, senza i PDF). Conservala fuori dal sito, in un posto sicuro.</p><div><button class="btn" type="button" data-act="backup">Scarica la copia di sicurezza</button></div></section>' +
+      '<div class="cols"><section class="box"><h2>Quattro livelli di accesso</h2><ol class="steps">' +
+      [['Pubblico', 'La vetrina, senza accesso.'], ['Socio', 'Archivio dei ritrovamenti e modulo di invio. Solo i soci in regola. (Da fare)'], ['Consiglio Direttivo', 'Questo gestionale.'], ['Amministratore', 'Account, cancellazioni e copie di sicurezza.']].map(function (x) { return '<li><div><b>' + x[0] + '</b><br><span class="sub">' + x[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
+      '<section class="box"><h2>Da decidere con il Consiglio Direttivo</h2><ul class="list">' +
+      ['Dominio e hosting intestati all’associazione (ipotesi: Serverplan, piano Startup, circa 76 € l’anno più IVA, da verificare)', 'Chi sono i due amministratori e chi tiene le credenziali di riserva', 'Codice sul telefono per tutti, o solo per le parti con dati sensibili', 'Ogni quanto scaricare una copia di sicurezza da conservare fuori dal sito', 'Quali sezioni sviluppare dopo: area soci, libro soci, iscrizioni ai corsi'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div></li>'; }).join('') + '</ul></section></div>';
+  };
+
+  P.account = function () {
+    return head('Cambia la password', 'La password vale per l’account «' + esc(me.nome) + '». Scegline una lunga, almeno 12 caratteri.') +
+      '<section class="box"><form data-act="pw" class="up"><label>Nuova password<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label><button class="btn" type="submit">Salva</button></form></section>';
+  };
+
+  P.cerca = function (qs) {
+    var q = low(decodeURIComponent(qs || '')).trim();
+    if (q.length < 2) return head('Cerca', 'Scrivi almeno due lettere.');
+    function hit(s) { return low(s).indexOf(q) >= 0; }
+    function mk(s) { var t = esc(s), i = low(t).indexOf(esc(q).toLowerCase()); return i < 0 ? t : t.slice(0, i) + '<mark>' + t.slice(i, i + esc(q).length) + '</mark>' + t.slice(i + esc(q).length); }
+    var R = [];
+    D.documenti.forEach(function (d) { if (hit(d.titolo) || hit(d.sottotitolo) || hit(JSON.stringify(d.contenuto || ''))) R.push(['Documento', d.titolo, d.contenuto ? docHref(d) : (d.area === 'verbali' ? '#archivio/verbali' : '#archivio')]); });
+    D.pratica_passi.forEach(function (x) { if (hit(x.titolo) || hit(x.descrizione)) R.push(['Passo di una pratica', x.titolo, '#pratiche']); });
+    D.scadenze.forEach(function (x) { if (hit(x.titolo) || hit(x.note)) R.push(['Scadenza', x.titolo, '#pratiche/scadenze']); });
+    D.attivita.forEach(function (x) { if (hit(x.titolo) || hit(x.note)) R.push(['Attività', x.titolo, '#attivita']); });
+    D.decisioni.forEach(function (x) { if (hit(x.testo)) R.push(['Decisione', x.testo, '#pratiche/decisioni']); });
+    D.cariche.forEach(function (c) { if (hit(c.nome) || hit(c.compiti_statuto.join(' ')) || hit(c.mansioni.join(' ')) || hit(c.sostituto_nota)) R.push(['Ruolo', c.nome, '#ruoli']); });
+    D.comunicazioni.forEach(function (c) { if (hit(c.contenuto) || hit(c.quando)) R.push(['Comunicazione (' + c.attivita + ')', c.quando + ': ' + c.contenuto, '#comesifa/comunicazioni']); });
+    D.testi.forEach(function (x) { if (hit(x.titolo) || hit(x.testo)) R.push(['Testo pronto', x.titolo, '#comesifa/comunicazioni']); });
+    return head('Risultati per «' + esc(decodeURIComponent(qs)) + '»', R.length + ' risultati') +
+      '<section class="box">' + (R.length ? '<ul class="list">' + R.map(function (r) { return '<li><div><b><a href="' + r[2] + '">' + mk(r[1]) + '</a></b><span class="sub">' + esc(r[0]) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun risultato.</p>') + '</section>';
+  };
+
+  /* ---------- router ---------- */
+  var mainEl = document.getElementById('main'), tabsEl = document.getElementById('tabs');
+  function route() { var h = (location.hash || '#oggi').slice(1).split('/'); return { a: h[0] || 'oggi', s: h.slice(1).join('/') }; }
+  function badge(k) {
+    if (k === 'pratiche') return D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); }).length;
+    if (k === 'ruoli') return D.cariche.filter(function (c) { return !c.sostituto_id; }).length;
+    return 0;
+  }
+  function render() {
+    if (!me) return;
+    var r = route(), html;
+    try {
+      if (r.a === 'doc') { var d = D.documenti.filter(function (x) { return x.slug === r.s || String(x.id) === r.s; })[0]; html = docPage(d); }
+      else if (P[r.a]) html = P[r.a](r.s);
+      else html = P.oggi();
+    } catch (ex) { console.error(ex); html = head('Qualcosa non va', 'Questa pagina non si è caricata. Torna a <a href="#oggi">Oggi</a>.'); }
+    mainEl.innerHTML = html;
+    var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' ? '' : r.a;
+    var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
+    tabsEl.innerHTML = aree.map(function (x) { var n = badge(x[0]); return '<a href="#' + x[0] + '"' + (x[0] === cur ? ' aria-current="page"' : '') + '>' + x[1] + (n ? '<span class="n" aria-label="' + n + ' da fare">' + n + '</span>' : '') + '</a>'; }).join('');
+  }
+  window.addEventListener('hashchange', function () { render(); window.scrollTo(0, 0); mainEl.focus({ preventScroll: true }); });
+  document.getElementById('search').addEventListener('submit', function (e) { e.preventDefault(); var q = document.getElementById('q').value.trim(); if (q) location.hash = '#cerca/' + encodeURIComponent(q); });
+
+  /* ---------- azioni ---------- */
+  async function download(path) {
+    var w = window.open('', '_blank');
+    var r = await sb.storage.from('archivio').createSignedUrl(path, 300);
+    if (r.error) { if (w) w.close(); toast('Il file non si apre: ' + r.error.message); return; }
+    if (w) { w.opener = null; w.location.href = r.data.signedUrl; } else location.href = r.data.signedUrl;
+  }
+  mainEl.addEventListener('change', async function (e) {
+    var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
+    if (a === 'dec') {
+      var x = await upd('decisioni', id, { approvata: t.checked, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome });
+      if (x) { await log(x.approvata ? 'Ha segnato come approvata' : 'Ha riaperto', x.testo); render(); var el = document.getElementById('dec' + id); if (el) el.focus(); }
+    } else if (a === 'scad') {
+      var s = await upd('scadenze', id, { fatta: t.checked });
+      if (s) { await log(s.fatta ? 'Ha segnato come fatta' : 'Ha riaperto la scadenza', s.titolo); toast(s.fatta ? 'Segnata come fatta.' : 'Scadenza riaperta.'); render(); }
+    } else if (a === 'passo') {
+      var p = await upd('pratica_passi', id, { stato: t.value, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+      if (p) { await log('Ha cambiato in «' + PASSO[p.stato][0] + '» il passo', p.titolo); toast('Stato aggiornato.'); render(); }
+    }
+  });
+  mainEl.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]'); if (!b || b.tagName === 'FORM' || b.tagName === 'SELECT' || (b.tagName === 'INPUT')) return;
+    var a = b.getAttribute('data-act');
+    if (a === 'dl') { e.preventDefault(); download(b.getAttribute('data-path')); }
+    else if (a === 'cat') { P.archivio.cur = b.getAttribute('data-v'); render(); }
+    else if (a === 'editRuolo') { P.ruoli.edit = b.getAttribute('data-id'); render(); var ta = document.getElementById('m-' + P.ruoli.edit); if (ta) ta.focus(); }
+    else if (a === 'cancelRuolo') { P.ruoli.edit = null; render(); }
+    else if (a === 'backup') { backup(); }
+    else if (a === 'copy') {
+      var q = document.getElementById('tx' + b.getAttribute('data-i')), txt = q.textContent;
+      var ok = function () { toast('Testo copiato.'); };
+      var fb = function () { var r = document.createRange(); r.selectNodeContents(q); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Testo selezionato: copialo dal menu del telefono.'); };
+      try { navigator.clipboard.writeText(txt).then(ok, fb); } catch (err) { fb(); }
+    }
+  });
+  mainEl.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = e.target, a = f.getAttribute('data-act'), btn = f.querySelector('button[type=submit]');
+    if (btn) btn.disabled = true;
+    try {
+      if (f.classList.contains('up') && f.getAttribute('data-area')) await uploadDoc(f);
+      else if (a === 'saveRuolo') {
+        var id = f.getAttribute('data-id'), m = f.m.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var c = await upd('cariche', id, { mansioni: m });
+        if (c) { await log('Ha modificato le mansioni di', c.nome); P.ruoli.edit = null; toast('Mansioni salvate.'); render(); }
+      } else if (a === 'newScad') {
+        var r = await sb.from('scadenze').insert({ titolo: f.t.value.trim(), data: f.d.value || null, responsabile: f.r.value, categoria: f.c.value.trim() || null }).select().single();
+        if (r.error) throw r.error; D.scadenze.push(r.data); await log('Ha aggiunto la scadenza', r.data.titolo); toast('Scadenza aggiunta.'); render();
+      } else if (a === 'newAtt') {
+        var r2 = await sb.from('attivita').insert({ titolo: f.t.value.trim(), data: f.d.value, tipo: f.k.value, responsabile: f.r.value.trim() || 'Da assegnare', stato: f.s.value }).select().single();
+        if (r2.error) throw r2.error; D.attivita.push(r2.data); await log('Ha aggiunto l’attività', r2.data.titolo); toast('Attività aggiunta.'); render();
+      } else if (a === 'pw') {
+        if (f.p.value !== f.p2.value) { toast('Le due password non coincidono.'); return; }
+        var u = await sb.auth.updateUser({ password: f.p.value });
+        if (u.error) throw u.error; f.reset(); await log('Ha cambiato la propria password', ''); toast('Password cambiata.');
+      }
+    } catch (ex) { console.error(ex); toast('Non salvato: ' + (ex.message || ex)); }
+    finally { if (btn) btn.disabled = false; }
+  });
+  async function uploadDoc(f) {
+    var area = f.getAttribute('data-area'), title = f.t.value.trim(), file = f.f.files[0];
+    if (!title || !file) return;
+    var path = area + '/' + Date.now() + '-' + slugify(file.name.replace(/\.[^.]+$/, '')) + (/\.[a-z0-9]+$/i.test(file.name) ? file.name.match(/\.[a-z0-9]+$/i)[0].toLowerCase() : '');
+    var up = await sb.storage.from('archivio').upload(path, file, { contentType: file.type || 'application/octet-stream', upsert: false });
+    if (up.error) throw up.error;
+    var ex = D.documenti.filter(function (x) { return x.area === area && low(x.titolo) === low(title); })[0];
+    if (ex && !ex.file_path) {
+      var u0 = await upd('documenti', ex.id, { file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc });
+      if (!u0) return;
+      await log('Ha caricato il file di', u0.titolo + ' (' + file.name + ')'); toast('Caricato. Il documento ora ha il suo file.');
+    } else if (ex) {
+      var v = await sb.from('documenti_versioni').insert({ documento_id: ex.id, versione: ex.versione, file_path: ex.file_path, file_nome: ex.file_nome, caricato_da: ex.caricato_da, data: ex.aggiornato_il }).select().single();
+      if (v.error) throw v.error; D.documenti_versioni.push(v.data);
+      var u = await upd('documenti', ex.id, { versione: ex.versione + 1, file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc });
+      if (!u) return;
+      await log('Ha sostituito, ora versione ' + u.versione + ':', u.titolo); toast('Caricato. La versione ' + (u.versione - 1) + ' resta tra le versioni precedenti.');
+    } else {
+      var r = await sb.from('documenti').insert({ area: area, categoria: f.c.value, titolo: title, stato: f.s.value, file_path: path, file_nome: file.name, data_doc: f.d.value || null, caricato_da: me.nome }).select().single();
+      if (r.error) throw r.error; D.documenti.push(r.data);
+      await log('Ha caricato', title + ' (' + file.name + ')'); toast('Caricato. Lo trovi nella lista.');
+    }
+    render();
+  }
+  async function backup() {
+    try {
+      await load();
+      var data = { creata_il: new Date().toISOString(), creata_da: me.nome, progetto: 'inzenga-gestionale' };
+      TABLES.forEach(function (t) { data[t] = D[t]; });
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gestionale-inzenga-copia-' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      await log('Ha scaricato la copia di sicurezza', ''); toast('Copia di sicurezza scaricata.'); render();
+    } catch (ex) { toast('Copia non riuscita: ' + (ex.message || ex)); }
+  }
+
+  /* ---------- avvio ---------- */
+  sb.auth.getSession().then(function (r) { if (r.data && r.data.session) start(r.data.session); else showLogin(); });
+})();
+</script>
+</body>
+</html>
