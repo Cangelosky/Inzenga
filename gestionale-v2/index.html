@@ -373,6 +373,12 @@ table.rend tr.av.big td { font-style: normal; font-weight: 700; color: var(--ink
 fieldset.quote { border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px 20px; }
 fieldset.quote label { display: flex; align-items: center; gap: 8px; font-weight: 500; }
 fieldset.quote input { width: 22px; height: 22px; }
+pre.modello { white-space: pre-wrap; background: color-mix(in srgb, var(--line) 30%, var(--card)); border: 1px solid var(--line); border-radius: 10px; padding: 14px; font: 15px/1.55 ui-monospace, Menlo, Consolas, monospace; }
+ul.cl-doc { list-style: none; padding-left: 0; display: grid; gap: 6px; }
+ul.cl-doc li::before { content: '☐ '; color: var(--ink-2); }
+ul.cl-doc li.ok::before { content: '☑ '; color: var(--forest); }
+.doc-intro { background: color-mix(in srgb, var(--line) 25%, var(--card)); border-left: 4px solid var(--line); padding: 10px 14px; border-radius: 8px; }
+.doc-indice { font-size: 15px; line-height: 1.8; } .doc-indice a { white-space: nowrap; }
 .btn.sm { min-height: 38px; padding: 4px 14px; font-size: 15px; }
 .btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -600,14 +606,24 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<button class="btn" type="submit">Carica</button></form>' +
       '<p class="sub">Se il titolo è già presente, il file nuovo prende il posto del vecchio e il vecchio resta nelle versioni precedenti.</p>';
   }
+  function fmx(s) { return fm(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>'); }
+  function blocco(b) {
+    if (b.t === 'p') return '<p>' + fmx(b.v) + '</p>';
+    if (b.t === 'h3') return '<h3>' + fmx(b.v) + '</h3>';
+    if (b.t === 'pre') return '<pre class="modello">' + esc(b.v) + '</pre>';
+    if (b.t === 'ul' || b.t === 'ol') return '<' + b.t + '>' + b.v.map(function (x) { return '<li>' + fmx(x) + '</li>'; }).join('') + '</' + b.t + '>';
+    if (b.t === 'cl') return '<ul class="cl-doc">' + b.v.map(function (x) { var ok = x.indexOf('☑ ') === 0; return '<li class="' + (ok ? 'ok' : '') + '">' + fmx(ok ? x.slice(2) : x) + '</li>'; }).join('') + '</ul>';
+    if (b.t === 'table') return '<div class="tablew"><table><thead><tr>' + b.v[0].map(function (x) { return '<th>' + fmx(x) + '</th>'; }).join('') + '</tr></thead><tbody>' + b.v[1].map(function (r) { return '<tr>' + r.map(function (x) { return '<td>' + fmx(x) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
+    return '';
+  }
   function docPage(d) {
     if (!d) return head('Documento non trovato', '<a href="#archivio">Torna all’archivio</a>');
     var c = d.contenuto || { secs: [] };
     var kick = d.stato === 'bozza' ? 'Bozza · da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [d.stato])[0];
     var ufficiale = d.stato === 'ufficiale' || d.stato === 'approvato';
-    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto ? '. Fonte: piano di lavoro su Notion.' : '') + '</p></div>' +
+    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto && !d.sottotitolo ? 'Fonte: piano di lavoro su Notion.' : '') + '</p>' + (c.intro ? '<p class="doc-intro">' + fmx(c.intro) + '</p>' : '') + (c.secs && c.secs.length > 4 ? '<nav class="doc-indice" aria-label="Indice"><b>Indice</b> ' + c.secs.map(function (s, i) { return '<a href="#" data-act="docSez" data-i="' + i + '">' + esc(s.h) + '</a>'; }).join(' · ') + '</nav>' : '') + '</div>' +
       (c.secs || []).map(function (s) {
-        return '<section class="fs"><h2>' + esc(s.h) + '</h2>' + (s.p ? '<p>' + fm(s.p) + '</p>' : '') +
+        return '<section class="fs" id="sez' + (c.secs.indexOf(s)) + '"><h2>' + esc(s.h) + '</h2>' + (s.nota ? '<p class="sub">' + esc(s.nota) + '</p>' : '') + (s.p ? '<p>' + fm(s.p) + '</p>' : '') + (s.b ? s.b.map(blocco).join('') : '') +
           (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ul>' : '') +
           (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ol>' : '') +
           (s.table ? tableH(s.table[0], s.table[1]) : '') +
@@ -842,7 +858,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     return head('Archivio', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. Ogni documento mostra in alto il suo stato (in rosso se è una bozza o da firmare), la versione e l’ultimo aggiornamento.') + t + addLink('#nuovo/documento', 'Carica un documento') +
       '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + cats.map(function (c) { return '<button class="chip" type="button" data-act="cat" data-v="' + esc(c) + '" aria-pressed="' + (c === cur) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
       '<div>' + list.map(fileRow).join('') + '</div></section>' +
-      '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
+      '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
   };
 
   P.soldi = function (sub) {
@@ -883,9 +899,9 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
         '<section class="box"><h2>Sequenza degli interventi</h2><ol class="steps">' + seq.map(function (s) { return '<li><div><b>' + s[0] + '</b></div><span class="pill ' + (s[1] === 'Da fare' ? 'plain' : 'warn') + '">' + s[1] + '</span></li>'; }).join('') + '</ol></section>' +
         '<p class="note">Le decisioni da votare per far avanzare la sequenza sono in Pratiche, Decisioni da votare.</p>';
     }
-    var dis = D.documenti.filter(function (d) { return d.categoria === 'Disciplinari' || d.categoria === 'Questionari'; });
-    return head('Come si fa', 'I disciplinari spiegano come si organizza ogni attività: scopo, responsabili, passaggi in ordine, comunicazioni, materiale. Le schede delle cariche sono in Ruoli e vice.') + t +
-      '<section class="box"><header><h2>Disciplinari e questionari</h2><a href="#ruoli">Ruoli e vice</a></header>' + dis.map(fileRow).join('') + '</section>' +
+    var dis = D.documenti.filter(function (d) { return (d.categoria === 'Disciplinari' || d.categoria === 'Questionari' || d.categoria === 'Normativa e guide') && !d.archiviato; }).sort(function (a, b) { var o = { 'Normativa e guide': 0, Disciplinari: 1, Questionari: 2 }; return o[a.categoria] - o[b.categoria] || a.titolo.localeCompare(b.titolo); });
+    return head('Come si fa', 'La normativa che ci riguarda e i disciplinari: come si organizza ogni attività e ogni adempimento, con i passaggi in ordine. Le schede delle cariche sono in Ruoli e vice.') + t +
+      '<section class="box"><header><h2>Normativa, disciplinari e questionari</h2><a href="#ruoli">Ruoli e vice</a></header>' + dis.map(fileRow).join('') + '</section>' +
       '<section class="box"><h2>Struttura fissa di ogni disciplinare</h2><ol class="steps">' + ['Scopo', 'Responsabile e vice', 'Passaggi in ordine', 'Comunicazioni', 'Materiale', 'Da chiedere a presidente, tesoriere e segretario'].map(function (x) { return '<li><div><b>' + x + '</b></div></li>'; }).join('') + '</ol></section>';
   };
 
@@ -1009,7 +1025,8 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   }
   /* ---------- scheda attività: il motore di ogni attività sociale ---------- */
   var TIPI = ['Stage', 'Mostre', 'Gite', 'Corsi per il tesserino', 'Corsi extra', 'Pranzi e cene', 'Conversazioni', 'Lezioni', 'Pratica', 'Eventi'];
-  var TIPO_DISC = { Stage: 'doc-stage', Mostre: 'doc-mostra', Gite: 'doc-gite', 'Corsi per il tesserino': 'doc-corsi', Corsi: 'doc-corsi', 'Corsi extra': 'doc-corsi-extra', 'Pranzi e cene': 'doc-pranzi' };
+  var TIPO_DISC = { Stage: 'doc-stage', Mostre: 'doc-mostra', Gite: 'doc-gite', 'Corsi per il tesserino': 'doc-tesserino', Corsi: 'doc-corsi', 'Corsi extra': 'doc-corsi-extra', 'Pranzi e cene': 'doc-pranzi' };
+  function discPer(tipo, dati) { if (tipo === 'Corsi per il tesserino' && dati && dati.tipo_corso === 'Tartufi') return 'doc-tartufi'; return TIPO_DISC[tipo]; }
   var CAMPO = {
     luogo: ['Luogo', 'text', 'Es. Gambarie d’Aspromonte'], orario: ['Orario', 'text', 'Es. ritrovo ore 8.30'],
     albergo: ['Albergo o struttura', 'text'], posti: ['Posti o partecipanti previsti', 'number'], quota: ['Quota a persona', 'text', 'Es. 50 €, oppure da decidere'],
@@ -1019,14 +1036,14 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     mezzo: ['Mezzo di trasporto', 'text', 'Es. auto proprie, pullman'], ritrovo: ['Ritrovo', 'text', 'Es. piazza…, ore 8'], pranzo: ['Pranzo', 'text', 'Es. al sacco, in trattoria'],
     ente: ['Ente o comune ospitante', 'text', 'Es. Parco Uditore'], allestimento: ['Referente allestimento', 'text'], riunione: ['Riunione organizzativa', 'date'],
     squadre: ['Squadre di raccolta', 'text', 'Zone e capisquadra'], docenti: ['Docenti', 'text'], sede: ['Sede delle lezioni', 'text'],
-    serate: ['Date delle serate', 'text', 'Es. 4 serate: 3, 10, 17, 24 marzo'], destinatari: ['Per chi', 'text', 'Es. solo soci, aperto a tutti'],
+    serate: ['Date delle serate', 'text', 'Es. 4 serate: 3, 10, 17, 24 marzo'], tipo_corso: ['Tipo di corso', 'select', ['Funghi epigei', 'Tartufi', 'Aggiornamento quinquennale']], comune_ente: ['Comune o ente che lo chiede', 'text', 'Es. Comune di Cefalù'], micologo: ['Micologo direttore del corso', 'text'], autorizzazione_corso: ['Autorizzazione (protocollo e data)', 'text', 'Es. Forestale prot. 3219 del 14/01/2026'], destinatari: ['Per chi', 'text', 'Es. solo soci, aperto a tutti'],
     locale: ['Locale', 'text'], menu: ['Menu', 'text'], prenotazioni_entro: ['Prenotazioni entro il', 'date'], relatore: ['Relatore', 'text'], tema: ['Tema', 'text']
   };
   var DATI_TIPO = {
     Stage: ['albergo', 'posti', 'quota', 'chi_incassa', 'caparra', 'collaborazione', 'sopralluogo', 'autorizzazione', 'iscrizioni_entro'],
     Mostre: ['ente', 'orario', 'allestimento', 'riunione', 'squadre'],
     Gite: ['ritrovo', 'mezzo', 'pranzo', 'autorizzazione', 'iscrizioni_entro', 'quota'],
-    'Corsi per il tesserino': ['sede', 'serate', 'docenti', 'posti', 'quota', 'chi_incassa', 'iscrizioni_entro'],
+    'Corsi per il tesserino': ['tipo_corso', 'comune_ente', 'sede', 'serate', 'micologo', 'docenti', 'posti', 'quota', 'chi_incassa', 'iscrizioni_entro', 'autorizzazione_corso'],
     Corsi: ['sede', 'serate', 'docenti', 'posti', 'quota', 'iscrizioni_entro'],
     'Corsi extra': ['destinatari', 'sede', 'serate', 'docenti', 'posti', 'quota'],
     'Pranzi e cene': ['locale', 'orario', 'menu', 'quota', 'chi_incassa', 'prenotazioni_entro', 'posti'],
@@ -1041,7 +1058,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   };
   var LISTE_TIPO = { Stage: ['partecipanti', 'camere', 'materiale', 'preventivi', 'info'], Gite: ['partecipanti', 'preventivi', 'info'], Mostre: ['materiale', 'preventivi', 'info'], 'Corsi per il tesserino': ['partecipanti', 'materiale', 'info'], Corsi: ['partecipanti', 'materiale', 'info'], 'Corsi extra': ['partecipanti', 'materiale', 'info'], 'Pranzi e cene': ['partecipanti', 'preventivi', 'info'] };
   function campiPer(tipo) { return ['luogo'].concat(DATI_TIPO[tipo] || ['orario']); }
-  function campoInput(k, v) { var c = CAMPO[k]; return '<label>' + c[0] + '<input name="d_' + k + '" type="' + (c[1] === 'number' ? 'number' : c[1] === 'date' ? 'date' : 'text') + '" maxlength="300" value="' + esc(v == null ? '' : v) + '"' + (c[2] ? ' placeholder="' + esc(c[2]) + '"' : '') + '></label>'; }
+  function campoInput(k, v) { var c = CAMPO[k]; if (c[1] === 'select') return '<label>' + c[0] + '<select name="d_' + k + '">' + c[2].map(function (o) { return '<option' + (o === v ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>'; return '<label>' + c[0] + '<input name="d_' + k + '" type="' + (c[1] === 'number' ? 'number' : c[1] === 'date' ? 'date' : 'text') + '" maxlength="300" value="' + esc(v == null ? '' : v) + '"' + (c[2] ? ' placeholder="' + esc(c[2]) + '"' : '') + '></label>'; }
   function campoVal(k, v) { if (v == null || v === '') return ''; return CAMPO[k][1] === 'date' ? fD.format(dt(v)) : esc(v); }
   function respSelect(name, cur, extra) { var opts = RESP_SEL.slice(); if (cur && opts.indexOf(cur) < 0) opts.unshift(cur); return '<select name="' + name + '">' + (extra ? '<option value="">' + extra + '</option>' : '') + opts.map(function (r) { return '<option' + (r === cur ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select>'; }
   function attForm(a, tipo, dataPre) {
@@ -1054,7 +1071,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<label>Responsabile' + respSelect('responsabile', a ? a.responsabile : (me.carica ? myName() : 'Da assegnare')) + '</label><label>Vice' + respSelect('vice', a ? a.vice : '', 'Nessuno per ora') + '</label>' +
       campiPer(tipo).map(function (k) { return campoInput(k, k === 'luogo' ? (a ? a.luogo : '') : d[k]); }).join('') +
       '<label class="wide">Note<textarea name="note" maxlength="1000">' + esc(a ? a.note || '' : '') + '</textarea></label>' +
-      (isNew ? '<p class="wide sub">Alla creazione si apre la scheda dell’attività con la checklist del disciplinare' + (TIPO_DISC[tipo] && docBySlug(TIPO_DISC[tipo]) ? ' «' + esc(docBySlug(TIPO_DISC[tipo]).titolo.replace('Disciplinare operativo, ', '')) + '»' : ' (per questo tipo il disciplinare non c’è ancora: la scrivete voi)') + ' e gli strumenti per gestirla.</p>' : '') +
+      (isNew ? '<p class="wide sub">Alla creazione si apre la scheda dell’attività con la checklist del disciplinare' + (TIPO_DISC[tipo] && docBySlug(TIPO_DISC[tipo]) ? ' «' + esc(docBySlug(TIPO_DISC[tipo]).titolo.replace(/^Disciplinare (operativo|base), /, '')) + '»' : ' (per questo tipo il disciplinare non c’è ancora: la scrivete voi)') + ' e gli strumenti per gestirla.</p>' : '') +
       '<div class="wide"><button class="btn" type="submit">' + (isNew ? 'Crea l’attività e apri la scheda' : 'Salva') + '</button></div></form>';
   }
   function datiAttivita(f, tipo) {
@@ -1109,7 +1126,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     if (sez === 'checklist') return top + checklistSec(a, cl);
     if (sez === 'liste') return top + liste.map(function (k) { return listaBox(a, k); }).join('');
     if (sez === 'soldi') return top + soldiAttivita(a);
-    if (sez === 'documenti') { var docs = D.documenti.filter(function (x) { return x.attivita_id === a.id && !x.archiviato; }); var disc = TIPO_DISC[a.tipo] && docBySlug(TIPO_DISC[a.tipo]);
+    if (sez === 'documenti') { var docs = D.documenti.filter(function (x) { return x.attivita_id === a.id && !x.archiviato; }); var disc = discPer(a.tipo, a.dati) && docBySlug(discPer(a.tipo, a.dati));
       return top + (disc ? '<section class="box k-doc"><h2>Disciplinare di riferimento</h2>' + fileRow(disc) + '</section>' : '') + '<section class="box k-doc"><h2>Documenti dell’attività</h2>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento ancora: preventivi, locandine, contratti, ricevute.</p>') + '<h3 style="margin-top:12px">Carica un documento</h3>' + upForm('archivio', ['Preventivi', 'Locandine', 'Contratti', 'Ricevute', 'Altro'], true).replace('<form class="up" data-area="archivio">', '<form class="up" data-area="archivio"><input type="hidden" name="att" value="' + a.id + '">') + '</section>'; }
     if (sez === 'commenti') return top + commentiBox('attivita_id', a.id, D.commenti.filter(function (c) { return c.attivita_id === a.id; }).sort(function (x, y) { return new Date(x.quando) - new Date(y.quando); }));
     var dati = a.dati || {}, campi = campiPer(a.tipo).filter(function (k) { return k !== 'luogo' && dati[k]; });
@@ -1124,7 +1141,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   function checklistSec(a, cl) {
     var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
     var src = cl.length && cl[0].fonte ? docBySlug(cl[0].fonte) : null;
-    return '<section class="box"><header><h2>Checklist</h2>' + (src ? '<a href="' + docHref(src) + '">Dal disciplinare: ' + esc(src.titolo.replace('Disciplinare operativo, ', '')) + '</a>' : '') + '</header>' +
+    return '<section class="box"><header><h2>Checklist</h2>' + (src ? '<a href="' + docHref(src) + '">Dal disciplinare: ' + esc(src.titolo.replace(/^Disciplinare (operativo|base), /, '')) + '</a>' : '') + '</header>' +
       (cl.length ? '<div>' + cl.map(function (x) {
         var cm = D.commenti.filter(function (c) { return c.attivita_id === a.id && c.testo.indexOf('[passo ' + x.id + ']') === 0; });
         return '<div class="cl ' + x.stato + '" id="cl' + x.id + '"><span class="num">' + x.ordine + '</span><div><div class="txt">' + fm(x.testo) + '</div>' +
@@ -1135,7 +1152,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
           '<span class="sub">' + (x.aggiornato_da ? 'Ultima modifica: ' + esc(x.aggiornato_da) + ', ' + fT.format(new Date(x.aggiornato_il)) : '') + '</span>' +
           '<details class="ed"><summary>Modifica, aggiungi una nota o elimina</summary><form data-act="clEdit" data-id="' + x.id + '" style="display:grid;gap:8px;margin-top:8px"><label class="field">Testo<textarea name="t" style="min-height:90px">' + esc(x.testo) + '</textarea></label><label class="field">Nota sullo stato dell’arte<input name="n" value="' + esc(x.nota || '') + '"></label><div><button class="btn" type="submit">Salva</button></div></form>' + azioni('checklist', x, short(x.testo, 60)) + '</details>' +
           '</div></div>'; }).join('') + '</div>' : '<p class="sub">Questa attività non ha ancora una checklist.</p>') +
-      (!cl.length && disc.length ? '<form class="up" data-act="fromDisc" data-id="' + a.id + '"><label>Crea la checklist dal disciplinare<select name="s">' + disc.map(function (x) { return '<option value="' + esc(x.slug) + '"' + (TIPO_DISC[a.tipo] === x.slug ? ' selected' : '') + '>' + esc(x.titolo.replace('Disciplinare operativo, ', '')) + '</option>'; }).join('') + '</select></label><button class="btn" type="submit">Crea la checklist</button></form>' : '') +
+      (!cl.length && disc.length ? '<form class="up" data-act="fromDisc" data-id="' + a.id + '"><label>Crea la checklist dal disciplinare<select name="s">' + disc.map(function (x) { return '<option value="' + esc(x.slug) + '"' + (discPer(a.tipo, a.dati) === x.slug ? ' selected' : '') + '>' + esc(x.titolo.replace(/^Disciplinare (operativo|base), /, '')) + '</option>'; }).join('') + '</select></label><button class="btn" type="submit">Crea la checklist</button></form>' : '') +
       '<details><summary style="cursor:pointer;color:var(--link);font-weight:600">＋ Aggiungi un passo</summary><form class="up" data-act="newCl" data-id="' + a.id + '" style="margin-top:10px"><label>Cosa fare<input name="t" required></label><label>Chi<select name="r">' + RESP.map(function (r) { return '<option>' + r + '</option>'; }).join('') + '</select></label><label>Entro il<input name="d" type="date"></label><button class="btn" type="submit">Aggiungi</button></form></details></section>';
   }
 
@@ -1805,7 +1822,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<label class="wide">Riferimento (facoltativo)<input name="rif" maxlength="200" placeholder="Es. Proposta del Tesoriere, 20 novembre"></label>' +
       '<div class="wide"><button class="btn" type="submit">Aggiungi la decisione</button></div></form></section>';
     if (sub === 'documento') return back + head('Nuovo documento', 'Scegli dove metterlo. Se c’è già un documento con lo stesso titolo, il nuovo file prende il suo posto e il vecchio resta tra le versioni.') +
-      '<section class="box k-doc"><h2>In Archivio</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
+      '<section class="box k-doc"><h2>In Archivio</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
       '<section class="box k-doc"><h2>Tra i Verbali</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>' +
       '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere.') + '</section>';
     if (sub === 'testo') return back + head('Nuovo testo pronto', 'Compare in Come si fa → Comunicazioni, con il pulsante «Copia».') +
@@ -1829,7 +1846,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     if (a === 'nAtt') {
       var tipoN = v('tipo'), datiN = datiAttivita(f, tipoN);
       if (v('data_fine') && v('data') && v('data_fine') < v('data')) { toast('La data di fine viene prima di quella di inizio.'); return; }
-      var discN = TIPO_DISC[tipoN] && docBySlug(TIPO_DISC[tipoN]) ? TIPO_DISC[tipoN] : null;
+      var discN = discPer(tipoN, datiN) && docBySlug(discPer(tipoN, datiN)) ? discPer(tipoN, datiN) : null;
       r = await sb.from('attivita').insert({ titolo: v('titolo'), tipo: tipoN, stato: v('stato'), data: nz('data'), data_fine: nz('data_fine'), responsabile: v('responsabile') || 'Da assegnare', vice: nz('vice'), luogo: nz('d_luogo'), note: nz('note'), dati: datiN, disciplinare: discN }).select().single();
       if (r.error) throw r.error; D.attivita.push(r.data);
       var doc = discN && docBySlug(discN), sec = doc && doc.contenuto && (doc.contenuto.secs || []).filter(function (x) { return x.h === 'Passaggi in ordine'; })[0];
@@ -1940,6 +1957,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     var b = e.target.closest('[data-act]'); if (!b || b.tagName === 'FORM' || b.tagName === 'SELECT' || (b.tagName === 'INPUT')) return;
     var a = b.getAttribute('data-act');
     if (a === 'dl') { e.preventDefault(); download(b.getAttribute('data-path')); }
+    else if (a === 'docSez') { e.preventDefault(); var sz = document.getElementById('sez' + b.getAttribute('data-i')); if (sz) sz.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'cat') { P.archivio.cur = b.getAttribute('data-v'); render(); }
     else if (a === 'editRuolo') { P.ruoli.edit = b.getAttribute('data-id'); render(); var ta = document.getElementById('m-' + P.ruoli.edit); if (ta) ta.focus(); }
     else if (a === 'cancelRuolo') { P.ruoli.edit = null; render(); }
