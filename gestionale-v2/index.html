@@ -390,6 +390,33 @@ body.lite nav.tabs, body.lite #search { display: none; }
 .scelta b { font-size: calc(21px * var(--z)); } .scelta span { color: var(--ink-2); }
 .scelta .ico { font-size: calc(34px * var(--z)); color: inherit; }
 .scelta:hover, .scelta:focus-visible { border-color: var(--forest); box-shadow: 0 0 0 3px color-mix(in srgb, var(--forest) 25%, transparent); }
+.carica-d > summary, .og-card > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; list-style: none; }
+.carica-d > summary::-webkit-details-marker, .og-card > summary::-webkit-details-marker { display: none; }
+.carica-d > summary h2, .og-card > summary h2 { margin: 0; }
+.carica-d { padding: 14px 20px; display: block; }
+.carica-d .vd { color: var(--link); font-weight: 600; white-space: nowrap; }
+.carica-d .vd::after { content: ' ▾'; }
+.carica-d[open] .vd::after { content: ' ▴'; }
+.carica-d[open] .vd { font-size: 0; } .carica-d[open] .vd::after { font-size: 16px; content: 'Chiudi ▴'; }
+.cd-body { display: grid; gap: 12px; margin-top: 12px; }
+.cd-body .cc { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.og-n { min-width: 34px; height: 30px; padding: 0 10px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--warn-bg); color: var(--warn-ink); font-variant-numeric: tabular-nums; }
+.og-n.zero { background: color-mix(in srgb, var(--line) 50%, var(--card)); color: var(--ink-2); }
+.og-grid { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: stretch; }
+@media (min-width: 760px) { .og-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1240px) { .og-grid { grid-template-columns: 1fr 1fr 1fr; } }
+.og-card { display: flex; flex-direction: column; gap: 0; }
+.og-card[open] > summary { margin-bottom: 12px; }
+.og-body { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.og-more { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); font-weight: 600; }
+@media (min-width: 701px) { .og-card > summary { pointer-events: none; cursor: default; } .og-card > summary .og-n { pointer-events: auto; } }
+@media (max-width: 700px) { .og-card > summary h2::after { content: ' ▾'; font-size: 16px; color: var(--link); } .og-card[open] > summary h2::after { content: ' ▴'; } }
+.quadro-box .stats { box-shadow: none; }
+@media (min-width: 760px) {
+  .quadro-box .quadro { grid-template-columns: 1fr 1fr; grid-template-areas: "p a" "s a"; }
+  .quadro-box .qd.k-dec { grid-area: p; } .quadro-box .qd.k-att { grid-area: a; } .quadro-box .qd.k-sito { grid-area: s; }
+}
+.stats.s6 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .btn.sm { min-height: 38px; padding: 4px 14px; font-size: calc(15px * var(--z)); }
 .btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -759,57 +786,72 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<div class="chips">' + (r.stato === 'aperta' ? '<button class="btn alt" type="button" data-act="rqStato" data-v="presa" data-id="' + r.id + '">La prendo io</button>' : '<span class="pill warn">Presa in carico</span>') + '<button class="btn" type="button" data-act="rqStato" data-v="fatta" data-id="' + r.id + '">Fatta</button></div></li>';
   }
 
-  P.oggi = function () {
+  function isMobile() { return window.matchMedia('(max-width: 700px)').matches; }
+  function ogCard(cls, title, n, rows, empty, href, linkTxt, ulc) {
+    var open = isMobile() ? '' : ' open';
+    return '<details class="box og-card ' + cls + '"' + open + '><summary><h2>' + title + '</h2><span class="og-n' + (n ? '' : ' zero') + '" aria-label="' + n + ' elementi">' + n + '</span></summary>' +
+      '<div class="og-body">' + (rows.length ? '<ul class="' + (ulc || 'list') + '">' + rows.slice(0, 4).join('') + '</ul>' : '<p class="sub">' + empty + '</p>') +
+      '<a class="og-more" href="' + href + '">' + linkTxt + (n > 4 ? ' (' + n + ')' : '') + ' →</a></div></details>';
+  }
+  function oggiDati() {
+    var o = {};
+    o.passi = D.pratica_passi.filter(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; return pr && !pr.archiviato && pr.stato !== 'chiusa' && x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); });
+    o.scadMie = scSorted(openScad().filter(function (x) { var d = scadDate(x); return (x.urgente || (d && dleft(d) <= 60)) && isMine(x.responsabile); }));
+    o.myCl = myClOpen().sort(function (a, b) { return (a.scadenza || '9').localeCompare(b.scadenza || '9') || a.attivita_id - b.attivita_id || a.ordine - b.ordine; });
+    o.rq = richiestePerMe();
+    o.clLi = function (x) { var a = att(x.attivita_id), d = x.scadenza && dt(x.scadenza);
+      return '<li><div><b><a href="#attivita/' + x.attivita_id + '/checklist">' + esc(short(x.testo, 110)) + '</a></b><span class="sub">' + meta([['Attività', esc(a ? a.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; };
+    o.passoLi = function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
+      return '<li><div><b><a href="#pratiche/p' + x.pratica_id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Pratica', esc(pr ? pr.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; };
+    o.tutte = o.rq.map(richiestaLi).concat(o.myCl.map(o.clLi), o.passi.map(o.passoLi), o.scadMie.map(function (x) { return scadItem(x); }));
+    return o;
+  }
+  function caricaCard(mine) {
+    if (!mine) return '<details class="box carica-d"><summary><h2>Amministratore</h2><span class="vd">Vedi dettagli</span></summary><div class="cd-body"><p>Vedi le cose da fare di tutte le cariche. Da <a href="#admin">Amministrazione</a> scarichi le copie di sicurezza e gestisci gli account.</p></div></details>';
+    var sost = mine.sostituto_id ? carica(mine.sostituto_id).nome : null;
+    var atts = D.attivita.filter(function (a) { return !a.archiviato && (respMatch(a.responsabile, mine.nome) || respMatch(a.vice, mine.nome)); });
+    return '<details class="box carica-d tinted"' + tintCarica(mine.nome) + '><summary><h2>La tua carica: ' + esc(mine.nome) + '</h2><span class="vd">Vedi dettagli</span></summary><div class="cd-body">' +
+      '<div class="cc"><div><div class="lbl">Ruoli dallo statuto</div><ul class="plain sm">' + mine.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
+      '<div><div class="lbl">Mansioni</div><ul class="plain sm">' + (mine.mansioni.length ? mine.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') : '<li>Da definire in Consiglio</li>') + '</ul></div></div>' +
+      (atts.length ? '<div><div class="lbl">Attività che segui</div><ul class="plain sm">' + atts.map(function (a) { return '<li><a href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a>' + (respMatch(a.vice, mine.nome) && !respMatch(a.responsabile, mine.nome) ? ' (vice)' : '') + '</li>'; }).join('') + '</ul></div>' : '') +
+      '<p class="sub"><b>Se manchi ti sostituisce:</b> ' + esc(mine.sostituto_nota || sost || 'da decidere in CD') + '</p><p><a href="#ruoli">Modifica le mansioni in Ruoli e mansioni →</a></p></div></details>';
+  }
+  P.oggi = function (sub) {
+    var o = oggiDati();
+    if (sub === 'cose') {
+      return '<a class="back" href="#oggi">← Oggi</a>' + head('Cose da fare', 'Tutto quello che tocca a te: le richieste degli altri membri, i passi delle attività e delle pratiche, le tue scadenze.') +
+        '<section class="box k-att"><header><h2>Richieste che ti hanno fatto</h2><span class="og-n' + (o.rq.length ? '' : ' zero') + '">' + o.rq.length + '</span></header>' + (o.rq.length ? '<ul class="list">' + o.rq.map(richiestaLi).join('') + '</ul>' : '<p class="sub">Nessuna richiesta aperta.</p>') + '</section>' +
+        '<section class="box k-att"><header><h2>Nelle attività</h2><span class="og-n' + (o.myCl.length ? '' : ' zero') + '">' + o.myCl.length + '</span></header>' + (o.myCl.length ? '<ul class="list">' + o.myCl.map(o.clLi).join('') + '</ul>' : '<p class="sub">Nessun passo di checklist assegnato a te.</p>') + '</section>' +
+        '<section class="box k-dec"><header><h2>Nelle pratiche</h2><span class="og-n' + (o.passi.length ? '' : ' zero') + '">' + o.passi.length + '</span></header>' + (o.passi.length ? '<ul class="list">' + o.passi.map(o.passoLi).join('') + '</ul>' : '<p class="sub">Nessun passo di pratica assegnato a te.</p>') + '</section>' +
+        '<section class="box k-scad"><header><h2>Le tue scadenze</h2><span class="og-n' + (o.scadMie.length ? '' : ' zero') + '">' + o.scadMie.length + '</span></header>' + (o.scadMie.length ? '<ul class="list">' + o.scadMie.map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza tua nei prossimi 60 giorni.</p>') + '</section>';
+    }
     var mine = me.admin ? null : carica(me.carica);
-    var passi = D.pratica_passi.filter(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; return pr && !pr.archiviato && pr.stato !== 'chiusa' && x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); });
-    var scadMie = scSorted(openScad().filter(function (x) { var d = scadDate(x); return (x.urgente || (d && dleft(d) <= 60)) && isMine(x.responsabile); }));
     var scadTutte = scSorted(openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 45); }));
     var s30 = openScad().filter(function (x) { var d = scadDate(x); return x.urgente || (d && dleft(d) <= 30); }).length;
     var a30 = D.attivita.filter(function (x) { var d = attDate(x); return !x.archiviato && d && dleft(d) <= 30 && dleft(d) >= 0; }).length;
     var bozze = D.documenti.filter(function (d) { return !d.archiviato && (d.stato === 'bozza' || d.stato === 'da_firmare'); }).length;
-    var myCl = myClOpen().sort(function (a, b) { return (a.scadenza || '9').localeCompare(b.scadenza || '9') || a.attivita_id - b.attivita_id || a.ordine - b.ordine; });
-    var rq = richiestePerMe();
-    var altri = regEntries().filter(function (e) { return e.uid && e.uid !== me.id && e.op !== 'LOG'; }).slice(0, 6);
-    var last = D.documenti.filter(function (d) { return !d.archiviato; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); }).slice(0, 4);
+    var sette = new Date(Date.now() - 7 * 864e5);
+    var altri = regEntries().filter(function (e) { return e.uid && e.uid !== me.id && e.op !== 'LOG' && e.q >= sette; });
+    var docs = D.documenti.filter(function (d) { return !d.archiviato; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
+    var prossime = attSorted().filter(function (x) { var d = attDate(x); return !x.archiviato && d && dleft(d) >= 0; });
     var ns = nuoviDalSito(), nsTot = ns.pre + ns.soc + ns.msg;
-    var card;
-    if (mine) {
-      var sost = mine.sostituto_id ? carica(mine.sostituto_id).nome : null;
-      card = '<aside class="box carica tinted"' + tintCarica(mine.nome) + '><header><h2>La tua carica: ' + esc(mine.nome) + '</h2><a href="#ruoli">Dettagli</a></header>' +
-        '<div class="cc"><div><div class="lbl">Ruoli dallo statuto</div><ul class="plain sm">' + mine.compiti_statuto.slice(0, 3).map(function (t) { return '<li>' + esc(short(t.replace(/\s*\(art\.[^)]*\)\.?$/, ''), 70)) + '</li>'; }).join('') + '</ul></div>' +
-        '<div><div class="lbl">Mansioni</div><ul class="plain sm">' + (mine.mansioni.length ? mine.mansioni.slice(0, 3).map(function (t) { return '<li>' + esc(short(t, 70)) + '</li>'; }).join('') : '<li>Da definire in Consiglio</li>') + '</ul></div></div>' +
-        '<p class="sub"><b>Se manchi ti sostituisce:</b> ' + esc(mine.sostituto_nota || sost || 'da decidere in CD') + '</p></aside>';
-    } else {
-      card = '<aside class="box carica"><header><h2>Amministratore</h2><a href="#admin">Amministrazione</a></header><p class="sub">Vedi le cose da fare di tutte le cariche. Da Amministrazione scarichi la copia di sicurezza di tutti i dati.</p></aside>';
-    }
-    var cose = myCl.length + passi.length + rq.length;
-    var visione = '<section class="box"><header><h2>Il quadro generale</h2><span class="sub">Tutto il lavoro in corso, a colpo d’occhio</span></header><div class="quadro">' +
-      '<div class="qd k-dec"><div class="lbl"><a href="#pratiche">Pratiche in corso</a></div>' + (praticheAttive().length ? praticheAttive().map(function (pr) { var x = prSteps(pr); return '<a class="qrow" href="#pratiche/p' + pr.id + '"><b>' + esc(pr.titolo) + '</b>' + progBar(x.done, x.ps.length, 'passi') + (x.next ? '<span class="sub">Prossimo passo: ' + esc(short(x.next.titolo, 70)) + ' · ' + esc(x.next.responsabile || 'da assegnare') + '</span>' : '') + '</a>'; }).join('') : '<p class="sub">Nessuna pratica aperta.</p>') + '</div>' +
-      '<div class="qd k-att"><div class="lbl"><a href="#attivita">Attività da preparare</a></div>' + attSorted().filter(function (a) { return !a.archiviato && clOf(a.id).length && attPhase(a) !== 'concluse'; }).slice(0, 4).map(function (a) { var p = clProg(clOf(a.id)), d = attDate(a); return '<a class="qrow" href="#attivita/' + a.id + '"><b>' + esc(a.titolo) + '</b>' + progBar(p.done, p.tot, 'passi') + '<span class="sub">' + (d ? fD.format(d) + ' · ' : '') + 'responsabile: ' + esc(a.responsabile || 'da assegnare') + '</span></a>'; }).join('') + '</div>' +
-      '<div class="qd k-sito"><div class="lbl"><a href="#sito">Dal sito</a></div>' + (nsTot ? '<ul class="plain sm">' + (ns.pre ? '<li><a href="#attivita/corsi">' + ns.pre + ' preiscrizioni ai corsi da contattare</a></li>' : '') + (ns.soc ? '<li><a href="#soci">' + ns.soc + ' richieste per diventare socio</a></li>' : '') + (ns.msg ? '<li><a href="#sito/messaggi">' + ns.msg + ' messaggi da leggere</a></li>' : '') + '</ul>' : '<p class="sub">Nessuna richiesta nuova dal sito.</p>') +
-      (D.prima_nota.length ? '<div class="lbl" style="margin-top:12px"><a href="#soldi/primanota">Contabilità</a></div><p class="sub">In cassa ' + eur2(saldo('cassa')) + ' · in banca ' + eur2(saldo('banca')) + '</p>' : '') + '</div></div></section>';
-    return '<div class="hero"><div class="hero-l">' + head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui sotto trovi lo stato di tutto il lavoro dell’associazione e le cose che toccano a te.') +
-      '<nav class="stats s5" aria-label="Riepilogo"><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
-      '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti da completare o firmare</span></a><a href="#sito"><b>' + nsTot + '</b><span>richieste nuove dal sito</span></a></nav></div>' + card + '</div>' +
-      visione +
-      '<div class="cols"><div class="col">' +
-      '<section class="box k-att"><header><h2>Cose da fare</h2><span class="pill ' + (cose ? 'warn' : '') + '">' + cose + '</span></header>' +
-      (rq.length ? '<div class="lbl">Richieste che ti hanno fatto</div><ul class="list">' + rq.map(richiestaLi).join('') + '</ul>' : '') +
-      (myCl.length ? '<div class="lbl">Nelle attività</div><ul class="list">' + myCl.slice(0, 8).map(function (x) { var a = att(x.attivita_id), d = x.scadenza && dt(x.scadenza);
-        return '<li><div><b><a href="#attivita/' + x.attivita_id + '">' + esc(short(x.testo, 110)) + '</a></b><span class="sub">' + meta([['Attività', esc(a ? a.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' + (myCl.length > 8 ? '<p class="sub">e altri ' + (myCl.length - 8) + ' in <a href="#attivita/chi">Chi fa cosa</a>.</p>' : '') : '') +
-      (passi.length ? '<div class="lbl">Nelle pratiche</div><ul class="list">' + passi.map(function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
-        return '<li><div><b><a href="#pratiche/p' + x.pratica_id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Pratica', esc(pr ? pr.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : '') +
-      (scadMie.length ? '<div class="lbl">Scadenze tue</div><ul class="list">' + scadMie.slice(0, 5).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '') +
-      (!cose && !scadMie.length ? '<p class="sub">Niente in sospeso per la tua carica.</p>' : '') + '</section>' +
-      '<section class="box k-scad"><header><h2>Scadenze dell’associazione</h2><a href="#pratiche/scadenze">Tutte</a></header>' +
-      (scadTutte.length ? '<ul class="list">' + scadTutte.slice(0, 6).map(function (x) { return scadItem(x); }).join('') + '</ul>' : '<p class="sub">Nessuna scadenza nei prossimi 45 giorni.</p>') + '</section></div>' +
-      '<div class="col">' +
-      '<section class="box k-cal"><header><h2>Prossime attività</h2><a href="#calendario">Calendario</a></header><ul class="list">' +
-      attSorted().filter(function (x) { var d = attDate(x); return !x.archiviato && d && dleft(d) >= 0; }).slice(0, 4).map(function (x) { var d = attDate(x); return '<li><div><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Quando', (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d)], ['Responsabile', esc(x.responsabile || 'da assegnare')]]) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }).join('') + '</ul></section>' +
-      '<section class="box k-dec"><header><h2>Da votare in Consiglio</h2><a href="#pratiche/decisioni">Tutte</a></header>' + decList(openDec().slice(0, 3)) + '</section>' +
-      '<section class="box k-altri"><header><h2>Cosa stanno facendo gli altri</h2><a href="#archivio/registro">Registro</a></header>' + (altri.length ? '<ul class="reg">' + altri.map(regLi).join('') + '</ul>' : '<p class="sub">Ancora nessuna modifica dagli altri membri del Consiglio.</p>') + '</section>' +
-      '<section class="box k-doc"><header><h2>Ultimi documenti</h2><a href="#archivio">Archivio</a></header><ul class="list">' +
-      last.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + meta([['Aggiornato', fD.format(new Date(d.aggiornato_il))], ['da', esc(d.caricato_da)]]) + '</span></div>' + docTag(d) + '</li>'; }).join('') + '</ul></section></div></div>';
+    var stats = '<nav class="stats s6" aria-label="Riepilogo"><a href="#oggi/cose"><b>' + o.tutte.length + '</b><span>cose da fare per te</span></a><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
+      '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti da completare o firmare</span></a><a href="#sito"><b>' + nsTot + '</b><span>richieste nuove dal sito</span></a></nav>';
+    var attPrep = attSorted().filter(function (a) { return !a.archiviato && clOf(a.id).length && attPhase(a) !== 'concluse'; }).slice(0, 4);
+    var visione = '<section class="box quadro-box"><header><h2>Il quadro generale</h2><span class="sub">Tutto il lavoro in corso, a colpo d’occhio</span></header>' + stats + '<div class="quadro">' +
+      '<div class="qd k-dec"><div class="lbl"><a href="#pratiche">Pratiche in corso</a></div>' + (praticheAttive().length ? praticheAttive().slice(0, 4).map(function (pr) { var x = prSteps(pr); return '<a class="qrow" href="#pratiche/p' + pr.id + '"><b>' + esc(pr.titolo) + '</b>' + progBar(x.done, x.ps.length, 'passi') + (x.next ? '<span class="sub">Prossimo passo: ' + esc(short(x.next.titolo, 70)) + ' · ' + esc(x.next.responsabile || 'da assegnare') + '</span>' : '') + '</a>'; }).join('') : '<p class="sub">Nessuna pratica aperta.</p>') + '</div>' +
+      '<div class="qd k-att"><div class="lbl"><a href="#attivita">Attività da preparare</a></div>' + (attPrep.length ? attPrep.map(function (a) { var p = clProg(clOf(a.id)), d = attDate(a); return '<a class="qrow" href="#attivita/' + a.id + '"><b>' + esc(a.titolo) + '</b>' + progBar(p.done, p.tot, 'passi') + '<span class="sub">' + (d ? fD.format(d) + ' · ' : '') + 'responsabile: ' + esc(a.responsabile || 'da assegnare') + '</span></a>'; }).join('') : '<p class="sub">Nessuna attività con checklist aperta.</p>') + '</div>' +
+      '<div class="qd k-sito"><div class="lbl"><a href="#sito">Dal sito</a></div>' + (nsTot ? '<ul class="plain sm">' + (ns.pre ? '<li><a href="#attivita/corsi">' + ns.pre + ' preiscrizioni ai corsi da contattare</a></li>' : '') + (ns.soc ? '<li><a href="#soci/richieste">' + ns.soc + ' richieste per diventare socio</a></li>' : '') + (ns.msg ? '<li><a href="#sito/messaggi">' + ns.msg + ' messaggi da leggere</a></li>' : '') + '</ul>' : '<p class="sub">Nessuna richiesta nuova dal sito.</p>') +
+      '<div class="lbl" style="margin-top:12px"><a href="#soldi">Contabilità</a></div><p class="sub">' + (D.prima_nota.length ? 'In cassa ' + eur2(saldo('cassa')) + ' · in banca ' + eur2(saldo('banca')) : 'Nessun movimento registrato.') + '</p></div></div></section>';
+    var cards = '<div class="og-grid">' +
+      ogCard('k-att', 'Cose da fare', o.tutte.length, o.tutte, 'Niente in sospeso per la tua carica.', '#oggi/cose', 'Tutte le cose da fare') +
+      ogCard('k-scad', 'Scadenze dell’associazione', scadTutte.length, scadTutte.map(function (x) { return scadItem(x); }), 'Nessuna scadenza nei prossimi 45 giorni.', '#pratiche/scadenze', 'Tutte le scadenze') +
+      ogCard('k-cal', 'Prossime attività', prossime.length, prossime.map(function (x) { var d = attDate(x); return '<li><div><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Quando', (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d)], ['Responsabile', esc(x.responsabile || 'da assegnare')]]) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }), 'Nessuna attività in programma.', '#calendario', 'Il calendario completo') +
+      ogCard('k-dec', 'Da votare in Consiglio', openDec().length, openDec().map(function (x) { return '<li><div><b><a href="#pratiche/decisioni">' + esc(x.testo) + '</a></b><span class="sub">' + meta([['Si vota in', 'Consiglio Direttivo'], ['Riferimento', esc(x.rif || '')]]) + '</span></div><span class="pill warn">Da votare</span></li>'; }), 'Nessuna decisione in attesa.', '#pratiche/decisioni', 'Tutte le decisioni') +
+      ogCard('k-altri', 'Cosa stanno facendo gli altri', altri.length, altri.map(regLi), 'Nessuna modifica dagli altri membri negli ultimi 7 giorni.', '#archivio/registro', 'Il registro completo', 'reg') +
+      ogCard('k-doc', 'Ultimi documenti', docs.length, docs.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + meta([['Aggiornato', fD.format(new Date(d.aggiornato_il))], ['da', esc(d.caricato_da)]]) + '</span></div>' + docTag(d) + '</li>'; }), 'Nessun documento.', '#archivio', 'Tutto l’archivio') +
+      '</div>';
+    return head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui sotto trovi lo stato di tutto il lavoro dell’associazione e le cose che toccano a te.') + caricaCard(mine) + visione + cards;
   };
 
   P.ruoli = function () {
@@ -2120,6 +2162,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       (function step(t) { var k = Math.min(1, (t - t0) / dur); b.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); })(t0);
     });
   }
+  try { window.matchMedia('(max-width: 700px)').addEventListener('change', function () { if (me && route().a === 'oggi') render(); }); } catch (e) {}
   window.addEventListener('hashchange', function () { sheet(false); render(); window.scrollTo(0, 0); mainEl.focus({ preventScroll: true }); entra(); });
   document.getElementById('search').addEventListener('submit', function (e) { e.preventDefault(); var q = document.getElementById('q').value.trim(); if (q) location.hash = '#cerca/' + encodeURIComponent(q); });
 
