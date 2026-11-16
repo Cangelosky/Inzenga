@@ -627,7 +627,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (me) log('Ha effettuato l’accesso', '');
   });
   document.getElementById('liteBtn').addEventListener('click', function () { var on = !isLite(); try { if (on) localStorage.setItem('inz-lite', '1'); else localStorage.removeItem('inz-lite'); } catch (e) {} location.hash = on ? '#facile' : '#oggi'; render(); });
-  document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; P.soci.ok = false; P.soci.viste = {}; P.soci.q = ''; showLogin(); });
+  async function esci(car) { await sb.auth.signOut(); me = null; D = {}; P.soci.ok = false; P.soci.viste = {}; P.soci.q = ''; showLogin(); if (car) { var s = document.getElementById('lgCarica'); if (s) { s.value = car; var pw = document.getElementById('lgPass'); if (pw) pw.focus(); } } }
+  document.getElementById('logout').addEventListener('click', function () { esci(); });
   function showLogin() { appEl.hidden = true; loginEl.hidden = false; document.getElementById('lgPass').focus(); }
 
   async function load() {
@@ -663,6 +664,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       document.getElementById('whoName').textContent = me.nome + (me.prova ? ' · accesso rapido' : '');
       document.getElementById('pwLink').hidden = me.prova;
       loginEl.hidden = true; appEl.hidden = false;
+      try { var dopo = sessionStorage.getItem('inz-dopo'); sessionStorage.removeItem('inz-dopo'); if (dopo && !me.prova) location.hash = dopo; } catch (e) {}
       render(); entra();
       var nuoveR = richiestePerMe().filter(function (r) { return r.stato === 'aperta'; }).length;
       if (nuoveR && !me.admin) toast(nuoveR === 1 ? 'Hai una richiesta nuova da un altro membro: la trovi in «Cose da fare».' : 'Hai ' + nuoveR + ' richieste nuove da altri membri: le trovi in «Cose da fare».');
@@ -1770,7 +1772,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   var CORSO_ST = { aperto: 'Iscrizioni aperte', in_attesa: 'Si raccolgono preiscrizioni', concluso: 'Concluso (archivio con locandina)' };
   function nascosti() { return me && me.prova; }
   function cntPre(corsoId, statiEsclusi) { if (!D.cnt) return 0; return (D.cnt.preiscrizioni || []).filter(function (x) { return (corsoId === undefined || x.corso_id === corsoId) && (!statiEsclusi || statiEsclusi.indexOf(x.stato) < 0); }).reduce(function (s, x) { return s + x.n; }, 0); }
-  function boxNascosti(cosa) { return '<section class="box k-altri"><h2>Dati delle persone nascosti</h2><p>Con l’accesso rapido di prova ' + cosa + ' non si vedono: contengono nomi, email e telefoni. Per vederli e gestirli entra con la carica e la tua password personale.</p></section>'; }
+  function boxNascosti(cosa) { return '<section class="box k-altri"><h2>Dati delle persone nascosti</h2><p>Con l’accesso rapido di prova ' + cosa + ' non si vedono: contengono nomi, email e telefoni. Per vederli e gestirli entra con la carica e la tua password personale.</p><div><button class="btn" type="button" data-act="conPassword">Entra con la password personale</button></div></section>'; }
   function nuoviDalSito() {
     if (nascosti()) { var c = D.cnt || {}; return { pre: cntPre(undefined) - cntPre(undefined, ['preiscritto']), soc: (c.richieste || {}).nuova || 0, msg: (c.messaggi || {}).da_leggere || 0 }; }
     return { pre: D.sito_preiscrizioni.filter(function (x) { return x.stato === 'preiscritto'; }).length, soc: D.sito_richieste_socio.filter(function (x) { return x.stato === 'nuova'; }).length, msg: D.sito_messaggi.filter(function (x) { return x.stato === 'da_leggere'; }).length }; }
@@ -2225,6 +2227,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'rqStato') { var rr = await upd('richieste', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v'), aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (rr) { toast(rr.stato === 'fatta' ? 'Richiesta segnata come fatta.' : 'Hai preso in carico la richiesta.'); render(); } }
     else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
     else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
+    else if (a === 'conPassword') { var back = location.hash; await esci(me.carica); try { sessionStorage.setItem('inz-dopo', back); } catch (e) {} }
     else if (a === 'sociCsv') { csvSoci(); }
     else if (a === 'socioDel') { await socioDel(+b.getAttribute('data-id')); }
     else if (a === 'rendY') { P.soldi.ry = b.getAttribute('data-v'); render(); }
