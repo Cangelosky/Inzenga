@@ -911,7 +911,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<section class="box"><header><h2>Account</h2><span class="sub">' + D.profili.length + ' account</span></header><div class="tablew"><table><thead><tr><th>Account</th><th>Carica</th><th>Permessi</th></tr></thead><tbody>' +
       D.profili.map(function (p) { var c = p.carica_id && carica(p.carica_id); return '<tr><td><b>' + esc(p.nome_visualizzato) + '</b></td><td>' + esc(c ? c.nome : '—') + '</td><td>' + (p.is_admin ? 'Tutto, compresi account e cancellazioni' : 'Legge e modifica; non cancella') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       '<p class="sub">Per creare, disattivare o reimpostare un account serve il pannello di Supabase (progetto «inzenga-gestionale»).</p></section>' +
-      '<section class="box"><h2>Copia di sicurezza</h2><p>Scarica in un solo file tutti i dati del gestionale (tabelle, senza i PDF). Conservala fuori dal sito, in un posto sicuro.</p><div><button class="btn" type="button" data-act="backup">Scarica la copia di sicurezza</button></div></section>' +
+      '<section class="box"><h2>Copia di sicurezza</h2><p>Scarica in un solo file i dati del gestionale (tabelle, senza i PDF) <b>senza dati personali</b>. Conservala fuori dal sito, in un posto sicuro.</p><div><button class="btn" type="button" data-act="backup">Scarica la copia senza dati personali</button></div></section>' + copiaCifrataBox() +
       '<div class="cols"><section class="box"><h2>Quattro livelli di accesso</h2><ol class="steps">' +
       [['Pubblico', 'La vetrina, senza accesso.'], ['Socio', 'Archivio dei ritrovamenti e modulo di invio. Solo i soci in regola. (Da fare)'], ['Consiglio Direttivo', 'Questo gestionale.'], ['Amministratore', 'Account, cancellazioni e copie di sicurezza.']].map(function (x) { return '<li><div><b>' + x[0] + '</b><br><span class="sub">' + x[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
       '<section class="box"><h2>Da decidere con il Consiglio Direttivo</h2><ul class="list">' +
@@ -1352,7 +1352,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<p class="sub">Altri stati: ' + Object.keys(SOCIO_ST).filter(function (k) { return k !== 'attivo'; }).map(function (k) { return SOCIO_ST[k] + ' ' + (st[k] || 0); }).join(' · ') + '. Quota ' + (y - 1) + ': ' + (c.quota_anno_prec || 0) + ' soci attivi segnati.</p></section>' +
       '<section class="box"><h2>Chi ha usato i dati</h2>' + (ult ? '<p>Ultima operazione: <b>' + esc(ult.chi) + '</b>, ' + fT.format(new Date(ult.quando)) + '.</p>' : '<p class="sub">Nessuna operazione registrata.</p>') +
       '<p class="sub">Ogni apertura del libro soci, ogni scheda aperta, ogni modifica e ogni scaricamento finisce nel registro dei dati personali, con l’account e l’ora. Il registro non si cancella.</p><div><a class="btn alt" href="#soci/registro">Apri il registro</a></div></section></div>' +
-      '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati completi: oggi tutti gli accessi del Consiglio con password personale; proposta: Presidente, Vicepresidente, Segretario e Tesoriere</b></div></li><li><div><b style="font-weight:500">Modulo di consenso privacy da far firmare ai soci che non l’hanno ancora firmato</b></div></li><li><div><b style="font-weight:500">Numeri di tessera e date di iscrizione: da recuperare dal vecchio libro soci</b></div></li></ul></section>';
+      copiaCifrataBox() + '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati completi: oggi tutti gli accessi del Consiglio con password personale; proposta: Presidente, Vicepresidente, Segretario e Tesoriere</b></div></li><li><div><b style="font-weight:500">Modulo di consenso privacy da far firmare ai soci che non l’hanno ancora firmato</b></div></li><li><div><b style="font-weight:500">Numeri di tessera e date di iscrizione: da recuperare dal vecchio libro soci</b></div></li></ul></section>';
   }
   function sociVelo() {
     var finti = ['██████ ████', '████████ ██████', '█████ ███████', '███████ ████', '██████ █████'];
@@ -2005,6 +2005,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
         if (!f.ok.checked || me.prova) return;
         await sociLog('accettazione', 'Accettata la dichiarazione di responsabilità sui dati dei soci');
         P.soci.ok = true; await caricaSoci(); await sociLog('apertura', 'Aperto il libro soci'); render();
+      } else if (a === 'copiaCifrata') { await copiaCifrata(f);
       } else if (a === 'sociCerca') { P.soci.q = f.q.value.trim(); render();
       } else if (a === 'socioSave') { await socioSave(f);
       } else if (a === 'attSave') {
@@ -2185,11 +2186,44 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     }
     render();
   }
+  function puoCopiaCifrata() { return me && !me.prova && (me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente'); }
+  function copiaCifrataBox() {
+    if (!puoCopiaCifrata()) return '';
+    return '<section class="box k-soci"><h2>Copia completa cifrata</h2><p>Tutto il gestionale <b>con i dati personali</b> (libro soci, registro dei dati personali, richieste dal sito, liste dei partecipanti) in un file zip protetto da password (cifratura AES a 256 bit). La password la scegli tu adesso e non viene salvata da nessuna parte: deve conoscerla solo la Presidenza. Se si perde, la copia non si apre più.</p>' +
+      '<form class="sform" data-act="copiaCifrata"><label>Password della copia<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label>' +
+      (P.soci.ok ? '' : '<label class="wide" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" name="ok" required style="width:24px;height:24px;flex:none"> ' + SOCI_DICH + '</label>') +
+      '<div class="wide"><button class="btn" type="submit">Prepara e scarica la copia cifrata</button></div></form><p class="sub">Per aprirla serve un programma che legge gli zip con cifratura AES, per esempio 7-Zip su Windows o Keka su Mac. Lo scaricamento resta nel registro dei dati personali.</p></section>';
+  }
+  function caricaZip() {
+    if (window.zip) return Promise.resolve();
+    return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.62/dist/zip-full.min.js'; s.onload = ok; s.onerror = function () { ko(new Error('libreria zip non raggiungibile')); }; document.head.appendChild(s); });
+  }
+  async function copiaCifrata(f) {
+    if (!puoCopiaCifrata()) return;
+    if (f.p.value !== f.p2.value) { toast('Le due password non coincidono.'); return; }
+    if (f.ok && !f.ok.checked) return;
+    toast('Preparo la copia cifrata…');
+    if (!P.soci.ok) { await sociLog('accettazione', 'Accettata la dichiarazione di responsabilità per la copia cifrata'); P.soci.ok = true; }
+    await caricaZip(); await load(); await caricaSoci();
+    var quando = new Date().toISOString(), dati = { creata_il: quando, creata_da: me.nome, progetto: 'inzenga-gestionale' };
+    TABLES.forEach(function (t) { dati[t] = D[t]; });
+    var w = new zip.ZipWriter(new zip.BlobWriter('application/zip'), { password: f.p.value, encryptionStrength: 3, useWebWorkers: false });
+    await w.add('gestionale.json', new zip.TextReader(JSON.stringify(dati, null, 2)));
+    await w.add('libro-soci.json', new zip.TextReader(JSON.stringify(D.soci, null, 2)));
+    await w.add('registro-dati-personali.json', new zip.TextReader(JSON.stringify(D.soci_log, null, 2)));
+    await w.add('LEGGIMI.txt', new zip.TextReader('Copia completa del gestionale del Consiglio Direttivo, Associazione Micologica Bresadola APS, Gruppo di Palermo «G. Inzenga».\r\nCreata il ' + fT.format(new Date(quando)) + ' da ' + me.nome + '.\r\nContiene dati personali dei soci e delle persone che hanno scritto dal sito: trattali secondo il GDPR, non inoltrarla, conservala in un posto protetto.\r\n'));
+    var blob = await w.close();
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gestionale-inzenga-cifrata-' + quando.slice(0, 10) + '.zip'; document.body.appendChild(a); a.click(); a.remove();
+    f.reset(); await sociLog('scaricamento', 'Scaricata la copia completa cifrata del gestionale (' + D.soci.length + ' soci)'); await log('Ha scaricato la copia completa cifrata', '');
+    toast('Copia cifrata scaricata.'); render();
+  }
   async function backup() {
     try {
       await load();
       var data = { creata_il: new Date().toISOString(), creata_da: me.nome, progetto: 'inzenga-gestionale' };
-      TABLES.forEach(function (t) { data[t] = D[t]; });
+      var PERS = ['sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
+      TABLES.forEach(function (t) { if (PERS.indexOf(t) >= 0) return; data[t] = t === 'attivita_liste' ? D[t].filter(function (x) { return x.tipo !== 'partecipanti' && x.tipo !== 'camere'; }) : D[t]; });
+      data.nota = 'Copia senza dati personali: richieste dal sito, liste dei partecipanti e libro soci sono solo nella copia cifrata.';
       var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gestionale-inzenga-copia-' + new Date().toISOString().slice(0, 10) + '.json';
       document.body.appendChild(a); a.click(); a.remove();
