@@ -420,6 +420,16 @@ body.lite nav.tabs, body.lite #search { display: none; }
   .quadro-box .qd.k-dec { grid-area: p; } .quadro-box .qd.k-att { grid-area: a; } .quadro-box .qd.k-sito { grid-area: s; }
 }
 .stats.s6 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.doc-azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+a.doclink .pill { font-size: 13px; padding: 0 8px; }
+@media print {
+  .top, nav.tabs, #search, .bar2, .bnav, .fab, .sheet, .sheet-bg, footer, .back, .doc-azioni, .lite-bar, .doc-indice, #toast, .note, .box.k-altri { display: none !important; }
+  body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+  #app, main { display: block !important; max-width: none !important; }
+  article.foglio { box-shadow: none !important; border: 0 !important; padding: 0 !important; }
+  .fs { break-inside: auto; } .fs h2 { break-after: avoid; } table { break-inside: avoid; }
+  a { color: #000; text-decoration: none; }
+}
 .btn.sm { min-height: 38px; padding: 4px 14px; font-size: calc(15px * var(--z)); }
 .btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -735,9 +745,10 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var h = vers.length ? '<details><summary>Versioni precedenti (' + vers.length + ')</summary><ul>' + vers.map(function (o) {
       return '<li>Versione ' + o.versione + ', del ' + fT.format(new Date(o.data)) + ', caricata da ' + esc(o.caricato_da) + (o.file_path ? ' · <a href="#" data-act="dl" data-path="' + esc(o.file_path) + '">scarica</a>' : '') + '</li>'; }).join('') + '</ul></details>' : '';
     var acts = docTag(d);
-    if (d.contenuto) acts += '<a class="btn alt" href="' + docHref(d) + '">Apri</a>';
+    acts += '<a class="btn alt" href="' + docHref(d) + '">Apri</a>';
     if (d.file_path) acts += '<button class="btn alt" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica</button>';
-    if (!d.contenuto && !d.file_path) acts += '<span class="dc">File da caricare</span>';
+    if (d.riservato) acts += '<span class="pill plain">Dati personali</span>';
+    if (!d.contenuto && !d.file_path && !d.riservato) acts += '<span class="dc">Testo o file da caricare</span>';
     var date = d.data_doc ? fD.format(dt(d.data_doc)) : '';
     return '<div class="file"><div><b>' + esc(d.titolo) + '</b><div class="sub">' + esc(d.categoria) + (date ? ' · documento del ' + date : '') + '<br>Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + ' · ' + esc(d.caricato_da) + (d.sottotitolo ? '<br>' + esc(d.sottotitolo) : '') + '</div></div>' +
       '<div class="acts">' + acts + '</div>' + h + '</div>';
@@ -762,19 +773,35 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (b.t === 'table') return '<div class="tablew"><table><thead><tr>' + b.v[0].map(function (x) { return '<th>' + fmx(x) + '</th>'; }).join('') + '</tr></thead><tbody>' + b.v[1].map(function (r) { return '<tr>' + r.map(function (x) { return '<td>' + fmx(x) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
     return '';
   }
+  D.docRis = {};
+  async function caricaRiservato(d) {
+    var r = await sb.from('documenti_testo_riservato').select('contenuto').eq('documento_id', d.id).maybeSingle();
+    D.docRis[d.id] = r.error ? { errore: r.error.message } : (r.data ? r.data.contenuto : { secs: [] });
+    if (!r.error && me && !me.prova) { try { await log('Ha aperto il documento con dati personali', d.titolo); } catch (e) {} }
+    if (route().a === 'doc') render();
+  }
   function docPage(d) {
     if (!d) return head('Documento non trovato', '<a href="#archivio">Torna all’archivio</a>');
-    var c = d.contenuto || { secs: [] };
+    var c = d.contenuto || { secs: [] }, avviso = '';
+    if (d.riservato) {
+      if (nascosti()) { c = { secs: [] }; avviso = '<section class="box k-altri"><h2>Documento con dati personali</h2><p>Contiene nomi, date di nascita o codici fiscali. Con l’accesso rapido non si vede: entra con la tua password personale.</p><div><button class="btn" type="button" data-act="conPassword">Entra con la password personale</button></div></section>'; }
+      else if (!D.docRis[d.id]) { D.docRis[d.id] = { carico: true }; caricaRiservato(d); c = { secs: [] }; avviso = '<p class="sub">Carico il testo…</p>'; }
+      else if (D.docRis[d.id].carico) { c = { secs: [] }; avviso = '<p class="sub">Carico il testo…</p>'; }
+      else if (D.docRis[d.id].errore) { c = { secs: [] }; avviso = '<p class="note">Il testo non si è caricato: ' + esc(D.docRis[d.id].errore) + '</p>'; }
+      else { c = D.docRis[d.id]; avviso = '<p class="note">Documento con dati personali: lo vedono solo gli accessi con password personale, e ogni apertura resta nel registro.</p>'; }
+    }
+    var vuoto = !d.riservato && !d.contenuto && !d.file_path;
     var kick = d.stato === 'bozza' ? 'Bozza · da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [d.stato])[0];
     var ufficiale = d.stato === 'ufficiale' || d.stato === 'approvato';
-    return '<a class="back" href="#archivio">← Archivio</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto && !d.sottotitolo ? 'Fonte: piano di lavoro su Notion.' : '') + '</p>' + (c.intro ? '<p class="doc-intro">' + fmx(c.intro) + '</p>' : '') + (c.secs && c.secs.length > 4 ? '<nav class="doc-indice" aria-label="Indice"><b>Indice</b> ' + c.secs.map(function (s, i) { return '<a href="#" data-act="docSez" data-i="' + i + '">' + esc(s.h) + '</a>'; }).join(' · ') + '</nav>' : '') + '</div>' +
+    return '<a class="back" href="#archivio" data-act="indietro">← Indietro</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto && !d.sottotitolo ? 'Fonte: piano di lavoro su Notion.' : '') + '</p>' + (c.intro ? '<p class="doc-intro">' + fmx(c.intro) + '</p>' : '') + (c.secs && c.secs.length > 4 ? '<nav class="doc-indice" aria-label="Indice"><b>Indice</b> ' + c.secs.map(function (s, i) { return '<a href="#" data-act="docSez" data-i="' + i + '">' + esc(s.h) + '</a>'; }).join(' · ') + '</nav>' : '') + '</div>' +
+      avviso + (vuoto ? '<section class="box"><h2>Testo non ancora nel gestionale</h2><p>Di questo documento c’è solo la scheda. Carica il file (per esempio la scansione firmata) con lo stesso titolo: diventa la nuova versione.</p>' + upForm(d.area, [d.categoria], true).replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</section>' : '') +
       (c.secs || []).map(function (s) {
         return '<section class="fs" id="sez' + (c.secs.indexOf(s)) + '"><h2>' + esc(s.h) + '</h2>' + (s.nota ? '<p class="sub">' + esc(s.nota) + '</p>' : '') + (s.p ? '<p>' + fm(s.p) + '</p>' : '') + (s.b ? s.b.map(blocco).join('') : '') +
           (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ul>' : '') +
           (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ol>' : '') +
           (s.table ? tableH(s.table[0], s.table[1]) : '') +
           (s.comunicazioni ? tableH(HEAD4, comsRows(s.comunicazioni)) : '') + '</section>'; }).join('') +
-      (d.file_path ? '<div><button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button></div>' : '') + '</article>';
+      '<div class="doc-azioni">' + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o salva in PDF</button>' : '') + '</div></article>';
   }
 
   /* ---------- pagine ---------- */
@@ -920,9 +947,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   }
   function docLink(slug) {
     var dd = docBySlug(slug); if (!dd) return '';
-    if (dd.file_path) return '<button type="button" class="doclink" data-act="dl" data-path="' + esc(dd.file_path) + '">📄 ' + esc(dd.titolo) + ' <span class="sub">· scarica</span></button>';
-    if (dd.contenuto) return '<a class="doclink" href="' + docHref(dd) + '">📄 ' + esc(dd.titolo) + ' <span class="sub">· apri</span></a>';
-    return '<a class="doclink off" href="#nuovo/documento">📄 ' + esc(dd.titolo) + ' <span class="dc">' + (dd.stato === 'da_firmare' ? 'Da firmare: carica il file firmato' : 'File da caricare') + '</span></a>';
+    return '<a class="doclink" href="' + docHref(dd) + '">📄 ' + esc(dd.titolo) + ' ' + docTag(dd) + (dd.riservato ? ' <span class="sub">· dati personali</span>' : '') + ' <span class="sub">· apri</span></a>';
   }
   function passoRow(x) {
     var d = x.scadenza && dt(x.scadenza);
@@ -2233,6 +2258,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'conPassword') { var back = location.hash; await esci(me.carica); try { sessionStorage.setItem('inz-dopo', back); } catch (e) {} }
     else if (a === 'liteOff') { document.getElementById('liteBtn').click(); }
     else if (a === 'liteEsci') { document.getElementById('logout').click(); }
+    else if (a === 'stampa') { window.print(); }
+    else if (a === 'indietro') { e.preventDefault(); if (history.length > 1) history.back(); else location.hash = '#archivio'; }
     else if (a === 'sociCsv') { csvSoci(); }
     else if (a === 'socioDel') { await socioDel(+b.getAttribute('data-id')); }
     else if (a === 'rendY') { P.soldi.ry = b.getAttribute('data-v'); render(); }
