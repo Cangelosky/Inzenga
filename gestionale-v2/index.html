@@ -420,6 +420,8 @@ body.lite nav.tabs, body.lite #search { display: none; }
   .quadro-box .qd.k-dec { grid-area: p; } .quadro-box .qd.k-att { grid-area: a; } .quadro-box .qd.k-sito { grid-area: s; }
 }
 .stats.s6 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+iframe.pdfprev { width: 100%; height: 75vh; border: 1px solid var(--line); border-radius: 10px; margin-top: 14px; background: #fff; }
+.doc-agg { margin-top: 16px; }
 .doc-azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 a.doclink .pill { font-size: 13px; padding: 0 8px; }
 @media print {
@@ -715,7 +717,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function comsRows(k) { return D.comunicazioni.filter(function (c) { return c.attivita === k; }).map(function (c) { return [c.quando, c.chi, c.a_chi, c.contenuto]; }); }
   var STATO_DOC = { bozza: ['BOZZA', 'bozza'], da_confermare: ['Da confermare', 'warn'], approvato: ['Approvato', ''], da_firmare: ['Da firmare', 'warn'], ufficiale: ['Ufficiale', ''] };
   function docTag(d) { var s = STATO_DOC[d.stato] || [d.stato, 'plain']; return '<span class="pill ' + s[1] + '">' + esc(s[0]) + '</span>'; }
-  function docBySlug(s) { return D.documenti.filter(function (d) { return d.slug === s; })[0]; }
+  function docBySlug(s) { if (/^id:\d+$/.test(s || '')) { var n = +s.slice(3); return D.documenti.filter(function (d) { return d.id === n; })[0]; } return D.documenti.filter(function (d) { return d.slug === s; })[0]; }
+  function docKey(d) { return d.slug || ('id:' + d.id); }
   function docHref(d) { return '#doc/' + (d.slug || d.id); }
   function carica(id) { return D.cariche.filter(function (c) { return c.id === id; })[0]; }
   function myName() { var c = me.carica && carica(me.carica); return c ? c.nome : me.nome; }
@@ -801,6 +804,9 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
           (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ol>' : '') +
           (s.table ? tableH(s.table[0], s.table[1]) : '') +
           (s.comunicazioni ? tableH(HEAD4, comsRows(s.comunicazioni)) : '') + '</section>'; }).join('') +
+      (!vuoto && !(d.riservato && nascosti()) ? '<details class="ed doc-agg"><summary>Aggiorna il documento: stato o file firmato</summary><form class="sform" data-act="docStato" data-id="' + d.id + '"><label>Stato<select name="stato">' + Object.keys(STATO_DOC).map(function (k) { return '<option value="' + k + '"' + (k === d.stato ? ' selected' : '') + '>' + esc(STATO_DOC[k][0]) + '</option>'; }).join('') + '</select></label><label class="wide">Nota sotto il titolo<input name="sottotitolo" maxlength="300" value="' + esc(d.sottotitolo || '') + '"></label><div class="wide"><button class="btn" type="submit">Salva lo stato</button></div></form>' +
+        '<h3 style="margin-top:14px">Carica il file, per esempio la scansione firmata</h3>' + upForm(d.area, [d.categoria], true).replace('<form class="up" data-area="' + d.area + '">', '<form class="up" data-area="' + d.area + '"><input type="hidden" name="docid" value="' + d.id + '">').replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</details>' : '') +
+      (d.file_path && /\.pdf$/i.test(d.file_path) && !(d.riservato && nascosti()) ? '<iframe class="pdfprev" data-path="' + esc(d.file_path) + '" title="Anteprima del file"></iframe>' : '') +
       '<div class="doc-azioni">' + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o salva in PDF</button>' : '') + '</div></article>';
   }
 
@@ -812,10 +818,19 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function prSteps(pr) { var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === pr.id; }); return { ps: ps, done: ps.filter(function (x) { return x.stato === 'fatto'; }).length, next: ps.filter(function (x) { return x.stato === 'in_corso'; })[0] || ps.filter(function (x) { return x.stato === 'da_fare'; })[0] }; }
   function praticheAttive() { return D.pratiche.filter(function (p) { return !p.archiviato && p.stato !== 'chiusa'; }); }
   function richiestePerMe() { if (me.admin) return D.richieste.filter(function (r) { return r.stato === 'aperta' || r.stato === 'presa'; }); return D.richieste.filter(function (r) { return (r.stato === 'aperta' || r.stato === 'presa') && (low(r.a_chi) === low(myName()) || low(r.a_chi) === 'consiglio direttivo'); }); }
+  function mieRichieste() { return D.richieste.filter(function (r) { return r.user_id === me.id || low(r.da_chi).indexOf(low(myName())) === 0; }); }
+  function risposteNuove() { return mieRichieste().filter(function (r) { return (r.risposta || r.stato === 'fatta' || r.stato === 'rifiutata') && !r.vista_il; }); }
+  function miaRichiestaLi(r) {
+    var RQ = { aperta: ['Non ancora presa', 'plain'], presa: ['In lavorazione', 'warn'], fatta: ['Fatta', ''], rifiutata: ['Non si può', 'crit'] };
+    var ctx = r.attivita_id && att(r.attivita_id) ? '<a href="#attivita/' + r.attivita_id + '">' + esc(att(r.attivita_id).titolo) + '</a>' : r.pratica_id ? '<a href="#pratiche/p' + r.pratica_id + '">pratica</a>' : '';
+    return '<li class="rq"><div><b>' + esc(r.testo) + '</b><span class="sub">' + meta([['A', esc(r.a_chi)], ['Per', ctx], ['Aggiornata da', esc(r.aggiornata_da || '')]]) + (r.risposta ? '<br><b>Risposta:</b> ' + esc(r.risposta) : '') + '</span></div>' +
+      '<div class="chips"><span class="pill ' + RQ[r.stato][1] + '">' + RQ[r.stato][0] + '</span>' + (!r.vista_il && (r.risposta || r.stato === 'fatta' || r.stato === 'rifiutata') ? '<button class="btn alt" type="button" data-act="rqVisto" data-id="' + r.id + '">Ok, visto</button>' : '') + '</div></li>';
+  }
   function richiestaLi(r) {
     var ctx = r.attivita_id && att(r.attivita_id) ? '<a href="#attivita/' + r.attivita_id + '">' + esc(att(r.attivita_id).titolo) + '</a>' : r.pratica_id ? '<a href="#pratiche/p' + r.pratica_id + '">pratica</a>' : '';
     return '<li class="rq"><div><b>' + esc(r.testo) + '</b><span class="sub">' + meta([['Chiesto da', esc(r.da_chi)], ['A', esc(r.a_chi)], ['Entro', r.scadenza ? fD.format(dt(r.scadenza)) : ''], ['Per', ctx]]) + (r.risposta ? '<br>Risposta: ' + esc(r.risposta) : '') + '</span></div>' +
-      '<div class="chips">' + (r.stato === 'aperta' ? '<button class="btn alt" type="button" data-act="rqStato" data-v="presa" data-id="' + r.id + '">La prendo io</button>' : '<span class="pill warn">Presa in carico</span>') + '<button class="btn" type="button" data-act="rqStato" data-v="fatta" data-id="' + r.id + '">Fatta</button></div></li>';
+      '<div class="chips">' + (r.stato === 'aperta' ? '<button class="btn alt" type="button" data-act="rqStato" data-v="presa" data-id="' + r.id + '">La prendo io</button>' : '<span class="pill warn">Presa in carico</span>') + '<button class="btn" type="button" data-act="rqStato" data-v="fatta" data-id="' + r.id + '">Fatta</button></div>' +
+      '<details class="ed"><summary>Rispondi a ' + esc(r.da_chi) + '</summary><form class="sform" data-act="rqRisp" data-id="' + r.id + '"><label class="wide">Risposta<textarea name="risposta" maxlength="2000" required placeholder="Es. Fatto: i preventivi sono nella scheda dell’attività.">' + esc(r.risposta || '') + '</textarea></label><label>Esito<select name="stato"><option value="fatta">Fatta</option><option value="presa">Ci sto lavorando</option><option value="rifiutata">Non si può fare</option></select></label><div class="wide"><button class="btn" type="submit">Invia la risposta</button></div></form></details></li>';
   }
 
   function isMobile() { return window.matchMedia('(max-width: 700px)').matches; }
@@ -835,7 +850,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       return '<li><div><b><a href="#attivita/' + x.attivita_id + '/checklist">' + esc(short(x.testo, 110)) + '</a></b><span class="sub">' + meta([['Attività', esc(a ? a.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; };
     o.passoLi = function (x) { var pr = D.pratiche.filter(function (p) { return p.id === x.pratica_id; })[0]; var d = x.scadenza && dt(x.scadenza);
       return '<li><div><b><a href="#pratiche/p' + x.pratica_id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Pratica', esc(pr ? pr.titolo : '')], ['Entro', d ? fD.format(d) : 'senza data']]) + '</span></div><span class="pill ' + PASSO[x.stato][1] + '">' + PASSO[x.stato][0] + '</span></li>'; };
-    o.tutte = o.rq.map(richiestaLi).concat(o.myCl.map(o.clLi), o.passi.map(o.passoLi), o.scadMie.map(function (x) { return scadItem(x); }));
+    o.risp = risposteNuove();
+    o.tutte = o.risp.map(miaRichiestaLi).concat(o.rq.map(richiestaLi)).concat(o.myCl.map(o.clLi), o.passi.map(o.passoLi), o.scadMie.map(function (x) { return scadItem(x); }));
     return o;
   }
   function caricaCard(mine) {
@@ -852,6 +868,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var o = oggiDati();
     if (sub === 'cose') {
       return '<a class="back" href="#oggi">← Oggi</a>' + head('Cose da fare', 'Tutto quello che tocca a te: le richieste degli altri membri, i passi delle attività e delle pratiche, le tue scadenze.') +
+        '<section class="box k-altri"><header><h2>Richieste che hai fatto tu</h2><span class="og-n' + (o.risp.length ? '' : ' zero') + '">' + o.risp.length + '</span></header>' + (mieRichieste().length ? '<ul class="list">' + mieRichieste().sort(function (x, y) { return new Date(y.creata_il) - new Date(x.creata_il); }).slice(0, 12).map(miaRichiestaLi).join('') + '</ul>' : '<p class="sub">Non hai fatto richieste. Le fai dalla scheda di un’attività o di una pratica.</p>') + '</section>' +
         '<section class="box k-att"><header><h2>Richieste che ti hanno fatto</h2><span class="og-n' + (o.rq.length ? '' : ' zero') + '">' + o.rq.length + '</span></header>' + (o.rq.length ? '<ul class="list">' + o.rq.map(richiestaLi).join('') + '</ul>' : '<p class="sub">Nessuna richiesta aperta.</p>') + '</section>' +
         '<section class="box k-att"><header><h2>Nelle attività</h2><span class="og-n' + (o.myCl.length ? '' : ' zero') + '">' + o.myCl.length + '</span></header>' + (o.myCl.length ? '<ul class="list">' + o.myCl.map(o.clLi).join('') + '</ul>' : '<p class="sub">Nessun passo di checklist assegnato a te.</p>') + '</section>' +
         '<section class="box k-dec"><header><h2>Nelle pratiche</h2><span class="og-n' + (o.passi.length ? '' : ' zero') + '">' + o.passi.length + '</span></header>' + (o.passi.length ? '<ul class="list">' + o.passi.map(o.passoLi).join('') + '</ul>' : '<p class="sub">Nessun passo di pratica assegnato a te.</p>') + '</section>' +
@@ -956,7 +973,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<span class="sub">' + meta([['Chi', esc(x.responsabile || 'da assegnare')], ['Entro', d ? fD.format(d) + ' (' + when(d) + ')' : ''], ['Aggiornato da', esc(x.aggiornato_da || '')]]) + '</span>' +
       (x.descrizione ? '<p style="margin-top:4px">' + esc(x.descrizione) + '</p>' : '') +
       (x.documenti_slug.length ? '<div class="docs">' + x.documenti_slug.map(docLink).join('') + '</div>' : '') +
-      '<details class="ed"><summary>Modifica il passo</summary><form class="sform" data-act="passoEdit" data-id="' + x.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300" value="' + esc(x.titolo) + '"></label><label class="wide">Spiegazione<textarea name="descrizione" maxlength="1500">' + esc(x.descrizione || '') + '</textarea></label><label>Chi<select name="responsabile">' + respOpts(x.responsabile || 'Da assegnare') + (RESP_SEL.indexOf(x.responsabile) < 0 && x.responsabile ? '<option selected>' + esc(x.responsabile) + '</option>' : '') + '</select></label><label>Entro il<input name="scadenza" type="date" value="' + esc(x.scadenza || '') + '"></label><label>Ordine<input name="ordine" type="number" min="1" max="999" value="' + x.ordine + '"></label><div class="wide"><button class="btn" type="submit">Salva</button></div></form>' + azioni('pratica_passi', x, x.titolo) + '</details>' +
+      '<details class="ed"><summary>Modifica il passo</summary><form class="sform" data-act="passoEdit" data-id="' + x.id + '"><label class="wide">Cosa fare<input name="titolo" required maxlength="300" value="' + esc(x.titolo) + '"></label><label class="wide">Spiegazione<textarea name="descrizione" maxlength="1500">' + esc(x.descrizione || '') + '</textarea></label><label>Chi<select name="responsabile">' + respOpts(x.responsabile || 'Da assegnare') + (RESP_SEL.indexOf(x.responsabile) < 0 && x.responsabile ? '<option selected>' + esc(x.responsabile) + '</option>' : '') + '</select></label><label>Entro il<input name="scadenza" type="date" value="' + esc(x.scadenza || '') + '"></label><label>Ordine<input name="ordine" type="number" min="1" max="999" value="' + x.ordine + '"></label><label class="wide">Documenti collegati <span class="sub">(tieni premuto Ctrl o Cmd per sceglierne più di uno)</span><select name="docs" multiple size="6">' + D.documenti.filter(function (d) { return !d.archiviato; }).sort(function (a, b) { return a.titolo.localeCompare(b.titolo); }).map(function (d) { var k = docKey(d); return '<option value="' + esc(k) + '"' + (x.documenti_slug.indexOf(k) >= 0 ? ' selected' : '') + '>' + esc(d.titolo) + '</option>'; }).join('') + '</select></label><div class="wide"><button class="btn" type="submit">Salva</button></div></form>' + azioni('pratica_passi', x, x.titolo) + '</details>' +
       '</div></div>';
   }
   function praticaPage(id) {
@@ -2005,8 +2022,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     return '<section class="box k-soci"><header><h2>Richieste per diventare socio</h2><span class="sub">Dal modulo «Diventa socio» del sito</span></header>' + (rs.length ? rs.map(function (r) {
       return '<article class="msg"><header><div><b>' + esc(r.nome) + ' ' + esc(r.cognome) + '</b> · ' + esc(r.comune) + '<br><a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' + (r.telefono ? ' · <a href="tel:' + esc(r.telefono.replace(/[^\d+]/g, '')) + '">' + esc(r.telefono) + '</a>' : '') + '<br><span class="sub">' + fT.format(new Date(r.creato_il)) + (r.come ? ' · ci ha conosciuto: ' + esc(r.come) : '') + '</span></div><span class="pill ' + SOC_ST[r.stato][1] + '">' + SOC_ST[r.stato][0] + '</span></header>' +
         (r.motivi.length ? '<p class="sub"><b>Perché:</b> ' + r.motivi.map(esc).join(', ') + '</p>' : '') + (r.interessi.length ? '<p class="sub"><b>Interessi:</b> ' + r.interessi.map(esc).join(', ') + '</p>' : '') + (r.livello ? '<p class="sub"><b>Esperienza:</b> ' + esc(r.livello) + '</p>' : '') + (r.messaggio ? '<p class="quote">' + esc(r.messaggio) + '</p>' : '') +
-        '<form class="up" data-act="socSave" data-id="' + r.id + '"><label>Stato' + sel('stato', Object.keys(SOC_ST).map(function (k) { return [k, SOC_ST[k][0]]; }), r.stato) + '</label><label>Nota del CD<input name="note_cd" maxlength="2000" value="' + esc(r.note_cd || '') + '" placeholder="Es. Invitato alla serata del 20/11"></label><button class="btn" type="submit">Salva</button>' + delBtn('sito_richieste_socio', r.id) + '</form></article>'; }).join('') : '<p class="sub">Nessuna richiesta arrivata dal sito.</p>') +
-      '<p class="sub">Quando una persona diventa socio, i suoi dati passano al libro soci, che resta fuori dal gestionale; la richiesta qui si può poi cancellare.</p></section>';
+        (r.stato !== 'socio' ? '<div class="chips" style="margin-bottom:8px"><button class="btn" type="button" data-act="socNelLibro" data-id="' + r.id + '">Aggiungi al libro soci</button></div>' : '') + '<form class="up" data-act="socSave" data-id="' + r.id + '"><label>Stato' + sel('stato', Object.keys(SOC_ST).map(function (k) { return [k, SOC_ST[k][0]]; }), r.stato) + '</label><label>Nota del CD<input name="note_cd" maxlength="2000" value="' + esc(r.note_cd || '') + '" placeholder="Es. Invitato alla serata del 20/11"></label><button class="btn" type="submit">Salva</button>' + delBtn('sito_richieste_socio', r.id) + '</form></article>'; }).join('') : '<p class="sub">Nessuna richiesta arrivata dal sito.</p>') +
+      '<p class="sub">Quando la persona si iscrive, «Aggiungi al libro soci» crea la sua scheda con nome e contatti e segna la richiesta come «È diventato socio». Poi si completano codice fiscale, indirizzo e quota nel Libro soci.</p></section>';
   }
 
   /* ---------- aggiungere: un solo punto d'ingresso ---------- */
@@ -2025,7 +2042,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   P.nuovo = function (sub0) {
     var parts = String(sub0 || '').split('/'), sub = parts[0], dataPre = /^\d{4}-\d{2}-\d{2}$/.test(parts[1] || '') ? parts[1] : '';
     var back = '<a class="back" href="#nuovo">← Cosa vuoi aggiungere</a>';
-    if (sub === 'giorno') return '<a class="back" href="#calendario/' + dataPre.slice(0, 7) + '">← Calendario</a>' + head('Cosa aggiungi il ' + (dataPre ? fL.format(dt(dataPre)) : 'giorno scelto') + '?', 'Scegli: la data è già inserita.') +
+    if (sub === 'giorno') return '<a class="back" href="#calendario/' + dataPre.slice(0, 7) + '">← Calendario</a>' + head('Cosa aggiungi per ' + (dataPre ? fL.format(dt(dataPre)) : 'il giorno scelto') + '?', 'Scegli: la data è già inserita.') +
       '<div class="who-grid">' + [['scadenza', 'Una scadenza', 'Qualcosa da fare entro quel giorno.', 'k-scad'], ['attivita', 'Un’attività o un evento', 'Una gita, una cena, un corso, una mostra: con la sua scheda.', 'k-att'], ['appuntamento', 'Un appuntamento sul sito', 'Compare nel calendario pubblico del sito.', 'k-sito']].map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '/' + dataPre + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
     if (sub === 'appuntamento') return '<a class="back" href="#calendario">← Calendario</a>' + head('Nuovo appuntamento sul sito', 'Compare nel calendario pubblico del sito appena salvi.') + '<section class="box k-sito">' + calForm({ id: 'new', anno: +(dataPre || iso(base)).slice(0, 4), mese: +(dataPre || iso(base)).slice(5, 7) - 1, data: dataPre || null, pubblicato: true, categoria: 'conv', titolo: '' }, null).replace('data-id="new"', 'data-id="new"') + '</section>';
     var myR = me.carica ? myName() : 'Da assegnare';
@@ -2137,6 +2154,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       else html = P.oggi();
     } catch (ex) { console.error(ex); html = head('Qualcosa non va', 'Questa pagina non si è caricata. Torna a <a href="#oggi">Oggi</a>.'); }
     var lite = isLite(); document.body.classList.toggle('lite', lite); document.getElementById('liteBtn').setAttribute('aria-pressed', String(lite)); document.getElementById('liteBtn').textContent = lite ? 'Versione completa' : 'Versione semplice';
+    setTimeout(function () { mainEl.querySelectorAll('iframe.pdfprev[data-path]').forEach(async function (fr) { var r = await sb.storage.from('archivio').createSignedUrl(fr.getAttribute('data-path'), 600); if (!r.error) fr.src = r.data.signedUrl; else fr.remove(); }); }, 0);
     mainEl.innerHTML = (lite ? '<div class="lite-bar">' + (r.a !== 'facile' ? '<a class="lite-home" href="#facile">← Cosa vuoi fare?</a>' : '') + '<button class="btn alt" type="button" data-act="liteOff">Versione completa</button>' + (r.a === 'facile' ? '<button class="btn alt" type="button" data-act="liteEsci">Esci</button>' : '') + '</div>' : '') + html;
     var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' || r.a === 'nuovo' ? '' : r.a;
     document.getElementById('addBtn').setAttribute('aria-current', r.a === 'nuovo' ? 'page' : 'false');
@@ -2220,6 +2238,13 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       if (x) { render(); var el = document.getElementById('dec' + id); if (el) el.focus(); }
     } else if (a === 'scad') {
       var s = await upd('scadenze', id, { fatta: t.checked });
+      if (s && s.fatta && s.annuale && s.data) {
+        var nd = new Date(dt(s.data)); nd.setFullYear(nd.getFullYear() + 1); var ns = iso(nd);
+        if (!D.scadenze.some(function (z) { return low(z.titolo) === low(s.titolo) && z.data === ns; })) {
+          var ins = await sb.from('scadenze').insert({ titolo: s.titolo, data: ns, responsabile: s.responsabile, categoria: s.categoria, note: s.note, annuale: true, urgente: false, etichetta: s.etichetta, pratica_id: null }).select().single();
+          if (!ins.error) { D.scadenze.push(ins.data); toast('Fatta. Ho già messo in calendario quella del ' + nd.getFullYear() + '.'); render(); return; }
+        }
+      }
       if (s) { toast(s.fatta ? 'Segnata come fatta.' : 'Scadenza riaperta.'); render(); }
     } else if (a === 'passo') {
       var p = await upd('pratica_passi', id, { stato: t.value, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
@@ -2252,6 +2277,15 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'prStato') { var pp = await upd('pratiche', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v') }); if (pp) { toast(pp.stato === 'chiusa' ? 'Pratica chiusa.' : 'Pratica riaperta.'); render(); } }
     else if (a === 'archivia') { var tb2 = b.getAttribute('data-t'), on = b.getAttribute('data-v') === '1'; var ar = await upd(tb2, +b.getAttribute('data-id'), { archiviato: on }); if (ar) { toast(on ? 'Archiviato: lo ritrovi in «Archiviate».' : 'Ripristinato.'); render(); } }
     else if (a === 'elimina') { await elimina(b.getAttribute('data-t'), +b.getAttribute('data-id'), b.getAttribute('data-l')); }
+    else if (a === 'socNelLibro') {
+      var rs0 = D.sito_richieste_socio.filter(function (x) { return x.id === +b.getAttribute('data-id'); })[0]; if (!rs0 || nascosti()) return;
+      if (!confirm('Aggiungere ' + rs0.nome + ' ' + rs0.cognome + ' al libro soci, con iscrizione da oggi?')) return;
+      var nso = await sb.from('soci').insert({ cognome: rs0.cognome, nome: rs0.nome, email: rs0.email || null, telefono: rs0.telefono || null, comune: rs0.comune || null, data_iscrizione: iso(base), stato: 'attivo', consenso_privacy: null, note: 'Iscritto dalla richiesta del sito del ' + fD.format(new Date(rs0.creato_il)) + ': completare codice fiscale, nascita, indirizzo e quota.', aggiornato_da: me.nome }).select().single();
+      if (nso.error) { toast('Non aggiunto: ' + nso.error.message); return; }
+      await upd('sito_richieste_socio', rs0.id, { stato: 'socio', aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+      if (D.soci) D.soci.push(nso.data); toast('Aggiunto al libro soci. Completa la scheda.'); location.hash = '#soci/s' + nso.data.id;
+    }
+    else if (a === 'rqVisto') { var rv = await upd('richieste', +b.getAttribute('data-id'), { vista_il: new Date().toISOString() }); if (rv) render(); }
     else if (a === 'rqStato') { var rr = await upd('richieste', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v'), aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (rr) { toast(rr.stato === 'fatta' ? 'Richiesta segnata come fatta.' : 'Hai preso in carico la richiesta.'); render(); } }
     else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
     else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
@@ -2291,6 +2325,13 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         if (!f.ok.checked || me.prova) return;
         await sociLog('accettazione', 'Accettata la dichiarazione di responsabilità sui dati dei soci');
         P.soci.ok = true; await caricaSoci(); await sociLog('apertura', 'Aperto il libro soci'); render();
+      } else if (a === 'rqRisp') {
+        var rq2 = await upd('richieste', +f.getAttribute('data-id'), { risposta: f.risposta.value.trim(), stato: f.stato.value, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome, vista_il: null });
+        if (rq2) { toast('Risposta inviata: la vede chi ti ha fatto la richiesta.'); render(); }
+      } else if (a === 'rqVista') {
+      } else if (a === 'docStato') {
+        var ds = await upd('documenti', +f.getAttribute('data-id'), { stato: f.stato.value, sottotitolo: f.sottotitolo.value.trim() || null, aggiornato_il: new Date().toISOString(), caricato_da: me.nome });
+        if (ds) { toast('Stato del documento: ' + STATO_DOC[ds.stato][0] + '.'); render(); }
       } else if (a === 'copiaCifrata') { await copiaCifrata(f);
       } else if (a === 'sociCerca') { P.soci.q = f.q.value.trim(); render();
       } else if (a === 'socioSave') { await socioSave(f);
@@ -2360,7 +2401,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         var r2b = await upd('decisioni', +f.getAttribute('data-id'), { testo: f.testo.value.trim(), rif: f.rif.value.trim() || null });
         if (r2b) { toast('Decisione salvata.'); render(); }
       } else if (a === 'passoEdit') {
-        var r3b = await upd('pratica_passi', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null, responsabile: f.responsabile.value, scadenza: f.scadenza.value || null, ordine: +f.ordine.value || 1, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
+        var r3b = await upd('pratica_passi', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null, responsabile: f.responsabile.value, scadenza: f.scadenza.value || null, ordine: +f.ordine.value || 1, documenti_slug: Array.prototype.filter.call(f.docs.options, function (o) { return o.selected; }).map(function (o) { return o.value; }), aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
         if (r3b) { D.pratica_passi.sort(function (a1, b1) { return a1.ordine - b1.ordine; }); toast('Passo salvato.'); render(); }
       } else if (a === 'prEdit') {
         var r4b = await upd('pratiche', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null });
@@ -2450,11 +2491,12 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   async function uploadDoc(f) {
     var area = f.getAttribute('data-area'), title = f.t.value.trim(), file = f.f.files[0];
     if (!title || !file) return;
-    var path = area + '/' + Date.now() + '-' + slugify(file.name.replace(/\.[^.]+$/, '')) + (/\.[a-z0-9]+$/i.test(file.name) ? file.name.match(/\.[a-z0-9]+$/i)[0].toLowerCase() : '');
+    var target = f.docid ? D.documenti.filter(function (x) { return x.id === +f.docid.value; })[0] : null;
+    var path = (target && target.riservato ? 'riservati/' : '') + area + '/' + Date.now() + '-' + slugify(file.name.replace(/\.[^.]+$/, '')) + (/\.[a-z0-9]+$/i.test(file.name) ? file.name.match(/\.[a-z0-9]+$/i)[0].toLowerCase() : '');
     var up = await sb.storage.from('archivio').upload(path, file, { contentType: file.type || 'application/octet-stream', upsert: false });
     if (up.error) throw up.error;
     var attId = f.att ? +f.att.value : null, praId = f.pra ? +f.pra.value : null;
-    var ex = D.documenti.filter(function (x) { return x.area === area && low(x.titolo) === low(title) && (x.attivita_id || null) === attId && (x.pratica_id || null) === praId; })[0];
+    var ex = target || D.documenti.filter(function (x) { return x.area === area && low(x.titolo) === low(title) && (x.attivita_id || null) === attId && (x.pratica_id || null) === praId; })[0];
     if (ex && !ex.file_path) {
       var u0 = await upd('documenti', ex.id, { file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc });
       if (!u0) return;
