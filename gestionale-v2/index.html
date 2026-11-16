@@ -379,6 +379,17 @@ ul.cl-doc li::before { content: '☐ '; color: var(--ink-2); }
 ul.cl-doc li.ok::before { content: '☑ '; color: var(--forest); }
 .doc-intro { background: color-mix(in srgb, var(--line) 25%, var(--card)); border-left: 4px solid var(--line); padding: 10px 14px; border-radius: 8px; }
 .doc-indice { font-size: 15px; line-height: 1.8; } .doc-indice a { white-space: nowrap; }
+#liteBtn { font: inherit; }
+body.lite nav.tabs, body.lite #search { display: none; }
+.lite-home { display: inline-flex; align-items: center; min-height: 48px; padding: 8px 18px; border-radius: 999px; background: var(--forest); color: #fff; font-weight: 700; text-decoration: none; margin-bottom: 14px; font-size: 18px; }
+.facile { display: grid; gap: 16px; max-width: 960px; }
+.facile h1 { font-size: clamp(28px, 4vw, 40px); }
+.facile .passo { font-weight: 700; color: var(--ink-2); letter-spacing: .04em; }
+.scelte { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.scelta { display: grid; gap: 6px; padding: 22px; min-height: 120px; border: 2px solid var(--line); border-radius: 16px; background: var(--card); color: var(--ink); text-decoration: none; font-size: 18px; }
+.scelta b { font-size: 21px; } .scelta span { color: var(--ink-2); }
+.scelta .ico { font-size: 34px; color: inherit; }
+.scelta:hover, .scelta:focus-visible { border-color: var(--forest); box-shadow: 0 0 0 3px color-mix(in srgb, var(--forest) 25%, transparent); }
 .btn.sm { min-height: 38px; padding: 4px 14px; font-size: 15px; }
 .btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -436,7 +447,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   <div id="app" hidden>
     <header class="top">
       <div class="brand"><strong><a href="#oggi" style="color:inherit;text-decoration:none">Gestionale del Consiglio Direttivo</a></strong><span>Associazione Micologica Bresadola APS · Gruppo di Palermo «G. Inzenga» · <a href="../" style="color:inherit">torna al sito</a></span></div>
-      <div class="who"><a href="../" title="Torna alla Home del sito dell’associazione">← Sito</a><span>Sei entrato come</span><b id="whoName"></b><a href="#account" id="pwLink">Password</a><button type="button" id="logout">Esci</button></div>
+      <div class="who"><a href="../" title="Torna alla Home del sito dell’associazione">← Sito</a><span>Sei entrato come</span><b id="whoName"></b><a href="#account" id="pwLink">Password</a><button type="button" id="liteBtn" aria-pressed="false" title="Una schermata alla volta, con domande semplici">Versione semplice</button><button type="button" id="logout">Esci</button></div>
     </header>
     <div class="bar2">
       <nav class="tabs" id="tabs" aria-label="Aree del gestionale"></nav>
@@ -492,6 +503,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     await start(r.data.session);
     if (me) log('Ha effettuato l’accesso', '');
   });
+  document.getElementById('liteBtn').addEventListener('click', function () { var on = !isLite(); try { if (on) localStorage.setItem('inz-lite', '1'); else localStorage.removeItem('inz-lite'); } catch (e) {} location.hash = on ? '#facile' : '#oggi'; render(); });
   document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; P.soci.ok = false; P.soci.viste = {}; P.soci.q = ''; showLogin(); });
   function showLogin() { appEl.hidden = true; loginEl.hidden = false; document.getElementById('lgPass').focus(); }
 
@@ -924,6 +936,50 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<section class="box"><form data-act="pw" class="up"><label>Nuova password<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label><button class="btn" type="submit">Salva</button></form></section>';
   };
 
+  /* ---------- versione semplice: «Cosa vuoi fare?» ---------- */
+  var FACILE = [
+    ['vedere', '📋', 'Vedere cosa c’è da fare', 'Le tue cose da fare, le scadenze, il calendario.', [
+      ['#oggi', 'Le mie cose da fare', 'Quello che tocca a te, con le richieste degli altri membri.'],
+      ['#calendario', 'Il calendario', 'Tutto il mese: attività, scadenze, appuntamenti del sito.'],
+      ['#pratiche/scadenze', 'Le scadenze', 'Le cose da fare entro una data, dalla più vicina.'],
+      ['#attivita/chi', 'Cosa stanno facendo gli altri', 'Per ogni carica: cosa sta facendo e cosa deve fare.']]],
+    ['attivita', '🍄', 'Organizzare un’attività', 'Una gita, una mostra, un corso, una cena.', [
+      ['#nuovo/attivita', 'Crearne una nuova', 'Rispondi a poche domande: la scheda e la checklist si preparano da sole.'],
+      ['#attivita', 'Aprirne una già in corso', 'Scegli l’attività e aggiorna la checklist, le liste, i documenti.'],
+      ['#attivita/corsi', 'Gestire le iscrizioni ai corsi', 'Le preiscrizioni arrivate dal sito, da contattare.']]],
+    ['documenti', '📄', 'Trovare un documento', 'Statuto, verbali, disciplinari, normativa.', [
+      ['#archivio', 'L’archivio', 'Tutti i documenti, divisi per tipo.'],
+      ['#archivio/verbali', 'I verbali', 'Consiglio Direttivo e Assemblee.'],
+      ['#comesifa', 'Come si fa una cosa', 'La normativa e i disciplinari, passo per passo.'],
+      ['#nuovo/documento', 'Caricare un documento', 'Un verbale, una ricevuta, una locandina.']]],
+    ['soci', '👥', 'Occuparmi dei soci', 'Quanti sono, chi ha pagato la quota, chi vuole iscriversi.', [
+      ['#soci', 'Il quadro dei soci', 'Numeri, quote, dati che mancano.'],
+      ['#soci/libro', 'Il libro soci', 'Nomi e contatti: si apre con la password personale.'],
+      ['#soci/richieste', 'Chi vuole diventare socio', 'Le richieste arrivate dal sito.']]],
+    ['soldi', '💶', 'Vedere i conti', 'Cassa, banca, budget delle attività, rendiconto.', [
+      ['#soldi', 'Il riepilogo', 'Saldi e budget delle attività.'],
+      ['#soldi/primanota', 'La prima nota', 'Entrate e uscite. Scrive solo il Tesoriere.'],
+      ['#soldi/rendiconto', 'Il rendiconto per cassa', 'Pronto per l’Assemblea e per il RUNTS.']]],
+    ['sito', '🌐', 'Cambiare qualcosa sul sito', 'Una slide, un corso, una data, un avviso.', [
+      ['#sito/slide', 'Le slide in primo piano', 'In cima alla Home del sito.'],
+      ['#sito/corsi', 'I corsi', 'Date, luogo, locandina.'],
+      ['#sito/calendario', 'Il calendario del sito', 'Le serate, le gite, le mostre.'],
+      ['#sito/messaggi', 'I messaggi arrivati', 'Chi ha scritto dal modulo Contatti.']]],
+    ['aggiungere', '➕', 'Aggiungere qualcosa', 'Una scadenza, una decisione da votare, una pratica.', [
+      ['#nuovo/scadenza', 'Una scadenza', 'Qualcosa da fare entro una data.'],
+      ['#nuovo/decisione', 'Una decisione da votare', 'Un punto per il prossimo Consiglio.'],
+      ['#nuovo/pratica', 'Una pratica con i suoi passi', 'Un lavoro in più passi, in ordine.'],
+      ['#nuovo', 'Altro', 'Tutte le cose che si possono aggiungere.']]]
+  ];
+  P.facile = function (sub) {
+    var nome = me.carica ? myName() : me.nome, cose = richiestePerMe().length + myClOpen().length;
+    var m = FACILE.filter(function (x) { return x[0] === sub; })[0];
+    if (!m) return '<div class="facile"><p class="passo">Passo 1 di 2</p><h1>Ciao, ' + esc(nome) + '. Cosa vuoi fare?</h1>' + (cose ? '<p class="sub">Hai <b>' + cose + '</b> ' + (cose === 1 ? 'cosa' : 'cose') + ' da fare: le trovi in «Vedere cosa c’è da fare».</p>' : '') +
+      '<div class="scelte">' + FACILE.map(function (x) { return '<a class="scelta" href="#facile/' + x[0] + '"><span class="ico" aria-hidden="true">' + x[1] + '</span><b>' + x[2] + '</b><span>' + x[3] + '</span></a>'; }).join('') + '</div>' +
+      '<p class="sub">Puoi tornare qui in ogni momento con il pulsante «Cosa vuoi fare?» in alto. Per vedere tutto insieme scegli «Versione completa».</p></div>';
+    return '<div class="facile"><p class="passo">Passo 2 di 2 · <a href="#facile">← indietro</a></p><h1><span aria-hidden="true">' + m[1] + '</span> ' + m[2] + '</h1><p class="sub">Scegli una di queste:</p>' +
+      '<div class="scelte">' + m[4].map(function (x) { return '<a class="scelta" href="' + x[0] + '"><b>' + x[1] + '</b><span>' + x[2] + '</span></a>'; }).join('') + '</div></div>';
+  };
   P.cerca = function (qs) {
     var q = low(decodeURIComponent(qs || '')).trim();
     if (q.length < 2) return head('Cerca', 'Scrivi almeno due lettere.');
@@ -1888,7 +1944,8 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
 
   /* ---------- router ---------- */
   var mainEl = document.getElementById('main'), tabsEl = document.getElementById('tabs');
-  function route() { var h = (location.hash || '#oggi').slice(1).split('/'); return { a: h[0] || 'oggi', s: h.slice(1).join('/') }; }
+  function route() { var def = isLite() ? '#facile' : '#oggi'; var h = (location.hash || def).slice(1).split('/'); return { a: h[0] || def.slice(1), s: h.slice(1).join('/') }; }
+  function isLite() { try { return localStorage.getItem('inz-lite') === '1'; } catch (e) { return false; } }
   function badge(k) {
     if (k === 'pratiche') return D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); }).length;
     if (k === 'ruoli') return D.cariche.filter(function (c) { return !c.sostituto_id; }).length;
@@ -1905,7 +1962,8 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       else if (P[r.a]) html = P[r.a](r.s);
       else html = P.oggi();
     } catch (ex) { console.error(ex); html = head('Qualcosa non va', 'Questa pagina non si è caricata. Torna a <a href="#oggi">Oggi</a>.'); }
-    mainEl.innerHTML = html;
+    var lite = isLite(); document.body.classList.toggle('lite', lite); document.getElementById('liteBtn').setAttribute('aria-pressed', String(lite)); document.getElementById('liteBtn').textContent = lite ? 'Versione completa' : 'Versione semplice';
+    mainEl.innerHTML = (lite && r.a !== 'facile' ? '<a class="lite-home" href="#facile">← Cosa vuoi fare?</a>' : '') + html;
     var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' || r.a === 'nuovo' ? '' : r.a;
     document.getElementById('addBtn').setAttribute('aria-current', r.a === 'nuovo' ? 'page' : 'false');
     var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
