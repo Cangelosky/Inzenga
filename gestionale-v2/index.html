@@ -422,6 +422,16 @@ body.lite nav.tabs, body.lite #search { display: none; }
 .stats.s6 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 iframe.pdfprev { width: 100%; height: 75vh; border: 1px solid var(--line); border-radius: 10px; margin-top: 14px; background: #fff; }
 .doc-agg { margin-top: 16px; }
+main:has(.gen-out) > *:not(.gen-out) { }
+@media print { main:has(.gen-out) > *:not(.gen-out) { display: none !important; } }
+.gen-chip { display: inline-flex; align-items: center; text-decoration: none; color: inherit; font-weight: 600; }
+.intest { display: grid; gap: 2px; text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 14px; }
+.intest b { font-family: var(--font-display); font-size: calc(19px * var(--z, 1)); } .intest span { font-size: calc(14.5px * var(--z, 1)); color: var(--ink-2); }
+.gen-dec { border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; display: grid; gap: 12px; }
+.gd { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 8px; } .gd:first-of-type { border-top: 0; }
+.gd-row { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.doc-azioni .chk { display: inline-flex; align-items: center; gap: 8px; }
+fieldset.pn-quota { border: 1px dashed var(--line-strong, var(--line)); border-radius: 10px; padding: 8px 12px; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .doc-azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 a.doclink .pill { font-size: 13px; padding: 0 8px; }
 @media print {
@@ -954,7 +964,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function decList(arr, edit) {
     if (!arr.length) return '<p class="sub">Nessuna decisione in questo elenco.</p>';
     return '<div>' + arr.map(function (x) {
-      return '<div class="check' + (x.approvata ? ' done' : '') + '"><input type="checkbox" id="dec' + x.id + '" data-act="dec" data-id="' + x.id + '" ' + (x.approvata ? 'checked' : '') + ' aria-label="Segna come approvata: ' + esc(x.testo) + '"><div class="cb"><label for="dec' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.testo) + '</b></label><span class="sub">' + meta([['Chi decide', 'Consiglio Direttivo'], ['Riferimento', esc(x.rif || '')], ['Esito', x.approvata ? 'approvata' + (x.aggiornata_da ? ' (segnata da ' + esc(x.aggiornata_da) + ')' : '') : 'da votare']]) + '</span>' +
+      return '<div class="check' + (x.approvata ? ' done' : '') + '"><input type="checkbox" id="dec' + x.id + '" data-act="dec" data-id="' + x.id + '" ' + (x.approvata ? 'checked' : '') + ' aria-label="Segna come approvata: ' + esc(x.testo) + '"><div class="cb"><label for="dec' + x.id + '"><b style="font-weight:600;display:block">' + esc(x.testo) + '</b></label><span class="sub">' + meta([['Chi decide', 'Consiglio Direttivo'], ['Riferimento', esc(x.rif || '')], ['Esito', x.approvata ? 'approvata' + (x.seduta ? ' nella seduta: ' + esc(x.seduta) : '') + (x.approvata_il ? ', ' + fD.format(dt(x.approvata_il)) : '') + (x.aggiornata_da ? ' (segnata da ' + esc(x.aggiornata_da) + ')' : '') : 'da votare']]) + (x.verbale_slug && docBySlug(x.verbale_slug) ? '<br>' + docLink(x.verbale_slug) : '') + '</span>' +
         (edit ? '<details class="ed"><summary>Modifica</summary>' + decForm(x) + azioni('decisioni', x, x.testo) + '</details>' : '') + '</div></div>'; }).join('') + '</div>';
   }
   function scadItem(x, withNote) {
@@ -1039,7 +1049,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   };
   P.archivio = function (sub) {
     var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']];
-    var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    var t = '<div class="chips"><a class="chip gen-chip" href="#genera">✍️ Genera un documento</a>' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'registro') {
       return head('Registro delle modifiche', 'Chi ha fatto cosa e quando, con il prima e il dopo di ogni modifica. Lo vedono tutti i membri del Consiglio Direttivo.') + t + registroPage();
     }
@@ -1127,6 +1137,89 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<section class="box"><form data-act="pw" class="up"><label>Nuova password<input name="p" type="password" minlength="12" required autocomplete="new-password"></label><label>Ripetila<input name="p2" type="password" minlength="12" required autocomplete="new-password"></label><button class="btn" type="submit">Salva</button></form></section>';
   };
 
+  /* ---------- genera documenti: modelli con la stessa intestazione ---------- */
+  var INTEST = ['Associazione Micologica Bresadola – Gruppo di Palermo «Giuseppe Inzenga» APS', 'Sede legale: Via Francesco La Colla n. 15, 90124 Palermo · Codice fiscale 97171140821'];
+  var SEDE_OP = 'sede operativa, Via San Domenico Savio n. 4, Palermo';
+  function gIt(isoD) { return isoD ? fL.format(dt(isoD)) : '[data]'; }
+  function gD(isoD) { return isoD ? fD.format(dt(isoD)) : '[data]'; }
+  function righe(t) { return String(t || '').split(/\n+/).map(function (x) { return x.replace(/^\s*(\d+[.)]|[-•])\s*/, '').trim(); }).filter(Boolean); }
+  function odgDefault() { return openDec().map(function (x) { return x.testo; }).concat(['Varie ed eventuali']).map(function (t, i) { return (i + 1) + '. ' + t; }).join('\n'); }
+  var GEN = [
+    { k: 'conv-cd', ico: '📨', t: 'Convocazione del Consiglio Direttivo', d: 'Data, luogo e ordine del giorno, pronta da mandare per email.', cat: ['verbali', 'Consiglio Direttivo'],
+      campi: [['data', 'Giorno della riunione', 'date'], ['ora', 'Ora', 'time', '18:00'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno (un punto per riga)', 'area', odgDefault], ['firma', 'Firma', 'text', 'Il Presidente']],
+      fai: function (v) { return { titolo: 'Convocazione del Consiglio Direttivo del ' + gD(v.data), secs: [
+        { h: 'Convocazione del Consiglio Direttivo', b: [{ t: 'p', v: 'Ai componenti del Consiglio Direttivo' }, { t: 'p', v: 'Il Consiglio Direttivo è convocato per ' + gIt(v.data) + ', alle ore ' + (v.ora || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', per discutere e deliberare sul seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }, { t: 'p', v: 'In caso di impedimento si prega di avvisare per tempo il Presidente o il Segretario.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**' + (v.firma || 'Il Presidente') + '**' }] }] }; } },
+    { k: 'verbale-cd', ico: '📝', t: 'Verbale del Consiglio Direttivo', d: 'Presenze, punti all’ordine del giorno ed esito delle decisioni da votare. Salvandolo, le decisioni approvate si chiudono con la data della seduta.', cat: ['verbali', 'Consiglio Direttivo'],
+      campi: [['data', 'Giorno della seduta', 'date'], ['ora', 'Ora di inizio', 'time', '18:00'], ['fine', 'Ora di chiusura', 'time'], ['luogo', 'Luogo', 'text', SEDE_OP], ['pres', 'Presiede', 'text', 'il Presidente'], ['segr', 'Segretario verbalizzante', 'text', 'il Segretario'], ['presenti', 'Presenti (un nome o una carica per riga)', 'area'], ['assenti', 'Assenti giustificati', 'area'], ['num', 'Componenti in carica', 'number'], ['dec', 'Decisioni da votare', 'decisioni'], ['altro', 'Altri punti discussi (uno per riga)', 'area'], ['varie', 'Varie ed eventuali', 'area']],
+      fai: function (v) { var pr = righe(v.presenti), ESI = { approvata: 'approvata', respinta: 'respinta', rinviata: 'rinviata a una prossima seduta', non: 'non discussa' };
+        var dec = (v.decEsiti || []).filter(function (x) { return x.esito !== 'non'; });
+        var odg = dec.map(function (x) { return x.testo; }).concat(righe(v.altro)).concat(['Varie ed eventuali']);
+        return { titolo: 'Verbale del Consiglio Direttivo del ' + gD(v.data), secs: [
+          { h: 'Verbale', b: [{ t: 'p', v: 'Il giorno ' + gIt(v.data) + ', alle ore ' + (v.ora || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', si è riunito il Consiglio Direttivo dell’Associazione, regolarmente convocato, per discutere e deliberare sul seguente ordine del giorno:' }, { t: 'ol', v: odg }] },
+          { h: 'Presenze', b: [{ t: 'p', v: 'Presiede ' + (v.pres || '[nome]') + '; svolge le funzioni di segretario verbalizzante ' + (v.segr || '[nome]') + '.' }, { t: 'p', v: 'Sono presenti' + (pr.length ? ':' : ' [elenco dei presenti].') }].concat(pr.length ? [{ t: 'ul', v: pr }] : []).concat(righe(v.assenti).length ? [{ t: 'p', v: 'Assenti giustificati: ' + righe(v.assenti).join(', ') + '.' }] : []).concat([{ t: 'p', v: 'Presenti ' + (pr.length || '[numero]') + ' componenti su ' + (v.num || '[numero]') + ' in carica: il Presidente constata che la seduta è valida (statuto, art. 18) e apre i lavori.' }]) }]
+          .concat(dec.map(function (x, i) { return { h: 'Punto ' + (i + 1) + ' – ' + x.testo, b: [{ t: 'p', v: (x.nota ? x.nota + ' ' : '') + 'Il Consiglio Direttivo, dopo la discussione, ' + (x.esito === 'approvata' ? 'approva' : x.esito === 'respinta' ? 'non approva' : 'rinvia la decisione a una prossima seduta') + (x.voti ? ' (' + x.voti + ')' : '') + '.' }] }; }))
+          .concat(righe(v.altro).map(function (t, i) { return { h: 'Punto ' + (dec.length + i + 1) + ' – ' + t, b: [{ t: 'p', v: '[Sintesi della discussione e decisione]' }] }; }))
+          .concat([{ h: 'Varie ed eventuali e chiusura', b: [{ t: 'p', v: righe(v.varie).length ? righe(v.varie).join(' ') : 'Nessun altro argomento.' }, { t: 'p', v: 'Esauriti gli argomenti, la seduta è chiusa alle ore ' + (v.fine || '[ora]') + '. Il presente verbale, letto e approvato, è sottoscritto dal Presidente e dal Segretario verbalizzante.' }, { t: 'p', v: '**Il Presidente** ________________________    **Il Segretario verbalizzante** ________________________' }] }]) }; } },
+    { k: 'conv-ass', ico: '📣', t: 'Convocazione dell’Assemblea dei soci', d: 'Prima e seconda convocazione, ordine del giorno, controllo dei 15 giorni di preavviso.', cat: ['verbali', 'Assemblea'],
+      campi: [['tipo', 'Assemblea', 'select', 'ordinaria', ['ordinaria', 'straordinaria']], ['d1', 'Prima convocazione: giorno', 'date'], ['o1', 'Prima convocazione: ora', 'time', '17:00'], ['d2', 'Seconda convocazione: giorno', 'date'], ['o2', 'Seconda convocazione: ora', 'time', '17:30'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno (un punto per riga)', 'area', '1. \n2. Varie ed eventuali'], ['bil', 'Si approva il bilancio (rendiconto)?', 'select', 'no', ['no', 'sì']]],
+      fai: function (v) { return { titolo: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci del ' + gD(v.d2 || v.d1), secs: [
+        { h: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci', b: [{ t: 'p', v: 'Ai soci dell’Associazione' }, { t: 'p', v: 'Ai sensi dell’art. 16.8 dello Statuto, l’Assemblea ' + v.tipo + ' dei soci è convocata in prima convocazione per ' + gIt(v.d1) + ' alle ore ' + (v.o1 || '[ora]') + ' e, occorrendo, in seconda convocazione per ' + gIt(v.d2) + ' alle ore ' + (v.o2 || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', con il seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }]
+          .concat(v.bil === 'sì' ? [{ t: 'p', v: 'Il rendiconto e i libri sociali sono consultabili in sede dagli associati almeno 8 giorni prima dell’Assemblea (Statuto, art. 18.7).' }] : [])
+          .concat([{ t: 'p', v: 'Ogni socio può farsi rappresentare da un altro socio con delega scritta; ciascun socio può ricevere una sola delega (Statuto, art. 16.7). Hanno diritto di voto i soci iscritti da almeno tre mesi e in regola con la quota.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**Il Presidente**' }]) }] }; },
+      avviso: function (v) { if (!v.d1) return ''; var g = Math.round((dt(v.d1) - base) / 864e5); return g < 15 ? 'Attenzione: mancano ' + g + ' giorni alla prima convocazione. Lo Statuto (art. 16.8) chiede almeno 15 giorni di preavviso.' : ''; } },
+    { k: 'comunicato', ico: '💬', t: 'Comunicato ai soci', d: 'Per una gita, un corso, una cena, una serata: prende i dati dall’attività. Da incollare in email o su WhatsApp.', cat: ['archivio', 'Sito e comunicazione'],
+      campi: [['att', 'Attività', 'attivita'], ['titolo', 'Titolo', 'text'], ['quando', 'Quando', 'text'], ['dove', 'Dove e ritrovo', 'text'], ['quota', 'Quota', 'text'], ['entro', 'Iscrizioni entro il', 'date'], ['come', 'Come iscriversi', 'text', 'rispondendo a questo messaggio o al Segretario'], ['testo', 'Altre informazioni', 'area'], ['firma', 'Firma', 'text', 'Il Consiglio Direttivo']],
+      fai: function (v) { var b = [{ t: 'p', v: 'Care socie e cari soci,' }, { t: 'p', v: 'vi aspettiamo a **' + (v.titolo || '[attività]') + '**.' }];
+        var dati = [['Quando', v.quando], ['Dove', v.dove], ['Quota', v.quota], ['Iscrizioni entro', v.entro ? gIt(v.entro) : ''], ['Come iscriversi', v.come]].filter(function (x) { return x[1]; }).map(function (x) { return x[0] + ': ' + x[1]; });
+        if (dati.length) b.push({ t: 'ul', v: dati });
+        righe(v.testo).forEach(function (x) { b.push({ t: 'p', v: x }); });
+        b.push({ t: 'p', v: 'A presto,' }); b.push({ t: 'p', v: v.firma || 'Il Consiglio Direttivo' });
+        return { titolo: 'Comunicato ai soci: ' + (v.titolo || 'attività'), secs: [{ h: v.titolo || 'Comunicato ai soci', b: b }] }; } },
+    { k: 'comune', ico: '🏛️', t: 'Richiesta di sala o patrocinio a un Comune', d: 'Lettera formale per l’uso di una sala, il patrocinio gratuito o entrambi.', cat: ['archivio', 'Modulistica'],
+      campi: [['comune', 'Comune', 'text', 'Comune di '], ['ufficio', 'Alla cortese attenzione di', 'text', 'Sig. Sindaco e Presidente del Consiglio Comunale'], ['cosa', 'Si chiede', 'select', 'la disponibilità di una sala', ['la disponibilità di una sala', 'il patrocinio gratuito', 'la disponibilità di una sala e il patrocinio gratuito']], ['evento', 'Iniziativa', 'text', 'corso di formazione per il rilascio del tesserino per la raccolta dei funghi epigei'], ['date', 'Giorni', 'text'], ['orari', 'Orari', 'text', 'dalle 16:30 alle 20:30'], ['persone', 'Partecipanti previsti', 'number'], ['note', 'Altre informazioni', 'area']],
+      fai: function (v) { return { titolo: 'Richiesta al ' + (v.comune || 'Comune') + ': ' + v.cosa, secs: [
+        { h: 'Lettera', b: [{ t: 'p', v: 'Spett.le ' + (v.comune || '[Comune]') + (v.ufficio ? ', alla cortese attenzione del ' + v.ufficio : '') }, { t: 'p', v: '**Oggetto: richiesta di ' + v.cosa.replace(/^la |^il /, '') + ' per ' + (v.evento || '[iniziativa]') + '**' }, { t: 'p', v: 'L’Associazione Micologica Bresadola – Gruppo di Palermo «Giuseppe Inzenga» APS, ente del Terzo settore che da anni promuove la conoscenza dei funghi e la tutela dell’ambiente, intende organizzare ' + (v.evento || '[iniziativa]') + (v.date ? ' nei giorni ' + v.date : '') + (v.orari ? ', ' + v.orari : '') + '.' }, { t: 'p', v: 'Con la presente si chiede ' + v.cosa + (v.persone ? ', per circa ' + v.persone + ' partecipanti' : '') + '. L’iniziativa è senza scopo di lucro e aperta alla cittadinanza.' }]
+          .concat(righe(v.note).map(function (x) { return { t: 'p', v: x }; }))
+          .concat([{ t: 'p', v: 'Restando a disposizione per ogni chiarimento, si porgono distinti saluti.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**Il Presidente e legale rappresentante**' }]) }] }; } }
+  ];
+  function genVal(f, m) {
+    var v = {}; m.campi.forEach(function (c) { if (c[2] === 'decisioni') return; var el = f.elements[c[0]]; if (el) v[c[0]] = el.value.trim(); });
+    if (m.k === 'verbale-cd') v.decEsiti = openDec().map(function (x) { return { id: x.id, testo: x.testo, esito: f.elements['es' + x.id].value, nota: f.elements['nt' + x.id].value.trim(), voti: f.elements['vt' + x.id].value.trim() }; });
+    return v;
+  }
+  function genCampo(c, v) {
+    var val = v[c[0]] != null ? v[c[0]] : (typeof c[3] === 'function' ? c[3]() : (c[3] || ''));
+    if (c[2] === 'area') return '<label class="wide">' + c[1] + '<textarea name="' + c[0] + '" rows="5">' + esc(val) + '</textarea></label>';
+    if (c[2] === 'select') return '<label>' + c[1] + '<select name="' + c[0] + '">' + c[4].map(function (o) { return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>';
+    if (c[2] === 'attivita') return '<label class="wide">' + c[1] + '<select name="att" data-act="genAtt"><option value="">Scegli un’attività per riempire i campi</option>' + attSorted().filter(function (a) { return !a.archiviato; }).map(function (a) { return '<option value="' + a.id + '"' + (String(a.id) === String(val) ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>';
+    if (c[2] === 'decisioni') { var od = openDec(); return '<fieldset class="wide gen-dec"><legend>' + c[1] + ' (' + od.length + ')</legend>' + (od.length ? od.map(function (x) { var e = (v.decEsiti || []).filter(function (y) { return y.id === x.id; })[0] || {}; return '<div class="gd"><b>' + esc(x.testo) + '</b><div class="gd-row"><label>Esito<select name="es' + x.id + '">' + [['approvata', 'Approvata'], ['respinta', 'Respinta'], ['rinviata', 'Rinviata'], ['non', 'Non discussa']].map(function (o) { return '<option value="' + o[0] + '"' + ((e.esito || 'non') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label><label>Voti<input name="vt' + x.id + '" value="' + esc(e.voti || '') + '" placeholder="Es. all’unanimità"></label><label class="wide">Nota<input name="nt' + x.id + '" value="' + esc(e.nota || '') + '" placeholder="Es. responsabile nominato: …"></label></div></div>'; }).join('') : '<p class="sub">Nessuna decisione da votare.</p>') + '</fieldset>'; }
+    return '<label>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '" value="' + esc(val) + '"></label>';
+  }
+  function genTesto(doc) {
+    var out = [INTEST[0], INTEST[1], ''];
+    doc.secs.forEach(function (s) { out.push(s.h.toUpperCase(), ''); (s.b || []).forEach(function (b) {
+      var pl = function (x) { return String(x).replace(/\*\*([^*]+)\*\*/g, '$1'); };
+      if (b.t === 'ol') b.v.forEach(function (x, i) { out.push((i + 1) + '. ' + pl(x)); }); else if (b.t === 'ul') b.v.forEach(function (x) { out.push('- ' + pl(x)); }); else out.push(pl(b.v));
+      out.push(''); }); });
+    return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+  function genFoglio(doc) {
+    return '<article class="foglio gen-out"><div class="intest"><b>' + esc(INTEST[0]) + '</b><span>' + esc(INTEST[1]) + '</span></div>' +
+      doc.secs.map(function (s) { return '<section class="fs"><h2>' + esc(s.h) + '</h2>' + (s.b || []).map(blocco).join('') + '</section>'; }).join('') + '</article>';
+  }
+  P.genera = function (sub) {
+    var m = GEN.filter(function (x) { return x.k === sub; })[0];
+    if (!m) return head('Genera documenti', 'Scegli il modello: compili pochi campi e il documento esce con l’intestazione dell’associazione, pronto da copiare in una mail, stampare o salvare in PDF. Salvandolo, finisce nell’archivio come bozza.') +
+      '<div class="scelte">' + GEN.map(function (x) { return '<a class="scelta" href="#genera/' + x.k + '"><span class="ico" aria-hidden="true">' + x.ico + '</span><b>' + x.t + '</b><span>' + x.d + '</span></a>'; }).join('') + '</div>';
+    P.genera.v = P.genera.k === m.k ? (P.genera.v || {}) : {}; P.genera.k = m.k;
+    var v = P.genera.v, doc = P.genera.doc && P.genera.docK === m.k ? P.genera.doc : null, avv = m.avviso && P.genera.v ? m.avviso(P.genera.v) : '';
+    return '<a class="back" href="#genera">← Tutti i modelli</a>' + head(m.t, m.d) +
+      '<section class="box"><form class="sform" data-act="genFai" data-k="' + m.k + '">' + m.campi.map(function (c) { return genCampo(c, v); }).join('') + '<div class="wide"><button class="btn" type="submit">Prepara il documento</button></div></form></section>' +
+      (doc ? (avv ? '<p class="note" style="border-color:var(--crit-ink)">' + esc(avv) + '</p>' : '') + genFoglio(doc) +
+        '<div class="doc-azioni"><button class="btn" type="button" data-act="genCopia">Copia il testo</button><button class="btn alt" type="button" data-act="stampa">Stampa o salva in PDF</button><button class="btn alt" type="button" data-act="genSalva">Salva nell’archivio come bozza</button>' +
+        (m.k === 'verbale-cd' ? '<label class="chk"><input type="checkbox" id="genChiudi" checked> Salvando, segna le decisioni approvate con la data della seduta</label>' : '') + '</div>' : '');
+  };
+
   /* ---------- versione semplice: «Cosa vuoi fare?» ---------- */
   var FACILE = [
     ['vedere', '📋', 'Vedere cosa c’è da fare', 'Le tue cose da fare, le scadenze, il calendario.', [
@@ -1142,6 +1235,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       ['#archivio', 'L’archivio', 'Tutti i documenti, divisi per tipo.'],
       ['#archivio/verbali', 'I verbali', 'Consiglio Direttivo e Assemblee.'],
       ['#comesifa', 'Come si fa una cosa', 'La normativa e i disciplinari, passo per passo.'],
+      ['#genera', 'Preparare un documento da un modello', 'Convocazione, verbale, comunicato, lettera a un Comune.'],
       ['#nuovo/documento', 'Caricare un documento', 'Un verbale, una ricevuta, una locandina.']]],
     ['soci', '👥', 'Occuparmi dei soci', 'Quanti sono, chi ha pagato la quota, chi vuole iscriversi.', [
       ['#soci', 'Il quadro dei soci', 'Numeri, quote, dati che mancano.'],
@@ -1334,9 +1428,18 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function listaBox(a, tipo) {
     var L = LISTE[tipo], rows = D.attivita_liste.filter(function (x) { return x.attivita_id === a.id && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine || x.id - y.id; });
     if (L.pers && nascosti()) return '<section class="box"><h2>' + L.nome + '</h2><p class="sub">Contiene dati delle persone: con l’accesso rapido non si vede. Entra con la tua password personale.</p></section>';
-    var nid = 'ln' + a.id + tipo;
+    var nid = 'ln' + a.id + tipo, preBlk = '';
+    if (tipo === 'partecipanti') {
+      var corsiCol = D.sito_corsi.filter(function (c) { return c.attivita_id === a.id; }).map(function (c) { return c.id; });
+      if (corsiCol.length) {
+        var giaNomi = rows.map(function (r) { return low(r.dati.nome || ''); });
+        var pre = D.sito_preiscrizioni.filter(function (p) { return corsiCol.indexOf(p.corso_id) >= 0 && p.stato !== 'ritirato'; });
+        var nuove = pre.filter(function (p) { return giaNomi.indexOf(low(p.nome + ' ' + p.cognome)) < 0; });
+        preBlk = '<div class="note">Preiscrizioni dal sito al corso collegato: <b>' + pre.length + '</b>' + (nuove.length ? ', di cui <b>' + nuove.length + '</b> non ancora in lista. <button class="btn sm" type="button" data-act="preInLista" data-id="' + a.id + '">Aggiungile alla lista</button>' : ', tutte già in lista.') + '</div>';
+      }
+    }
     return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + (rows.length === 1 ? '1 riga' : rows.length + ' righe') + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' +
-      rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
+      preBlk + rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
       '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '<th></th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr>' + L.campi.map(function (c) { return '<td><input form="lr' + r.id + '" name="' + c[0] + '" value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
       '<tr class="nuova">' + L.campi.map(function (c, i) { return '<td><input form="' + nid + '" name="' + c[0] + '" maxlength="' + (c[0] === 'testo' ? 2000 : 300) + '" placeholder="' + c[1] + '"' + (i === 0 ? ' required' : '') + ' aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn sm" form="' + nid + '" type="submit">＋ Aggiungi</button></td></tr>' +
@@ -1645,6 +1748,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     return '<a class="back" href="#soci/libro">← Libro soci</a>' + head(socioNome(s), (s.stato !== 'attivo' ? SOCIO_ST[s.stato] + ' · ' : '') + 'ultimo aggiornamento ' + fT.format(new Date(s.aggiornato_il)) + (s.aggiornato_da ? ' · ' + esc(s.aggiornato_da) : '')) +
       (s.note ? '<section class="box k-scad"><h2>Da controllare</h2><p>' + esc(s.note) + '</p><p class="sub">Quando hai controllato, cancella la nota qui sotto e salva.</p></section>' : '') +
       '<section class="box k-soci"><h2>Scheda del socio</h2>' + socioForm(s) + (puoCanc ? '<div class="azioni"><button class="btn alt sm danger" type="button" data-act="socioDel" data-id="' + s.id + '">Togli dal libro soci</button></div><p class="sub">Per un socio che lascia l’associazione è meglio cambiare lo stato in «Dimesso»: la storia resta.</p>' : '') + '</section>' +
+      (function () { var pg = D.prima_nota.filter(function (m) { return m.socio_id === s.id && !m.annullato; }); return '<section class="box k-soldi"><h2>Quote registrate in prima nota</h2>' + (pg.length ? '<ul class="list">' + pg.map(function (m) { return '<li><div><b>' + esc(m.descrizione) + '</b><span class="sub">' + fD.format(dt(m.data)) + ' · ' + esc(m.conto) + (m.riferimento ? ' · ' + esc(m.riferimento) : '') + '</span></div><span class="pill">' + eur2(m.importo) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun movimento collegato a questo socio. Le quote pagate si registrano in Contabilità, Prima nota, con categoria «Quote associative»: il gestionale le segna anche qui.</p>') + '</section>'; })() +
       '<section class="box"><h2>Registro di questa scheda</h2>' + (lg.length ? '<ul class="reg">' + lg.map(function (l) { return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b><span class="det">' + esc(l.dettaglio || l.azione) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna operazione registrata.</p>') + '</section>';
   }
   function sociRegistro() {
@@ -1723,6 +1827,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<label>Attività collegata<select name="a"><option value="">Nessuna</option>' + attSorted().map(function (a) { return '<option value="' + a.id + '"' + (P.soldi.att === a.id ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>' +
       '<label class="wide">Descrizione<input name="t" required placeholder="Es. Quota associativa 2027, socio n. 12"></label>' +
       '<label>Riferimento (ricevuta, fattura)<input name="r" placeholder="Es. Ricevuta n. 34"></label>' +
+      '<fieldset class="wide pn-quota"><legend>Solo per «Quote associative»: di quale socio e per quale anno</legend>' + (D.soci ? '<label>Socio<select name="so"><option value="">Nessuno (più soci insieme o non indicato)</option>' + D.soci.filter(function (s) { return s.stato === 'attivo'; }).map(function (s) { return '<option value="' + s.id + '">' + socioNome(s) + '</option>'; }).join('') + '</select></label><label>Anno della quota<select name="qa">' + [base.getFullYear() - 1, base.getFullYear(), base.getFullYear() + 1].map(function (y) { return '<option' + (y === base.getFullYear() ? ' selected' : '') + '>' + y + '</option>'; }).join('') + '</select></label><p class="sub">Il gestionale segna la quota anche nel Libro soci.</p>' : '<p class="sub">Per collegare la quota a un socio apri prima il <a href="#soci/libro">Libro soci</a> (dichiarazione di responsabilità): poi torna qui e scegli il socio.</p>') + '</fieldset>' +
       '<button class="btn" type="submit">Registra</button></form>' +
       '<p class="sub">Un movimento registrato non si modifica e non si cancella: se c’è un errore si annulla, con il motivo, e si registra quello giusto. Per un giroconto registra due movimenti: un’uscita da un conto e un’entrata nell’altro, con la categoria «Giroconto».</p></section>'
       : '<p class="note">Nella prima nota scrive solo il Tesoriere' + (vice ? ' e il suo vice (' + esc(vice.nome) + ')' : '; il suo vice potrà scrivere quando il Consiglio lo avrà nominato') + '. Tutto il Consiglio può leggerla.</p>';
@@ -1878,6 +1983,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<label>Quando<input name="quando" maxlength="160" value="' + esc(c ? c.quando || '' : '') + '" placeholder="Es. 11 – 21 novembre 2026"></label>' +
       '<label>Dove<input name="dove" maxlength="200" value="' + esc(c ? c.dove || '' : '') + '" placeholder="Es. Aula Consiliare, Piazza Duomo"></label>' +
       '<label>Informazioni (telefono)<input name="info" maxlength="200" value="' + esc(c ? c.info || '' : '') + '"></label>' +
+      '<label class="wide">Attività del gestionale collegata <span class="sub">(le preiscrizioni a questo corso compaiono nella sua lista partecipanti)</span><select name="attivita_id"><option value="">Nessuna</option>' + attSorted().filter(function (a) { return !a.archiviato && /corsi|lezioni/i.test(a.tipo); }).map(function (a) { return '<option value="' + a.id + '"' + (c && c.attivita_id === a.id ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>' +
       '<label>Soglia per partire<input name="soglia" type="number" min="1" max="200" value="' + (c ? c.soglia : 15) + '"></label>' +
       '<label>Posti<input name="posti" type="number" min="1" max="500" value="' + (c ? c.posti : 20) + '"></label>' +
       '<label class="wide">Descrizione<textarea name="descrizione" maxlength="800">' + esc(c ? c.descrizione || '' : '') + '</textarea></label>' +
@@ -2034,6 +2140,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     ['pratica', 'Una pratica con i suoi passi', 'Un lavoro in più passi, come il trasferimento della sede o il deposito al RUNTS.', 'k-dec'],
     ['decisione', 'Una decisione da votare', 'Un punto da portare al prossimo Consiglio Direttivo.', 'k-dec'],
     ['documento', 'Un documento o un verbale', 'Un file: verbale, regolamento, modulo, ricevuta, locandina.', 'k-doc'],
+    ['#genera', 'Un documento da un modello', 'Convocazione, verbale del CD, comunicato ai soci, richiesta a un Comune: con l’intestazione, da copiare o stampare.', 'k-doc'],
     ['testo', 'Un testo pronto', 'Un messaggio da copiare e incollare nelle chat o nelle email.', 'k-altri'],
     ['movimento', 'Un movimento di prima nota', 'Un’entrata o un’uscita di cassa o di banca. Solo il Tesoriere e il suo vice.', 'k-soldi'],
     ['sito', 'Qualcosa sul sito', 'Una slide in primo piano, un corso, un appuntamento del calendario, un avviso.', 'k-sito']
@@ -2079,7 +2186,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (sub === 'sito') return back + head('Aggiungi sul sito', 'Scegli cosa: ogni pagina ha il modulo «Aggiungi» in fondo.') +
       '<div class="who-grid">' + [['#sito/slide', 'Una slide in primo piano', 'In cima alla Home, con foto.'], ['#sito/corsi', 'Un corso', 'Con le date, il luogo e la locandina.'], ['#sito/calendario', 'Un appuntamento del calendario', 'Una serata, una gita, una mostra.'], ['#sito/testi', 'Un avviso in Home', 'Per esempio una serata annullata.']].map(function (x) { return '<a class="card k-sito" href="' + x[0] + '"><h3>' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
     return head('Aggiungi', 'Scegli cosa vuoi aggiungere. Tutto quello che aggiungi resta nel registro, con il tuo nome di carica e l’ora.') +
-      '<div class="who-grid">' + NUOVI.filter(function (x) { return x[0] !== 'movimento' || canPN(); }).map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>' +
+      '<div class="who-grid">' + NUOVI.filter(function (x) { return x[0] !== 'movimento' || canPN(); }).map(function (x) { return '<a class="card ' + x[3] + '" href="' + (x[0].charAt(0) === '#' ? x[0] : '#nuovo/' + x[0]) + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>' +
       '<p class="note">Si aggiungono anche: i passi di una checklist dentro ogni attività, i passi di una pratica in fondo a ogni pratica, le preiscrizioni arrivate per telefono in Attività → Corsi e iscrizioni.</p>';
   };
   async function nuovoSave(a, f) {
@@ -2225,6 +2332,13 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   }
   mainEl.addEventListener('change', async function (e) {
     var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
+    if (a === 'genAtt') {
+      var ga = att(+t.value), gf = t.form; if (!ga) return; var gd = ga.dati || {}, gdt = attDate(ga);
+      var setv = function (n, val) { if (gf.elements[n] && val) gf.elements[n].value = val; };
+      setv('titolo', ga.titolo); setv('quando', ga.ricorrenza || (gdt ? fL.format(gdt) + (ga.data_fine && ga.data_fine !== ga.data ? ' – ' + fL.format(dt(ga.data_fine)) : '') : '') + (gd.orario ? ', ' + gd.orario : ''));
+      setv('dove', [ga.luogo, gd.ritrovo || gd.locale || gd.sede || gd.albergo].filter(Boolean).join(' · ')); setv('quota', gd.quota); setv('entro', gd.iscrizioni_entro || gd.prenotazioni_entro);
+      return;
+    }
     if (a === 'attTipo') {
       var fo = t.form, vals = {}; Array.prototype.forEach.call(fo.elements, function (el) { if (el.name) vals[el.name] = el.value; });
       var aid = fo.getAttribute('data-id'), base0 = aid ? att(+aid) : null;
@@ -2234,7 +2348,15 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       fo.replaceWith(nf); var ns = nf.querySelector('[name="tipo"]'); if (ns) ns.focus(); return;
     }
     if (a === 'dec') {
-      var x = await upd('decisioni', id, { approvata: t.checked, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome });
+      var seduta = null, quando = null;
+      if (t.checked) {
+        seduta = prompt('In quale seduta è stata approvata?', 'Consiglio Direttivo del ' + fD.format(base));
+        if (seduta === null) { t.checked = false; return; }
+        var mq = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(seduta) || /(\d{1,2}) (gen|feb|mar|apr|mag|giu|lug|ago|set|ott|nov|dic)\w* (\d{4})/i.exec(seduta);
+        quando = iso(base);
+        if (mq && /\//.test(mq[0])) quando = mq[3] + '-' + ('0' + mq[2]).slice(-2) + '-' + ('0' + mq[1]).slice(-2);
+      }
+      var x = await upd('decisioni', id, { approvata: t.checked, seduta: t.checked ? seduta.trim() || null : null, approvata_il: t.checked ? quando : null, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome });
       if (x) { render(); var el = document.getElementById('dec' + id); if (el) el.focus(); }
     } else if (a === 'scad') {
       var s = await upd('scadenze', id, { fatta: t.checked });
@@ -2277,6 +2399,35 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'prStato') { var pp = await upd('pratiche', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v') }); if (pp) { toast(pp.stato === 'chiusa' ? 'Pratica chiusa.' : 'Pratica riaperta.'); render(); } }
     else if (a === 'archivia') { var tb2 = b.getAttribute('data-t'), on = b.getAttribute('data-v') === '1'; var ar = await upd(tb2, +b.getAttribute('data-id'), { archiviato: on }); if (ar) { toast(on ? 'Archiviato: lo ritrovi in «Archiviate».' : 'Ripristinato.'); render(); } }
     else if (a === 'elimina') { await elimina(b.getAttribute('data-t'), +b.getAttribute('data-id'), b.getAttribute('data-l')); }
+    else if (a === 'genCopia') {
+      var txt = genTesto(P.genera.doc);
+      try { await navigator.clipboard.writeText(txt); toast('Testo copiato: incollalo nella mail.'); }
+      catch (e2) { var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('Testo copiato: incollalo nella mail.'); } catch (e3) { toast('Non riesco a copiare: seleziona il testo a mano.'); } ta.remove(); }
+    }
+    else if (a === 'genSalva') {
+      var gm2 = GEN.filter(function (x) { return x.k === P.genera.docK; })[0], dg = P.genera.doc, gv = P.genera.v || {};
+      var slugG = 'gen-' + Date.now();
+      var rg = await sb.from('documenti').insert({ slug: slugG, area: gm2.cat[0], categoria: gm2.cat[1], titolo: dg.titolo, sottotitolo: 'Preparato con il modello «' + gm2.t + '» il ' + fD.format(base), stato: 'bozza', contenuto: { intro: INTEST.join(' · '), secs: dg.secs }, caricato_da: me.nome, data_doc: gv.data || gv.d2 || null }).select().single();
+      if (rg.error) { toast('Non salvato: ' + rg.error.message); return; }
+      D.documenti.push(rg.data);
+      var chiudi = document.getElementById('genChiudi'), nChiuse = 0;
+      if (gm2.k === 'verbale-cd' && chiudi && chiudi.checked) {
+        for (var gi = 0; gi < (gv.decEsiti || []).length; gi++) { var de = gv.decEsiti[gi]; if (de.esito !== 'approvata') continue;
+          var ud = await upd('decisioni', de.id, { approvata: true, seduta: 'Consiglio Direttivo del ' + gD(gv.data), approvata_il: gv.data || iso(base), verbale_slug: slugG, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (ud) nChiuse++; }
+      }
+      P.genera.doc = null; P.genera.v = {};
+      toast('Salvato nell’archivio come bozza' + (nChiuse ? '; ' + nChiuse + ' decisioni segnate come approvate' : '') + '.'); location.hash = '#doc/' + slugG;
+    }
+    else if (a === 'preInLista') {
+      var aidP = +b.getAttribute('data-id'), corsiP = D.sito_corsi.filter(function (c) { return c.attivita_id === aidP; }).map(function (c) { return c.id; });
+      var giaP = D.attivita_liste.filter(function (x) { return x.attivita_id === aidP && x.tipo === 'partecipanti'; });
+      var nomiP = giaP.map(function (r) { return low(r.dati.nome || ''); }), ordP = giaP.reduce(function (m, x) { return Math.max(m, x.ordine); }, 0);
+      var nuoveP = D.sito_preiscrizioni.filter(function (p) { return corsiP.indexOf(p.corso_id) >= 0 && p.stato !== 'ritirato' && nomiP.indexOf(low(p.nome + ' ' + p.cognome)) < 0; });
+      if (!nuoveP.length) return;
+      var insP = await sb.from('attivita_liste').insert(nuoveP.map(function (p, i) { return { attivita_id: aidP, tipo: 'partecipanti', ordine: ordP + i + 1, aggiornato_da: me.nome, dati: { nome: p.nome + ' ' + p.cognome, telefono: p.telefono || '', quota: p.stato === 'quota_versata' ? 'versata' : (p.quota || ''), note: 'Preiscritto dal sito il ' + fD.format(new Date(p.creato_il)) + (p.note ? ' · ' + p.note : '') } }; })).select();
+      if (insP.error) { toast('Non aggiunte: ' + insP.error.message); return; }
+      D.attivita_liste = D.attivita_liste.concat(insP.data); toast(insP.data.length + ' preiscrizioni aggiunte alla lista partecipanti.'); render();
+    }
     else if (a === 'socNelLibro') {
       var rs0 = D.sito_richieste_socio.filter(function (x) { return x.id === +b.getAttribute('data-id'); })[0]; if (!rs0 || nascosti()) return;
       if (!confirm('Aggiungere ' + rs0.nome + ' ' + rs0.cognome + ' al libro soci, con iscrizione da oggi?')) return;
@@ -2329,6 +2480,10 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         var rq2 = await upd('richieste', +f.getAttribute('data-id'), { risposta: f.risposta.value.trim(), stato: f.stato.value, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome, vista_il: null });
         if (rq2) { toast('Risposta inviata: la vede chi ti ha fatto la richiesta.'); render(); }
       } else if (a === 'rqVista') {
+      } else if (a === 'genFai') {
+        var gm = GEN.filter(function (x) { return x.k === f.getAttribute('data-k'); })[0];
+        P.genera.v = genVal(f, gm); P.genera.doc = gm.fai(P.genera.v); P.genera.docK = gm.k; render();
+        var go = document.querySelector('.gen-out'); if (go) go.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (a === 'docStato') {
         var ds = await upd('documenti', +f.getAttribute('data-id'), { stato: f.stato.value, sottotitolo: f.sottotitolo.value.trim() || null, aggiornato_il: new Date().toISOString(), caricato_da: me.nome });
         if (ds) { toast('Stato del documento: ' + STATO_DOC[ds.stato][0] + '.'); render(); }
@@ -2384,8 +2539,13 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         if (PN_E.indexOf(cat) >= 0 && tipo !== 'entrata') { toast('«' + cat + '» è una categoria di entrata: controlla entrata o uscita.'); return; }
         if (PN_U.indexOf(cat) >= 0 && tipo !== 'uscita') { toast('«' + cat + '» è una categoria di uscita: controlla entrata o uscita.'); return; }
         if (!confirm('Registrare ' + (tipo === 'entrata' ? 'un’entrata' : 'un’uscita') + ' di ' + eur2(imp) + ' in ' + f.c.value + ', del ' + f.d.value.split('-').reverse().join('/') + '?\n\nUna volta registrato, il movimento non si modifica: si può solo annullare.')) return;
-        var r5 = await sb.from('prima_nota').insert({ data: f.d.value, tipo: tipo, importo: imp, conto: f.c.value, categoria: cat, descrizione: f.t.value.trim(), riferimento: f.r.value.trim() || null, attivita_id: f.a.value ? +f.a.value : null, creato_da: me.nome, user_id: me.id }).select().single();
-        if (r5.error) throw r5.error; D.prima_nota.push(r5.data); P.soldi.year = f.d.value.slice(0, 4); toast('Movimento registrato.'); render();
+        var r5 = await sb.from('prima_nota').insert({ data: f.d.value, tipo: tipo, importo: imp, conto: f.c.value, categoria: cat, descrizione: f.t.value.trim(), riferimento: f.r.value.trim() || null, attivita_id: f.a.value ? +f.a.value : null, socio_id: cat === 'Quote associative' && f.so && f.so.value ? +f.so.value : null, creato_da: me.nome, user_id: me.id }).select().single();
+        if (r5.error) throw r5.error; D.prima_nota.push(r5.data); P.soldi.year = f.d.value.slice(0, 4);
+        if (r5.data.socio_id && D.soci) {
+          var sq = D.soci.filter(function (s) { return s.id === r5.data.socio_id; })[0], anq = +f.qa.value;
+          if (sq && (sq.quote || []).indexOf(anq) < 0) { var nq = (sq.quote || []).concat([anq]).sort(); var uq = await upd('soci', sq.id, { quote: nq, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome }); toast(uq ? 'Movimento registrato e quota ' + anq + ' segnata nel Libro soci.' : 'Movimento registrato, ma la quota nel Libro soci non si è aggiornata.'); render(); return; }
+        }
+        toast('Movimento registrato.'); render();
       } else if (a === 'pnAnn') {
         var mot = f.m.value.trim(); if (!mot) return;
         if (!confirm('Annullare questo movimento? Resta visibile, barrato, con il motivo.')) return;
@@ -2442,7 +2602,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     function v(n) { return f[n] ? f[n].value.trim() : ''; }
     function nz(n) { return v(n) || null; }
     if (a === 'slideSave') row = { titolo: v('titolo'), testo: v('testo'), dettaglio: v('dettaglio'), link: v('link'), bottone: v('bottone') || 'Scopri di più', alt: v('alt'), ordine: +v('ordine') || 100, logo: f.logo.checked, pubblicato: f.pubblicato.checked };
-    else if (a === 'corsoSave') row = { stato: v('stato'), ordine: +v('ordine') || 100, titolo: v('titolo'), titolo_breve: nz('titolo_breve'), tipo: nz('tipo'), luogo: nz('luogo'), quando: nz('quando'), dove: nz('dove'), info: nz('info'), descrizione: nz('descrizione'), alt: nz('alt'), soglia: +v('soglia') || 15, posti: +v('posti') || 20, pubblicato: f.pubblicato.checked };
+    else if (a === 'corsoSave') row = { stato: v('stato'), ordine: +v('ordine') || 100, titolo: v('titolo'), titolo_breve: nz('titolo_breve'), tipo: nz('tipo'), luogo: nz('luogo'), quando: nz('quando'), dove: nz('dove'), info: nz('info'), descrizione: nz('descrizione'), alt: nz('alt'), soglia: +v('soglia') || 15, posti: +v('posti') || 20, pubblicato: f.pubblicato.checked, attivita_id: f.attivita_id && f.attivita_id.value ? +f.attivita_id.value : null };
     else {
       var d1 = v('data'), d2 = v('data_fine'), anno = +v('anno'), mese = +v('mese');
       if (d1) { anno = +d1.slice(0, 4); mese = +d1.slice(5, 7) - 1; }
