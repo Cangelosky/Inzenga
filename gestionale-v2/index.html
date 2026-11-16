@@ -364,6 +364,15 @@ table.lista td { padding: 4px; vertical-align: middle; }
 table.lista input { width: 100%; min-width: 110px; min-height: 40px; padding: 4px 8px; border: 2px solid var(--line); border-radius: 8px; background: var(--card); font-size: 15.5px; }
 table.lista td.na { white-space: nowrap; }
 @media (max-width: 560px) { dl.dati { grid-template-columns: 1fr; gap: 2px; } dl.dati dd { margin-bottom: 8px; } }
+table.rend th, table.rend td { font-size: 15px; }
+table.rend tr.sez th { background: color-mix(in srgb, var(--forest) 10%, var(--card)); text-align: left; padding-top: 10px; }
+table.rend tr.tot td { font-weight: 700; border-top: 2px solid var(--line); }
+table.rend tr.av td { font-style: italic; color: var(--ink-2); }
+table.rend tr.av.big td { font-style: normal; font-weight: 700; color: var(--ink); font-size: 16px; }
+.velo { filter: blur(3px); user-select: none; pointer-events: none; opacity: .7; }
+fieldset.quote { border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+fieldset.quote label { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+fieldset.quote input { width: 22px; height: 22px; }
 .btn.sm { min-height: 38px; padding: 4px 14px; font-size: 15px; }
 .btn.danger { color: var(--stamp); border-color: color-mix(in srgb, var(--stamp) 50%, var(--line)); }
 .azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -477,7 +486,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     await start(r.data.session);
     if (me) log('Ha effettuato l’accesso', '');
   });
-  document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; showLogin(); });
+  document.getElementById('logout').addEventListener('click', async function () { await sb.auth.signOut(); me = null; D = {}; P.soci.ok = false; P.soci.viste = {}; P.soci.q = ''; showLogin(); });
   function showLogin() { appEl.hidden = true; loginEl.hidden = false; document.getElementById('lgPass').focus(); }
 
   async function load() {
@@ -488,6 +497,8 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     }));
     res.forEach(function (r, i) { if (r.error) throw r.error; D[TABLES[i]] = r.data; });
     var cn = await sb.rpc('conteggi_moduli'); D.cnt = cn.error ? null : cn.data;
+    var cs = await sb.rpc('conteggi_soci'); D.cntSoci = cs.error ? null : cs.data;
+    if (P.soci.ok && me && !me.prova) await caricaSoci();
     D.cariche.sort(function (a, b) { return a.ordine - b.ordine; });
     ['decisioni', 'comunicazioni', 'testi', 'regole_economiche', 'numeri', 'pratica_passi', 'checklist'].forEach(function (t) { D[t].sort(function (a, b) { return a.ordine - b.ordine; }); });
   }
@@ -605,7 +616,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   }
 
   /* ---------- pagine ---------- */
-  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Soldi'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
+  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Contabilità'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
   var P = {};
 
   function meta(pairs) { return pairs.filter(function (p) { return p[1]; }).map(function (p) { return '<span class="mt"><em>' + p[0] + '</em> ' + p[1] + '</span>'; }).join(''); }
@@ -835,33 +846,22 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   };
 
   P.soldi = function (sub) {
-    var tabsS = [['', 'Riepilogo'], ['primanota', 'Prima nota']];
+    var tabsS = [['', 'Riepilogo'], ['primanota', 'Prima nota'], ['rendiconto', 'Rendiconto per cassa']];
     var tS = '<div class="chips">' + tabsS.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soldi' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '').split('/')[0] === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    var tes = carica('tesoriere'), vice = tes && tes.sostituto_id ? carica(tes.sostituto_id) : null;
+    var chiScrive = 'Scrive solo il Tesoriere' + (vice ? ' o il suo vice (' + esc(vice.nome) + ')' : '') + ', con la sua password personale; tutto il Consiglio legge.';
     P.soldi.att = /^primanota\/att\d+$/.test(sub || '') ? +sub.split('/att')[1] : null;
-    if (/^primanota/.test(sub || '')) return head('Prima nota', 'Il registro di cassa e banca dell’associazione: ogni entrata e ogni uscita, con data, categoria e riferimento. Lo tiene il Tesoriere; tutto il Consiglio lo legge.') + tS + primaNota();
-    var hasPN = D.prima_nota.length > 0, Ty = pnYearTot(base.getFullYear());
-    var sp = [['Corsi', 820], ['Mostre', 640], ['Stage', 530], ['Sede e assicurazioni', 460], ['Gite', 410], ['Conversazioni', 120]];
-    var en = [['Quote dei soci', 3100], ['Iscrizioni ai corsi', 900], ['Contributi', 250]];
-    function bars(a) { return '<div class="barsx">' + a.map(function (r) { return '<div class="barx"><span>' + r[0] + '</span><div class="t"><i style="width:' + (r[1] / 3100 * 100).toFixed(1) + '%"></i></div><em>' + eur(r[1]) + '</em></div>'; }).join('') + '</div>'; }
-    var canUp = me.admin || me.carica === 'tesoriere' || me.carica === 'presidente';
-    var docs = D.documenti.filter(function (d) { return d.area === 'contabilita'; });
-    return head('Soldi', 'Saldi e prima nota tenuti dal Tesoriere, regole economiche e documenti contabili. Tutto il Consiglio legge; scrive il Tesoriere.') + tS +
-      '<section class="box"><header><h2>Prima nota</h2><a href="#soldi/primanota">Apri la prima nota</a></header>' + (hasPN ? '<div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(Ty.en) + '</b><span>entrate del ' + base.getFullYear() + '</span></div><div><b>' + eur2(Ty.us) + '</b><span>uscite del ' + base.getFullYear() + '</span></div></div>' : '<p class="sub">Nessun movimento registrato. Il primo movimento da inserire è il «Saldo di apertura» di cassa e di banca.</p>') + '</section>' +
-      '<section class="box"><h2>Regole economiche già definite</h2><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b></div><span class="pill plain">' + esc(r.valore) + '</span></li>'; }).join('') + '</ul></section>' +
+    if (/^primanota/.test(sub || '')) return head('Prima nota', 'Il registro di cassa e banca: ogni entrata e ogni uscita, con data, categoria e riferimento. ' + chiScrive) + tS + primaNota();
+    if (sub === 'rendiconto') return head('Rendiconto per cassa', 'Il rendiconto annuale nello schema del Terzo settore (RUNTS), compilato da solo dalla prima nota. Il Tesoriere lo controlla e lo porta in Assemblea per l’approvazione.') + tS + rendicontoPage();
+    var Ty = pnYearTot(base.getFullYear()), docs = D.documenti.filter(function (d) { return d.area === 'contabilita'; });
+    return head('Contabilità', 'Saldi, prima nota, rendiconto e budget delle attività. ' + chiScrive) + tS +
+      '<section class="box k-soldi"><header><h2>Saldi</h2><a href="#soldi/primanota">Apri la prima nota</a></header>' + (D.prima_nota.length ? '<div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(Ty.en) + '</b><span>entrate del ' + base.getFullYear() + '</span></div><div><b>' + eur2(Ty.us) + '</b><span>uscite del ' + base.getFullYear() + '</span></div></div>' : '<p class="sub">Nessun movimento registrato. Il primo movimento da inserire è il «Saldo di apertura» di cassa e di banca.</p>') + '</section>' +
+      budgetPanoramica() +
+      '<div class="cols"><section class="box"><h2>Prontuario economico</h2><p class="sub">Le poche regole già decise. Le altre si decidono in Consiglio e si aggiungono qui.</p><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b><span class="sub">' + esc(r.valore) + '</span></div></li>'; }).join('') + '</ul></section>' +
       '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
-      ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
-
-      '<section class="box"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Il rendiconto annuale e la prima nota si caricano qui.</p>') +
-      upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], canUp, 'Qui caricano il Tesoriere e il Presidente. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
-  };
-
-  P.soci = function () {
-    return head('Soci', 'Il libro soci, con nomi, indirizzi e telefoni, resta sui computer dell’associazione. Qui ci sono i totali e le richieste di iscrizione arrivate dal sito.') +
-      '<div class="stats k-soci">' + D.numeri.map(function (n) { return '<div><b>' + esc(n.valore) + '</b><span>' + esc(n.descrizione) + '</span></div>'; }).join('') + '</div>' +
-      '<section class="box"><h2>Numeri da raccogliere</h2><ul class="list">' +
-      ['Soci in regola con la quota', 'Soci in scadenza', 'Nuovi soci dell’anno', 'Permanenza dei corsisti dopo il corso (oggi stima a occhio: 1 su 10 il primo anno, 1 su 30 a lungo termine)'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section>' +
-      '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati anagrafici completi (proposta: Presidente, Segretario, Tesoriere)</b></div></li><li><div><b style="font-weight:500">Quando caricare il libro soci nel gestionale, con informativa e registro dei trattamenti</b></div></li></ul></section>' +
-      richiesteSoci() + '<p class="note">Il libro soci con i nomi resta fuori dal gestionale finché il Consiglio non decide diversamente. Le richieste del sito le vedono solo i membri del Consiglio, come dice l’informativa.</p>';
+      ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section></div>' +
+      '<section class="box k-doc"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Qui vanno i rendiconti approvati, gli estratti conto e le ricevute.</p>') +
+      upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
   };
 
   P.comesifa = function (sub) {
@@ -1101,7 +1101,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     if (!a) return head('Attività non trovata', '<a href="#attivita">Torna allo stato dei lavori</a>');
     var cl = clOf(a.id), p = clProg(cl), d = attDate(a), tipoL = TIPI.indexOf(a.tipo) >= 0 ? a.tipo : a.tipo;
     var liste = LISTE_TIPO[a.tipo] || ['materiale', 'info'];
-    var tabs = [['', 'Scheda'], ['checklist', 'Checklist (' + p.done + '/' + p.tot + ')'], ['liste', 'Liste'], ['soldi', 'Soldi'], ['documenti', 'Documenti'], ['commenti', 'Commenti (' + D.commenti.filter(function (c) { return c.attivita_id === a.id; }).length + ')']];
+    var tabs = [['', 'Scheda'], ['checklist', 'Checklist (' + p.done + '/' + p.tot + ')'], ['liste', 'Liste'], ['soldi', 'Budget e spese'], ['documenti', 'Documenti'], ['commenti', 'Commenti (' + D.commenti.filter(function (c) { return c.attivita_id === a.id; }).length + ')']];
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#attivita/' + a.id + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (sez === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     var quando = a.ricorrenza ? esc(a.ricorrenza) : d ? fL.format(d) + (a.data_fine && a.data_fine !== a.data ? ' – ' + fL.format(dt(a.data_fine)) : '') + ' (' + when(d) + ')' : 'data da fissare';
     var top = '<a class="back" href="#attivita">← Stato dei lavori</a><section class="box att-head tinted"' + tintTipo(a.tipo) + '><div><span class="pill plain">' + esc(tipoL) + '</span> <span class="pill ' + pillCls(a.stato) + '">' + esc(a.stato || '') + '</span><h1 style="margin-top:8px">' + esc(a.titolo) + '</h1>' +
@@ -1185,9 +1185,255 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
   };
 
   /* ---------- prima nota ---------- */
-  var PN_E = ['Quote associative', 'Iscrizioni ai corsi', 'Quote di stage e gite', 'Erogazioni liberali', 'Contributi di enti pubblici', '5 per mille', 'Altre entrate'];
-  var PN_U = ['Sede e utenze', 'Assicurazioni', 'Materiale e attrezzature', 'Spese per corsi', 'Spese per stage e gite', 'Spese per mostre', 'Rimborsi spese', 'Spese bancarie', 'Altre uscite'];
+  /* ---------- contabilità: categorie della prima nota e voci del rendiconto per cassa (RUNTS) ---------- */
+  var PN_CAT = [
+    ['Quote associative', 'entrata', 'A.E1'],
+    ['Quote dei soci per corsi, gite, stage e pranzi', 'entrata', 'A.E3'],
+    ['Quote di non soci per corsi e attività', 'entrata', 'A.E7'],
+    ['Erogazioni liberali', 'entrata', 'A.E4'],
+    ['5 per mille', 'entrata', 'A.E5'],
+    ['Contributi da privati', 'entrata', 'A.E6'],
+    ['Contributi da enti pubblici', 'entrata', 'A.E8'],
+    ['Altre entrate delle attività', 'entrata', 'A.E10'],
+    ['Raccolta fondi occasionale', 'entrata', 'C.E2'],
+    ['Interessi bancari', 'entrata', 'D.E1'],
+    ['Materiale per le attività', 'uscita', 'A.U1'],
+    ['Servizi per le attività (albergo, pullman, ristorante, docenti)', 'uscita', 'A.U2'],
+    ['Affitto di sale e strutture per le attività', 'uscita', 'A.U3'],
+    ['Rimborsi spese ai volontari', 'uscita', 'A.U5'],
+    ['Altre uscite delle attività', 'uscita', 'A.U5'],
+    ['Spese per la raccolta fondi', 'uscita', 'C.U2'],
+    ['Spese bancarie', 'uscita', 'D.U1'],
+    ['Cancelleria e materiale d’ufficio', 'uscita', 'E.U1'],
+    ['Sede: utenze e servizi', 'uscita', 'E.U2'],
+    ['Assicurazioni', 'uscita', 'E.U2'],
+    ['Sede: affitto', 'uscita', 'E.U3'],
+    ['Altre spese generali', 'uscita', 'E.U5'],
+    ['Imposte e tasse', 'uscita', 'IMP'],
+    ['Acquisto di attrezzature durevoli', 'uscita', 'INV.U1']
+  ];
+  var PN_E = PN_CAT.filter(function (c) { return c[1] === 'entrata'; }).map(function (c) { return c[0]; });
+  var PN_U = PN_CAT.filter(function (c) { return c[1] === 'uscita'; }).map(function (c) { return c[0]; });
   var PN_X = ['Saldo di apertura', 'Giroconto tra cassa e banca'];
+  var PN_VOCE = {}; PN_CAT.forEach(function (c) { PN_VOCE[c[0]] = c[2]; });
+  var MAT = ['Materie prime, sussidiarie, di consumo e di merci', 'Servizi', 'Godimento beni di terzi', 'Personale'];
+  var MODD = [
+    ['A', 'attività di interesse generale', MAT.concat(['Uscite diverse di gestione']), ['Entrate da quote associative e apporti dei fondatori', 'Entrate dagli associati per attività mutuali', 'Entrate per prestazioni e cessioni ad associati e fondatori', 'Erogazioni liberali', 'Entrate del 5 per mille', 'Contributi da soggetti privati', 'Entrate per prestazioni e cessioni a terzi', 'Contributi da enti pubblici', 'Entrate da contratti con enti pubblici', 'Altre entrate']],
+    ['B', 'attività diverse', MAT.concat(['Uscite diverse di gestione']), ['Entrate per prestazioni e cessioni ad associati e fondatori', 'Contributi da soggetti privati', 'Entrate per prestazioni e cessioni a terzi', 'Contributi da enti pubblici', 'Entrate da contratti con enti pubblici', 'Altre entrate']],
+    ['C', 'attività di raccolta fondi', ['Uscite per raccolte fondi abituali', 'Uscite per raccolte fondi occasionali', 'Altre uscite'], ['Entrate da raccolte fondi abituali', 'Entrate da raccolte fondi occasionali', 'Altre entrate']],
+    ['D', 'attività finanziarie e patrimoniali', ['Su rapporti bancari', 'Su investimenti finanziari', 'Su patrimonio edilizio', 'Su altri beni patrimoniali', 'Altre uscite'], ['Da rapporti bancari', 'Da altri investimenti finanziari', 'Da patrimonio edilizio', 'Da altri beni patrimoniali', 'Altre entrate']],
+    ['E', 'attività di supporto generale', MAT.concat(['Altre uscite']), ['Entrate da distacco del personale', 'Altre entrate di supporto generale']]
+  ];
+  var MODD_INV = [['Investimenti in immobilizzazioni inerenti alle attività di interesse generale', 'Investimenti in immobilizzazioni inerenti alle attività diverse', 'Investimenti in attività finanziarie e patrimoniali', 'Rimborso di finanziamenti per quota capitale e di prestiti'], ['Disinvestimenti di immobilizzazioni inerenti alle attività di interesse generale', 'Disinvestimenti di immobilizzazioni inerenti alle attività diverse', 'Disinvestimenti di attività finanziarie e patrimoniali', 'Ricevimento di finanziamenti e di prestiti']];
+  function pnVoce(m) { return PN_VOCE[m.categoria] || (m.tipo === 'entrata' ? 'A.E10' : 'A.U5'); }
+  function rendSomme(y) {
+    var S = {}; pnValid().forEach(function (m) { if (m.data.slice(0, 4) !== String(y) || PN_X.indexOf(m.categoria) >= 0) return; var v = pnVoce(m); S[v] = (S[v] || 0) + +m.importo; });
+    return S;
+  }
+  function saldoAl(conto, dataIso) { return pnValid().filter(function (m) { return (!conto || m.conto === conto) && m.data <= dataIso; }).reduce(function (s, m) { return s + (m.tipo === 'entrata' ? 1 : -1) * +m.importo; }, 0); }
+  function rendiconto(y, agg) {
+    var S = rendSomme(y), S0 = rendSomme(y - 1);
+    function n(v) { return v ? eur2(v) : '—'; }
+    function tot(Sx, sez, k, len) { var t = 0; for (var i = 1; i <= len; i++) t += Sx[sez + '.' + k + i] || 0; return t; }
+    var H = '<thead><tr><th>Uscite</th><th class="num">' + y + '</th><th class="num">' + (y - 1) + '</th><th>Entrate</th><th class="num">' + y + '</th><th class="num">' + (y - 1) + '</th></tr></thead>';
+    var gU = 0, gE = 0, gU0 = 0, gE0 = 0, out = '', csv = [['Sezione', 'Voce', 'Uscite ' + y, 'Uscite ' + (y - 1), 'Voce', 'Entrate ' + y, 'Entrate ' + (y - 1)]];
+    MODD.forEach(function (s) {
+      var tu = tot(S, s[0], 'U', s[2].length), te = tot(S, s[0], 'E', s[3].length), tu0 = tot(S0, s[0], 'U', s[2].length), te0 = tot(S0, s[0], 'E', s[3].length);
+      gU += tu; gE += te; gU0 += tu0; gE0 += te0;
+      var rows = '';
+      if (!agg) for (var i = 0; i < Math.max(s[2].length, s[3].length); i++) {
+        var ku = s[0] + '.U' + (i + 1), ke = s[0] + '.E' + (i + 1);
+        rows += '<tr><td>' + (s[2][i] ? (i + 1) + ') ' + s[2][i] : '') + '</td><td class="num">' + (s[2][i] ? n(S[ku]) : '') + '</td><td class="num">' + (s[2][i] ? n(S0[ku]) : '') + '</td><td>' + (s[3][i] ? (i + 1) + ') ' + s[3][i] : '') + '</td><td class="num">' + (s[3][i] ? n(S[ke]) : '') + '</td><td class="num">' + (s[3][i] ? n(S0[ke]) : '') + '</td></tr>';
+        csv.push([s[0], s[2][i] || '', s[2][i] ? (S[ku] || 0) : '', s[2][i] ? (S0[ku] || 0) : '', s[3][i] || '', s[3][i] ? (S[ke] || 0) : '', s[3][i] ? (S0[ke] || 0) : '']);
+      }
+      csv.push([s[0], 'Totale', tu, tu0, 'Totale', te, te0]);
+      out += '<tbody><tr class="sez"><th colspan="3">' + s[0] + ') Uscite da ' + s[1] + '</th><th colspan="3">' + s[0] + ') Entrate da ' + s[1] + '</th></tr>' + rows +
+        '<tr class="tot"><td>Totale</td><td class="num">' + n(tu) + '</td><td class="num">' + n(tu0) + '</td><td>Totale</td><td class="num">' + n(te) + '</td><td class="num">' + n(te0) + '</td></tr>' +
+        '<tr class="av"><td colspan="3"></td><td>Avanzo o disavanzo ' + s[1] + '</td><td class="num">' + eur2(te - tu) + '</td><td class="num">' + eur2(te0 - tu0) + '</td></tr></tbody>';
+    });
+    var imp = S.IMP || 0, imp0 = S0.IMP || 0;
+    function invT(Sx, k) { var t = 0; for (var i = 1; i <= 4; i++) t += Sx['INV.' + k + i] || 0; return t; }
+    var iu = invT(S, 'U'), ie = invT(S, 'E'), iu0 = invT(S0, 'U'), ie0 = invT(S0, 'E');
+    out += '<tbody><tr class="tot"><td>Totale uscite della gestione</td><td class="num">' + n(gU) + '</td><td class="num">' + n(gU0) + '</td><td>Totale entrate della gestione</td><td class="num">' + n(gE) + '</td><td class="num">' + n(gE0) + '</td></tr>' +
+      '<tr class="av"><td colspan="3"></td><td>Avanzo o disavanzo prima delle imposte</td><td class="num">' + eur2(gE - gU) + '</td><td class="num">' + eur2(gE0 - gU0) + '</td></tr>' +
+      '<tr><td colspan="3"></td><td>Imposte</td><td class="num">' + n(imp) + '</td><td class="num">' + n(imp0) + '</td></tr>' +
+      '<tr class="av"><td colspan="3"></td><td>Avanzo o disavanzo prima di investimenti, disinvestimenti e finanziamenti</td><td class="num">' + eur2(gE - gU - imp) + '</td><td class="num">' + eur2(gE0 - gU0 - imp0) + '</td></tr></tbody>' +
+      '<tbody><tr class="sez"><th colspan="3">Uscite da investimenti in immobilizzazioni o da deflussi di capitale di terzi</th><th colspan="3">Entrate da disinvestimenti in immobilizzazioni o da flussi di capitale di terzi</th></tr>' +
+      (agg ? '' : MODD_INV[0].map(function (u, i) { return '<tr><td>' + (i + 1) + ') ' + u + '</td><td class="num">' + n(S['INV.U' + (i + 1)]) + '</td><td class="num">' + n(S0['INV.U' + (i + 1)]) + '</td><td>' + (i + 1) + ') ' + MODD_INV[1][i] + '</td><td class="num">' + n(S['INV.E' + (i + 1)]) + '</td><td class="num">' + n(S0['INV.E' + (i + 1)]) + '</td></tr>'; }).join('')) +
+      '<tr class="tot"><td>Totale</td><td class="num">' + n(iu) + '</td><td class="num">' + n(iu0) + '</td><td>Totale</td><td class="num">' + n(ie) + '</td><td class="num">' + n(ie0) + '</td></tr>' +
+      '<tr class="av"><td colspan="3"></td><td>Avanzo o disavanzo da investimenti, disinvestimenti e finanziamenti</td><td class="num">' + eur2(ie - iu) + '</td><td class="num">' + eur2(ie0 - iu0) + '</td></tr>' +
+      '<tr class="av big"><td colspan="3"></td><td>Avanzo o disavanzo complessivo</td><td class="num">' + eur2(gE - gU - imp + ie - iu) + '</td><td class="num">' + eur2(gE0 - gU0 - imp0 + ie0 - iu0) + '</td></tr></tbody>' +
+      '<tbody><tr class="sez"><th colspan="3"></th><th colspan="3">Cassa e banca al 31 dicembre</th></tr>' +
+      '<tr><td colspan="3"></td><td>Cassa</td><td class="num">' + eur2(saldoAl('cassa', y + '-12-31')) + '</td><td class="num">' + eur2(saldoAl('cassa', (y - 1) + '-12-31')) + '</td></tr>' +
+      '<tr><td colspan="3"></td><td>Depositi bancari e postali</td><td class="num">' + eur2(saldoAl('banca', y + '-12-31')) + '</td><td class="num">' + eur2(saldoAl('banca', (y - 1) + '-12-31')) + '</td></tr></tbody>';
+    csv.push(['', 'Imposte', imp, imp0, '', '', '']); csv.push(['Investimenti', 'Totale', iu, iu0, 'Totale', ie, ie0]);
+    csv.push(['', '', '', '', 'Avanzo o disavanzo complessivo', gE - gU - imp + ie - iu, gE0 - gU0 - imp0 + ie0 - iu0]);
+    csv.push(['', '', '', '', 'Cassa al 31/12', saldoAl('cassa', y + '-12-31'), saldoAl('cassa', (y - 1) + '-12-31')]);
+    csv.push(['', '', '', '', 'Depositi bancari e postali al 31/12', saldoAl('banca', y + '-12-31'), saldoAl('banca', (y - 1) + '-12-31')]);
+    rendiconto.csv = csv;
+    return '<div class="tablew"><table class="rend">' + H + out + '</table></div>';
+  }
+  function rendicontoPage() {
+    var years = Array.from(new Set(D.prima_nota.map(function (m) { return m.data.slice(0, 4); }).concat([String(base.getFullYear())]))).sort().reverse();
+    var y = +(P.soldi.ry || years[0]), agg = !!P.soldi.agg;
+    return '<section class="box k-soldi"><header><h2>Rendiconto per cassa ' + y + '</h2><div class="chips">' + years.map(function (x) { return '<button class="chip" type="button" data-act="rendY" data-v="' + x + '" aria-pressed="' + (+x === y) + '">' + x + '</button>'; }).join('') + '</div></header>' +
+      '<div class="chips"><button class="chip" type="button" data-act="rendAgg" data-v="0" aria-pressed="' + !agg + '">Voce per voce (Modello D)</button><button class="chip" type="button" data-act="rendAgg" data-v="1" aria-pressed="' + agg + '">Solo i totali (Modello E, fino a 60.000 € di entrate)</button><button class="btn alt sm" type="button" data-act="rendCsv" data-v="' + y + '">Scarica per Excel</button></div>' +
+      '<p class="sub">Si compila da solo dalla prima nota: ogni categoria del movimento finisce nella sua voce. I movimenti annullati, il saldo di apertura e i giroconti non contano.</p>' +
+      rendiconto(y, agg) + '</section>' +
+      '<section class="box"><h2>Da dove viene ogni voce</h2><div class="tablew"><table><thead><tr><th>Categoria della prima nota</th><th>Voce del rendiconto</th></tr></thead><tbody>' +
+      PN_CAT.map(function (c) { return '<tr><td>' + esc(c[0]) + '</td><td>' + vocLabel(c[2]) + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      '<p class="note">Schema del rendiconto per cassa degli enti del Terzo settore (Modello D del decreto del Ministero del Lavoro del 5 marzo 2020). Per gli enti con entrate fino a 60.000 € c’è anche la forma aggregata (Modello E, decreto del 18 febbraio 2026), che riporta solo i totali di sezione e si può usare dal rendiconto del 2026. Questo è un prospetto di lavoro: la scelta del modello e l’abbinamento delle categorie alle voci (per esempio i rimborsi ai volontari) vanno confermati con il commercialista prima del deposito al RUNTS.</p></section>';
+  }
+  function vocLabel(v) {
+    if (v === 'IMP') return 'Imposte';
+    var m = /^(A|B|C|D|E|INV)\.(U|E)(\d+)$/.exec(v); if (!m) return esc(v);
+    if (m[1] === 'INV') return (m[2] === 'U' ? 'Uscite da investimenti, ' : 'Entrate da disinvestimenti, ') + m[3] + ') ' + MODD_INV[m[2] === 'U' ? 0 : 1][+m[3] - 1];
+    var s = MODD.filter(function (x) { return x[0] === m[1]; })[0];
+    return m[1] + ') ' + (m[2] === 'U' ? 'Uscite' : 'Entrate') + ' da ' + s[1] + ', ' + m[3] + ') ' + s[m[2] === 'U' ? 2 : 3][+m[3] - 1];
+  }
+  function pnCatOptions() {
+    function grp(lab, tipo, pref) { var cs = PN_CAT.filter(function (c) { return c[1] === tipo && pref.indexOf(c[2].split('.')[0]) >= 0; }); return cs.length ? '<optgroup label="' + lab + '">' + cs.map(function (c) { return '<option>' + esc(c[0]) + '</option>'; }).join('') + '</optgroup>' : ''; }
+    return grp('Entrate delle attività', 'entrata', ['A']) + grp('Altre entrate', 'entrata', ['B', 'C', 'D', 'E']) + grp('Uscite delle attività', 'uscita', ['A', 'B', 'C']) + grp('Spese generali, banca e imposte', 'uscita', ['D', 'E', 'IMP']) + grp('Investimenti', 'uscita', ['INV']) +
+      '<optgroup label="Speciali">' + PN_X.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup>';
+  }
+  function budgetPanoramica() {
+    var ids = Array.from(new Set(D.attivita_budget.map(function (b) { return b.attivita_id; }).concat(D.prima_nota.filter(function (m) { return m.attivita_id && !m.annullato; }).map(function (m) { return m.attivita_id; }))));
+    var rows = ids.map(function (id) { var a = att(id); if (!a) return '';
+      var b = D.attivita_budget.filter(function (x) { return x.attivita_id === id; }), m = D.prima_nota.filter(function (x) { return x.attivita_id === id && !x.annullato; });
+      function s(arr, t) { return arr.filter(function (x) { return x.tipo === t; }).reduce(function (z, x) { return z + +x.importo; }, 0); }
+      return '<tr><td><b><a href="#attivita/' + id + '/soldi">' + esc(a.titolo) + '</a></b></td><td class="num">' + eur2(s(b, 'entrata') - s(b, 'uscita')) + '</td><td class="num">' + eur2(s(m, 'entrata') - s(m, 'uscita')) + '</td></tr>'; }).join('');
+    return '<section class="box k-soldi"><header><h2>Budget delle attività</h2><span class="sub">Risultato previsto e reale di ogni attività</span></header>' +
+      (rows ? '<div class="tablew"><table><thead><tr><th>Attività</th><th class="num">Previsto</th><th class="num">Reale</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="sub">Nessuna attività ha ancora un budget. Il Tesoriere lo compila dalla scheda di ogni attività, nella parte «Soldi».</p>') + '</section>';
+  }
+  function csvRend(y) {
+    function q(v) { v = typeof v === 'number' ? v.toFixed(2).replace('.', ',') : String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    rendiconto(+y, false);
+    var blob = new Blob(['﻿' + rendiconto.csv.map(function (r) { return r.map(q).join(';'); }).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'rendiconto-per-cassa-' + y + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    log('Ha scaricato il rendiconto per cassa del', String(y));
+  }
+
+  /* ---------- soci: libro soci protetto, con registro dei dati personali ---------- */
+  var SOCIO_ST = { attivo: 'Attivo', sospeso: 'Sospeso', dimesso: 'Dimesso', decaduto: 'Decaduto', deceduto: 'Deceduto' };
+  var SOCI_DICH = 'Dichiaro che userò i dati personali dei soci solo per i compiti che mi spettano nell’associazione, che non li copierò né li passerò ad altri senza una decisione del Consiglio Direttivo, e che li custodirò con cura. So che ogni apertura, modifica e scaricamento viene registrato con il mio account e l’ora, e che rispondo personalmente, sul piano civile e penale, di un uso improprio, secondo il Regolamento europeo 2016/679 (GDPR) e il Codice in materia di protezione dei dati personali (d.lgs. 196/2003).';
+  var SOCI_CAMPI = [['cognome', 'Cognome', 'text', 120, true], ['nome', 'Nome', 'text', 120], ['numero', 'Numero di tessera', 'text', 30], ['data_iscrizione', 'Socio dal', 'date'], ['codice_fiscale', 'Codice fiscale', 'text', 16], ['data_nascita', 'Data di nascita', 'date'], ['luogo_nascita', 'Luogo di nascita', 'text', 120], ['indirizzo', 'Indirizzo', 'text', 200], ['cap', 'CAP', 'text', 10], ['comune', 'Comune', 'text', 120], ['email', 'Email', 'email', 200], ['telefono', 'Telefono', 'tel', 60]];
+  async function sociLog(azione, dettaglio, sid) { try { var r = await sb.from('soci_log').insert({ user_id: me.id, chi: me.nome, azione: azione, dettaglio: dettaglio ? String(dettaglio).slice(0, 500) : null, socio_id: sid || null }).select().single(); if (!r.error && D.soci_log) D.soci_log.unshift(r.data); } catch (e) {} }
+  async function caricaSoci() {
+    var r = await Promise.all([sb.from('soci').select('*').order('cognome').order('nome'), sb.from('soci_log').select('*').order('id', { ascending: false }).limit(500), sb.rpc('conteggi_soci')]);
+    if (r[0].error) throw r[0].error; if (r[1].error) throw r[1].error;
+    D.soci = r[0].data; D.soci_log = r[1].data; if (!r[2].error) D.cntSoci = r[2].data;
+  }
+  function socioNome(s) { return esc(s.cognome) + (s.nome ? ' ' + esc(s.nome) : ''); }
+  function socioManca(s) { return ['codice_fiscale', 'data_nascita', 'indirizzo', 'email', 'telefono'].filter(function (k) { return !s[k]; }); }
+  function sociCruscotto() {
+    var c = D.cntSoci || {}, st = c.stati || {}, y = base.getFullYear();
+    function tile(n, l, h) { return '<a href="' + h + '"><b>' + (n == null ? '—' : n) + '</b><span>' + l + '</span></a>'; }
+    var att0 = st.attivo || 0, ult = c.ultimo_accesso;
+    return '<nav class="stats s5 k-soci" aria-label="Riepilogo dei soci">' + tile(att0, 'soci attivi', '#soci/libro') + tile(c.quota_anno, 'in regola con la quota ' + y, '#soci/libro/quota') + tile(att0 - (c.quota_anno || 0), 'quota ' + y + ' non ancora segnata', '#soci/libro/quota') + tile(c.da_controllare, 'schede con dati da controllare', '#soci/libro/controllare') + tile(c.senza_consenso, 'senza consenso privacy firmato', '#soci/libro/consenso') + '</nav>' +
+      '<div class="cols"><section class="box k-soci"><h2>Dati che mancano</h2><ul class="list">' +
+      [['senza_cf', 'Codice fiscale'], ['senza_indirizzo', 'Indirizzo'], ['senza_email', 'Email'], ['senza_telefono', 'Telefono']].map(function (x) { return '<li><div><b style="font-weight:500">' + x[1] + '</b></div><a class="pill ' + (c[x[0]] ? 'warn' : '') + '" href="#soci/libro/mancanti">' + (c[x[0]] || 0) + ' soci attivi senza</a></li>'; }).join('') + '</ul>' +
+      '<p class="sub">Altri stati: ' + Object.keys(SOCIO_ST).filter(function (k) { return k !== 'attivo'; }).map(function (k) { return SOCIO_ST[k] + ' ' + (st[k] || 0); }).join(' · ') + '. Quota ' + (y - 1) + ': ' + (c.quota_anno_prec || 0) + ' soci attivi segnati.</p></section>' +
+      '<section class="box"><h2>Chi ha usato i dati</h2>' + (ult ? '<p>Ultima operazione: <b>' + esc(ult.chi) + '</b>, ' + fT.format(new Date(ult.quando)) + '.</p>' : '<p class="sub">Nessuna operazione registrata.</p>') +
+      '<p class="sub">Ogni apertura del libro soci, ogni scheda aperta, ogni modifica e ogni scaricamento finisce nel registro dei dati personali, con l’account e l’ora. Il registro non si cancella.</p><div><a class="btn alt" href="#soci/registro">Apri il registro</a></div></section></div>' +
+      '<section class="box"><h2>Da decidere con il Consiglio</h2><ul class="list"><li><div><b style="font-weight:500">Chi può vedere i dati completi: oggi tutti gli accessi del Consiglio con password personale; proposta: Presidente, Vicepresidente, Segretario e Tesoriere</b></div></li><li><div><b style="font-weight:500">Modulo di consenso privacy da far firmare ai soci che non l’hanno ancora firmato</b></div></li><li><div><b style="font-weight:500">Numeri di tessera e date di iscrizione: da recuperare dal vecchio libro soci</b></div></li></ul></section>';
+  }
+  function sociVelo() {
+    var finti = ['██████ ████', '████████ ██████', '█████ ███████', '███████ ████', '██████ █████'];
+    return '<section class="box k-soci"><h2>Prima di aprire i dati dei soci</h2><p>' + SOCI_DICH + '</p>' +
+      '<form class="sform" data-act="sociOk"><label class="wide" style="display:flex;gap:10px;align-items:flex-start;font-weight:600"><input type="checkbox" name="ok" required style="width:24px;height:24px;flex:none;margin-top:2px"> Ho letto, accetto e me ne assumo la responsabilità</label><div class="wide"><button class="btn" type="submit">Accetto e apro i dati</button></div></form></section>' +
+      '<section class="box velo" aria-hidden="true"><div class="tablew"><table><thead><tr><th>Socio</th><th>Comune</th><th>Telefono</th><th>Email</th><th>Quote</th></tr></thead><tbody>' + finti.map(function (f) { return '<tr><td>' + f + '</td><td>██████</td><td>███ ███ ████</td><td>████████@████.██</td><td>████</td></tr>'; }).join('') + '</tbody></table></div></section>';
+  }
+  function sociFiltro(s, f, y) {
+    if (f === 'quota') return s.stato === 'attivo' && (s.quote || []).indexOf(y) < 0;
+    if (f === 'controllare') return !!s.note;
+    if (f === 'consenso') return s.stato === 'attivo' && s.consenso_privacy !== true;
+    if (f === 'mancanti') return s.stato === 'attivo' && socioManca(s).length > 0;
+    if (f === 'altri') return s.stato !== 'attivo';
+    return s.stato === 'attivo';
+  }
+  function sociLibro(f) {
+    var y = base.getFullYear(), q = low(P.soci.q || '');
+    var F = [['', 'Attivi'], ['quota', 'Quota ' + y + ' da segnare'], ['mancanti', 'Con dati mancanti'], ['controllare', 'Da controllare'], ['consenso', 'Senza consenso'], ['altri', 'Non attivi']];
+    var list = D.soci.filter(function (s) { return sociFiltro(s, f, y) && (!q || low(s.cognome + ' ' + (s.nome || '') + ' ' + (s.comune || '') + ' ' + (s.numero || '')).indexOf(q) >= 0); });
+    return '<div class="chips" role="group" aria-label="Filtra i soci">' + F.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soci/libro' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + ' (' + D.soci.filter(function (s) { return sociFiltro(s, x[0], y); }).length + ')</a>'; }).join('') + '</div>' +
+      '<section class="box k-soci"><header><h2>' + list.length + ' soci</h2><div class="chips"><a class="btn alt sm" href="#soci/nuovo">＋ Nuovo socio</a><button class="btn alt sm" type="button" data-act="sociCsv">Scarica per Excel</button></div></header>' +
+      '<form class="up" data-act="sociCerca" role="search"><label>Cerca per nome, comune o tessera<input name="q" value="' + esc(P.soci.q || '') + '" placeholder="Es. Rossi"></label><button class="btn alt" type="submit">Cerca</button></form>' +
+      (list.length ? '<div class="tablew"><table><thead><tr><th>Socio</th><th>Comune</th><th>Telefono</th><th>Email</th><th>Quote pagate</th><th></th></tr></thead><tbody>' + list.map(function (s) { var mm = socioManca(s);
+        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">Mancano ' + mm.length + ' dati</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
+  }
+  function socioForm(s) {
+    var y = base.getFullYear(), anni = [y - 2, y - 1, y, y + 1];
+    (s && s.quote || []).forEach(function (a) { if (anni.indexOf(a) < 0) anni.unshift(a); });
+    return '<form class="sform" data-act="socioSave" data-id="' + (s ? s.id : 'new') + '">' +
+      SOCI_CAMPI.map(function (c) { var v = s ? s[c[0]] : ''; return '<label>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '"' + (c[3] ? ' maxlength="' + c[3] + '"' : '') + (c[4] ? ' required' : '') + ' value="' + esc(v == null ? '' : v) + '"' + (c[0] === 'codice_fiscale' ? ' pattern="[A-Za-z0-9]{16}" style="text-transform:uppercase"' : '') + '></label>'; }).join('') +
+      '<label>Stato<select name="stato">' + Object.keys(SOCIO_ST).map(function (k) { return '<option value="' + k + '"' + ((s ? s.stato : 'attivo') === k ? ' selected' : '') + '>' + SOCIO_ST[k] + '</option>'; }).join('') + '</select></label>' +
+      '<label>Consenso privacy<select name="consenso_privacy"><option value=""' + (!s || s.consenso_privacy == null ? ' selected' : '') + '>Non si sa</option><option value="true"' + (s && s.consenso_privacy === true ? ' selected' : '') + '>Firmato</option><option value="false"' + (s && s.consenso_privacy === false ? ' selected' : '') + '>Non firmato</option></select></label>' +
+      '<fieldset class="wide quote"><legend>Quote associative pagate</legend>' + anni.sort().map(function (a) { return '<label><input type="checkbox" name="q' + a + '"' + (s && (s.quote || []).indexOf(a) >= 0 ? ' checked' : '') + '> ' + a + '</label>'; }).join('') + '</fieldset>' +
+      '<label class="wide">Note e cose da controllare<textarea name="note" maxlength="2000">' + esc(s ? s.note || '' : '') + '</textarea></label>' +
+      '<div class="wide"><button class="btn" type="submit">' + (s ? 'Salva le modifiche' : 'Aggiungi al libro soci') + '</button></div></form>';
+  }
+  function socioPage(id) {
+    var s = D.soci.filter(function (x) { return x.id === id; })[0];
+    if (!s) return '<a class="back" href="#soci/libro">← Libro soci</a>' + head('Socio non trovato', '');
+    if (!P.soci.viste[id]) { P.soci.viste[id] = 1; sociLog('scheda', 'Aperta la scheda del socio n. ' + id, id); }
+    var lg = (D.soci_log || []).filter(function (l) { return l.socio_id === id; }).slice(0, 10);
+    var puoCanc = me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente';
+    return '<a class="back" href="#soci/libro">← Libro soci</a>' + head(socioNome(s), (s.stato !== 'attivo' ? SOCIO_ST[s.stato] + ' · ' : '') + 'ultimo aggiornamento ' + fT.format(new Date(s.aggiornato_il)) + (s.aggiornato_da ? ' · ' + esc(s.aggiornato_da) : '')) +
+      (s.note ? '<section class="box k-scad"><h2>Da controllare</h2><p>' + esc(s.note) + '</p><p class="sub">Quando hai controllato, cancella la nota qui sotto e salva.</p></section>' : '') +
+      '<section class="box k-soci"><h2>Scheda del socio</h2>' + socioForm(s) + (puoCanc ? '<div class="azioni"><button class="btn alt sm danger" type="button" data-act="socioDel" data-id="' + s.id + '">Togli dal libro soci</button></div><p class="sub">Per un socio che lascia l’associazione è meglio cambiare lo stato in «Dimesso»: la storia resta.</p>' : '') + '</section>' +
+      '<section class="box"><h2>Registro di questa scheda</h2>' + (lg.length ? '<ul class="reg">' + lg.map(function (l) { return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b><span class="det">' + esc(l.dettaglio || l.azione) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna operazione registrata.</p>') + '</section>';
+  }
+  function sociRegistro() {
+    var AZ = { accettazione: 'Ha accettato la dichiarazione di responsabilità', apertura: 'Ha aperto il libro soci', scheda: 'Ha aperto una scheda', inserimento: 'Ha aggiunto un socio', modifica: 'Ha modificato una scheda', eliminazione: 'Ha tolto un socio', scaricamento: 'Ha scaricato i dati', importazione: 'Importazione dei dati' };
+    return '<section class="box"><header><h2>Registro dei dati personali</h2><span class="sub">Ultime ' + D.soci_log.length + ' operazioni · non si cancella</span></header>' +
+      '<ul class="reg">' + D.soci_log.map(function (l) { var s = l.socio_id && D.soci.filter(function (x) { return x.id === l.socio_id; })[0];
+        return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b> · ' + (AZ[l.azione] || esc(l.azione)) + (s ? ' · <a href="#soci/s' + s.id + '">' + socioNome(s) + '</a>' : '') + '<span class="det">' + esc(l.dettaglio || '') + '</span></div></li>'; }).join('') + '</ul></section>';
+  }
+  P.soci = function (sub) {
+    var parts = String(sub || '').split('/'), s0 = parts[0];
+    var tabs = [['', 'Cruscotto'], ['libro', 'Libro soci'], ['registro', 'Registro dei dati personali'], ['richieste', 'Richieste dal sito']];
+    var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soci' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (s0 === x[0] || (x[0] === 'libro' && /^(s\d+|nuovo)$/.test(s0))) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    if (!s0) return head('Soci', 'Il quadro dei soci: quanti sono, chi è in regola con la quota, quali dati mancano. I nomi e i contatti stanno nel Libro soci, che si apre solo con la password personale e dopo aver accettato la dichiarazione di responsabilità.') + t + sociCruscotto();
+    if (s0 === 'richieste') return head('Richieste di iscrizione dal sito', 'Le persone che hanno chiesto di diventare soci dal modulo del sito.') + t + richiesteSoci();
+    var titolo = s0 === 'registro' ? 'Registro dei dati personali' : 'Libro soci';
+    if (nascosti()) return head(titolo, '') + t + boxNascosti('i dati dei soci');
+    if (!P.soci.ok) return head(titolo, 'I dati dei soci restano coperti finché non accetti la dichiarazione qui sotto.') + t + sociVelo();
+    if (!D.soci) return head(titolo, 'Carico i dati…') + t;
+    if (s0 === 'registro') return head(titolo, 'Chi ha aperto, modificato o scaricato i dati dei soci, e quando. Lo vedono solo gli accessi con password personale.') + t + sociRegistro();
+    if (s0 === 'nuovo') return '<a class="back" href="#soci/libro">← Libro soci</a>' + head('Nuovo socio', 'Basta il cognome per cominciare; il resto si completa dopo.') + '<section class="box k-soci">' + socioForm(null) + '</section>';
+    if (/^s\d+$/.test(s0)) return socioPage(+s0.slice(1));
+    return head(titolo, 'L’elenco dei soci con i loro dati. Tocca un nome per aprire e aggiornare la scheda: quote pagate, contatti, consenso privacy.') + t + sociLibro(parts[1] || '');
+  };
+  P.soci.viste = {};
+  async function socioSave(f) {
+    var id = f.getAttribute('data-id'), row = {}, y = base.getFullYear();
+    SOCI_CAMPI.forEach(function (c) { var v = f[c[0]].value.trim(); row[c[0]] = v || null; });
+    if (row.codice_fiscale) row.codice_fiscale = row.codice_fiscale.toUpperCase();
+    row.stato = f.stato.value; row.consenso_privacy = f.consenso_privacy.value === '' ? null : f.consenso_privacy.value === 'true';
+    row.quote = Array.prototype.filter.call(f.querySelectorAll('input[type=checkbox][name^="q"]'), function (x) { return x.checked; }).map(function (x) { return +x.name.slice(1); }).sort();
+    row.note = f.note.value.trim() || null; row.aggiornato_il = new Date().toISOString(); row.aggiornato_da = me.nome;
+    if (id === 'new') {
+      var r = await sb.from('soci').insert(row).select().single(); if (r.error) throw r.error;
+      D.soci.push(r.data); P.soci.viste[r.data.id] = 1; toast('Socio aggiunto al libro.'); await caricaSoci(); location.hash = '#soci/s' + r.data.id;
+    } else { var u = await upd('soci', +id, row); if (u) { toast('Scheda salvata.'); await caricaSoci(); render(); } }
+  }
+  async function socioDel(id) {
+    var s = D.soci.filter(function (x) { return x.id === id; })[0]; if (!s) return;
+    if (!confirm('Togliere ' + s.cognome + ' ' + (s.nome || '') + ' dal libro soci? I dati si cancellano. Se il socio ha solo lasciato l’associazione, annulla e cambia lo stato in «Dimesso».')) return;
+    var r = await sb.from('soci').delete().eq('id', id).select(); if (r.error) { toast('Non tolto: ' + r.error.message); return; }
+    if (!r.data.length) { toast('Non tolto: permesso negato.'); return; }
+    await caricaSoci(); toast('Socio tolto dal libro.'); location.hash = '#soci/libro';
+  }
+  function csvSoci() {
+    var y = base.getFullYear();
+    if (!confirm('Il file contiene i dati personali di ' + D.soci.length + ' soci. Lo scaricamento resta nel registro. Non inoltrarlo e cancellalo quando non ti serve più. Continuare?')) return;
+    function q(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    var H = SOCI_CAMPI.map(function (c) { return c[1]; }).concat(['Stato', 'Consenso privacy', 'Quote pagate', 'Note']);
+    var out = [H.join(';')].concat(D.soci.map(function (s) { return SOCI_CAMPI.map(function (c) { return q(c[2] === 'date' && s[c[0]] ? s[c[0]].split('-').reverse().join('/') : s[c[0]]); }).concat([SOCIO_ST[s.stato], s.consenso_privacy == null ? 'non si sa' : s.consenso_privacy ? 'firmato' : 'non firmato', (s.quote || []).join(' '), q(s.note)]).join(';'); }));
+    var blob = new Blob(['﻿' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'libro-soci-' + iso(base) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    sociLog('scaricamento', 'Scaricato il libro soci completo (' + D.soci.length + ' soci) in formato Excel');
+  }
   function eur2(n) { return (+n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'; }
   function canPN() { if (!me.carica || me.prova) return false; var t = carica('tesoriere'); return me.carica === 'tesoriere' || (t && t.sostituto_id && me.carica === t.sostituto_id); }
   function pnValid() { return D.prima_nota.filter(function (m) { return !m.annullato; }); }
@@ -1209,7 +1455,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       '<label>Entrata o uscita<select name="k" required><option value="entrata">Entrata</option><option value="uscita">Uscita</option></select></label>' +
       '<label>Importo in euro<input name="i" required inputmode="decimal" placeholder="Es. 25,00" pattern="[0-9]+([.,][0-9]{1,2})?"></label>' +
       '<label>Cassa o banca<select name="c"><option value="cassa">Cassa (contanti)</option><option value="banca">Banca</option></select></label>' +
-      '<label>Categoria<select name="g" required><optgroup label="Entrate">' + PN_E.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup><optgroup label="Uscite">' + PN_U.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup><optgroup label="Speciali">' + PN_X.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</optgroup></select></label>' +
+      '<label>Categoria<select name="g" required>' + pnCatOptions() + '</select></label>' +
       '<label>Attività collegata<select name="a"><option value="">Nessuna</option>' + attSorted().map(function (a) { return '<option value="' + a.id + '"' + (P.soldi.att === a.id ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>' +
       '<label class="wide">Descrizione<input name="t" required placeholder="Es. Quota associativa 2027, socio n. 12"></label>' +
       '<label>Riferimento (ricevuta, fattura)<input name="r" placeholder="Es. Ricevuta n. 34"></label>' +
@@ -1561,7 +1807,7 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     if (sub === 'documento') return back + head('Nuovo documento', 'Scegli dove metterlo. Se c’è già un documento con lo stesso titolo, il nuovo file prende il suo posto e il vecchio resta tra le versioni.') +
       '<section class="box k-doc"><h2>In Archivio</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
       '<section class="box k-doc"><h2>Tra i Verbali</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>' +
-      '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Prima nota', 'Ricevute'], me.admin || me.carica === 'tesoriere' || me.carica === 'presidente', 'Qui caricano il Tesoriere e il Presidente.') + '</section>';
+      '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere.') + '</section>';
     if (sub === 'testo') return back + head('Nuovo testo pronto', 'Compare in Come si fa → Comunicazioni, con il pulsante «Copia».') +
       '<section class="box k-altri"><form class="sform" data-act="nTesto"><label class="wide">Titolo<input name="titolo" required maxlength="200" placeholder="Es. Promemoria della gita"></label>' +
       '<label class="wide">Testo<textarea name="testo" required maxlength="3000" style="min-height:160px"></textarea></label><div class="wide"><button class="btn" type="submit">Aggiungi il testo</button></div></form></section>';
@@ -1710,6 +1956,11 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
     else if (a === 'rqStato') { var rr = await upd('richieste', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v'), aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (rr) { toast(rr.stato === 'fatta' ? 'Richiesta segnata come fatta.' : 'Hai preso in carico la richiesta.'); render(); } }
     else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
     else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
+    else if (a === 'sociCsv') { csvSoci(); }
+    else if (a === 'socioDel') { await socioDel(+b.getAttribute('data-id')); }
+    else if (a === 'rendY') { P.soldi.ry = b.getAttribute('data-v'); render(); }
+    else if (a === 'rendAgg') { P.soldi.agg = b.getAttribute('data-v') === '1'; render(); }
+    else if (a === 'rendCsv') { csvRend(b.getAttribute('data-v')); }
     else if (a === 'lCsv') { csvLista(+b.getAttribute('data-id'), b.getAttribute('data-tipo')); }
     else if (a === 'sitoDel') { sitoDel(b.getAttribute('data-t'), +b.getAttribute('data-id')); }
     else if (a === 'copy') {
@@ -1732,6 +1983,12 @@ details.ed > summary { cursor: pointer; color: var(--link); font-weight: 600; fo
       } else if (a === 'newScad') {
         var r = await sb.from('scadenze').insert({ titolo: f.t.value.trim(), data: f.d.value || null, responsabile: f.r.value, categoria: f.c.value.trim() || null }).select().single();
         if (r.error) throw r.error; D.scadenze.push(r.data); toast('Scadenza aggiunta.'); render();
+      } else if (a === 'sociOk') {
+        if (!f.ok.checked || me.prova) return;
+        await sociLog('accettazione', 'Accettata la dichiarazione di responsabilità sui dati dei soci');
+        P.soci.ok = true; await caricaSoci(); await sociLog('apertura', 'Aperto il libro soci'); render();
+      } else if (a === 'sociCerca') { P.soci.q = f.q.value.trim(); render();
+      } else if (a === 'socioSave') { await socioSave(f);
       } else if (a === 'attSave') {
         var aid0 = +f.getAttribute('data-id'), a0 = att(aid0), tipo0 = f.tipo.value, dati0 = Object.assign({}, a0.dati || {});
         (DATI_TIPO[tipo0] || ['orario']).forEach(function (k) { if (f['d_' + k]) { var vv = f['d_' + k].value.trim(); if (vv) dati0[k] = vv; else delete dati0[k]; } });
