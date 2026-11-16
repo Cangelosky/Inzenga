@@ -381,6 +381,9 @@ ul.cl-doc li.ok::before { content: '☑ '; color: var(--forest); }
 .doc-indice { font-size: calc(15px * var(--z)); line-height: 1.8; } .doc-indice a { white-space: nowrap; }
 #liteBtn { font: inherit; }
 body.lite nav.tabs, body.lite #search { display: none; }
+.lite-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.lite-bar .lite-home { margin-bottom: 0; }
+.lite-bar .btn { min-height: 48px; }
 .lite-home { display: inline-flex; align-items: center; min-height: 48px; padding: 8px 18px; border-radius: 999px; background: var(--forest); color: #fff; font-weight: 700; text-decoration: none; margin-bottom: 14px; font-size: calc(18px * var(--z)); }
 .facile { display: grid; gap: 16px; max-width: 960px; }
 .facile h1 { font-size: calc(clamp(28px, 4vw, 40px) * var(--z)); }
@@ -2109,7 +2112,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       else html = P.oggi();
     } catch (ex) { console.error(ex); html = head('Qualcosa non va', 'Questa pagina non si è caricata. Torna a <a href="#oggi">Oggi</a>.'); }
     var lite = isLite(); document.body.classList.toggle('lite', lite); document.getElementById('liteBtn').setAttribute('aria-pressed', String(lite)); document.getElementById('liteBtn').textContent = lite ? 'Versione completa' : 'Versione semplice';
-    mainEl.innerHTML = (lite && r.a !== 'facile' ? '<a class="lite-home" href="#facile">← Cosa vuoi fare?</a>' : '') + html;
+    mainEl.innerHTML = (lite ? '<div class="lite-bar">' + (r.a !== 'facile' ? '<a class="lite-home" href="#facile">← Cosa vuoi fare?</a>' : '') + '<button class="btn alt" type="button" data-act="liteOff">Versione completa</button>' + (r.a === 'facile' ? '<button class="btn alt" type="button" data-act="liteEsci">Esci</button>' : '') + '</div>' : '') + html;
     var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' || r.a === 'nuovo' ? '' : r.a;
     document.getElementById('addBtn').setAttribute('aria-current', r.a === 'nuovo' ? 'page' : 'false');
     var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
@@ -2228,6 +2231,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'sitoAnno') { P.sito.anno = b.getAttribute('data-v'); render(); }
     else if (a === 'preCsv') { csvPre(+b.getAttribute('data-id')); }
     else if (a === 'conPassword') { var back = location.hash; await esci(me.carica); try { sessionStorage.setItem('inz-dopo', back); } catch (e) {} }
+    else if (a === 'liteOff') { document.getElementById('liteBtn').click(); }
+    else if (a === 'liteEsci') { document.getElementById('logout').click(); }
     else if (a === 'sociCsv') { csvSoci(); }
     else if (a === 'socioDel') { await socioDel(+b.getAttribute('data-id')); }
     else if (a === 'rendY') { P.soldi.ry = b.getAttribute('data-v'); render(); }
