@@ -1739,14 +1739,16 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     D.soci = r[0].data; D.soci_log = r[1].data; if (!r[2].error) D.cntSoci = r[2].data;
   }
   function socioNome(s) { return esc(s.cognome) + (s.nome ? ' ' + esc(s.nome) : ''); }
-  function socioManca(s) { return ['codice_fiscale', 'data_nascita', 'indirizzo', 'email', 'telefono'].filter(function (k) { return !s[k]; }); }
+  /* dati obbligatori del libro soci: l'email è facoltativa */
+  var SOCIO_OBBL = { codice_fiscale: 'codice fiscale', data_nascita: 'data di nascita', luogo_nascita: 'luogo di nascita', indirizzo: 'indirizzo', cap: 'CAP', comune: 'comune', telefono: 'telefono' };
+  function socioManca(s) { return Object.keys(SOCIO_OBBL).filter(function (k) { return !s[k]; }); }
   function sociCruscotto() {
     var c = D.cntSoci || {}, st = c.stati || {}, y = base.getFullYear();
     function tile(n, l, h) { return '<a href="' + h + '"><b>' + (n == null ? '—' : n) + '</b><span>' + l + '</span></a>'; }
     var att0 = st.attivo || 0, ult = c.ultimo_accesso;
     return '<nav class="stats s5 k-soci" aria-label="Riepilogo dei soci">' + tile(att0, 'soci attivi', '#soci/libro') + tile(c.quota_anno, 'in regola con la quota ' + y, '#soci/libro/quota') + tile(att0 - (c.quota_anno || 0), 'quota ' + y + ' non ancora segnata', '#soci/libro/quota') + tile(c.da_controllare, 'schede con dati da controllare', '#soci/libro/controllare') + tile(c.senza_consenso, 'senza consenso privacy firmato', '#soci/libro/consenso') + '</nav>' +
       '<div class="cols"><section class="box k-soci"><h2>Dati che mancano</h2><ul class="list">' +
-      [['senza_cf', 'Codice fiscale'], ['senza_indirizzo', 'Indirizzo'], ['senza_email', 'Email'], ['senza_telefono', 'Telefono']].map(function (x) { return '<li><div><b style="font-weight:500">' + x[1] + '</b></div><a class="pill ' + (c[x[0]] ? 'warn' : '') + '" href="#soci/libro/mancanti">' + (c[x[0]] || 0) + ' soci attivi senza</a></li>'; }).join('') + '</ul>' +
+      [['senza_cf', 'Codice fiscale'], ['senza_indirizzo', 'Indirizzo'], ['senza_telefono', 'Telefono']].map(function (x) { return '<li><div><b style="font-weight:500">' + x[1] + '</b></div><a class="pill ' + (c[x[0]] ? 'warn' : '') + '" href="#soci/libro/mancanti">' + (c[x[0]] || 0) + ' soci attivi senza</a></li>'; }).join('') + '</ul>' +
       '<p class="sub">Altri stati: ' + Object.keys(SOCIO_ST).filter(function (k) { return k !== 'attivo'; }).map(function (k) { return SOCIO_ST[k] + ' ' + (st[k] || 0); }).join(' · ') + '. Quota ' + (y - 1) + ': ' + (c.quota_anno_prec || 0) + ' soci attivi segnati.</p></section>' +
       '<section class="box"><h2>Chi ha usato i dati</h2>' + (ult ? '<p>Ultima operazione: <b>' + esc(ult.chi) + '</b>, ' + fT.format(new Date(ult.quando)) + '.</p>' : '<p class="sub">Nessuna operazione registrata.</p>') +
       '<p class="sub">Ogni apertura del libro soci, ogni scheda aperta, ogni modifica e ogni scaricamento finisce nel registro dei dati personali, con l’account e l’ora. Il registro non si cancella.</p><div><a class="btn alt" href="#soci/registro">Apri il registro</a></div></section></div>' +
@@ -1768,13 +1770,13 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   }
   function sociLibro(f) {
     var y = base.getFullYear(), q = low(P.soci.q || '');
-    var F = [['', 'Attivi'], ['quota', 'Quota ' + y + ' da segnare'], ['mancanti', 'Con dati mancanti'], ['controllare', 'Da controllare'], ['consenso', 'Senza consenso'], ['altri', 'Non attivi']];
+    var F = [['', 'Attivi'], ['quota', 'Quota ' + y + ' da segnare'], ['mancanti', 'Con dati obbligatori mancanti'], ['controllare', 'Da controllare'], ['consenso', 'Senza consenso'], ['altri', 'Non attivi']];
     var list = D.soci.filter(function (s) { return sociFiltro(s, f, y) && (!q || low(s.cognome + ' ' + (s.nome || '') + ' ' + (s.comune || '') + ' ' + (s.numero || '')).indexOf(q) >= 0); });
     return '<div class="chips" role="group" aria-label="Filtra i soci">' + F.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soci/libro' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + ' (' + D.soci.filter(function (s) { return sociFiltro(s, x[0], y); }).length + ')</a>'; }).join('') + '</div>' +
       '<section class="box k-soci"><header><h2>' + list.length + ' soci</h2><div class="chips"><a class="btn alt sm" href="#soci/nuovo">＋ Nuovo socio</a><button class="btn alt sm" type="button" data-act="sociCsv">Scarica per Excel</button></div></header>' +
       '<form class="up" data-act="sociCerca" role="search"><label>Cerca per nome, comune o tessera<input name="q" value="' + esc(P.soci.q || '') + '" placeholder="Es. Rossi"></label><button class="btn alt" type="submit">Cerca</button></form>' +
       (list.length ? '<div class="tablew"><table><thead><tr><th>Socio</th><th>Comune</th><th>Telefono</th><th>Email</th><th>Quote pagate</th><th></th></tr></thead><tbody>' + list.map(function (s) { var mm = socioManca(s);
-        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">' + (mm.length === 1 ? 'Manca 1 dato' : 'Mancano ' + mm.length + ' dati') + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
+        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">' + (mm.length === 1 ? 'Manca: ' + SOCIO_OBBL[mm[0]] : mm.length === 2 ? 'Mancano: ' + SOCIO_OBBL[mm[0]] + ' e ' + SOCIO_OBBL[mm[1]] : 'Mancano ' + mm.length + ' dati') + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
   }
   function socioForm(s) {
     var y = base.getFullYear(), anni = [y - 2, y - 1, y, y + 1];
