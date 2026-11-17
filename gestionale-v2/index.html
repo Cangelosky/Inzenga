@@ -374,7 +374,8 @@ fieldset.quote { border: 2px solid var(--line); border-radius: 10px; padding: 10
 fieldset.quote label { display: flex; align-items: center; gap: 8px; font-weight: 500; }
 fieldset.quote input { width: 22px; height: 22px; }
 pre.modello { white-space: pre-wrap; background: color-mix(in srgb, var(--line) 30%, var(--card)); border: 1px solid var(--line); border-radius: 10px; padding: 14px; font: 15px/1.55 ui-monospace, Menlo, Consolas, monospace; }
-ul.cl-doc { list-style: none; padding-left: 0; display: grid; gap: 6px; }
+ul.cl-doc { list-style: none; padding-left: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.foglio li, .foglio p, .foglio td { overflow-wrap: break-word; }
 ul.cl-doc li::before { content: '☐ '; color: var(--ink-2); }
 ul.cl-doc li.ok::before { content: '☑ '; color: var(--forest); }
 .doc-intro { background: color-mix(in srgb, var(--line) 25%, var(--card)); border-left: 4px solid var(--line); padding: 10px 14px; border-radius: 8px; }
@@ -554,6 +555,43 @@ main.enter > *:nth-child(2) { animation-delay: .04s; } main.enter > *:nth-child(
 nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}
+
+/* impaginazione, controllo del 17/11: niente sbordi, niente buchi */
+.foglio { grid-template-columns: minmax(0, 1fr); }
+.foglio > *, .fh > *, .foglio .fs > * { min-width: 0; }
+.foglio .fs, .foglio ol, .foglio ul { grid-template-columns: minmax(0, 1fr); }
+.foglio pre { overflow-x: auto; white-space: pre-wrap; overflow-wrap: break-word; }
+.foglio a { overflow-wrap: break-word; }
+.doc-indice a { white-space: normal; }
+.cols { align-items: start; }
+@media (min-width: 760px) {
+  .og-grid { display: block; columns: 2; column-gap: 16px; }
+  .og-grid > .og-card { break-inside: avoid; display: flex; width: 100%; margin: 0 0 16px; }
+}
+@media (min-width: 1240px) { .og-grid { columns: 3; } }
+.og-card .list > li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.og-card .list > li > .pill { order: -1; justify-self: start; }
+.og-card .reg li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+@media (min-width: 900px) { form.up > label:first-child { grid-column: span 2; } }
+/* telefono: righe di schede che scorrono di lato, tabelle come schede */
+@media (max-width: 700px) {
+  .chips.rullo { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .chips.rullo::-webkit-scrollbar { display: none; }
+  .chips.rullo > * { flex: none; }
+  .chips.rullo.altro { -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent); mask-image: linear-gradient(90deg, #000 82%, transparent); }
+  .tablew.pila { overflow: visible; }
+  .tablew.pila table { min-width: 0; }
+  .tablew.pila thead { display: none; }
+  .tablew.pila tr { display: grid; grid-template-columns: minmax(0, 1fr); padding: 10px 0; border-top: 1px solid var(--line); }
+  .tablew.pila tbody tr:first-child { border-top: 0; }
+  .tablew.pila td { display: grid; grid-template-columns: minmax(84px, 36%) minmax(0, 1fr); gap: 10px; border: 0; padding: 3px 0; text-align: left; white-space: normal; }
+  .tablew.pila td::before { content: attr(data-l); color: var(--ink-2); font-size: calc(14.5px * var(--z)); font-weight: 600; }
+  .tablew.pila td[data-l=""] { grid-template-columns: minmax(0, 1fr); }
+  .tablew.pila td[data-l=""]::before { display: none; }
+  .tablew.pila td:first-child { font-weight: 700; }
+  .tablew.pila td:empty { display: none; }
+  .tablew.pila td > .tv { min-width: 0; overflow-wrap: break-word; }
 }
 </style>
 </head>
@@ -1161,7 +1199,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
           .concat(righe(v.altro).map(function (t, i) { return { h: 'Punto ' + (dec.length + i + 1) + ' – ' + t, b: [{ t: 'p', v: '[Sintesi della discussione e decisione]' }] }; }))
           .concat([{ h: 'Varie ed eventuali e chiusura', b: [{ t: 'p', v: righe(v.varie).length ? righe(v.varie).join(' ') : 'Nessun altro argomento.' }, { t: 'p', v: 'Esauriti gli argomenti, la seduta è chiusa alle ore ' + (v.fine || '[ora]') + '. Il presente verbale, letto e approvato, è sottoscritto dal Presidente e dal Segretario verbalizzante.' }, { t: 'p', v: '**Il Presidente** ________________________    **Il Segretario verbalizzante** ________________________' }] }]) }; } },
     { k: 'conv-ass', ico: '📣', t: 'Convocazione dell’Assemblea dei soci', d: 'Prima e seconda convocazione, ordine del giorno, controllo dei 15 giorni di preavviso.', cat: ['verbali', 'Assemblea'],
-      campi: [['tipo', 'Assemblea', 'select', 'ordinaria', ['ordinaria', 'straordinaria']], ['d1', 'Prima convocazione: giorno', 'date'], ['o1', 'Prima convocazione: ora', 'time', '17:00'], ['d2', 'Seconda convocazione: giorno', 'date'], ['o2', 'Seconda convocazione: ora', 'time', '17:30'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno (un punto per riga)', 'area', '1. \n2. Varie ed eventuali'], ['bil', 'Si approva il bilancio (rendiconto)?', 'select', 'no', ['no', 'sì']]],
+      campi: [['tipo', 'Assemblea', 'select', 'ordinaria', ['ordinaria', 'straordinaria']], ['d1', '1ª convocazione: giorno', 'date'], ['o1', '1ª convocazione: ora', 'time', '17:00'], ['d2', '2ª convocazione: giorno', 'date'], ['o2', '2ª convocazione: ora', 'time', '17:30'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno (un punto per riga)', 'area', '1. \n2. Varie ed eventuali'], ['bil', 'Si approva il bilancio (rendiconto)?', 'select', 'no', ['no', 'sì']]],
       fai: function (v) { return { titolo: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci del ' + gD(v.d2 || v.d1), secs: [
         { h: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci', b: [{ t: 'p', v: 'Ai soci dell’Associazione' }, { t: 'p', v: 'Ai sensi dell’art. 16.8 dello Statuto, l’Assemblea ' + v.tipo + ' dei soci è convocata in prima convocazione per ' + gIt(v.d1) + ' alle ore ' + (v.o1 || '[ora]') + ' e, occorrendo, in seconda convocazione per ' + gIt(v.d2) + ' alle ore ' + (v.o2 || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', con il seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }]
           .concat(v.bil === 'sì' ? [{ t: 'p', v: 'Il rendiconto e i libri sociali sono consultabili in sede dagli associati almeno 8 giorni prima dell’Assemblea (Statuto, art. 18.7).' }] : [])
@@ -1193,7 +1231,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (c[2] === 'select') return '<label>' + c[1] + '<select name="' + c[0] + '">' + c[4].map(function (o) { return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>';
     if (c[2] === 'attivita') return '<label class="wide">' + c[1] + '<select name="att" data-act="genAtt"><option value="">Scegli un’attività per riempire i campi</option>' + attSorted().filter(function (a) { return !a.archiviato; }).map(function (a) { return '<option value="' + a.id + '"' + (String(a.id) === String(val) ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>';
     if (c[2] === 'decisioni') { var od = openDec(); return '<fieldset class="wide gen-dec"><legend>' + c[1] + ' (' + od.length + ')</legend>' + (od.length ? od.map(function (x) { var e = (v.decEsiti || []).filter(function (y) { return y.id === x.id; })[0] || {}; return '<div class="gd"><b>' + esc(x.testo) + '</b><div class="gd-row"><label>Esito<select name="es' + x.id + '">' + [['approvata', 'Approvata'], ['respinta', 'Respinta'], ['rinviata', 'Rinviata'], ['non', 'Non discussa']].map(function (o) { return '<option value="' + o[0] + '"' + ((e.esito || 'non') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label><label>Voti<input name="vt' + x.id + '" value="' + esc(e.voti || '') + '" placeholder="Es. all’unanimità"></label><label class="wide">Nota<input name="nt' + x.id + '" value="' + esc(e.nota || '') + '" placeholder="Es. responsabile nominato: …"></label></div></div>'; }).join('') : '<p class="sub">Nessuna decisione da votare.</p>') + '</fieldset>'; }
-    return '<label>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '" value="' + esc(val) + '"></label>';
+    return '<label' + (c[2] === 'text' && /^(luogo|dove|come|ufficio|evento|titolo|quando)$/.test(c[0]) ? ' class="wide"' : '') + '>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '" value="' + esc(val) + '"></label>';
   }
   function genTesto(doc) {
     var out = [INTEST[0], INTEST[1], ''];
@@ -1726,7 +1764,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<section class="box k-soci"><header><h2>' + list.length + ' soci</h2><div class="chips"><a class="btn alt sm" href="#soci/nuovo">＋ Nuovo socio</a><button class="btn alt sm" type="button" data-act="sociCsv">Scarica per Excel</button></div></header>' +
       '<form class="up" data-act="sociCerca" role="search"><label>Cerca per nome, comune o tessera<input name="q" value="' + esc(P.soci.q || '') + '" placeholder="Es. Rossi"></label><button class="btn alt" type="submit">Cerca</button></form>' +
       (list.length ? '<div class="tablew"><table><thead><tr><th>Socio</th><th>Comune</th><th>Telefono</th><th>Email</th><th>Quote pagate</th><th></th></tr></thead><tbody>' + list.map(function (s) { var mm = socioManca(s);
-        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">Mancano ' + mm.length + ' dati</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
+        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">' + (mm.length === 1 ? 'Manca 1 dato' : 'Mancano ' + mm.length + ' dati') + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
   }
   function socioForm(s) {
     var y = base.getFullYear(), anni = [y - 2, y - 1, y, y + 1];
@@ -2271,6 +2309,26 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     renderBnav(aree, cur);
     document.body.classList.toggle('fab-on', r.a === 'oggi');
   }
+
+  /* impaginazione sul telefono: tabelle come schede, righe di schede che scorrono di lato */
+  function impagina() {
+    mainEl.querySelectorAll('.tablew').forEach(function (w) {
+      var t = w.querySelector('table'); if (!t || t.classList.contains('rend') || w.closest('.velo')) return;
+      var ths = [].map.call(t.querySelectorAll('thead th'), function (th) { return th.textContent.trim(); }); if (!ths.length) return;
+      t.querySelectorAll('tbody tr').forEach(function (tr) { var i = 0; [].forEach.call(tr.children, function (td) { var sp = +td.getAttribute('colspan') || 1; if (td.tagName === 'TD' && !td.hasAttribute('data-l')) { td.setAttribute('data-l', sp > 1 ? '' : (ths[i] || '')); if (td.childNodes.length && !(td.children.length === 1 && td.firstElementChild.classList.contains('tv'))) { var sv = document.createElement('div'); sv.className = 'tv'; while (td.firstChild) sv.appendChild(td.firstChild); td.appendChild(sv); } } i += sp; }); });
+      w.classList.add('pila');
+    });
+    mainEl.querySelectorAll('.chips').forEach(function (c) {
+      if (!c.querySelector(':scope > .chip') || c.querySelector(':scope > .btn, :scope > .pill, :scope > input')) return;
+      c.classList.add('rullo');
+      var segna = function () { c.classList.toggle('altro', c.scrollWidth > c.clientWidth + 2 && c.scrollLeft + c.clientWidth < c.scrollWidth - 4); };
+      if (!c.dataset.rullo) { c.dataset.rullo = '1'; c.addEventListener('scroll', segna, { passive: true }); var on = c.querySelector('[aria-pressed="true"], [aria-current="page"]'); if (on && on.getBoundingClientRect().right > c.getBoundingClientRect().right) c.scrollLeft = Math.max(0, on.offsetLeft - c.offsetLeft - 16); }
+      segna();
+    });
+  }
+  var impT = 0;
+  new MutationObserver(function () { cancelAnimationFrame(impT); impT = requestAnimationFrame(impagina); }).observe(mainEl, { childList: true, subtree: true });
+  window.addEventListener('resize', function () { cancelAnimationFrame(impT); impT = requestAnimationFrame(impagina); });
 
   /* ---------- telefono: menu in basso e foglio «Altro» ---------- */
   var ICO = {
