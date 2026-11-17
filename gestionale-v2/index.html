@@ -558,6 +558,16 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 }
 
 /* impaginazione, controllo del 17/11: niente sbordi, niente buchi */
+/* nessuna colonna più larga del suo contenitore, anche con il testo ingrandito dal telefono */
+#app, main, .box, .col, .agenda, .agenda .giorno, .cd-body, .og-body, .quadro-box { grid-template-columns: minmax(0, 1fr); }
+.cols, .board, .hero, .og-grid { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (min-width: 980px) { .hero { grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); } }
+@media (min-width: 1000px) { .board { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.box > *, .col > *, .cols > *, main > *, .calnav > * { min-width: 0; }
+.chips { min-width: 0; max-width: 100%; }
+.legend span { min-width: 0; }
+.ev { max-width: 100%; }
 .foglio { grid-template-columns: minmax(0, 1fr); }
 .foglio > *, .fh > *, .foglio .fs > * { min-width: 0; }
 .foglio .fs, .foglio ol, .foglio ul { grid-template-columns: minmax(0, 1fr); }
@@ -2319,7 +2329,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       w.classList.add('pila');
     });
     mainEl.querySelectorAll('.chips').forEach(function (c) {
-      if (!c.querySelector(':scope > .chip') || c.querySelector(':scope > .btn, :scope > .pill, :scope > input')) return;
+      if (!c.querySelector(':scope > .chip') || c.querySelector(':scope > .btn, :scope > .pill, :scope > input') || c.closest('.calnav')) return;
       c.classList.add('rullo');
       var segna = function () { c.classList.toggle('altro', c.scrollWidth > c.clientWidth + 2 && c.scrollLeft + c.clientWidth < c.scrollWidth - 4); };
       if (!c.dataset.rullo) { c.dataset.rullo = '1'; c.addEventListener('scroll', segna, { passive: true }); var on = c.querySelector('[aria-pressed="true"], [aria-current="page"]'); if (on && on.getBoundingClientRect().right > c.getBoundingClientRect().right) c.scrollLeft = Math.max(0, on.offsetLeft - c.offsetLeft - 16); }
