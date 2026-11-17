@@ -616,65 +616,6 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 :root[data-theme="dark"] .gen-out .cint-t b { color: #CFE3D6; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gen-out .cint-t b { color: #CFE3D6; } }
 @media (max-width: 520px) { .cint { gap: 8px; } .cint-l { width: 44px; } .cint-r { width: 54px; } .cint-t b { font-size: 16px; } .cint-k, .cint-s { font-size: 9.5px; } }
-#stampa { display: none; }
-@page carta {
-  size: A4; margin: 22mm 22mm 20mm;
-  @top-left { content: "Associazione Micologica Bresadola APS · Gruppo di Palermo «Giuseppe Inzenga»"; font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #1F4D36; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.4pt solid #C9D6CE; }
-  @top-right { content: "pag. " counter(page) " di " counter(pages); font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #5F6B64; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.4pt solid #C9D6CE; }
-  @bottom-center { content: "C.F. 97171140821 · RUNTS n. 75000 · gruppomic.inzenga@libero.it · PEC gruppomic.inzenga@pec.libero.it"; font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #5F6B64; }
-}
-@page carta:first {
-  margin: 14mm 22mm 34mm;
-  @top-left { content: none; border: 0; } @top-right { content: none; border: 0; }
-  @bottom-left { content: "SEDE OPERATIVA\A Oratorio Salesiano Villaurea\A Via S. Domenico Savio 4\A 90145 Palermo"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 30%; }
-  @bottom-center { content: "CONTATTI\A Tel. 335 782 5415\A gruppomic.inzenga@libero.it\A PEC gruppomic.inzenga@pec.libero.it"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 34%; }
-  @bottom-right { content: "DATI DELL’ASSOCIAZIONE\A Codice fiscale 97171140821\A RUNTS n. 75000\A Sede legale: Via F. La Colla 15, 90124 Palermo"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 36%; }
-}
-@page cartans { size: A4; margin: 22mm 22mm 20mm;
-  @top-left { content: "Associazione Micologica Bresadola APS · Gruppo di Palermo «Giuseppe Inzenga»"; font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #1F4D36; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.4pt solid #C9D6CE; }
-  @top-right { content: "pag. " counter(page) " di " counter(pages); font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #5F6B64; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.4pt solid #C9D6CE; }
-  @bottom-center { content: "C.F. 97171140821 · RUNTS n. 75000 · gruppomic.inzenga@libero.it · PEC gruppomic.inzenga@pec.libero.it"; font: 7.5pt Calibri, Carlito, Arial, sans-serif; color: #5F6B64; }
-}
-@page cartans:first {
-  margin: 14mm 22mm 34mm;
-  @top-left { content: none; border: 0; } @top-right { content: none; border: 0; }
-  @bottom-left { content: "SEDE OPERATIVA\A Oratorio Salesiano Villaurea\A Via S. Domenico Savio 4\A 90145 Palermo"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 30%; }
-  @bottom-center { content: "CONTATTI\A Tel. 335 782 5415\A gruppomic.inzenga@libero.it\A PEC gruppomic.inzenga@pec.libero.it"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 34%; }
-  @bottom-right { content: "DATI DELL’ASSOCIAZIONE\A Codice fiscale 97171140821\A RUNTS n. 75000"; white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.4pt solid #C9D6CE; font: 7.5pt/1.5 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; width: 36%; }
-}
-@media print {
-  body.in-stampa { background: #fff !important; padding: 0 !important; margin: 0 !important; }
-  body.in-stampa > *:not(#stampa) { display: none !important; }
-  body.in-stampa #stampa { display: block; page: carta; color: #1E2420; font: 10.5pt/1.45 Calibri, Carlito, 'Segoe UI', Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body.in-stampa #stampa.ns { page: cartans; }
-  #stampa .cint-l { width: 24mm; } #stampa .cint-r { width: 30mm; }
-  #stampa .cint { gap: 5mm; }
-  #stampa .cint-k { font-size: 7.5pt; } #stampa .cint-t b { font-size: 15pt; } #stampa .cint-s { font-size: 7.5pt; }
-  #stampa .cint-riga { margin: 4mm 0 8mm; height: 1.2pt; }
-  #stampa .st-tit, #stampa .st-corpo > .fs:first-child > h2:first-child { font: 400 15pt/1.3 Cambria, Caladea, Georgia, serif; color: #1F4D36; text-align: center; margin: 0 0 6mm; }
-  #stampa .st-intest h3 { text-align: center; font: 400 14pt/1.3 Cambria, Caladea, Georgia, serif; color: #1F4D36; margin: 0 0 1mm; }
-  #stampa .st-intest h3 + h3 { font: 400 10.5pt/1.4 Calibri, Carlito, Arial, sans-serif; color: #5F6B64; margin-bottom: 6mm; }
-  #stampa h2 { font: 700 11.5pt/1.3 Cambria, Caladea, Georgia, serif; color: #1F4D36; margin: 5mm 0 2mm; break-after: avoid; }
-  #stampa h3 { font: 700 10.5pt/1.3 Calibri, Carlito, Arial, sans-serif; color: #1F4D36; margin: 3mm 0 1mm; break-after: avoid; }
-  #stampa p { margin: 0 0 2.2mm; text-align: justify; orphans: 3; widows: 3; }
-  #stampa ul, #stampa ol { margin: 0 0 3mm; padding-left: 7mm; } #stampa li { margin: 0 0 .8mm; }
-  #stampa ul.cl-doc { list-style: none; padding-left: 0; } #stampa ul.cl-doc li::before { content: '☐ '; } #stampa ul.cl-doc li.ok::before { content: '☑ '; }
-  #stampa .tablew { overflow: visible !important; }
-  #stampa table { border-collapse: collapse; width: auto; min-width: 60%; margin: 1mm 0 4mm; break-inside: avoid; font-size: 10pt; }
-  #stampa th { background: #E7EFE9 !important; color: #1F4D36; text-align: left; font-weight: 700; }
-  #stampa th, #stampa td { border-top: .4pt solid #C9D6CE; border-bottom: .4pt solid #C9D6CE; padding: 1.4mm 3mm; vertical-align: top; }
-  #stampa tr > td:nth-child(2):last-child { text-align: right; }
-  #stampa a { color: inherit; text-decoration: none; }
-  #stampa pre.modello { white-space: pre-wrap; font: 9.5pt/1.4 Consolas, 'DejaVu Sans Mono', monospace; border: .4pt solid #C9D6CE; padding: 3mm; }
-  #stampa .dc { font-size: 0; } #stampa .dc::after { content: '______________'; font-size: 10.5pt; }
-  #stampa .fs { break-inside: auto; }
-  #stampa .st-corpo, #stampa .fs, #stampa ol, #stampa ul, #stampa .tablew { display: block !important; gap: 0 !important; }
-  #stampa ol { list-style: decimal; } #stampa ul:not(.cl-doc) { list-style: disc; }
-  #stampa li { display: list-item !important; margin: 0 0 .6mm !important; padding: 0 !important; line-height: 1.4; }
-  #stampa h2, #stampa h3, #stampa p:has(+ ol), #stampa p:has(+ ul), #stampa p:has(+ .tablew) { break-after: avoid; page-break-after: avoid; }
-  #stampa li, #stampa tr { break-inside: avoid; }
-}
-
 </style>
 </head>
 <body>
@@ -917,29 +858,92 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (/^note di lavoro|da togliere prima della stampa/i.test(s.h || '')) return '';
     var intest = /^intestazione$/i.test(s.h || '');
     var b = (s.b || []).filter(function (x) { return !(intest && (/Codice fiscale 97171140821/.test(x.v) || (x.t === 'h3' && /^Associazione Micologica Bresadola/i.test(x.v)))); });
-    return '<section class="fs' + (intest ? ' st-intest' : '') + '">' + (intest ? '' : '<h2>' + esc(s.h) + '</h2>') + (s.p ? '<p>' + fmx(s.p) + '</p>' : '') + b.map(blocco).join('') +
+    // firme: «**Il Presidente** – Nome» seguito da «Firma ____» diventano colonne affiancate che non si spezzano
+    var out = [], firme = [], luogo = '';
+    b.forEach(function (x, i) {
+      var m = x.t === 'p' && /^\*\*([^*]+)\*\*\s*[–-]?\s*(.*)$/.exec(x.v), nx = b[i + 1];
+      if (m && nx && nx.t === 'p' && /^Firma\s*_+/.test(nx.v)) { firme.push([m[1], m[2]]); return; }
+      if (x.t === 'p' && /^Firma\s*_+$/.test(x.v) && firme.length) return;
+      if (x.t === 'p' && /^Palermo, /.test(x.v) && /^\*\*Il /.test((b[i + 1] || {}).v || '')) { luogo = x.v; return; }
+      out.push(blocco(x));
+    });
+    var firmeH = firme.length ? '<div class="firme">' + (luogo ? '<p class="luogo">' + fmx(luogo) + '</p>' : '') + '<div class="firme-c">' + firme.map(function (f) { return '<div><span>' + esc(f[0]) + '</span><b>' + esc(f[1]) + '</b><i></i></div>'; }).join('') + '</div></div>' : (luogo ? '<p>' + fmx(luogo) + '</p>' : '');
+    if (intest) { var nh = 0; out = out.map(function (h) { return /^<h3>/.test(h) ? h.replace('<h3>', '<h3 class="' + (nh++ ? 'st-sub' : 'st-tit') + '">') : h; }); }
+    return '<section class="fs' + (intest ? ' st-intest' : '') + '">' + (intest ? '' : '<h2>' + esc(s.h) + '</h2>') + (s.p ? '<p>' + fmx(s.p) + '</p>' : '') + out.join('') + firmeH +
       (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fmx(x) + '</li>'; }).join('') + '</ul>' : '') +
       (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fmx(x) + '</li>'; }).join('') + '</ol>' : '') +
       (s.table ? tableH(s.table[0], s.table[1]) : '') + (s.comunicazioni ? tableH(HEAD4, comsRows(s.comunicazioni)) : '') + '</section>';
   }
   function cartaDoc(titolo, c) {
     var secs = (c && c.secs) || [], haIntest = secs.some(function (s) { return /^intestazione$/i.test(s.h || ''); });
-    return (haIntest || !titolo ? '' : '<h1 class="st-tit">' + esc(titolo) + '</h1>') + secs.map(cartaSez).join('');
+    var corpo = secs.map(cartaSez).join('');
+    if (!haIntest && !titolo) corpo = corpo.replace('<h2>', '<h2 class="st-tit">');   // il primo titolo fa da titolo del foglio
+    return (haIntest || !titolo ? '' : '<h1 class="st-tit">' + esc(titolo) + '</h1>') + corpo;
+  }
+  /* La pagina di stampa è un documento a sé, impaginato da Paged.js: margini, testata, recapiti e numeri di pagina
+     escono giusti anche se nella finestra di stampa del browser «Margini» è su «Nessuno», e anche su Safari e Firefox. */
+  var PAGEDJS = 'https://cdn.jsdelivr.net/npm/pagedjs@0.4.3/dist/paged.polyfill.min.js';
+  function cartaCSS(senzaSede) {
+    var f = 'font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 7.5pt; color: #5F6B64;';
+    var col = f + ' white-space: pre; text-align: left; vertical-align: top; padding-top: 4mm; border-top: 0.5pt solid #C9D6CE; line-height: 1.5;';
+    return '@page { size: A4; margin: 22mm 22mm 20mm;' +
+      ' @top-left { content: "Associazione Micologica Bresadola APS · Gruppo di Palermo «Giuseppe Inzenga»"; ' + f + ' color: #1F4D36; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.5pt solid #C9D6CE; }' +
+      ' @top-right { content: "pag. " counter(page) " di " counter(pages); ' + f + ' vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.5pt solid #C9D6CE; }' +
+      ' @bottom-center { content: "C.F. 97171140821 · RUNTS n. 75000 · gruppomic.inzenga@libero.it · PEC gruppomic.inzenga@pec.libero.it"; ' + f + ' } }' +
+      '@page :first { margin: 14mm 22mm 34mm; @top-left { content: none; border: 0; } @top-right { content: none; border: 0; } @bottom-center { content: none; border: 0; }' +
+      ' @bottom-left { content: "SEDE OPERATIVA\\A Oratorio Salesiano Villaurea\\A Via S. Domenico Savio 4\\A 90145 Palermo"; ' + col + ' width: 50mm; }' +
+      ' @bottom-center { content: "CONTATTI\\A Tel. 335 782 5415\\A gruppomic.inzenga@libero.it\\A PEC gruppomic.inzenga@pec.libero.it"; ' + col + ' width: 56mm; }' +
+      ' @bottom-right { content: "DATI DELL’ASSOCIAZIONE\\A Codice fiscale 97171140821\\A RUNTS n. 75000' + (senzaSede ? '' : '\\A Sede legale: Via F. La Colla 15, 90124 Palermo') + '"; ' + col + ' width: 60mm; } }' +
+      'html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }' +
+      'body { color: #1E2420; font: 10.5pt/1.45 Calibri, Carlito, "Segoe UI", Arial, sans-serif; }' +
+      '.cint { display: flex; align-items: center; gap: 5mm; } .cint img { display: block; height: auto; } .cint-l { width: 24mm; } .cint-r { width: 30mm; margin-left: auto; }' +
+      '.cint-t { display: flex; flex-direction: column; gap: 0.6mm; } .cint-k { font-weight: 700; font-size: 7.5pt; letter-spacing: .14em; text-transform: uppercase; color: #3E7A55; }' +
+      '.cint-t b { font: 400 15pt/1.2 Cambria, Caladea, Georgia, serif; color: #1F4D36; } .cint-t b i { font-style: italic; } .cint-s { font-size: 7.5pt; color: #5F6B64; }' +
+      '.cint-riga { height: 1.2pt; background: linear-gradient(90deg, #B8912F 0 24%, #1F4D36 24% 100%); margin: 4mm 0 8mm; }' +
+      '.st-tit { font: 400 15pt/1.3 Cambria, Caladea, Georgia, serif !important; color: #1F4D36; text-align: center; margin: 0 0 1.5mm !important; }' +
+      'h1.st-tit, h2.st-tit { margin-bottom: 6mm !important; }' +
+      '.st-sub { font: 400 10.5pt/1.4 Calibri, Carlito, Arial, sans-serif !important; color: #5F6B64 !important; text-align: center; margin: 0 0 6mm !important; }' +
+      '.firme { break-inside: avoid; margin-top: 4mm; } .firme .luogo { text-align: left; margin-bottom: 6mm; }' +
+      '.firme-c { display: flex; gap: 12mm; } .firme-c > div { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }' +
+      '.firme-c span { font-size: 9.5pt; color: #5F6B64; } .firme-c b { font: italic 400 11.5pt/1.3 Cambria, Caladea, Georgia, serif; color: #1F4D36; margin-top: .5mm; }' +
+      '.firme-c i { display: block; width: 62mm; border-bottom: .6pt solid #9DB3A6; height: 16mm; }' +
+      'h2 { font: 700 11.5pt/1.3 Cambria, Caladea, Georgia, serif; color: #1F4D36; margin: 5mm 0 2mm; break-after: avoid; }' +
+      'h3 { font-weight: 700; font-size: 10.5pt; color: #1F4D36; margin: 3mm 0 1mm; break-after: avoid; }' +
+      'p { margin: 0 0 2.2mm; text-align: justify; orphans: 3; widows: 3; } p:has(+ ol), p:has(+ ul), p:has(+ .tablew) { break-after: avoid; }' +
+      'ul, ol { margin: 0 0 3mm; padding-left: 7mm; } li { margin: 0 0 .6mm; line-height: 1.4; break-inside: avoid; }' +
+      'ul.cl-doc { list-style: none; padding-left: 0; } ul.cl-doc li::before { content: "☐ "; } ul.cl-doc li.ok::before { content: "☑ "; }' +
+      'table { border-collapse: collapse; min-width: 60%; margin: 1mm 0 4mm; font-size: 10pt; break-inside: avoid; } tr { break-inside: avoid; }' +
+      'th { background: #E7EFE9; color: #1F4D36; text-align: left; font-weight: 700; } th, td { border-top: .5pt solid #C9D6CE; border-bottom: .5pt solid #C9D6CE; padding: 1.4mm 3mm; vertical-align: top; }' +
+      'tr > td:nth-child(2):last-child { text-align: right; } a { color: inherit; text-decoration: none; }' +
+      'pre.modello { white-space: pre-wrap; font: 9.5pt/1.4 Consolas, "DejaVu Sans Mono", monospace; border: .5pt solid #C9D6CE; padding: 3mm; }' +
+      '.dc { font-size: 0; } .dc::after { content: "______________"; font-size: 10.5pt; }' +
+      '@media screen { body { background: #e9ece9; } .pagedjs_page { background: #fff; margin: 0 auto 8mm; box-shadow: 0 1px 6px rgba(0,0,0,.2); } }';
   }
   function stampaCarta(html, o) {
     o = o || {};
-    var el = document.getElementById('stampa');
-    if (!el) { el = document.createElement('div'); el.id = 'stampa'; document.body.appendChild(el); }
-    el.className = o.senzaSede ? 'ns' : '';
-    el.innerHTML = cartaTesta() + '<div class="st-corpo">' + html + '</div>';
-    document.body.classList.add('in-stampa');
-    var imgs = [].slice.call(el.querySelectorAll('img'));
-    Promise.all(imgs.map(function (i) { return i.complete ? 1 : new Promise(function (r) { i.onload = i.onerror = r; }); })).then(function () {
-      var vecchio = document.title; if (o.titolo) document.title = o.titolo;   // diventa il nome del PDF
-      setTimeout(function () { window.print(); setTimeout(function () { document.title = vecchio; }, 800); }, 60);
-    });
+    var vecchio = document.getElementById('stampaFrame'); if (vecchio) vecchio.remove();
+    var fr = document.createElement('iframe'); fr.id = 'stampaFrame'; fr.title = 'Stampa';
+    fr.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none';
+    document.body.appendChild(fr);
+    var abs = function (u) { return new URL(u, location.href).href; };
+    var corpo = cartaTesta().replace('src="carta/inzenga.png"', 'src="' + abs('carta/inzenga.png') + '"').replace('src="carta/amb.png"', 'src="' + abs('carta/amb.png') + '"') + '<div class="st-corpo">' + html + '</div>';
+    var titolo = (o.titolo || 'Documento').replace(/[<>&"]/g, '');
+    toast('Preparo la pagina di stampa…');
+    var w = fr.contentWindow, fatto = false;
+    var stampa = function () {
+      if (fatto) return; fatto = true;
+      var t0 = document.title; document.title = titolo;   // il nome proposto per il PDF
+      try { w.focus(); w.print(); } catch (e) { toast('La stampa non è partita: ' + e.message); }
+      setTimeout(function () { document.title = t0; }, 1500);
+    };
+    w.__cartaPronta = stampa;
+    w.document.open();
+    w.document.write('<!doctype html><html lang="it"><head><meta charset="utf-8"><title>' + titolo + '</title><style>' + cartaCSS(!!o.senzaSede) + '</style>' +
+      '<script>window.PagedConfig = { auto: true, after: function () { setTimeout(function () { window.__cartaPronta && window.__cartaPronta(); }, 150); } };<\/script>' +
+      '<script src="' + PAGEDJS + '" onerror="window.__cartaPronta && window.__cartaPronta()"><\/script></head><body>' + corpo + '</body></html>');
+    w.document.close(); w.__cartaPronta = stampa;
+    setTimeout(stampa, 15000);   // se l'impaginazione non risponde, si stampa comunque
   }
-  window.addEventListener('afterprint', function () { document.body.classList.remove('in-stampa'); });
   function stampaCorrente() {
     var r = route();
     if (r.a === 'doc') {
