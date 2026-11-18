@@ -632,6 +632,61 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 @media (max-width: 600px) { .gs-r { grid-template-columns: minmax(0, 1fr); } .gs-del { max-width: none; } }
 .gd .gd-row { display: none; } .gd:has(> .chk input:checked) .gd-row { display: grid; }
 .gen-sociok { display: grid; gap: 8px; }
+.doc-txt { min-height: 60vh; font: 400 calc(15.5px * var(--z))/1.55 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; tab-size: 2; }
+.doc-editor code { background: var(--soft, rgba(0,0,0,.05)); padding: 0 4px; border-radius: 4px; font-size: .92em; }
+.doc-prev:empty { display: none; } .doc-prev .foglio { border: 1px dashed var(--line); padding: 14px; border-radius: 10px; }
+.att-stato { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.att-stato select { border: 0; background: transparent; font: inherit; color: inherit; padding: 0 2px; min-height: 0; cursor: pointer; }
+.lav-box { display: grid; gap: 4px; } .lav-h { margin: 10px 0 2px; font-size: calc(14px * var(--z)); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+.lav-r { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; align-items: center; padding: 8px 10px; border-radius: 10px; text-decoration: none; color: inherit; }
+.lav-r:hover { background: color-mix(in srgb, var(--line) 35%, transparent); }
+.lav-t { display: grid; min-width: 0; } .lav-t b { overflow-wrap: anywhere; }
+@media (max-width: 700px) { .lav-r { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.lav-dopo { margin-top: 6px; }
+.ac-list { position: absolute; z-index: 80; background: var(--card, #fff); border: 1px solid var(--line-strong, #9DB3A6); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 4px; display: grid; max-width: calc(100vw - 24px); }
+.ac-list button { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; gap: 12px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: calc(16px * var(--z)); color: var(--ink); }
+.ac-list button.on, .ac-list button:hover { background: color-mix(in srgb, var(--accent, #2f6b4a) 14%, transparent); }
+.ac-list .sub { font-size: calc(13.5px * var(--z)); white-space: nowrap; }
+.rl-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.rl-strip a { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px; background: color-mix(in srgb, var(--tint, var(--line)) 22%, var(--card)); border: 1px solid color-mix(in srgb, var(--tint, var(--line)) 55%, transparent); text-decoration: none; color: var(--ink); }
+.rl-strip a.me { outline: 2px solid var(--ink); outline-offset: 1px; }
+.rl-strip small { display: block; color: var(--ink-2); font-size: calc(13px * var(--z)); }
+.rl-av { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: color-mix(in srgb, var(--tint, #557) 70%, #1b2a20); }
+.rl-av.lg { width: 46px; height: 46px; font-size: calc(20px * var(--z)); }
+.rl-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); align-items: start; }
+.rl-card { display: grid; gap: 14px; border-top: 5px solid color-mix(in srgb, var(--tint, var(--line)) 80%, #000 5%); }
+.rl-card.me { box-shadow: 0 0 0 2px color-mix(in srgb, var(--tint) 70%, transparent), 0 6px 20px rgba(0,0,0,.07); }
+.rl-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+.rl-head h2 { margin: 0; } .rl-vice { grid-column: 1 / -1; justify-self: start; font-size: calc(14px * var(--z)); padding: 4px 10px; border-radius: 999px; background: color-mix(in srgb, var(--tint, var(--line)) 20%, transparent); }
+.rl-vice.vuoto { background: #FFF1C9; color: #6B4E00; }
+.rl-gest { background: color-mix(in srgb, var(--tint, var(--line)) 12%, var(--card)); border-radius: 14px; padding: 12px; display: grid; gap: 10px; }
+.rl-gest h3, .rl-man h3 { margin: 0; font-size: calc(16px * var(--z)); } .rl-gest h3 small { font-weight: 500; color: var(--ink-2); margin-left: 6px; }
+.rl-tiles { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.rl-tile { display: grid; gap: 3px; padding: 10px 12px; border-radius: 12px; background: var(--card); border: 1px solid color-mix(in srgb, var(--tint, var(--line)) 60%, transparent); text-decoration: none; color: var(--ink); transition: transform .15s, box-shadow .15s; }
+.rl-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+.rl-tile b { line-height: 1.25; } .rl-ruolo { font-size: calc(12px * var(--z)); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); }
+.rl-bar { height: 6px; border-radius: 6px; background: color-mix(in srgb, var(--line) 70%, transparent); overflow: hidden; margin-top: 4px; } .rl-bar i { display: block; height: 100%; background: var(--ok-ink, #2f6b4a); border-radius: 6px; }
+.rl-cosa { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; } .rl-cosa li { display: grid; padding: 6px 10px; border-left: 3px solid color-mix(in srgb, var(--tint, var(--line)) 80%, transparent); background: var(--card); border-radius: 0 8px 8px 0; }
+.rl-man { display: grid; gap: 8px; justify-items: start; } .rl-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.rl-chips li { padding: 5px 11px; border-radius: 999px; background: color-mix(in srgb, var(--line) 45%, transparent); font-size: calc(14.5px * var(--z)); line-height: 1.35; }
+.rl-dd { margin: 0; padding: 6px 10px; border-radius: 8px; background: #FFF6DB; color: #5B4300; font-size: calc(14.5px * var(--z)); }
+.rl-stat summary { cursor: pointer; font-weight: 600; color: var(--link, inherit); }
+:root[data-theme="dark"] .rl-vice.vuoto, :root[data-theme="dark"] .rl-dd { background: #3a3218; color: #f3dfa3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .rl-vice.vuoto, :root:not([data-theme="light"]) .rl-dd { background: #3a3218; color: #f3dfa3; } }
+.box > header.rl-head { display: grid; grid-template-columns: auto minmax(0, 1fr); justify-content: stretch; text-align: left; }
+.rl-head > div { justify-self: start; text-align: left; }
+@media (max-width: 700px) { .rl-strip { display: flex; overflow-x: auto; scrollbar-width: none; gap: 8px; } .rl-strip a { flex: none; padding: 8px 12px; } .rl-strip::-webkit-scrollbar { display: none; } }
+#guida { position: fixed; inset: 0; z-index: 200; }
+#guida .g-buco { position: fixed; border-radius: 12px; box-shadow: 0 0 0 9999px rgba(10, 20, 14, .58); transition: all .3s ease; pointer-events: none; outline: 2px solid #F3D36B; }
+#guida .g-card { position: fixed; width: min(360px, calc(100vw - 24px)); background: var(--card); color: var(--ink); border-radius: 16px; padding: 16px 18px; box-shadow: 0 14px 40px rgba(0,0,0,.3); display: grid; gap: 8px; animation: gIn .25s ease; }
+#guida .g-card h2 { margin: 0; font-size: calc(20px * var(--z)); } #guida .g-card p { margin: 0; line-height: 1.5; }
+#guida .g-n { font-size: calc(13px * var(--z)); color: var(--ink-2); font-weight: 600; }
+#guida .g-dots { display: flex; gap: 5px; } #guida .g-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); } #guida .g-dots i.on { background: var(--ink); width: 18px; border-radius: 4px; }
+#guida .g-az { display: flex; gap: 8px; align-items: center; } #guida .g-az span { flex: 1; }
+@keyframes gIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #guida .g-buco { transition: none; } #guida .g-card { animation: none; } }
+.guida-link { display: inline-flex; gap: 6px; flex-wrap: wrap; } .guida-link button { font: inherit; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: inherit; cursor: pointer; }
+.guida-link #guidaVia { font-weight: 700; }
 </style>
 </head>
 <body>
@@ -676,6 +731,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     </div>
     <main id="main" tabindex="-1"><p class="loading">Caricamento…</p></main>
     <footer>I dati stanno in un archivio protetto: li vede solo chi entra con un account del Consiglio Direttivo. I dati delle persone si vedono solo entrando con la password personale.
+      <span class="guida-link"><button type="button" id="guidaVia">📘 Guida passo passo</button> <button type="button" id="guidaAuto" aria-pressed="true">Guida al primo accesso: accesa</button></span>
       <span class="tema" role="group" aria-label="Aspetto">Aspetto: <button type="button" data-tema="auto">Automatico</button> <button type="button" data-tema="light">Chiaro</button> <button type="button" data-tema="dark">Scuro</button></span></footer>
     <a class="fab" href="#nuovo" aria-label="Aggiungi una scadenza, un'attività o altro">＋ Aggiungi</a>
     <nav class="bnav" id="bnav" aria-label="Menu principale"></nav>
@@ -767,7 +823,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       document.getElementById('pwLink').hidden = me.prova;
       loginEl.hidden = true; appEl.hidden = false;
       try { var dopo = sessionStorage.getItem('inz-dopo'); sessionStorage.removeItem('inz-dopo'); if (dopo && !me.prova) location.hash = dopo; } catch (e) {}
-      render(); entra();
+      render(); entra(); guidaAlPrimo();
       var nuoveR = richiestePerMe().filter(function (r) { return r.stato === 'aperta'; }).length;
       if (nuoveR && !me.admin) toast(nuoveR === 1 ? 'Hai una richiesta nuova da un altro membro: la trovi in «Cose da fare».' : 'Hai ' + nuoveR + ' richieste nuove da altri membri: le trovi in «Cose da fare».');
     } catch (ex) {
@@ -978,8 +1034,66 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (!r.error && me && !me.prova) { try { await log('Ha aperto il documento con dati personali', d.titolo); } catch (e) {} }
     if (route().a === 'doc') render();
   }
+  /* ---------- testo dei documenti in forma semplice, per modificarlo ----------
+     ## Titolo di sezione · ### sottotitolo · - punto · 1. punto · [ ] / [x] casella · | tabella | · > nota · ``` modello ``` */
+  function doc2txt(c) {
+    var o = [];
+    if (c.intro) o.push('> ' + c.intro, '');
+    (c.secs || []).forEach(function (s) {
+      o.push('## ' + (s.h || ''));
+      if (s.nota) o.push('> ' + s.nota);
+      if (s.p) o.push(s.p, '');
+      var bl = (s.b || []).slice();
+      if (s.ul) bl.push({ t: 'ul', v: s.ul }); if (s.ol) bl.push({ t: 'ol', v: s.ol }); if (s.table) bl.push({ t: 'table', v: s.table });
+      bl.forEach(function (b) {
+        if (b.t === 'p') o.push(b.v, '');
+        else if (b.t === 'h3') o.push('### ' + b.v);
+        else if (b.t === 'ul') { b.v.forEach(function (x) { o.push('- ' + x); }); o.push(''); }
+        else if (b.t === 'ol') { b.v.forEach(function (x, i) { o.push((i + 1) + '. ' + x); }); o.push(''); }
+        else if (b.t === 'cl') { b.v.forEach(function (x) { o.push(x.indexOf('☑ ') === 0 ? '[x] ' + x.slice(2) : '[ ] ' + x); }); o.push(''); }
+        else if (b.t === 'pre') o.push('```', b.v, '```', '');
+        else if (b.t === 'table') { o.push('| ' + b.v[0].join(' | ') + ' |'); b.v[1].forEach(function (r) { o.push('| ' + r.map(function (x) { return String(x).replace(/\|/g, '/'); }).join(' | ') + ' |'); }); o.push(''); }
+      });
+      if (s.comunicazioni) o.push('{{comunicazioni:' + s.comunicazioni + '}}', '');
+      o.push('');
+    });
+    return o.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  }
+  function txt2doc(t) {
+    var c = { secs: [] }, sec = null, L = String(t).replace(/\r/g, '').split('\n'), i = 0, par = [];
+    var nuova = function (h) { sec = { h: h, b: [] }; c.secs.push(sec); };
+    var push = function (b) { if (!sec) nuova('Testo'); sec.b.push(b); };
+    var chiudiPar = function () { if (par.length) { push({ t: 'p', v: par.join(' ') }); par = []; } };
+    while (i < L.length) {
+      var l = L[i], tl = l.trim();
+      if (!tl) { chiudiPar(); i++; continue; }
+      if (/^```/.test(tl)) { chiudiPar(); var pr = []; i++; while (i < L.length && !/^```/.test(L[i].trim())) pr.push(L[i++]); i++; push({ t: 'pre', v: pr.join('\n') }); continue; }
+      if (/^## /.test(tl)) { chiudiPar(); nuova(tl.slice(3).trim()); i++; continue; }
+      if (/^### /.test(tl)) { chiudiPar(); push({ t: 'h3', v: tl.slice(4).trim() }); i++; continue; }
+      if (/^> /.test(tl)) { chiudiPar(); if (!sec) c.intro = (c.intro ? c.intro + ' ' : '') + tl.slice(2); else sec.nota = (sec.nota ? sec.nota + ' ' : '') + tl.slice(2); i++; continue; }
+      var mc = /^\{\{comunicazioni:([^}]+)\}\}$/.exec(tl); if (mc) { chiudiPar(); if (!sec) nuova('Testo'); sec.comunicazioni = mc[1]; i++; continue; }
+      var gruppo = function (re, tipo, f) { chiudiPar(); var v = []; while (i < L.length && re.test(L[i].trim())) v.push(f(L[i++].trim())); push({ t: tipo, v: v }); };
+      if (/^[-•*] /.test(tl)) { gruppo(/^[-•*] /, 'ul', function (x) { return x.slice(2).trim(); }); continue; }
+      if (/^\d+[.)] /.test(tl)) { gruppo(/^\d+[.)] /, 'ol', function (x) { return x.replace(/^\d+[.)] /, '').trim(); }); continue; }
+      if (/^\[( |x|X)\] /.test(tl)) { gruppo(/^\[( |x|X)\] /, 'cl', function (x) { return (/^\[[xX]\]/.test(x) ? '☑ ' : '') + x.slice(4).trim(); }); continue; }
+      if (/^\|.*\|$/.test(tl)) { chiudiPar(); var rr = []; while (i < L.length && /^\|.*\|$/.test(L[i].trim())) { var cel = L[i++].trim().slice(1, -1).split('|').map(function (x) { return x.trim(); }); if (!cel.every(function (x) { return /^:?-{2,}:?$/.test(x); })) rr.push(cel); }
+        if (rr.length) push({ t: 'table', v: [rr[0], rr.slice(1)] }); continue; }
+      par.push(tl); i++;
+    }
+    chiudiPar();
+    return c;
+  }
+  function puoModificare(d) { return !!me && !(d.riservato && nascosti()) && !(d.riservato && (!D.docRis[d.id] || D.docRis[d.id].carico || D.docRis[d.id].errore)); }
+  function docEditor(d, c) {
+    return '<section class="box doc-editor"><h2>Modifica il testo</h2>' +
+      '<p class="sub">Scrivi normalmente. Per dare forma al testo: <code>## Titolo</code> per una sezione, <code>### Sottotitolo</code>, <code>- punto</code> o <code>1. punto</code> per gli elenchi, <code>[ ] cosa da fare</code> per una casella, <code>**grassetto**</code>, <code>| cella | cella |</code> per una tabella (la prima riga è l’intestazione), <code>&gt; nota</code> per una nota sotto il titolo della sezione. Lascia una riga vuota tra i paragrafi.</p>' +
+      '<form class="sform" data-act="docTesto" data-id="' + d.id + '"><label class="wide">Titolo<input name="titolo" required maxlength="200" value="' + esc(d.titolo) + '"></label>' +
+      '<label class="wide">Testo<textarea name="testo" class="doc-txt" spellcheck="true">' + esc(doc2txt(c)) + '</textarea></label>' +
+      '<label class="wide chk"><input type="checkbox" name="nuovaver" checked> Salva come nuova versione (versione ' + ((d.versione || 1) + 1) + ')</label>' +
+      '<div class="wide doc-azioni"><button class="btn" type="submit">Salva il testo</button><button class="btn alt" type="button" data-act="docAnteprima">Anteprima</button><button class="btn alt" type="button" data-act="docAnnulla">Annulla</button></div><div class="doc-prev wide"></div></form></section>';
+  }
   function docPage(d) {
-    if (!d) return head('Documento non trovato', '<a href="#archivio">Torna all’archivio</a>');
+    if (!d) return head('Documento non trovato', '<a href="#archivio">Torna ai documenti</a>');
     var c = d.contenuto || { secs: [] }, avviso = '';
     if (d.riservato) {
       if (nascosti()) { c = { secs: [] }; avviso = '<section class="box k-altri"><h2>Documento con dati personali</h2><p>Contiene nomi, date di nascita o codici fiscali. Con l’accesso rapido non si vede: entra con la tua password personale.</p><div><button class="btn" type="button" data-act="conPassword">Entra con la password personale</button></div></section>'; }
@@ -993,20 +1107,21 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var ufficiale = d.stato === 'ufficiale' || d.stato === 'approvato';
     return '<a class="back" href="#archivio" data-act="indietro">← Indietro</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto && !d.sottotitolo ? 'Fonte: piano di lavoro su Notion.' : '') + '</p>' + (c.intro ? '<p class="doc-intro">' + fmx(c.intro) + '</p>' : '') + (c.secs && c.secs.length > 4 ? '<nav class="doc-indice" aria-label="Indice"><b>Indice</b> ' + c.secs.map(function (s, i) { return '<a href="#" data-act="docSez" data-i="' + i + '">' + esc(s.h) + '</a>'; }).join(' · ') + '</nav>' : '') + '</div>' +
       avviso + (vuoto ? '<section class="box"><h2>Testo non ancora nel gestionale</h2><p>Di questo documento c’è solo la scheda. Carica il file (per esempio la scansione firmata) con lo stesso titolo: diventa la nuova versione.</p>' + upForm(d.area, [d.categoria], true).replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</section>' : '') +
-      (c.secs || []).map(function (s) {
+      (P.docEdit === d.id ? docEditor(d, c) : '') +
+      (P.docEdit === d.id ? [] : (c.secs || [])).map(function (s) {
         return '<section class="fs" id="sez' + (c.secs.indexOf(s)) + '"><h2>' + esc(s.h) + '</h2>' + (s.nota ? '<p class="sub">' + esc(s.nota) + '</p>' : '') + (s.p ? '<p>' + fm(s.p) + '</p>' : '') + (s.b ? s.b.map(blocco).join('') : '') +
           (s.ul ? '<ul>' + s.ul.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ul>' : '') +
           (s.ol ? '<ol>' + s.ol.map(function (x) { return '<li>' + fm(x) + '</li>'; }).join('') + '</ol>' : '') +
           (s.table ? tableH(s.table[0], s.table[1]) : '') +
           (s.comunicazioni ? tableH(HEAD4, comsRows(s.comunicazioni)) : '') + '</section>'; }).join('') +
-      (!vuoto && !(d.riservato && nascosti()) ? '<details class="ed doc-agg"><summary>Aggiorna il documento: stato o file firmato</summary><form class="sform" data-act="docStato" data-id="' + d.id + '"><label>Stato<select name="stato">' + Object.keys(STATO_DOC).map(function (k) { return '<option value="' + k + '"' + (k === d.stato ? ' selected' : '') + '>' + esc(STATO_DOC[k][0]) + '</option>'; }).join('') + '</select></label><label class="wide">Nota sotto il titolo<input name="sottotitolo" maxlength="300" value="' + esc(d.sottotitolo || '') + '"></label><div class="wide"><button class="btn" type="submit">Salva lo stato</button></div></form>' +
+      (!vuoto && !(d.riservato && nascosti()) ? '<details class="ed doc-agg"><summary>Aggiorna il documento: stato, tipo, nota o file firmato</summary><form class="sform" data-act="docStato" data-id="' + d.id + '"><label>Stato<select name="stato">' + Object.keys(STATO_DOC).map(function (k) { return '<option value="' + k + '"' + (k === d.stato ? ' selected' : '') + '>' + esc(STATO_DOC[k][0]) + '</option>'; }).join('') + '</select></label><label class="wide">Nota sotto il titolo<input name="sottotitolo" maxlength="300" value="' + esc(d.sottotitolo || '') + '"></label><label>Tipo di documento<input name="categoria" maxlength="80" list="dlCat" value="' + esc(d.categoria || '') + '"></label><datalist id="dlCat">' + D.documenti.map(function (x) { return x.categoria; }).filter(function (x, i, a) { return x && a.indexOf(x) === i; }).map(function (x) { return '<option value="' + esc(x) + '">'; }).join('') + '</datalist><div class="wide"><button class="btn" type="submit">Salva lo stato</button></div></form>' +
         '<h3 style="margin-top:14px">Carica il file, per esempio la scansione firmata</h3>' + upForm(d.area, [d.categoria], true).replace('<form class="up" data-area="' + d.area + '">', '<form class="up" data-area="' + d.area + '"><input type="hidden" name="docid" value="' + d.id + '">').replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</details>' : '') +
       (d.file_path && /\.pdf$/i.test(d.file_path) && !(d.riservato && nascosti()) ? '<iframe class="pdfprev" data-path="' + esc(d.file_path) + '" title="Anteprima del file"></iframe>' : '') +
-      '<div class="doc-azioni">' + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button>' : '') + '</div></article>';
+      '<div class="doc-azioni">' + (puoModificare(d) && P.docEdit !== d.id ? '<button class="btn" type="button" data-act="docEdita" data-id="' + d.id + '">✏️ Modifica il testo</button>' : '') + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button>' : '') + '</div></article>';
   }
 
   /* ---------- pagine ---------- */
-  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Archivio'], ['soldi', 'Contabilità'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
+  var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Documenti'], ['soldi', 'Contabilità'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
   var P = {};
 
   function meta(pairs) { return pairs.filter(function (p) { return p[1]; }).map(function (p) { return '<span class="mt"><em>' + p[0] + '</em> ' + p[1] + '</span>'; }).join(''); }
@@ -1018,7 +1133,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function miaRichiestaLi(r) {
     var RQ = { aperta: ['Non ancora presa', 'plain'], presa: ['In lavorazione', 'warn'], fatta: ['Fatta', ''], rifiutata: ['Non si può', 'crit'] };
     var ctx = r.attivita_id && att(r.attivita_id) ? '<a href="#attivita/' + r.attivita_id + '">' + esc(att(r.attivita_id).titolo) + '</a>' : r.pratica_id ? '<a href="#pratiche/p' + r.pratica_id + '">pratica</a>' : '';
-    return '<li class="rq"><div><b>' + esc(r.testo) + '</b><span class="sub">' + meta([['A', esc(r.a_chi)], ['Per', ctx], ['Aggiornata da', esc(r.aggiornata_da || '')]]) + (r.risposta ? '<br><b>Risposta:</b> ' + esc(r.risposta) : '') + '</span></div>' +
+    return '<li class="rq"><div><b>' + esc(r.testo) + '</b><span class="sub">' + meta([['A', esc(r.a_chi)], ['Per', ctx], ['Aggiornata da', esc(r.aggiornata_da || '')]]) + (r.risposta ? '<br><b>Risposta:</b> ' + esc(r.risposta) : '') + '</span>' + (r.stato === 'aperta' || r.stato === 'presa' ? '<details class="ed"><summary>Correggi o ritira</summary><form class="sform" data-act="rqEdit" data-id="' + r.id + '"><label class="wide">Cosa chiedi<textarea name="testo" required maxlength="1000">' + esc(r.testo) + '</textarea></label><label>Entro il<input name="scadenza" type="date" value="' + esc(r.scadenza || '') + '"></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button><button class="btn alt sm danger" type="button" data-act="elimina" data-t="richieste" data-id="' + r.id + '" data-l="questa richiesta">Ritira la richiesta</button></div></form></details>' : '') + '</div>' +
       '<div class="chips"><span class="pill ' + RQ[r.stato][1] + '">' + RQ[r.stato][0] + '</span>' + (!r.vista_il && (r.risposta || r.stato === 'fatta' || r.stato === 'rifiutata') ? '<button class="btn alt" type="button" data-act="rqVisto" data-id="' + r.id + '">Ok, visto</button>' : '') + '</div></li>';
   }
   function richiestaLi(r) {
@@ -1081,7 +1196,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var ns = nuoviDalSito(), nsTot = ns.pre + ns.soc + ns.msg;
     var stats = '<nav class="stats s6" aria-label="Riepilogo"><a href="#oggi/cose"><b>' + o.tutte.length + '</b><span>cose da fare per te</span></a><a href="#pratiche/scadenze"><b>' + s30 + '</b><span>scadenze entro 30 giorni</span></a><a href="#calendario"><b>' + a30 + '</b><span>attività nei prossimi 30 giorni</span></a>' +
       '<a href="#pratiche/decisioni"><b>' + openDec().length + '</b><span>decisioni da votare in CD</span></a><a href="#archivio/dafirmare"><b>' + bozze + '</b><span>documenti da completare o firmare</span></a><a href="#sito"><b>' + nsTot + '</b><span>richieste nuove dal sito</span></a></nav>';
-    var attPrep = attSorted().filter(function (a) { return !a.archiviato && clOf(a.id).length && attPhase(a) !== 'concluse'; }).slice(0, 4);
+    var attPrep = attSorted().filter(function (a) { return !a.archiviato && clOf(a.id).length && attPhase(a) !== 'concluse' && attIniziata(a); }).slice(0, 4);
     var visione = '<section class="box quadro-box"><header><h2>Il quadro generale</h2><span class="sub">Tutto il lavoro in corso, a colpo d’occhio</span></header>' + stats + '<div class="quadro">' +
       '<div class="qd k-dec"><div class="lbl"><a href="#pratiche">Pratiche in corso</a></div>' + (praticheAttive().length ? praticheAttive().slice(0, 4).map(function (pr) { var x = prSteps(pr); return '<a class="qrow" href="#pratiche/p' + pr.id + '"><b>' + esc(pr.titolo) + '</b>' + progBar(x.done, x.ps.length, 'passi') + (x.next ? '<span class="sub">Prossimo passo: ' + esc(short(x.next.titolo, 70)) + ' · ' + esc(x.next.responsabile || 'da assegnare') + '</span>' : '') + '</a>'; }).join('') : '<p class="sub">Nessuna pratica aperta.</p>') + '</div>' +
       '<div class="qd k-att"><div class="lbl"><a href="#attivita">Attività da preparare</a></div>' + (attPrep.length ? attPrep.map(function (a) { var p = clProg(clOf(a.id)), d = attDate(a); return '<a class="qrow" href="#attivita/' + a.id + '"><b>' + esc(a.titolo) + '</b>' + progBar(p.done, p.tot, 'passi') + '<span class="sub">' + (d ? fD.format(d) + ' · ' : '') + 'responsabile: ' + esc(a.responsabile || 'da assegnare') + '</span></a>'; }).join('') : '<p class="sub">Nessuna attività con checklist aperta.</p>') + '</div>' +
@@ -1093,28 +1208,52 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       ogCard('k-cal', 'Prossime attività', prossime.length, prossime.map(function (x) { var d = attDate(x); return '<li><div><b><a href="#attivita/' + x.id + '">' + esc(x.titolo) + '</a></b><span class="sub">' + meta([['Quando', (x.ricorrenza ? esc(x.ricorrenza) + ', prossima ' : '') + fD.format(d)], ['Responsabile', esc(x.responsabile || 'da assegnare')]]) + '</span></div><span class="pill ' + pillCls(x.stato) + '">' + esc(x.stato) + '</span></li>'; }), 'Nessuna attività in programma.', '#calendario', 'Il calendario completo') +
       ogCard('k-dec', 'Da votare in Consiglio', openDec().length, openDec().map(function (x) { return '<li><div><b><a href="#pratiche/decisioni">' + esc(x.testo) + '</a></b><span class="sub">' + meta([['Si vota in', 'Consiglio Direttivo'], ['Riferimento', esc(x.rif || '')]]) + '</span></div><span class="pill warn">Da votare</span></li>'; }), 'Nessuna decisione in attesa.', '#pratiche/decisioni', 'Tutte le decisioni') +
       ogCard('k-altri', 'Cosa stanno facendo gli altri', altri.length, altri.map(regLi), 'Nessuna modifica dagli altri membri negli ultimi 7 giorni.', '#archivio/registro', 'Il registro completo', 'reg') +
-      ogCard('k-doc', 'Ultimi documenti', docs.length, docs.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + meta([['Aggiornato', fD.format(new Date(d.aggiornato_il))], ['da', esc(d.caricato_da)]]) + '</span></div>' + docTag(d) + '</li>'; }), 'Nessun documento.', '#archivio', 'Tutto l’archivio') +
+      ogCard('k-doc', 'Ultimi documenti', docs.length, docs.map(function (d) { return '<li><div><b><a href="' + (d.contenuto ? docHref(d) : '#archivio') + '">' + esc(d.titolo) + '</a></b><span class="sub">' + meta([['Aggiornato', fD.format(new Date(d.aggiornato_il))], ['da', esc(d.caricato_da)]]) + '</span></div>' + docTag(d) + '</li>'; }), 'Nessun documento.', '#archivio', 'Tutti i documenti') +
       '</div>';
     return head('Buon lavoro, ' + esc(myName()), 'Oggi è ' + fL.format(base) + '. Qui sotto trovi lo stato di tutto il lavoro dell’associazione e le cose che toccano a te.') + caricaCard(mine) + visione + cards;
   };
 
   P.ruoli = function () {
     var editing = P.ruoli.edit;
-    var rows = D.cariche.map(function (c) {
-      var s = c.sostituto_id && carica(c.sostituto_id);
+    /* una scheda per carica: in alto quello che ha in gestione adesso, sotto mansioni e ruoli dallo statuto */
+    var dati = D.cariche.map(function (c) {
+      var atts = attSorted().filter(function (a) { return !a.archiviato && attPhase(a) !== 'concluse' && (respMatch(a.responsabile, c.nome) || respMatch(a.vice, c.nome) || clOf(a.id).some(function (x) { return respMatch(x.responsabile, c.nome) && (x.stato === 'da_fare' || x.stato === 'in_corso'); })); });
+      var cl = D.checklist.filter(function (x) { return respMatch(x.responsabile, c.nome) && (x.stato === 'da_fare' || x.stato === 'in_corso') && clAttuale(x); });
+      var ps = D.pratica_passi.filter(function (x) { var pr = D.pratiche.filter(function (y) { return y.id === x.pratica_id; })[0]; return pr && !pr.archiviato && pr.stato !== 'chiusa' && x.stato !== 'fatto' && x.stato !== 'non_ancora' && respMatch(x.responsabile, c.nome); });
+      var sc = scSorted(openScad().filter(function (x) { return !x.archiviato && respMatch(x.responsabile, c.nome); }));
+      return { c: c, atts: atts, cl: cl, ps: ps, sc: sc, n: cl.length + ps.length + sc.length };
+    });
+    var strip = '<nav class="rl-strip" aria-label="Vai alla carica">' + dati.map(function (o) { return '<a href="#r-' + o.c.id + '" data-act="vaiRuolo" data-id="' + o.c.id + '"' + tintCarica(o.c.nome) + (me.carica === o.c.id ? ' class="me"' : '') + '><span class="rl-av">' + esc(o.c.nome.charAt(0)) + '</span><span><b>' + esc(o.c.nome) + '</b><small>' + (o.n ? (o.n === 1 ? '1 cosa aperta' : o.n + ' cose aperte') : 'niente in sospeso') + '</small></span></a>'; }).join('') + '</nav>';
+    var rows = dati.map(function (o) {
+      var c = o.c, s = c.sostituto_id && carica(c.sostituto_id), ed = editing === c.id;
       var copro = D.cariche.filter(function (x) { return x.sostituto_id === c.id; }).map(function (x) { return x.nome; });
-      var ed = editing === c.id;
-      var atts = D.attivita.filter(function (a) { return !a.archiviato && (respMatch(a.responsabile, c.nome) || respMatch(a.vice, c.nome)); });
-      var cl = D.checklist.filter(function (x) { return respMatch(x.responsabile, c.nome) && (x.stato === 'da_fare' || x.stato === 'in_corso'); });
-      return '<article class="box ruolo-r tinted' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"' + tintCarica(c.nome) + '><header><h2>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h2><span class="sub">Statuto, ' + esc(c.rif_statuto || '') + '</span></header>' +
-        '<div class="rr"><div><div class="lbl">Ruoli dallo statuto</div><ul class="plain sm">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
-        '<div><div class="lbl">Mansioni</div>' + (ed ? '<form data-act="saveRuolo" data-id="' + c.id + '" style="display:grid;gap:8px"><label class="field" for="m-' + c.id + '">Una mansione per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label><div class="chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
-          : '<ul class="plain sm">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul><button class="btn alt sm" type="button" data-act="editRuolo" data-id="' + c.id + '">Modifica le mansioni</button>') + '</div>' +
-        '<div><div class="lbl">Vice e attività in gestione</div><p class="sub"><b>Se manca, lo sostituisce:</b> ' + esc(c.sostituto_nota || (s ? s.nome : '') || 'da decidere in CD') + '</p>' + (copro.length ? '<p class="sub"><b>Sostituisce:</b> ' + esc(copro.join(', ')) + '</p>' : '') +
-        (atts.length ? '<ul class="plain sm">' + atts.map(function (a) { return '<li><a href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a>' + (respMatch(a.vice, c.nome) ? ' (vice)' : '') + '</li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna attività affidata per ora.</p>') +
-        (cl.length ? '<p class="sub"><a href="#attivita/chi">' + cl.length + ' passi delle checklist da fare</a></p>' : '') +
-        (c.da_decidere.length ? '<div class="lbl">Da decidere in CD</div><ul class="plain sm">' + c.da_decidere.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') + '</div></div></article>';
+      var tile = function (a) { var cc = clOf(a.id), p = clProg(cc), d = attDate(a), mine = cc.filter(function (x) { return respMatch(x.responsabile, c.nome) && (x.stato === 'da_fare' || x.stato === 'in_corso'); }).length, ruolo = respMatch(a.responsabile, c.nome) ? 'Responsabile' : respMatch(a.vice, c.nome) ? 'Vice' : 'Collabora';
+        return '<a class="rl-tile" href="#attivita/' + a.id + '"' + tintTipo(a.tipo) + '><span class="rl-ruolo">' + ruolo + '</span><b>' + esc(a.titolo) + '</b><span class="sub">' + (a.ricorrenza ? esc(a.ricorrenza) : d ? fD.format(d) + ' · ' + when(d) : 'data da fissare') + '</span>' +
+          (attIniziata(a) ? (cc.length ? '<span class="rl-bar"><i style="width:' + (p.tot ? Math.round(100 * p.done / p.tot) : 0) + '%"></i></span><span class="sub">' + p.done + ' di ' + p.tot + ' passi' + (mine ? ' · <b>' + mine + ' tuoi</b>' : '') + '</span>' : '') : '<span class="sub">🗓️ lavori dal ' + fD.format(lavoriDa(a)) + '</span>') + '</a>'; };
+      var perPr = {}; o.ps.forEach(function (x) { (perPr[x.pratica_id] = perPr[x.pratica_id] || []).push(x); });
+      var cosa = Object.keys(perPr).map(function (pid) { var xs = perPr[pid].sort(function (a, b) { return a.ordine - b.ordine; }), pr = D.pratiche.filter(function (y) { return String(y.id) === pid; })[0];
+          return '<li><a href="#pratiche/p' + pid + '">📁 ' + esc(pr ? pr.titolo : 'Pratica') + '</a><span class="sub">' + (xs.length === 1 ? '1 passo' : xs.length + ' passi') + ' · prossimo: ' + esc(short(xs[0].titolo, 70)) + '</span></li>'; })
+        .concat(o.sc.slice(0, 4).map(function (x) { var d = scadDate(x); return '<li><a href="#pratiche/scadenze">⏰ ' + esc(x.titolo) + '</a><span class="sub">' + (d ? 'Entro il ' + fD.format(d) + ' · ' + when(d) : 'Scadenza senza data') + '</span></li>'; }));
+      var vice = c.sostituto_nota || (s ? s.nome : '');
+      return '<article class="box rl-card' + (me.carica === c.id ? ' me' : '') + '" id="r-' + c.id + '"' + tintCarica(c.nome) + '>' +
+        '<header class="rl-head"><span class="rl-av lg">' + esc(c.nome.charAt(0)) + '</span><div><h2>' + esc(c.nome) + (me.carica === c.id ? ' <span class="pill">La tua carica</span>' : '') + '</h2><span class="sub">Statuto, ' + esc(c.rif_statuto || '') + '</span></div>' +
+          '<span class="rl-vice' + (vice ? '' : ' vuoto') + '">' + (vice ? '↪ Se manca: ' + esc(short(vice, 70)) : '⚠︎ Vice da nominare in CD') + '</span></header>' +
+        '<section class="rl-gest"><h3>In gestione adesso <small>' + o.atts.length + ' attività · ' + (o.n === 1 ? '1 cosa da fare' : o.n + ' cose da fare') + '</small></h3>' +
+          (o.atts.length ? '<div class="rl-tiles">' + o.atts.map(tile).join('') + '</div>' : '<p class="sub">Nessuna attività affidata per ora.</p>') +
+          (cosa.length ? '<ul class="rl-cosa">' + cosa.join('') + '</ul>' : '') +
+          (o.cl.length ? '<p class="sub"><a href="#attivita/chi">Tutti i ' + o.cl.length + ' passi delle checklist in «Chi fa cosa»</a></p>' : '') + '</section>' +
+        (ed ? '<form class="sform rl-ed" data-act="saveRuolo" data-id="' + c.id + '"><label class="wide" for="m-' + c.id + '">Mansioni, una per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label>' +
+            '<label class="wide">Se manca, lo sostituisce<input name="sost" maxlength="300" value="' + esc(c.sostituto_nota || '') + '" placeholder="Es. il Vicepresidente"></label>' +
+            '<label class="wide">Da decidere in CD, una cosa per riga<textarea name="dd">' + esc((c.da_decidere || []).join('\n')) + '</textarea></label>' +
+            '<div class="wide chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
+          : '<div class="rl-man"><h3>Mansioni</h3><ul class="rl-chips">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+            (c.da_decidere && c.da_decidere.length ? '<p class="rl-dd"><b>Da decidere in CD:</b> ' + c.da_decidere.map(esc).join(' · ') + '</p>' : '') +
+            (copro.length ? '<p class="sub">Sostituisce: ' + esc(copro.join(', ')) + '</p>' : '') +
+            '<button class="btn alt sm" type="button" data-act="editRuolo" data-id="' + c.id + '">✏️ Modifica mansioni, sostituto e cose da decidere</button></div>') +
+        '<details class="rl-stat"><summary>Ruoli dallo statuto (' + c.compiti_statuto.length + ')</summary><ul class="plain sm">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></details>' +
+        '</article>';
     }).join('');
+    rows = strip + '<div class="rl-grid">' + rows + '</div>';
     var mappa = '<section class="box"><header><h2>Chi sostituisce chi</h2><span class="sub">Se una carica manca, chi la copre</span></header><div class="mappa">' +
       D.cariche.map(function (c) { var s = c.sostituto_id && carica(c.sostituto_id);
         return '<div class="r"><div class="c">' + esc(c.nome) + '</div><div class="ar" aria-hidden="true">→</div>' + (s ? '<div class="c">' + esc(s.nome) + '</div>' : '<div class="c vuoto">Vice da nominare in CD</div>') + '</div>'; }).join('') +
@@ -1187,7 +1326,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       richiesteBox('pratica_id', pr.id) + commentiBox('pratica_id', pr.id, com);
   }
   function commentiBox(col, id, com) {
-    return '<section class="box k-altri"><h2>Commenti e stato dell’arte</h2>' + (com.length ? '<ul class="reg">' + com.map(function (c) { return '<li><time>' + fT.format(new Date(c.quando)) + '</time><div><b>' + esc(c.chi) + '</b><span class="det" style="white-space:pre-wrap;color:var(--ink)">' + esc(c.testo) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun commento. Scrivi a che punto sei: lo leggono tutti i membri del Consiglio.</p>') +
+    return '<section class="box k-altri"><h2>Commenti e stato dell’arte</h2>' + (com.length ? '<ul class="reg">' + com.map(function (c) { return '<li><time>' + fT.format(new Date(c.quando)) + '</time><div><b>' + esc(c.chi) + '</b><span class="det" style="white-space:pre-wrap;color:var(--ink)">' + esc(c.testo) + '</span>' + (c.chi === me.nome ? '<details class="ed"><summary>Correggi</summary><form class="sform" data-act="comEdit" data-id="' + c.id + '"><label class="wide">Testo<textarea name="testo" required maxlength="3000">' + esc(c.testo) + '</textarea></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button><button class="btn alt sm danger" type="button" data-act="elimina" data-t="commenti" data-id="' + c.id + '" data-l="questo commento">Elimina</button></div></form></details>' : '') + '</div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun commento. Scrivi a che punto sei: lo leggono tutti i membri del Consiglio.</p>') +
       '<form class="sform" data-act="commento" data-col="' + col + '" data-id="' + id + '"><label class="wide">Scrivi un aggiornamento<textarea name="testo" required maxlength="3000" placeholder="Es. Ho chiamato l’albergo: confermano 40 camere, aspettano la caparra entro il 15."></textarea></label><div class="wide"><button class="btn" type="submit">Pubblica il commento</button></div></form></section>';
   }
 
@@ -1253,7 +1392,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var cats = ['Tutti'].concat(Array.from(new Set(all.map(function (d) { return d.categoria; }))).sort());
     var cur = P.archivio.cur || 'Tutti';
     var list = all.filter(function (d) { return cur === 'Tutti' || d.categoria === cur; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
-    return head('Archivio', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. Ogni documento mostra in alto il suo stato (in rosso se è una bozza o da firmare), la versione e l’ultimo aggiornamento.') + t + addLink('#nuovo/documento', 'Carica un documento') +
+    return head('Documenti', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. Ogni documento mostra in alto il suo stato (in rosso se è una bozza o da firmare), la versione e l’ultimo aggiornamento.') + t + addLink('#nuovo/documento', 'Carica un documento') +
       '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + cats.map(function (c) { return '<button class="chip" type="button" data-act="cat" data-v="' + esc(c) + '" aria-pressed="' + (c === cur) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
       '<div>' + list.map(fileRow).join('') + '</div></section>' +
       '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
@@ -1291,7 +1430,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (sub === 'piano') {
       var obj = [['Obiettivo 1 · Un’organizzazione impeccabile e snella', ['Quota dei ruoli principali con responsabile e vice nominati in CD', 'Numero di disciplinari e schede ruolo scritti e approvati', 'Quota degli eventi organizzati seguendo il disciplinare']], ['Obiettivo 2 · Un’associazione più visibile e riconosciuta', ['Presenza sulla stampa locale', 'Persone esterne agli eventi aperti', 'Quota dei nuovi corsisti arrivati da social o passaparola']]];
       var seq = [['Raccogliere i dati veri dal tesoriere e dal presidente', 'Da fare'], ['Votare in CD ruoli e vice, e le priorità', 'Da fare'], ['Scrivere le schede ruolo e completare i disciplinari, cominciando dallo stage', 'In corso: schede ruolo nel gestionale, quattro disciplinari in bozza'], ['Avviare tutor, inventario e regole sui dati', 'Da fare'], ['Costruire identità visiva e comunicazione', 'In corso: sito e community in bozza'], ['Strumenti digitali e ricerca', 'In corso: gestionale con accesso protetto; Osservatorio in bozza']];
-      return head('Piano operativo', 'Dove siamo rispetto al piano. Il testo completo è in Archivio.') + t +
+      return head('Piano operativo', 'Dove siamo rispetto al piano. Il testo completo è in Documenti.') + t +
         '<section class="box"><h2>La visione</h2><p>Diventare il punto di riferimento della micologia siciliana: un faro affidabile dove studiare, conoscere e scambiare saperi su micologia, ambiente e boschi del Mediterraneo. Principio trasversale: pochi ma buoni.</p><div><a class="btn alt" href="#doc/doc-piano">Leggi il piano</a></div></section>' +
         '<div class="cols">' + obj.map(function (o) { return '<section class="box"><h3>' + o[0] + '</h3><ul class="list">' + o[1].map(function (i) { return '<li><div><b style="font-weight:500">' + i + '</b></div><span class="dc">Valore atteso da definire</span></li>'; }).join('') + '</ul></section>'; }).join('') + '</div>' +
         '<section class="box"><h2>Sequenza degli interventi</h2><ol class="steps">' + seq.map(function (s) { return '<li><div><b>' + s[0] + '</b></div><span class="pill ' + (s[1] === 'Da fare' ? 'plain' : 'warn') + '">' + s[1] + '</span></li>'; }).join('') + '</ol></section>' +
@@ -1450,14 +1589,15 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         '<label class="chk"><input type="checkbox" name="odgVarie"' + (v.odgVarie === false ? '' : ' checked') + '> Aggiungi «Varie ed eventuali» in fondo</label></fieldset>'; }
     if (c[2] === 'soci') return sociScelta(c, v);
     if (c[2] === 'decisioni') { var od = openDec(); return '<fieldset class="wide gen-dec"><legend>' + c[1] + ' (' + od.length + ')</legend><p class="sub">Spunta quelle discusse nella seduta e scegli l’esito.</p>' + (od.length ? od.map(function (x) { var e = (v.decEsiti || []).filter(function (y) { return y.id === x.id; })[0] || {}; return '<div class="gd"><label class="chk"><input type="checkbox" name="ds' + x.id + '"' + (e.discussa ? ' checked' : '') + '> <b>' + esc(x.testo) + '</b></label><div class="gd-row"><label>Esito<select name="es' + x.id + '">' + [['', 'Scegli l’esito'], ['approvata', 'Approvata'], ['respinta', 'Respinta'], ['rinviata', 'Rinviata']].map(function (o) { return '<option value="' + o[0] + '"' + ((e.esito && e.esito !== 'non' && e.esito !== 'da_definire' ? e.esito : '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label><label>Voti<input name="vt' + x.id + '" value="' + esc(e.voti || '') + '" placeholder="Es. all’unanimità"></label><label class="wide">Nota<input name="nt' + x.id + '" value="' + esc(e.nota || '') + '" placeholder="Es. responsabile nominato: …"></label></div></div>'; }).join('') : '<p class="sub">Nessuna decisione da votare.</p>') + '</fieldset>'; }
-    return '<label' + (c[2] === 'text' && /^(luogo|dove|come|ufficio|evento|titolo|quando)$/.test(c[0]) ? ' class="wide"' : '') + '>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '" value="' + esc(val) + '"' + (c[4] === 'soci' ? ' list="dlSoci" autocomplete="off"' : '') + '></label>';
+    return '<label' + (c[2] === 'text' && /^(luogo|dove|come|ufficio|evento|titolo|quando)$/.test(c[0]) ? ' class="wide"' : '') + '>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '" value="' + esc(val) + '"' + (c[4] === 'soci' ? ' data-socio="nome" autocomplete="off"' : '') + '></label>';
   }
   /* scelta dei soci dall'elenco: serve la password personale e la dichiarazione di responsabilità */
+  function sociOkBox(msg) { return '<div class="gen-sociok"><p class="sub">' + msg + '</p><label class="chk"><input type="checkbox" class="genSociDich"> ' + SOCI_DICH + '</label><div><button class="btn alt sm" type="button" data-act="genSociOk">Usa l’elenco dei soci</button></div></div>'; }
   function sociScelta(c, v) {
     var n = c[0], o = c[3] || {}, sel = (v[n + 'Sel'] || []).map(String), coppie = v.delegheCoppie || [];
     var testa = '<fieldset class="wide gen-soci"><legend>' + c[1] + '</legend>', altri = '<label>' + (D.soci ? 'Altri nomi, non presenti nell’elenco' : 'Nomi') + ', uno per riga<textarea name="' + n + 'Altri" rows="' + (D.soci ? 2 : 4) + '">' + esc(v[n + 'Altri'] || '') + '</textarea></label></fieldset>';
     if (nascosti()) return testa + '<p class="sub">L’elenco dei soci si usa con la password personale. Con l’accesso rapido scrivi i nomi a mano.</p>' + altri;
-    if (!P.soci.ok || !D.soci) return testa + '<div class="gen-sociok"><p class="sub">Per scegliere dall’elenco dei soci accetta prima la dichiarazione: l’uso resta nel registro dei dati personali.</p><label class="chk"><input type="checkbox" class="genSociDich"> ' + SOCI_DICH + '</label><div><button class="btn alt sm" type="button" data-act="genSociOk">Usa l’elenco dei soci</button></div></div>' + altri;
+    if (!P.soci.ok || !D.soci) return testa + sociOkBox('Per scegliere dall’elenco dei soci accetta prima la dichiarazione: l’uso resta nel registro dei dati personali.') + altri;
     var att = sociAttivi(), opzDel = function (id) { var cp = coppie.filter(function (k) { return String(k.id) === String(id); })[0] || {}; return '<option value="">rappresentato da…</option>' + att.filter(function (x) { return String(x.id) !== String(id); }).map(function (x) { return '<option value="' + x.id + '"' + (String(cp.a) === String(x.id) ? ' selected' : '') + '>' + esc(x.cognome + ' ' + (x.nome || '')) + '</option>'; }).join(''); };
     return testa + '<div class="gs-cerca"><input type="search" class="gen-filtro" placeholder="Cerca un socio" aria-label="Cerca un socio"><span class="sub">' + sel.length + ' scelti</span></div><div class="gs-lista">' +
       att.map(function (x) { var on = sel.indexOf(String(x.id)) >= 0; return '<div class="gs-r" data-q="' + esc(low(x.cognome + ' ' + (x.nome || '') + ' ' + (x.nome || '') + ' ' + x.cognome)) + '"><label class="chk"><input type="checkbox" name="' + n + 'Sel" value="' + x.id + '"' + (on ? ' checked' : '') + '> <span><b>' + esc(x.cognome) + '</b> ' + esc(x.nome || '') + (o.dati ? ' <span class="sub">' + esc(socioNascita(x)) + '</span>' : '') + '</span></label>' +
@@ -1482,11 +1622,11 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     P.genera.v = P.genera.k === m.k ? (P.genera.v || {}) : {}; P.genera.k = m.k;
     var v = P.genera.v, doc = P.genera.doc && P.genera.docK === m.k ? P.genera.doc : null, avv = m.avviso && P.genera.v ? m.avviso(P.genera.v) : '';
     return '<a class="back" href="#genera">← Tutti i modelli</a>' + head(m.t, m.d) +
-      (D.soci && !nascosti() ? '<datalist id="dlSoci">' + sociAttivi().map(function (x) { return '<option value="' + esc(socioNomeN(x)) + '">'; }).join('') + '</datalist>' : '') +
       (m.riservato ? '<p class="note">Questo documento contiene dati personali: salvandolo, il testo lo vedono solo gli accessi con password.</p>' : '') +
       '<section class="box"><form class="sform" data-act="genFai" data-k="' + m.k + '">' + m.campi.map(function (c) { return genCampo(c, v); }).join('') + '<div class="wide"><button class="btn" type="submit">Prepara il documento</button></div></form></section>' +
-      (doc ? (avv ? '<p class="note" style="border-color:var(--crit-ink)">' + esc(avv) + '</p>' : '') + genFoglio(doc) +
-        '<div class="doc-azioni"><button class="btn" type="button" data-act="genCopia">Copia il testo</button><button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button><button class="btn alt" type="button" data-act="genSalva">Salva nell’archivio come bozza</button>' +
+      (doc ? (avv ? '<p class="note" style="border-color:var(--crit-ink)">' + esc(avv) + '</p>' : '') +
+        (P.genera.edit ? '<section class="box doc-editor"><h2>Modifica il testo del documento</h2><p class="sub">Cambia quello che vuoi: <code>## Titolo</code> per una sezione, <code>- punto</code> o <code>1. punto</code> per gli elenchi, <code>**grassetto**</code>, una riga vuota tra i paragrafi. Se poi prepari di nuovo il documento dal modulo, le modifiche fatte qui si perdono.</p><form class="sform" data-act="genApplica"><label class="wide">Testo<textarea name="testo" class="doc-txt">' + esc(doc2txt(doc)) + '</textarea></label><div class="wide doc-azioni"><button class="btn" type="submit">Applica le modifiche</button><button class="btn alt" type="button" data-act="genModifica">Annulla</button></div></form></section>' : genFoglio(doc)) +
+        '<div class="doc-azioni"><button class="btn" type="button" data-act="genModifica">' + (P.genera.edit ? 'Chiudi la modifica' : '✏️ Modifica il testo') + '</button><button class="btn alt" type="button" data-act="genCopia">Copia il testo</button><button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button><button class="btn alt" type="button" data-act="genSalva">Salva in Documenti come bozza</button>' +
         (m.k === 'verbale-cd' ? '<label class="chk"><input type="checkbox" id="genChiudi" checked> Salvando, segna le decisioni approvate con la data della seduta</label>' : '') + '</div>' : '');
   };
 
@@ -1502,7 +1642,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       ['#attivita', 'Aprirne una già in corso', 'Scegli l’attività e aggiorna la checklist, le liste, i documenti.'],
       ['#attivita/corsi', 'Gestire le iscrizioni ai corsi', 'Le preiscrizioni arrivate dal sito, da contattare.']]],
     ['documenti', '📄', 'Trovare un documento', 'Statuto, verbali, disciplinari, normativa.', [
-      ['#archivio', 'L’archivio', 'Tutti i documenti, divisi per tipo.'],
+      ['#archivio', 'Documenti', 'Tutti i documenti, divisi per tipo.'],
       ['#archivio/verbali', 'I verbali', 'Consiglio Direttivo e Assemblee.'],
       ['#comesifa', 'Come si fa una cosa', 'La normativa e i disciplinari, passo per passo.'],
       ['#genera', 'Preparare un documento da un modello', 'Convocazione, verbale, comunicato, lettera a un Comune.'],
@@ -1572,42 +1712,54 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var pc = Math.round(done / tot * 100);
     return '<div class="prog"><div class="progress" role="img" aria-label="' + done + ' ' + what + ' fatti su ' + tot + '"><i style="width:' + pc + '%"></i></div><em>' + done + ' di ' + tot + ' · ' + pc + '%</em></div>';
   }
+  /* inizio dei lavori: prima di quella data i passi non sono «da fare» e non entrano nei conti */
+  var LAVORI_GG = { Stage: 180, Mostre: 120, 'Corsi per il tesserino': 90 };   // giorni prima dell'attività; per gli altri tipi 60
+  function lavoriDa(a) { var dd = a.dati && a.dati.inizio_lavori; if (dd) return dt(dd); var d = attDate(a); if (!d || a.ricorrenza) return null; return new Date(d.getTime() - (LAVORI_GG[a.tipo] || 60) * DAY); }
+  function attIniziata(a) { var l = lavoriDa(a); return !l || l <= base || clOf(a.id).some(function (x) { return x.stato === 'fatto' || x.stato === 'in_corso'; }); }
+  function clAttuale(x) { var a = att(x.attivita_id); return !!a && !a.archiviato && a.stato !== 'Annullata' && a.stato !== 'Conclusa' && attIniziata(a); }
   function attPhase(a) {
     if (a.stato === 'Conclusa' || a.stato === 'Annullata') return 'concluse';
     var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
     if (!a.ricorrenza && d && dleft(d) < 0) return (p.tot && p.done < p.tot) ? 'corso' : 'concluse';
     if (a.ricorrenza || cl.some(function (x) { return x.stato === 'fatto' || x.stato === 'in_corso'; })) return 'corso';
+    if (attIniziata(a) && cl.length) return 'corso';
     return 'programmate';
   }
   function respMatch(resp, who) { var r = low(resp); return who === 'Da assegnare' ? (!r || r === 'da assegnare') : r.indexOf(low(who)) >= 0; }
-  function myClOpen() { return D.checklist.filter(function (x) { return (x.stato === 'da_fare' || x.stato === 'in_corso') && !me.admin && isMine(x.responsabile); }); }
+  function myClOpen() { return D.checklist.filter(function (x) { return (x.stato === 'da_fare' || x.stato === 'in_corso') && !me.admin && isMine(x.responsabile) && clAttuale(x); }); }
   function attCard(a) {
     var cl = clOf(a.id), p = clProg(cl), d = attDate(a);
     var next = cl.filter(function (x) { return x.stato === 'in_corso'; })[0] || cl.filter(function (x) { return x.stato === 'da_fare'; })[0];
     return '<a class="card tinted" href="#attivita/' + a.id + '"' + tintTipo(a.tipo) + '><h3>' + esc(a.titolo) + '</h3><span class="sub">' + (a.ricorrenza ? esc(a.ricorrenza) : d ? fD.format(d) + ' (' + when(d) + ')' : 'Data da fissare') + ' · ' + esc(a.responsabile || 'Da assegnare') + '</span>' +
       '<div><span class="pill ' + pillCls(a.stato) + '">' + esc(a.stato || '') + '</span> <span class="pill plain">' + esc(a.tipo) + '</span></div>' +
-      (a.ricorrenza && !cl.length ? '<p class="sub">Appuntamento settimanale, senza checklist.</p>' : progBar(p.done, p.tot, 'passi')) +
-      (next ? '<span class="sub">' + (next.stato === 'in_corso' ? 'In corso' : 'Prossimo passo') + ': <b>' + esc(short(next.testo, 90)) + '</b> · ' + esc(next.responsabile) + '</span>' : '') + '</a>';
+      (a.ricorrenza && !cl.length ? '<p class="sub">Appuntamento settimanale, senza checklist.</p>' : !attIniziata(a) ? '<p class="sub lav-dopo">🗓️ I lavori iniziano il <b>' + fD.format(lavoriDa(a)) + '</b>: fino ad allora i passi non sono tra le cose da fare.</p>' : progBar(p.done, p.tot, 'passi')) +
+      (next && attIniziata(a) ? '<span class="sub">' + (next.stato === 'in_corso' ? 'In corso' : 'Prossimo passo') + ': <b>' + esc(short(next.testo, 90)) + '</b> · ' + esc(next.responsabile) + '</span>' : '') + '</a>';
   }
   function lavoriPage() {
     var L = { corso: [], programmate: [], concluse: [] };
     attSorted().forEach(function (a) { L[attPhase(a)].push(a); });
     L.concluse.reverse();
-    var tot = D.checklist.filter(function (x) { return x.stato !== 'non_serve'; }), fatti = tot.filter(function (x) { return x.stato === 'fatto'; }).length;
-    var pr = D.pratiche.map(function (p) { var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === p.id; }); return [p, ps.filter(function (x) { return x.stato === 'fatto'; }).length, ps.length]; });
-    return '<section class="box"><header><h2>A che punto siamo</h2><span class="sub">Passi delle attività e delle pratiche</span></header>' +
-      '<div><b>Attività, tutte insieme</b>' + progBar(fatti, tot.length, 'passi') + '</div>' +
-      pr.map(function (x) { return '<div><b><a href="#pratiche">' + esc(x[0].titolo) + '</a></b>' + progBar(x[1], x[2], 'passi') + '</div>'; }).join('') + '</section>' +
+    var aperte = attSorted().filter(function (a) { return !a.archiviato && attPhase(a) !== 'concluse' && attIniziata(a) && clOf(a.id).length; });
+    var dopo = attSorted().filter(function (a) { return !a.archiviato && attPhase(a) !== 'concluse' && !attIniziata(a); });
+    var pr = D.pratiche.filter(function (p) { return !p.archiviato && p.stato !== 'chiusa' && p.stato !== 'conclusa'; }).map(function (p) { var ps = D.pratica_passi.filter(function (x) { return x.pratica_id === p.id; }); return [p, ps.filter(function (x) { return x.stato === 'fatto'; }).length, ps.length]; }).filter(function (x) { return !x[0].chiusa && x[1] < x[2]; });
+    var sc = scSorted(openScad().filter(function (x) { return !x.archiviato; })).slice(0, 6);
+    var riga = function (href, tit, sub, bar) { return '<a class="lav-r" href="' + href + '"><span class="lav-t"><b>' + esc(tit) + '</b><span class="sub">' + sub + '</span></span>' + bar + '</a>'; };
+    return '<section class="box lav-box"><header><h2>Lavori aperti</h2><span class="sub">' + (aperte.length + pr.length + sc.length) + ' in gestione adesso</span></header>' +
+      (aperte.length ? '<h3 class="lav-h">Attività</h3>' + aperte.map(function (a) { var p = clProg(clOf(a.id)), d = attDate(a); return riga('#attivita/' + a.id, a.titolo, (d ? fD.format(d) + ' · ' : '') + esc(a.responsabile || 'Da assegnare'), progBar(p.done, p.tot, 'passi')); }).join('') : '') +
+      (pr.length ? '<h3 class="lav-h">Pratiche</h3>' + pr.map(function (x) { return riga('#pratiche/p' + x[0].id, x[0].titolo, 'Pratica', progBar(x[1], x[2], 'passi')); }).join('') : '') +
+      (sc.length ? '<h3 class="lav-h">Scadenze</h3>' + sc.map(function (x) { var d = scadDate(x); return riga('#pratiche/scadenze', x.titolo, (d ? 'Entro il ' + fD.format(d) + ' (' + when(d) + ')' : 'Senza data') + ' · ' + esc(x.responsabile || 'Da assegnare'), ''); }).join('') : '') +
+      (!aperte.length && !pr.length && !sc.length ? '<p class="sub">Nessun lavoro aperto.</p>' : '') +
+      (dopo.length ? '<p class="sub lav-dopo">Più avanti: ' + dopo.map(function (a) { return '<a href="#attivita/' + a.id + '">' + esc(a.titolo) + '</a> (lavori dal ' + fD.format(lavoriDa(a)) + ')'; }).join(' · ') + '. Fino a quella data i loro passi non sono tra le cose da fare.</p>' : '') + '</section>' +
       '<div class="board">' + [['corso', 'In corso'], ['programmate', 'In programma'], ['concluse', 'Concluse']].map(function (l) {
         return '<section class="lane"><h2>' + l[1] + ' <small>' + L[l[0]].length + '</small></h2>' + (L[l[0]].length ? L[l[0]].map(attCard).join('') : '<p class="note">Nessuna attività.</p>') + '</section>'; }).join('') + '</div>' +
-      '<p class="note">«In corso»: almeno un passo avviato, gli appuntamenti settimanali, oppure un’attività già passata con passi ancora aperti. «Concluse»: segnate come concluse o annullate, oppure passate con tutti i passi fatti.</p>';
+      '<p class="note">«In corso»: i lavori sono iniziati (lo dice la data «I lavori iniziano il» nella scheda), gli appuntamenti settimanali, oppure un’attività già passata con passi ancora aperti. «In programma»: i lavori non sono ancora iniziati. «Concluse»: segnate come concluse o annullate, oppure passate con tutti i passi fatti.</p>';
   }
   function chiPage() {
     var groups = RESP.slice();
     var recent = base.getTime() - 21 * DAY;
     function itemsFor(who) {
       var I = [];
-      D.checklist.forEach(function (x) { if (!respMatch(x.responsabile, who)) return; var a = att(x.attivita_id); if (!a) return;
+      D.checklist.forEach(function (x) { if (!respMatch(x.responsabile, who)) return; var a = att(x.attivita_id); if (!a || (x.stato !== 'fatto' && !clAttuale(x))) return;
         if (x.stato === 'fatto' && new Date(x.aggiornato_il).getTime() < recent) return; if (x.stato === 'non_serve') return;
         I.push({ st: x.stato, t: x.testo, ctx: a.titolo, href: '#attivita/' + a.id, d: x.scadenza && dt(x.scadenza), by: x.aggiornato_da }); });
       D.pratica_passi.forEach(function (x) { if (!respMatch(x.responsabile, who) || x.stato === 'non_ancora') return; var p = D.pratiche.filter(function (y) { return y.id === x.pratica_id; })[0];
@@ -1681,6 +1833,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<label>Dal<input name="data" type="date" value="' + esc(a ? a.data || '' : dataPre || '') + '"' + (a && a.ricorrenza ? ' disabled' : '') + '></label><label>Al (se dura più giorni)<input name="data_fine" type="date" value="' + esc(a ? a.data_fine || '' : '') + '"></label>' +
       '<label>Responsabile' + respSelect('responsabile', a ? a.responsabile : (me.carica ? myName() : 'Da assegnare')) + '</label><label>Vice' + respSelect('vice', a ? a.vice : '', 'Nessuno per ora') + '</label>' +
       campiPer(tipo).map(function (k) { return campoInput(k, k === 'luogo' ? (a ? a.luogo : '') : d[k]); }).join('') +
+      '<label>I lavori iniziano il<input name="inizio_lavori" type="date" value="' + esc(d.inizio_lavori || '') + '"><span class="sub">Se lo lasci vuoto: ' + (LAVORI_GG[tipo] || 60) + ' giorni prima dell’attività' + (a && lavoriDa(a) && !d.inizio_lavori ? ', cioè il ' + fD.format(lavoriDa(a)) : '') + '.</span></label>' +
       '<label class="wide">Note<textarea name="note" maxlength="1000">' + esc(a ? a.note || '' : '') + '</textarea></label>' +
       (isNew ? '<p class="wide sub">Alla creazione si apre la scheda dell’attività con la checklist del disciplinare' + (TIPO_DISC[tipo] && docBySlug(TIPO_DISC[tipo]) ? ' «' + esc(docBySlug(TIPO_DISC[tipo]).titolo.replace(/^Disciplinare (operativo|base), /, '')) + '»' : ' (per questo tipo il disciplinare non c’è ancora: la scrivete voi)') + ' e gli strumenti per gestirla.</p>' : '') +
       '<div class="wide"><button class="btn" type="submit">' + (isNew ? 'Crea l’attività e apri la scheda' : 'Salva') + '</button></div></form>';
@@ -1708,13 +1861,12 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
         preBlk = '<div class="note">Preiscrizioni dal sito al corso collegato: <b>' + pre.length + '</b>' + (nuove.length ? ', di cui <b>' + nuove.length + '</b> non ancora in lista. <button class="btn sm" type="button" data-act="preInLista" data-id="' + a.id + '">Aggiungile alla lista</button>' : ', tutte già in lista.') + '</div>';
       }
     }
-    var dlL = tipo === 'partecipanti' && D.soci ? '<datalist id="dlSociL">' + sociAttivi().map(function (x) { return '<option value="' + esc(socioNomeN(x)) + '">'; }).join('') + '</datalist>' : '';
-    var sociHint = tipo === 'partecipanti' && !D.soci && !nascosti() ? '<p class="sub">Per scegliere i partecipanti dall’elenco dei soci apri prima il <a href="#soci/libro">Libro soci</a>.</p>' : '';
+    var dlL = '', sociHint = tipo === 'partecipanti' && !D.soci && !nascosti() ? sociOkBox('Per avere la tendina con i nomi dei soci mentre scrivi, accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
     return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + (rows.length === 1 ? '1 riga' : rows.length + ' righe') + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + dlL + sociHint +
       preBlk + rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
       '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '<th></th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr>' + L.campi.map(function (c) { return '<td><input form="lr' + r.id + '" name="' + c[0] + '" value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
-      '<tr class="nuova">' + L.campi.map(function (c, i) { return '<td><input form="' + nid + '" name="' + c[0] + '" maxlength="' + (c[0] === 'testo' ? 2000 : 300) + '" placeholder="' + c[1] + (i === 0 && tipo === 'partecipanti' && D.soci ? ' (scrivi: compaiono i soci)' : '') + '"' + (i === 0 ? ' required' : '') + (i === 0 && tipo === 'partecipanti' && D.soci ? ' list="dlSociL" data-socio="1" autocomplete="off"' : '') + ' aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn sm" form="' + nid + '" type="submit">＋ Aggiungi</button></td></tr>' +
+      '<tr class="nuova">' + L.campi.map(function (c, i) { return '<td><input form="' + nid + '" name="' + c[0] + '" maxlength="' + (c[0] === 'testo' ? 2000 : 300) + '" placeholder="' + c[1] + (i === 0 && tipo === 'partecipanti' && D.soci ? ' (scrivi: compaiono i soci)' : '') + '"' + (i === 0 ? ' required' : '') + (i === 0 && tipo === 'partecipanti' && !nascosti() ? ' data-socio="1" autocomplete="off"' : '') + ' aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn sm" form="' + nid + '" type="submit">＋ Aggiungi</button></td></tr>' +
       '</tbody></table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
   }
   function soldiAttivita(a) {
@@ -1725,7 +1877,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var ed = canPN();
     return '<section class="box k-soldi"><header><h2>Budget previsionale</h2><span class="sub">' + (ed ? 'Lo compila il Tesoriere' : 'Lo compila il Tesoriere: tu lo vedi') + '</span></header>' +
       '<div class="tablew"><table><thead><tr><th>Voce</th><th>Tipo</th><th class="num">Previsto</th><th>Note</th>' + (ed ? '<th></th>' : '') + '</tr></thead><tbody>' +
-      bud.map(function (x) { return '<tr><td><b>' + esc(x.voce) + '</b></td><td>' + (x.tipo === 'entrata' ? 'Entrata' : 'Uscita') + '</td><td class="num">' + eur2(x.importo) + '</td><td>' + esc(x.note || '') + '</td>' + (ed ? '<td><button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_budget" data-id="' + x.id + '" data-l="' + esc(x.voce) + '">✕</button></td>' : '') + '</tr>'; }).join('') +
+      bud.map(function (x) { return '<tr><td><b>' + esc(x.voce) + '</b></td><td>' + (x.tipo === 'entrata' ? 'Entrata' : 'Uscita') + '</td><td class="num">' + eur2(x.importo) + '</td><td>' + esc(x.note || '') + '</td>' + (ed ? '<td class="na"><details class="ed"><summary>Modifica</summary><form class="sform" data-act="budEdit" data-id="' + x.id + '"><label>Voce<input name="voce" required maxlength="200" value="' + esc(x.voce) + '"></label><label>Tipo<select name="tipo"><option value="uscita"' + (x.tipo === 'uscita' ? ' selected' : '') + '>Uscita</option><option value="entrata"' + (x.tipo === 'entrata' ? ' selected' : '') + '>Entrata</option></select></label><label>Importo<input name="importo" required inputmode="decimal" value="' + esc(String(x.importo).replace('.', ',')) + '"></label><label class="wide">Note<input name="note" maxlength="300" value="' + esc(x.note || '') + '"></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button><button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_budget" data-id="' + x.id + '" data-l="' + esc(x.voce) + '">Elimina</button></div></form></details></td>' : '') + '</tr>'; }).join('') +
       (bud.length ? '' : '<tr><td colspan="5" class="sub">Nessuna voce ancora.</td></tr>') + '</tbody></table></div>' +
       (ed ? '<form class="sform" data-act="budNew" data-id="' + a.id + '"><label>Voce<input name="voce" required maxlength="200" placeholder="Es. Albergo, pullman, quote dei partecipanti"></label><label>Tipo<select name="tipo"><option value="uscita">Uscita</option><option value="entrata">Entrata</option></select></label><label>Importo previsto<input name="importo" required inputmode="decimal" placeholder="Es. 1200"></label><label>Note<input name="note" maxlength="500"></label><div class="wide"><button class="btn" type="submit">Aggiungi la voce</button></div></form>' : '') + '</section>' +
       '<section class="box k-soldi"><header><h2>Previsto e reale</h2><a href="#soldi/primanota">Prima nota</a></header><div class="tablew"><table><thead><tr><th></th><th class="num">Previsto</th><th class="num">Reale (prima nota)</th><th class="num">Differenza</th></tr></thead><tbody>' +
@@ -1743,8 +1895,8 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var tabs = [['', 'Scheda'], ['checklist', 'Checklist (' + p.done + '/' + p.tot + ')'], ['liste', 'Liste'], ['soldi', 'Budget e spese'], ['documenti', 'Documenti'], ['commenti', 'Commenti (' + D.commenti.filter(function (c) { return c.attivita_id === a.id; }).length + ')']];
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#attivita/' + a.id + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (sez === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     var quando = a.ricorrenza ? esc(a.ricorrenza) : d ? fL.format(d) + (a.data_fine && a.data_fine !== a.data ? ' – ' + fL.format(dt(a.data_fine)) : '') + ' (' + when(d) + ')' : 'data da fissare';
-    var top = '<a class="back" href="#attivita">← Stato dei lavori</a><section class="box att-head tinted"' + tintTipo(a.tipo) + '><div><span class="pill plain">' + esc(tipoL) + '</span> <span class="pill ' + pillCls(a.stato) + '">' + esc(a.stato || '') + '</span><h1 style="margin-top:8px">' + esc(a.titolo) + '</h1>' +
-      '<p class="sub">' + meta([['Quando', quando], ['Dove', esc(a.luogo || '')], ['Responsabile', esc(a.responsabile || 'da assegnare')], ['Vice', esc(a.vice || 'nessuno')]]) + '</p></div>' + progBar(p.done, p.tot, 'passi') + '</section>' + t;
+    var top = '<a class="back" href="#attivita">← Stato dei lavori</a><section class="box att-head tinted"' + tintTipo(a.tipo) + '><div><span class="pill plain">' + esc(tipoL) + '</span> <label class="att-stato pill ' + pillCls(a.stato) + '" title="Cambia lo stato">Stato: <select data-act="attStato" data-id="' + a.id + '" aria-label="Stato dell’attività">' + ATT_STATI.concat(ATT_STATI.indexOf(a.stato) < 0 && a.stato ? [a.stato] : []).map(function (x) { return '<option' + (x === a.stato ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select></label><h1 style="margin-top:8px">' + esc(a.titolo) + '</h1>' +
+      '<p class="sub">' + meta([['Quando', quando], ['Dove', esc(a.luogo || '')], ['Responsabile', esc(a.responsabile || 'da assegnare')], ['Vice', esc(a.vice || 'nessuno')]].concat(lavoriDa(a) ? [['Lavori dal', fD.format(lavoriDa(a)) + (attIniziata(a) ? '' : ' (non ancora iniziati)')]] : [])) + '</p></div>' + progBar(p.done, p.tot, 'passi') + '</section>' + t;
     if (sez === 'checklist') return top + checklistSec(a, cl);
     if (sez === 'liste') return top + liste.map(function (k) { return listaBox(a, k); }).join('');
     if (sez === 'soldi') return top + soldiAttivita(a);
@@ -2450,7 +2602,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '<label class="wide">Riferimento (facoltativo)<input name="rif" maxlength="200" placeholder="Es. Proposta del Tesoriere, 20 novembre"></label>' +
       '<div class="wide"><button class="btn" type="submit">Aggiungi la decisione</button></div></form></section>';
     if (sub === 'documento') return back + head('Nuovo documento', 'Scegli dove metterlo. Se c’è già un documento con lo stesso titolo, il nuovo file prende il suo posto e il vecchio resta tra le versioni.') +
-      '<section class="box k-doc"><h2>In Archivio</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
+      '<section class="box k-doc"><h2>In Documenti</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
       '<section class="box k-doc"><h2>Tra i Verbali</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>' +
       '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere.') + '</section>';
     if (sub === 'testo') return back + head('Nuovo testo pronto', 'Compare in Come si fa → Comunicazioni, con il pulsante «Copia».') +
@@ -2472,7 +2624,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       if (r.error) throw r.error; D.scadenze.push(r.data); toast('Scadenza aggiunta.'); location.hash = '#pratiche/scadenze'; return;
     }
     if (a === 'nAtt') {
-      var tipoN = v('tipo'), datiN = datiAttivita(f, tipoN);
+      var tipoN = v('tipo'), datiN = datiAttivita(f, tipoN); if (f.inizio_lavori && f.inizio_lavori.value) datiN.inizio_lavori = f.inizio_lavori.value;
       if (v('data_fine') && v('data') && v('data_fine') < v('data')) { toast('La data di fine viene prima di quella di inizio.'); return; }
       var discN = discPer(tipoN, datiN) && docBySlug(discPer(tipoN, datiN)) ? discPer(tipoN, datiN) : null;
       r = await sb.from('attivita').insert({ titolo: v('titolo'), tipo: tipoN, stato: v('stato'), data: nz('data'), data_fine: nz('data_fine'), responsabile: v('responsabile') || 'Da assegnare', vice: nz('vice'), luogo: nz('d_luogo'), note: nz('note'), dati: datiN, disciplinare: discN }).select().single();
@@ -2520,7 +2672,6 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function isLite() { try { return localStorage.getItem('inz-lite') === '1'; } catch (e) { return false; } }
   function badge(k) {
     if (k === 'pratiche') return D.pratica_passi.filter(function (x) { return x.stato !== 'fatto' && x.stato !== 'non_ancora' && isMine(x.responsabile); }).length;
-    if (k === 'ruoli') return D.cariche.filter(function (c) { return !c.sostituto_id; }).length;
     if (k === 'sito') { var nn = nuoviDalSito(); return nn.pre + nn.soc + nn.msg; }
     if (k === 'oggi') return me.admin ? 0 : richiestePerMe().filter(function (r) { return r.stato === 'aperta'; }).length;
     if (k === 'attivita') return myClOpen().filter(function (x) { return x.stato === 'in_corso' || (x.scadenza && dleft(dt(x.scadenza)) <= 30); }).length;
@@ -2624,21 +2775,99 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var dd = D.documenti.filter(function (x) { return x.file_path === path; })[0] || D.documenti_versioni.filter(function (x) { return x.file_path === path; })[0];
     log('Ha scaricato', dd ? (dd.titolo || dd.file_nome || path) : path);
   }
+
+  /* ---------- guida passo passo ----------
+     Parte da sola al primo accesso di ogni carica su questo dispositivo; si riapre dal piè di pagina e si può spegnere. */
+  var GUIDA = [
+    { h: 'oggi', t: 'Benvenuto nel gestionale', x: 'In pochi passi ti mostro dove sono le cose. Puoi uscire quando vuoi con «Chiudi» e riaprire la guida dal fondo della pagina.' },
+    { h: 'oggi', sel: '#tabs', selM: '#bnav', t: 'Le sezioni', x: 'Da qui vai a Oggi, Calendario, Attività, Pratiche, Documenti e alle altre sezioni. Sul telefono il menu è in basso: «Altro» apre tutte le sezioni.' },
+    { h: 'oggi', sel: '.carica-d', t: 'La tua carica', x: 'Tocca la riga per vedere i ruoli che ti dà lo statuto e le tue mansioni.' },
+    { h: 'oggi', sel: '.quadro-box', t: 'Il quadro generale', x: 'I numeri dicono quante cose sono aperte. Ogni riquadro si tocca e porta all’elenco.' },
+    { h: 'oggi', sel: '.og-card.k-att', t: 'Le tue cose da fare', x: 'Qui trovi i passi che spettano a te, le richieste degli altri membri e le risposte alle tue. I lavori che iniziano più avanti compaiono solo quando arriva il momento.' },
+    { h: 'oggi', sel: '#addBtn', selM: '.fab', t: 'Aggiungi', x: 'Per creare un’attività, una scadenza, una pratica o una decisione da votare. Chi la crea ne diventa il responsabile, se non sceglie un altro nome.' },
+    { h: 'oggi', sel: '#q', t: 'Cerca', x: 'Scrivi una parola: trovi documenti, scadenze, attività e ruoli.' },
+    { h: 'attivita', sel: '.lav-box', t: 'Lavori aperti', x: 'Tutto quello che è in gestione adesso: attività, pratiche e scadenze, con la barra dei passi fatti. Tocca una riga per aprirla.' },
+    { h: 'attivita', sel: '.board', t: 'Le attività', x: 'Ogni attività ha la sua scheda con stato, checklist, liste dei partecipanti, budget e documenti. Lo stato e la data di inizio dei lavori si cambiano dalla scheda.' },
+    { h: 'archivio', sel: '.gen-chip', t: 'Documenti e Genera', x: 'Tutti i documenti sono qui. Con «Genera un documento» prepari convocazioni, verbali, comunicati e richieste, li modifichi e li stampi su carta intestata.' },
+    { h: 'ruoli', sel: '.rl-strip', t: 'Ruoli e mansioni', x: 'Per ogni carica: cosa ha in gestione adesso, le mansioni e chi la sostituisce. Le mansioni le modifichi tu dalla scheda.' },
+    { h: 'oggi', sel: '#liteBtn', selM: '#bnav', t: 'Versione semplice', x: 'Se preferisci, la versione semplice ti fa una domanda alla volta con pulsanti grandi. Sul telefono la trovi in «Altro».' },
+    { h: 'oggi', sel: '.guida-link', t: 'Fine', x: 'La guida si riapre da qui, in fondo alla pagina. Da qui puoi anche spegnere l’avvio automatico al primo accesso.' }
+  ];
+  var guidaI = -1;
+  function guidaKey() { return 'inz-guida-' + (me && (me.carica || me.id) || 'x'); }
+  function guidaAuto() { try { return localStorage.getItem('inz-guida-auto') !== 'no'; } catch (e) { return true; } }
+  function guidaBtn() { var b = document.getElementById('guidaAuto'); if (b) { var on = guidaAuto(); b.setAttribute('aria-pressed', String(on)); b.textContent = 'Guida al primo accesso: ' + (on ? 'accesa' : 'spenta'); } }
+  function guidaAlPrimo() { guidaBtn(); var vista = true; try { vista = !!localStorage.getItem(guidaKey()); } catch (e) {} if (!vista && guidaAuto() && !isLite()) setTimeout(function () { guidaApri(0); }, 700); }
+  function guidaChiudi() { guidaI = -1; var g = document.getElementById('guida'); if (g) g.remove(); document.removeEventListener('keydown', guidaTasti); try { localStorage.setItem(guidaKey(), '1'); } catch (e) {} }
+  function guidaTasti(e) { if (e.key === 'Escape') guidaChiudi(); else if (e.key === 'ArrowRight') guidaApri(guidaI + 1); else if (e.key === 'ArrowLeft') guidaApri(guidaI - 1); }
+  function guidaApri(i) {
+    if (i < 0) i = 0; if (i >= GUIDA.length) return guidaChiudi();
+    guidaI = i; var st = GUIDA[i];
+    if (route().a !== st.h) { location.hash = '#' + st.h; return setTimeout(function () { guidaMostra(st, i); }, 450); }
+    guidaMostra(st, i);
+  }
+  function guidaMostra(st, i) {
+    if (guidaI !== i) return;
+    var g = document.getElementById('guida'); if (!g) { g = document.createElement('div'); g.id = 'guida'; document.body.appendChild(g); document.addEventListener('keydown', guidaTasti); }
+    var sel = isMobile() && st.selM ? st.selM : st.sel, el = sel ? [].slice.call(document.querySelectorAll(sel)).filter(function (x) { return x.offsetParent || getComputedStyle(x).position === 'fixed'; })[0] : null;
+    if (el && el.scrollIntoView && getComputedStyle(el).position !== 'fixed') el.scrollIntoView({ block: 'center', behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+    var r = el ? el.getBoundingClientRect() : null, pad = 6;
+    g.innerHTML = '<div class="g-buco"' + (r ? ' style="left:' + (r.left - pad) + 'px;top:' + (r.top - pad) + 'px;width:' + (r.width + 2 * pad) + 'px;height:' + (r.height + 2 * pad) + 'px"' : ' style="left:50%;top:40%;width:0;height:0"') + '></div>' +
+      '<div class="g-card" role="dialog" aria-modal="true" aria-labelledby="gT"><span class="g-n">' + (i + 1) + ' di ' + GUIDA.length + '</span><h2 id="gT">' + esc(st.t) + '</h2><p>' + esc(st.x) + '</p>' +
+      '<div class="g-dots">' + GUIDA.map(function (x, k) { return '<i' + (k === i ? ' class="on"' : '') + '></i>'; }).join('') + '</div>' +
+      '<div class="g-az"><button type="button" class="btn alt sm" data-g="chiudi">Chiudi</button><span></span>' + (i ? '<button type="button" class="btn alt sm" data-g="indietro">← Indietro</button>' : '') + '<button type="button" class="btn sm" data-g="avanti">' + (i === GUIDA.length - 1 ? 'Ho capito' : 'Avanti →') + '</button></div></div>';
+    var c = g.querySelector('.g-card'), cw = c.offsetWidth, ch = c.offsetHeight, W = innerWidth, H = innerHeight, x, y;
+    if (!r) { x = (W - cw) / 2; y = (H - ch) / 2; }
+    else { x = Math.min(Math.max(12, r.left), W - cw - 12); y = r.bottom + 14 + ch < H - 8 ? r.bottom + 14 : r.top - ch - 14 > 8 ? r.top - ch - 14 : Math.max(12, H - ch - (isMobile() ? 90 : 16)); if (r.height > H * 0.5 && !isMobile()) x = Math.max(12, W - cw - 24); }
+    c.style.left = x + 'px'; c.style.top = y + 'px';
+    c.querySelector('[data-g=avanti]').focus();
+  }
+  document.addEventListener('click', function (e) {
+    var gb = e.target.closest && e.target.closest('[data-g]');
+    if (gb) { var k = gb.getAttribute('data-g'); if (k === 'chiudi') guidaChiudi(); else if (k === 'avanti') guidaApri(guidaI + 1); else guidaApri(guidaI - 1); return; }
+    if (e.target.id === 'guidaVia') guidaApri(0);
+    if (e.target.id === 'guidaAuto') { try { localStorage.setItem('inz-guida-auto', guidaAuto() ? 'no' : 'si'); } catch (x) {} guidaBtn(); toast(guidaAuto() ? 'La guida partirà da sola al primo accesso di ogni carica.' : 'La guida non partirà più da sola: la riapri da qui quando vuoi.'); }
+  });
+  window.addEventListener('resize', function () { if (guidaI >= 0) guidaMostra(GUIDA[guidaI], guidaI); });
+  /* tendina con i soci sotto i campi data-socio */
+  function acChiudi() { var o = document.querySelector('.ac-list'); if (o) o.remove(); }
+  function acMostra(inp) {
+    acChiudi(); var q = low(inp.value.trim()); if (!D.soci || q.length < 2) return;
+    var hit = sociAttivi().filter(function (x) { var n = low(socioNomeN(x)), c = low(x.cognome + ' ' + (x.nome || '')); return n.indexOf(q) >= 0 || c.indexOf(q) >= 0; }).slice(0, 8);
+    if (!hit.length) return;
+    var box = document.createElement('div'); box.className = 'ac-list'; box.setAttribute('role', 'listbox');
+    box.innerHTML = hit.map(function (x, i) { return '<button type="button" role="option" data-sid="' + x.id + '"' + (i === 0 ? ' class="on"' : '') + '><b>' + esc(x.cognome) + '</b> ' + esc(x.nome || '') + (x.telefono ? '<span class="sub">' + esc(x.telefono) + '</span>' : '') + '</button>'; }).join('');
+    var r = inp.getBoundingClientRect(); box.style.left = (r.left + scrollX) + 'px'; box.style.top = (r.bottom + scrollY + 2) + 'px'; box.style.minWidth = Math.max(r.width, 240) + 'px';
+    box._inp = inp; document.body.appendChild(box);
+    var bw = box.offsetWidth; if (r.left + bw > innerWidth - 12) box.style.left = Math.max(12, innerWidth - 12 - bw) + scrollX + 'px';
+  }
+  function acScegli(inp, sid) {
+    var so = socioById(sid); if (!so) return; inp.value = socioNomeN(so);
+    if (inp.getAttribute('data-socio') === '1') { var fid = inp.getAttribute('form'), tel = fid && document.querySelector('input[form="' + fid + '"][name="telefono"]'); if (tel && !tel.value) tel.value = so.telefono || ''; }
+    acChiudi(); inp.focus();
+  }
+  document.addEventListener('mousedown', function (e) { var bt = e.target.closest && e.target.closest('.ac-list button'); if (bt) { e.preventDefault(); acScegli(bt.parentNode._inp, bt.getAttribute('data-sid')); } else if (!e.target.closest || !e.target.closest('.ac-list')) acChiudi(); });
+  mainEl.addEventListener('keydown', function (e) {
+    var l = document.querySelector('.ac-list'); if (!l || e.target !== l._inp) return;
+    var bs = [].slice.call(l.querySelectorAll('button')), i = bs.findIndex(function (x) { return x.classList.contains('on'); });
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); bs[i].classList.remove('on'); i = (i + (e.key === 'ArrowDown' ? 1 : bs.length - 1)) % bs.length; bs[i].classList.add('on'); }
+    else if (e.key === 'Enter') { e.preventDefault(); acScegli(l._inp, bs[i].getAttribute('data-sid')); }
+    else if (e.key === 'Escape') acChiudi();
+  });
+  window.addEventListener('hashchange', acChiudi);
   mainEl.addEventListener('input', function (e) {
+    if (e.target.matches && e.target.matches('input[data-socio]')) { acMostra(e.target); return; }
     if (!e.target.matches || !e.target.matches('.gen-filtro')) return;
     var q = low(e.target.value.trim()), box = e.target.closest('.gen-soci');
     box.querySelectorAll('.gs-r').forEach(function (r) { r.hidden = q && r.getAttribute('data-q').indexOf(q) < 0; });
   });
   mainEl.addEventListener('change', function (e) {
-    if (e.target.matches && e.target.matches('input[data-socio]')) {
-      var so = sociAttivi().filter(function (x) { return low(socioNomeN(x)) === low(e.target.value.trim()); })[0], fid = e.target.getAttribute('form'), tel = fid && document.querySelector('input[form="' + fid + '"][name="telefono"]');
-      if (so && tel && !tel.value) tel.value = so.telefono || '';
-    }
     var box = e.target.closest && e.target.closest('.gen-soci'); if (!box || e.target.type !== 'checkbox') return;
     var c = box.querySelector('.gs-cerca .sub'); if (c) c.textContent = box.querySelectorAll('.gs-lista input[type=checkbox]:checked').length + ' scelti';
   });
   mainEl.addEventListener('change', async function (e) {
     var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
+    if (a === 'attStato') { var xs = await upd('attivita', id, { stato: t.value }); if (xs) { toast('Stato: ' + t.value + '.'); render(); } return; }
     if (a === 'genAtt') {
       var ga = att(+t.value), gf = t.form; if (!ga) return; var gd = ga.dati || {}, gdt = attDate(ga);
       var setv = function (n, val) { if (gf.elements[n] && val) gf.elements[n].value = val; };
@@ -2694,6 +2923,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     if (a === 'dl') { e.preventDefault(); download(b.getAttribute('data-path')); }
     else if (a === 'docSez') { e.preventDefault(); var sz = document.getElementById('sez' + b.getAttribute('data-i')); if (sz) sz.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'cat') { P.archivio.cur = b.getAttribute('data-v'); render(); }
+    else if (a === 'vaiRuolo') { e.preventDefault(); var tr = document.getElementById('r-' + b.getAttribute('data-id')); if (tr) tr.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'editRuolo') { P.ruoli.edit = b.getAttribute('data-id'); render(); var ta = document.getElementById('m-' + P.ruoli.edit); if (ta) ta.focus(); }
     else if (a === 'cancelRuolo') { P.ruoli.edit = null; render(); }
     else if (a === 'backup') { backup(); }
@@ -2706,12 +2936,17 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     else if (a === 'prStato') { var pp = await upd('pratiche', +b.getAttribute('data-id'), { stato: b.getAttribute('data-v') }); if (pp) { toast(pp.stato === 'chiusa' ? 'Pratica chiusa.' : 'Pratica riaperta.'); render(); } }
     else if (a === 'archivia') { var tb2 = b.getAttribute('data-t'), on = b.getAttribute('data-v') === '1'; var ar = await upd(tb2, +b.getAttribute('data-id'), { archiviato: on }); if (ar) { toast(on ? 'Archiviato: lo ritrovi in «Archiviate».' : 'Ripristinato.'); render(); } }
     else if (a === 'elimina') { await elimina(b.getAttribute('data-t'), +b.getAttribute('data-id'), b.getAttribute('data-l')); }
+    else if (a === 'genModifica') { P.genera.edit = !P.genera.edit; render(); }
+    else if (a === 'docEdita') { P.docEdit = +b.getAttribute('data-id'); render(); var ta = mainEl.querySelector('.doc-txt'); if (ta) { ta.scrollIntoView({ block: 'start' }); ta.focus(); } }
+    else if (a === 'docAnnulla') { P.docEdit = null; render(); }
+    else if (a === 'docAnteprima') { var fp = b.closest('form'), dp = fp.querySelector('.doc-prev'), cp = txt2doc(fp.testo.value);
+      dp.innerHTML = '<h3>Anteprima</h3><div class="foglio">' + (cp.intro ? '<p class="doc-intro">' + fmx(cp.intro) + '</p>' : '') + cp.secs.map(function (x) { return '<section class="fs"><h2>' + esc(x.h) + '</h2>' + (x.nota ? '<p class="sub">' + esc(x.nota) + '</p>' : '') + x.b.map(blocco).join('') + (x.comunicazioni ? tableH(HEAD4, comsRows(x.comunicazioni)) : '') + '</section>'; }).join('') + '</div>'; }
     else if (a === 'genSociOk') {
       var dch = b.closest('.gen-sociok').querySelector('.genSociDich');
       if (!dch || !dch.checked) { toast('Spunta prima la dichiarazione di responsabilità.'); return; }
       if (!me || me.prova) return;
-      var fm0 = b.closest('form'), gm0 = GEN.filter(function (x) { return x.k === fm0.getAttribute('data-k'); })[0];
-      P.genera.v = genVal(fm0, gm0);
+      var fm0 = b.closest('form[data-act=genFai]'), gm0 = fm0 && GEN.filter(function (x) { return x.k === fm0.getAttribute('data-k'); })[0];
+      if (gm0) P.genera.v = genVal(fm0, gm0);
       await sociLog('accettazione', 'Accettata la dichiarazione di responsabilità sui dati dei soci (Genera documenti)');
       P.soci.ok = true; await caricaSoci(); await sociLog('apertura', 'Usato l’elenco dei soci per preparare un documento'); render();
     }
@@ -2738,7 +2973,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
           var ud = await upd('decisioni', de.id, { approvata: true, seduta: 'Consiglio Direttivo del ' + gD(gv.data), approvata_il: gv.data || iso(base), verbale_slug: slugG, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (ud) nChiuse++; }
       }
       P.genera.doc = null; P.genera.v = {};
-      toast('Salvato nell’archivio come bozza' + (nChiuse ? '; ' + nChiuse + ' decisioni segnate come approvate' : '') + '.'); location.hash = '#doc/' + slugG;
+      toast('Salvato in Documenti come bozza' + (nChiuse ? '; ' + nChiuse + ' decisioni segnate come approvate' : '') + '.'); location.hash = '#doc/' + slugG;
     }
     else if (a === 'preInLista') {
       var aidP = +b.getAttribute('data-id'), corsiP = D.sito_corsi.filter(function (c) { return c.attivita_id === aidP; }).map(function (c) { return c.id; });
@@ -2788,8 +3023,10 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     try {
       if (f.classList.contains('up') && f.getAttribute('data-area')) await uploadDoc(f);
       else if (a === 'saveRuolo') {
-        var id = f.getAttribute('data-id'), m = f.m.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        var c = await upd('cariche', id, { mansioni: m });
+        var id = f.getAttribute('data-id'), m = f.m.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean), patchR = { mansioni: m };
+        if (f.sost) patchR.sostituto_nota = f.sost.value.trim() || null;
+        if (f.dd) patchR.da_decidere = f.dd.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        var c = await upd('cariche', id, patchR);
         if (c) { P.ruoli.edit = null; toast('Mansioni salvate.'); render(); }
       } else if (a === 'newScad') {
         var r = await sb.from('scadenze').insert({ titolo: f.t.value.trim(), data: f.d.value || null, responsabile: f.r.value, categoria: f.c.value.trim() || null }).select().single();
@@ -2804,10 +3041,31 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       } else if (a === 'rqVista') {
       } else if (a === 'genFai') {
         var gm = GEN.filter(function (x) { return x.k === f.getAttribute('data-k'); })[0];
-        P.genera.v = genVal(f, gm); P.genera.doc = gm.fai(P.genera.v); P.genera.docK = gm.k; render();
+        P.genera.v = genVal(f, gm); P.genera.doc = gm.fai(P.genera.v); P.genera.docK = gm.k; P.genera.edit = false; render();
         var go = document.querySelector('.gen-out'); if (go) go.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (a === 'comEdit') {
+        var ce = await upd('commenti', +f.getAttribute('data-id'), { testo: f.testo.value.trim() }); if (ce) { toast('Commento corretto.'); render(); }
+      } else if (a === 'budEdit') {
+        var imp = parseFloat(String(f.importo.value).replace(/\./g, '').replace(',', '.')); if (!(imp >= 0)) { toast('Scrivi un importo valido, per esempio 150 o 150,50.'); return; }
+        var be = await upd('attivita_budget', +f.getAttribute('data-id'), { voce: f.voce.value.trim(), tipo: f.tipo.value, importo: imp, note: f.note.value.trim() || null }); if (be) { toast('Voce del budget salvata.'); render(); }
+      } else if (a === 'rqEdit') {
+        var re2 = await upd('richieste', +f.getAttribute('data-id'), { testo: f.testo.value.trim(), scadenza: f.scadenza.value || null, aggiornata_il: new Date().toISOString(), aggiornata_da: me.nome }); if (re2) { toast('Richiesta corretta.'); render(); }
+      } else if (a === 'genApplica') {
+        var gc = txt2doc(f.testo.value); if (!gc.secs.length) { toast('Il testo è vuoto.'); return; }
+        P.genera.doc = { titolo: P.genera.doc.titolo, secs: gc.secs }; P.genera.edit = false; toast('Modifiche applicate: ora puoi copiare, stampare o salvare.'); render();
+      } else if (a === 'docTesto') {
+        var did = +f.getAttribute('data-id'), dd = D.documenti.filter(function (x) { return x.id === did; })[0], nc = txt2doc(f.testo.value);
+        if (!nc.secs.length) { toast('Il testo è vuoto: scrivi almeno una sezione.'); return; }
+        var patch = { titolo: f.titolo.value.trim(), aggiornato_il: new Date().toISOString(), caricato_da: me.nome, versione: (dd.versione || 1) + (f.nuovaver.checked ? 1 : 0) };
+        if (dd.riservato) {
+          var rr = await sb.from('documenti_testo_riservato').upsert({ documento_id: did, contenuto: nc, aggiornato_da: me.nome, aggiornato_il: new Date().toISOString() }, { onConflict: 'documento_id' });
+          if (rr.error) { toast('Non salvato: ' + rr.error.message); return; }
+          D.docRis[did] = nc;
+        } else patch.contenuto = nc;
+        var du = await upd('documenti', did, patch);
+        if (du) { P.docEdit = null; toast('Testo salvato' + (f.nuovaver.checked ? ': versione ' + du.versione : '') + '.'); render(); scrollTo(0, 0); }
       } else if (a === 'docStato') {
-        var ds = await upd('documenti', +f.getAttribute('data-id'), { stato: f.stato.value, sottotitolo: f.sottotitolo.value.trim() || null, aggiornato_il: new Date().toISOString(), caricato_da: me.nome });
+        var ds = await upd('documenti', +f.getAttribute('data-id'), { stato: f.stato.value, sottotitolo: f.sottotitolo.value.trim() || null, categoria: (f.categoria && f.categoria.value.trim()) || null, aggiornato_il: new Date().toISOString(), caricato_da: me.nome });
         if (ds) { toast('Stato del documento: ' + STATO_DOC[ds.stato][0] + '.'); render(); }
       } else if (a === 'copiaCifrata') { await copiaCifrata(f);
       } else if (a === 'sociCerca') { P.soci.q = f.q.value.trim(); render();
@@ -2815,6 +3073,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       } else if (a === 'attSave') {
         var aid0 = +f.getAttribute('data-id'), a0 = att(aid0), tipo0 = f.tipo.value, dati0 = Object.assign({}, a0.dati || {});
         (DATI_TIPO[tipo0] || ['orario']).forEach(function (k) { if (f['d_' + k]) { var vv = f['d_' + k].value.trim(); if (vv) dati0[k] = vv; else delete dati0[k]; } });
+        if (f.inizio_lavori) { if (f.inizio_lavori.value) dati0.inizio_lavori = f.inizio_lavori.value; else delete dati0.inizio_lavori; }
         if (f.data_fine.value && f.data.value && f.data_fine.value < f.data.value) { toast('La data di fine viene prima di quella di inizio.'); return; }
         var pa = { titolo: f.titolo.value.trim(), tipo: tipo0, stato: f.stato.value, data_fine: f.data_fine.value || null, responsabile: f.responsabile.value || 'Da assegnare', vice: f.vice.value || null, luogo: f.d_luogo.value.trim() || null, note: f.note.value.trim() || null, dati: dati0 };
         if (!f.data.disabled) pa.data = f.data.value || null;
