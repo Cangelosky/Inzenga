@@ -632,7 +632,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 @media (max-width: 600px) { .gs-r { grid-template-columns: minmax(0, 1fr); } .gs-del { max-width: none; } }
 .gd .gd-row { display: none; } .gd:has(> .chk input:checked) .gd-row { display: grid; }
 .gen-sociok { display: grid; gap: 8px; }
-.doc-txt { min-height: 60vh; font: 400 calc(15.5px * var(--z))/1.55 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; tab-size: 2; }
+.doc-txt, .sform textarea.doc-txt { min-height: max(65vh, 420px); resize: vertical; font: 400 calc(15.5px * var(--z))/1.55 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; tab-size: 2; }
 .doc-editor code { background: var(--soft, rgba(0,0,0,.05)); padding: 0 4px; border-radius: 4px; font-size: .92em; }
 .doc-prev:empty { display: none; } .doc-prev .foglio { border: 1px dashed var(--line); padding: 14px; border-radius: 10px; }
 .att-stato { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
