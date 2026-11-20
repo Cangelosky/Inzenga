@@ -775,6 +775,55 @@ details.espandi > ul { width: 100%; }
   .sr-tit { grid-column: 1 / -1; } .sr-s { justify-items: start; grid-row: 1; grid-column: 1 / -1; }
   .sr-c em { display: block; }
 }
+/* libro soci e scheda del socio (proposta 20/11) */
+.so-tab table { min-width: 0; }
+.so-tab th, .so-tab td { padding: 10px 8px; }
+.so-tab td[data-l="Abita a"] { min-width: 140px; }
+.q-anno.sm { padding: 1px 6px; margin-right: 3px; }
+.so-tab td[data-l="Nato"], .so-tab td[data-l="Socio dal"] { white-space: nowrap; }
+.so-tab td[data-l="Quote"] { white-space: nowrap; } .so-tab td[data-l="Quote"] .q-anno { margin-bottom: 0; }
+.so-ctl .pill { display: block; width: max-content; margin: 2px 0; }
+.so-tab td[data-l="Socio"] { width: 24%; } .so-et .pill { white-space: normal; }
+.so-tab td[data-l="Contatti"] a { overflow-wrap: anywhere; } .so-tab td[data-l="Contatti"] { width: 19%; }
+@media (max-width: 700px) { .so-tab td, .so-tab td[data-l] { display: block; width: auto; min-width: 0; white-space: normal; padding: 5px 0; } .so-tab td::before { display: block; } .so-tab .so-ctl .pill { display: inline-block; margin-right: 4px; } .so-tab td > * { min-width: 0; } .so-tab td[data-l="Socio"] { grid-template-columns: 1fr; } .so-tab td[data-l="Socio"]::before { display: none; } .so-tab tr { padding: 14px 0; } }
+.so-tab td { vertical-align: middle; }
+.so-n { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.so-n b { display: block; color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.so-n small { display: block; color: var(--ink-2); font-size: calc(14px * var(--z)); }
+.so-av { flex: none; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: calc(15px * var(--z)); background: color-mix(in srgb, var(--k-soci) 40%, var(--card)); color: var(--ink); text-transform: uppercase; }
+.so-av.lg { width: 72px; height: 72px; font-size: calc(26px * var(--z)); }
+.so-et { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 6px; }
+.pill.so-car { background: var(--forest); color: var(--forest-ink); }
+.pill.so-on { background: color-mix(in srgb, var(--gold) 45%, var(--card)); color: var(--ink); }
+.q-anno { display: inline-block; margin: 0 4px 4px 0; padding: 1px 8px; border-radius: 999px; border: 1px dashed var(--line); font-size: calc(14px * var(--z)); color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.q-anno.ok { border: 0; background: var(--ok-bg); color: var(--ok-ink); font-weight: 600; }
+.so-cerca { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; }
+@media (max-width: 700px) { .so-cerca { grid-template-columns: 1fr; } .so-tab table { min-width: 0; } }
+.so-testa { gap: 16px; }
+.so-id { display: flex; align-items: center; gap: 18px; } .so-id h1 { margin: 0; } .so-id .sub { margin: 2px 0 0; }
+.so-veloce { display: grid; gap: 10px 14px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, var(--k-soci) 12%, var(--card)); }
+.so-veloce label { display: grid; gap: 4px; font-weight: 600; font-size: calc(15px * var(--z)); }
+.so-veloce select { min-height: 44px; padding: 6px 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: calc(16.5px * var(--z)); }
+.so-cols { grid-template-columns: 1fr; } @media (min-width: 900px) { .so-cols { grid-template-columns: 1fr 1fr; } }
+.so-dl { margin: 0; display: grid; gap: 0; }
+.so-d { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); } .so-d:first-child { border-top: 0; }
+.so-d dt { color: var(--ink-2); font-weight: 600; font-size: calc(15.5px * var(--z)); } .so-d dd { margin: 0; overflow-wrap: anywhere; }
+.so-quote { display: flex; flex-wrap: wrap; }
+.so-meriti { background: color-mix(in srgb, var(--gold) 10%, var(--card)); }
+.so-stelle { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; } .so-stelle .st { font-size: calc(30px * var(--z)); color: var(--gold); letter-spacing: 4px; }
+.so-form .so-grp { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 14px; }
+.so-form .so-grp legend { font-weight: 700; padding: 0 6px; }
+.so-form .quote { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; } .so-form .quote .lbl { width: 100%; font-weight: 600; }
+/* scheda riunione */
+.ri-cols { display: grid; gap: 20px; grid-template-columns: 1fr; } @media (min-width: 900px) { .ri-cols { grid-template-columns: 1fr 1fr; } }
+.ri-cols h3 { margin: 16px 0 6px; font-size: calc(17px * var(--z)); } .ri-cols h3 small { font-weight: 500; color: var(--ink-2); }
+.ri-odg { margin: 0 0 12px; padding-left: 1.4em; display: grid; gap: 6px; }
+.ri-lista { list-style: none; margin: 0; padding: 0; }
+.ri-p { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.ri-lista .ri-p:first-child { border-top: 0; }
+.ri-p select { min-height: 42px; padding: 4px 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: calc(15.5px * var(--z)); }
+.ri-legale { margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; background: color-mix(in srgb, var(--line) 30%, var(--card)); font-weight: 600; }
+.ri-legale.ok { background: var(--ok-bg); color: var(--ok-ink); } .ri-legale.ko { background: var(--warn-bg); color: var(--warn-ink); }
 </style>
 </head>
 <body>
@@ -1836,7 +1885,7 @@ details.espandi > ul { width: 100%; }
     return '<div class="prog"><div class="progress" role="img" aria-label="' + done + ' ' + what + ' fatti su ' + tot + '"><i style="width:' + pc + '%"></i></div><em>' + done + ' di ' + tot + ' · ' + pc + '%</em></div>';
   }
   /* inizio dei lavori: prima di quella data i passi non sono «da fare» e non entrano nei conti */
-  var LAVORI_GG = { Stage: 180, Mostre: 120, 'Corsi per il tesserino': 90 };   // giorni prima dell'attività; per gli altri tipi 60
+  var LAVORI_GG = { Stage: 180, Mostre: 120, 'Corsi per il tesserino': 90, 'Consiglio Direttivo': 14, 'Assemblea dei soci': 30 };   // giorni prima dell'attività; per gli altri tipi 60
   function lavoriDa(a) { var dd = a.dati && a.dati.inizio_lavori; if (dd) return dt(dd); var d = attDate(a); if (!d || a.ricorrenza) return null; return new Date(d.getTime() - (LAVORI_GG[a.tipo] || 60) * DAY); }
   function attIniziata(a) { var l = lavoriDa(a); return !l || l <= base || clOf(a.id).some(function (x) { return x.stato === 'fatto' || x.stato === 'in_corso'; }); }
   function clAttuale(x) { var a = att(x.attivita_id); return !!a && !a.archiviato && a.stato !== 'Annullata' && a.stato !== 'Conclusa' && attIniziata(a); }
@@ -1994,7 +2043,7 @@ details.espandi > ul { width: 100%; }
     return '<select data-act="' + act + '" data-id="' + id + '" aria-label="' + esc(lab) + '">' + opts.map(function (r) { return '<option' + (r === cur ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select>';
   }
   /* ---------- scheda attività: il motore di ogni attività sociale ---------- */
-  var TIPI = ['Stage', 'Mostre', 'Gite', 'Corsi per il tesserino', 'Corsi extra', 'Pranzi e cene', 'Conversazioni', 'Lezioni', 'Pratica', 'Eventi'];
+  var TIPI = ['Stage', 'Mostre', 'Gite', 'Corsi per il tesserino', 'Corsi extra', 'Pranzi e cene', 'Conversazioni', 'Lezioni', 'Pratica', 'Eventi', 'Consiglio Direttivo', 'Assemblea dei soci'];
   var TIPO_DISC = { Stage: 'doc-stage', Mostre: 'doc-mostra', Gite: 'doc-gite', 'Corsi per il tesserino': 'doc-tesserino', Corsi: 'doc-corsi', 'Corsi extra': 'doc-corsi-extra', 'Pranzi e cene': 'doc-pranzi' };
   function discPer(tipo, dati) { if (tipo === 'Corsi per il tesserino' && dati && dati.tipo_corso === 'Tartufi') return 'doc-tartufi'; return TIPO_DISC[tipo]; }
   var CAMPO = {
@@ -2112,12 +2161,51 @@ details.espandi > ul { width: 100%; }
     if (sez === 'commenti') return top + commentiBox('attivita_id', a.id, D.commenti.filter(function (c) { return c.attivita_id === a.id; }).sort(function (x, y) { return new Date(x.quando) - new Date(y.quando); }));
     var dati = a.dati || {}, campi = campiPer(a.tipo).filter(function (k) { return k !== 'luogo' && dati[k]; });
     var next = cl.filter(function (x) { return x.stato === 'in_corso' || x.stato === 'da_fare'; }).slice(0, 4);
-    return top + '<div class="cols"><section class="box"><header><h2>Dati dell’attività</h2></header>' +
-      (campi.length ? '<dl class="dati">' + campi.map(function (k) { return '<dt>' + CAMPO[k][0] + '</dt><dd>' + campoVal(k, dati[k]) + '</dd>'; }).join('') + '</dl>' : '<p class="sub">Mancano i dati preliminari: aprili con «Modifica i dati».</p>') +
+    return top + (isRiunione(a) ? riunioneBox(a) : '') + '<div class="cols"><section class="box"><header><h2>' + (isRiunione(a) ? 'Giorno, luogo e responsabili' : 'Dati dell’attività') + '</h2></header>' +
+      (isRiunione(a) ? '<p class="sub">Per cambiare giorno, luogo o responsabili usa «Modifica i dati».</p>' : campi.length ? '<dl class="dati">' + campi.map(function (k) { return '<dt>' + CAMPO[k][0] + '</dt><dd>' + campoVal(k, dati[k]) + '</dd>'; }).join('') + '</dl>' : '<p class="sub">Mancano i dati preliminari: aprili con «Modifica i dati».</p>') +
       (a.note ? '<p class="sub" style="margin-top:8px">' + esc(a.note) + '</p>' : '') +
       '<details class="ed"><summary>Modifica i dati</summary>' + attForm(a, a.tipo) + '</details>' + azioni('attivita', a, a.titolo) + '</section>' +
       '<section class="box k-att"><header><h2>Prossimi passi</h2><a href="#attivita/' + a.id + '/checklist">Tutta la checklist</a></header>' + (next.length ? '<ul class="list">' + next.map(function (x) { return '<li><div><b>' + esc(short(x.testo, 110)) + '</b><span class="sub">' + meta([['Chi', esc(x.responsabile)], ['Entro', x.scadenza ? fD.format(dt(x.scadenza)) : 'senza data']]) + '</span></div><span class="pill ' + CLST[x.stato][1] + '">' + CLST[x.stato][0] + '</span></li>'; }).join('') + '</ul>' : (cl.length ? '<p class="sub">Tutti i passi sono fatti.</p>' : '<p class="sub">La checklist è vuota: creala dalla scheda «Checklist».</p>')) + '</section></div>' +
       richiesteBox('attivita_id', a.id);
+  }
+  /* ---------- riunioni del Consiglio e assemblee (proposta 20/11) ---------- */
+  function isRiunione(a) { return !!a && (a.tipo === 'Consiglio Direttivo' || a.tipo === 'Assemblea dei soci'); }
+  function riunConvocati(a) {
+    var nm = function (s) { return s.cognome + (s.nome ? ' ' + s.nome : ''); };
+    if (a.tipo === 'Consiglio Direttivo') {
+      if (D.soci) return { daSoci: true, lista: D.soci.filter(function (s) { return s.stato === 'attivo' && CARICHE_CD.indexOf(s.carica) >= 0; }).sort(function (x, y) { return CARICHE_CD.indexOf(x.carica) - CARICHE_CD.indexOf(y.carica) || nm(x).localeCompare(nm(y)); }).map(function (s) { return { k: 's' + s.id, id: s.id, nome: nm(s), ruolo: s.carica, voto: true }; }) };
+      return { daSoci: false, lista: D.cariche.map(function (c) { return { k: 'c' + c.id, nome: c.nome, ruolo: '', voto: true }; }) };
+    }
+    if (!D.soci) return { daSoci: false, lista: [] };
+    return { daSoci: true, lista: sociAttivi().slice().sort(function (x, y) { return nm(x).localeCompare(nm(y)); }).map(function (s) { var on = socioTipo(s) === 'onorario'; return { k: 's' + s.id, id: s.id, nome: nm(s), ruolo: on ? 'Onorario, senza voto' : (s.carica || ''), voto: !on }; }) };
+  }
+  var PRES = [['', 'da segnare'], ['presente', 'Presente'], ['giustificato', 'Assente giustificato'], ['assente', 'Assente'], ['delega', 'Rappresentato con delega']];
+  function riunioneBox(a) {
+    var d = a.dati || {}, cd = a.tipo === 'Consiglio Direttivo', pr = d.presenze || {}, dd = attDate(a);
+    var odg = (d.odgSel || []).map(function (id) { var x = D.decisioni.filter(function (y) { return y.id === +id; })[0]; return x ? esc(x.testo) + (x.approvata ? ' <span class="pill">approvata</span>' : '') : null; }).filter(Boolean)
+      .concat(righe(d.odgAltri).map(esc)).concat(d.odgVarie === false ? [] : ['Varie ed eventuali']);
+    var C = riunConvocati(a), vot = C.lista.filter(function (x) { return x.voto; });
+    var nPres = vot.filter(function (x) { return pr[x.k] === 'presente' || pr[x.k] === 'delega'; }).length, serve = Math.floor(vot.length / 2) + 1, segnati = C.lista.filter(function (x) { return pr[x.k]; }).length;
+    var legale = !vot.length ? '' : '<p class="ri-legale ' + (nPres >= serve ? 'ok' : segnati ? 'ko' : '') + '">' + (nPres >= serve ? '✓ C’è il numero legale: ' + nPres + ' presenti su ' + vot.length + ' (ne servono ' + serve + ').' : segnati ? '⚠︎ Per ora ' + nPres + ' presenti su ' + vot.length + ': per il numero legale ne servono ' + serve + '.' : 'Per il numero legale servono almeno ' + serve + ' presenti su ' + vot.length + (cd ? ' consiglieri.' : ' soci con diritto di voto, in prima convocazione.')) + '</p>';
+    var rows = C.lista.map(function (x) { return '<li class="ri-p"><span><b>' + esc(x.nome) + '</b>' + (x.ruolo ? ' <span class="pill ' + (x.voto ? 'so-car' : 'so-on') + '">' + esc(x.ruolo) + '</span>' : '') + '</span><select data-act="presenza" data-id="' + a.id + '" data-k="' + x.k + '" aria-label="Presenza di ' + esc(x.nome) + '">' + PRES.filter(function (p) { return cd ? p[0] !== 'delega' : true; }).map(function (p) { return '<option value="' + p[0] + '"' + ((pr[x.k] || '') === p[0] ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('') + '</select></li>'; });
+    var convocati = nascosti() ? '<p class="sub">Con l’accesso rapido i nomi dei soci non si vedono: entra con la password personale.</p>'
+      : !C.daSoci ? (cd ? '<p class="sub">Per ora i convocati sono le quattro cariche. Con la password personale e la dichiarazione accettata, il gestionale prende dal libro soci tutti i componenti del Consiglio (chi ha una carica del Consiglio nella sua scheda).</p>' : '') + (cd ? '<ul class="ri-lista">' + rows.join('') + '</ul>' : sociOkBox('Per avere l’elenco dei soci convocati accetta la dichiarazione: l’uso resta nel registro dei dati personali.'))
+      : (C.lista.length ? espandi(rows, 'ri-lista') : '<p class="sub">Nessun componente del Consiglio nel libro soci: segna la carica nella scheda di ogni consigliere.</p>');
+    return '<section class="box ri-box k-dec"><header><h2>' + (cd ? 'La riunione' : 'L’assemblea') + '</h2></header><div class="ri-cols">' +
+      '<div><dl class="so-dl">' + '<div class="so-d"><dt>Quando</dt><dd>' + (dd ? fL.format(dd) : 'da fissare') + (d.ora ? ', ore ' + esc(d.ora) : '') + '</dd></div>' + '<div class="so-d"><dt>Dove</dt><dd>' + (esc(a.luogo || '') || '<span class="sub">da indicare</span>') + '</dd></div>' +
+        (!cd ? '<div class="so-d"><dt>Seconda convocazione</dt><dd>' + (d.d2 ? fL.format(dt(d.d2)) + (d.o2 ? ', ore ' + esc(d.o2) : '') : '<span class="sub">non indicata</span>') + '</dd></div><div class="so-d"><dt>Tipo</dt><dd>Assemblea ' + esc(d.assemblea || 'ordinaria') + '</dd></div>' : '') + '</dl>' +
+        '<h3>Ordine del giorno</h3><ol class="ri-odg">' + odg.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>' +
+        '<div class="chips"><button class="btn" type="button" data-act="riunConv" data-id="' + a.id + '">📨 Prepara la convocazione</button><button class="btn alt" type="button" data-act="riunVerb" data-id="' + a.id + '">📝 Prepara il verbale</button></div></div>' +
+      '<div><h3>' + (cd ? 'Convocati e presenze' : 'Soci convocati e presenze') + ' <small>' + C.lista.length + '</small></h3>' + legale + convocati + '</div></div></section>';
+  }
+  function riunGenera(a, verb) {
+    var d = a.dati || {}, cd = a.tipo === 'Consiglio Direttivo', k = cd ? (verb ? 'verbale-cd' : 'conv-cd') : (verb ? 'verbale-ass' : 'conv-ass');
+    var v = { odgSel: (d.odgSel || []).map(String), odgAltri: d.odgAltri || '', odgVarie: d.odgVarie !== false, luogo: a.luogo || '', data: a.data || '', ora: d.ora || '' };
+    if (!cd) { v.tipo = d.assemblea || 'ordinaria'; v.d1 = a.data || ''; v.o1 = d.ora || ''; v.d2 = d.d2 || ''; v.o2 = d.o2 || ''; }
+    if (verb) { var C = riunConvocati(a).lista, pr = d.presenze || {}, ids = function (f) { return C.filter(function (x) { return x.id && f(x); }).map(function (x) { return String(x.id); }); };
+      v.presentiSel = ids(function (x) { return x.voto && pr[x.k] === 'presente'; }); v.assentiSel = ids(function (x) { return pr[x.k] === 'giustificato'; });
+      if (cd) v.num = C.length; else { v.onorariSel = ids(function (x) { return !x.voto && pr[x.k] === 'presente'; }); v.delegheSel = ids(function (x) { return pr[x.k] === 'delega'; }); v.iscritti = C.filter(function (x) { return x.voto; }).length; } }
+    P.genera.k = k; P.genera.v = v; P.genera.doc = null; location.hash = '#genera/' + k;
   }
   function checklistSec(a, cl) {
     var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
@@ -2326,6 +2414,25 @@ details.espandi > ul { width: 100%; }
     D.soci = r[0].data; D.soci_log = r[1].data; if (!r[2].error) D.cntSoci = r[2].data;
   }
   function socioNome(s) { return esc(s.cognome) + (s.nome ? ' ' + esc(s.nome) : ''); }
+  /* tipo, carica e parentela (proposta 20/11): colonne soci.tipo, soci.carica, soci.parente_di, soci.parentela */
+  var SOCIO_TIPO = { ordinario: 'Ordinario', onorario: 'Onorario' };
+  var SOCIO_CARICHE = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consigliere', 'Revisore dei conti', 'Comitato scientifico'];
+  var CARICHE_CD = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consigliere'];
+  var PARENTELE = ['coniuge o compagno', 'figlio o figlia', 'genitore', 'fratello o sorella', 'altro familiare'];
+  function socioTipo(s) { return s.tipo || 'ordinario'; }
+  function socioDi(id) { return (D.soci || []).filter(function (x) { return x.id === id; })[0]; }
+  function socioFamiliari(s) { return (D.soci || []).filter(function (x) { return x.id !== s.id && (x.parente_di === s.id || s.parente_di === x.id); }); }
+  function socioAnni(s) { if (!s.data_iscrizione) return null; var d = dt(s.data_iscrizione); var n = base.getFullYear() - d.getFullYear(); if (base.getMonth() < d.getMonth() || (base.getMonth() === d.getMonth() && base.getDate() < d.getDate())) n--; return Math.max(0, n); }
+  /* stelle di anzianità (Ordine al Merito, 2/11): una per traguardo di 5, 10, 20 e 30 anni */
+  function socioStelle(s) { var n = socioAnni(s); return n == null ? null : [5, 10, 20, 30].filter(function (x) { return n >= x; }).length; }
+  function socioEtichette(s) {
+    var t = [];
+    if (s.carica) t.push('<span class="pill so-car">' + esc(s.carica) + '</span>');
+    if (socioTipo(s) === 'onorario') t.push('<span class="pill so-on">Onorario</span>');
+    var p = s.parente_di && socioDi(s.parente_di); if (p) t.push('<span class="pill plain">' + esc(s.parentela || 'familiare') + ' di ' + socioNome(p) + '</span>');
+    if (s.stato !== 'attivo') t.push('<span class="pill plain">' + SOCIO_ST[s.stato] + '</span>');
+    return t.join(' ');
+  }
   /* dati obbligatori del libro soci: l'email è facoltativa */
   var SOCIO_OBBL = { codice_fiscale: 'codice fiscale', data_nascita: 'data di nascita', luogo_nascita: 'luogo di nascita', indirizzo: 'indirizzo', cap: 'CAP', comune: 'comune', telefono: 'telefono' };
   function socioManca(s) { return Object.keys(SOCIO_OBBL).filter(function (k) { return !s[k]; }); }
@@ -2353,40 +2460,84 @@ details.espandi > ul { width: 100%; }
     if (f === 'consenso') return s.stato === 'attivo' && s.consenso_privacy !== true;
     if (f === 'mancanti') return s.stato === 'attivo' && socioManca(s).length > 0;
     if (f === 'altri') return s.stato !== 'attivo';
+    if (f === 'cd') return s.stato === 'attivo' && CARICHE_CD.indexOf(s.carica) >= 0;
+    if (f === 'onorari') return s.stato === 'attivo' && socioTipo(s) === 'onorario';
+    if (f === 'tutti') return true;
     return s.stato === 'attivo';
   }
   function sociLibro(f) {
     var y = base.getFullYear(), q = low(P.soci.q || '');
-    var F = [['', 'Attivi'], ['quota', 'Quota ' + y + ' da segnare'], ['mancanti', 'Con dati obbligatori mancanti'], ['controllare', 'Da controllare'], ['consenso', 'Senza consenso'], ['altri', 'Non attivi']];
-    var list = D.soci.filter(function (s) { return sociFiltro(s, f, y) && (!q || low(s.cognome + ' ' + (s.nome || '') + ' ' + (s.comune || '') + ' ' + (s.numero || '')).indexOf(q) >= 0); });
-    return '<div class="chips" role="group" aria-label="Filtra i soci">' + F.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soci/libro' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + ' (' + D.soci.filter(function (s) { return sociFiltro(s, x[0], y); }).length + ')</a>'; }).join('') + '</div>' +
+    var F = [['', 'Attivi'], ['cd', 'Consiglio Direttivo'], ['onorari', 'Onorari'], ['quota', 'Quota ' + y + ' da segnare'], ['mancanti', 'Dati mancanti'], ['controllare', 'Da controllare'], ['consenso', 'Senza consenso'], ['altri', 'Non attivi'], ['tutti', 'Tutti']];
+    var ord = P.soci.ord || 'cognome';
+    var list = D.soci.filter(function (s) { return sociFiltro(s, f, y) && (!q || low(s.cognome + ' ' + (s.nome || '') + ' ' + (s.comune || '') + ' ' + (s.numero || '') + ' ' + (s.carica || '')).indexOf(q) >= 0); });
+    var cmp = { cognome: function (a, b) { return (a.cognome + ' ' + (a.nome || '')).localeCompare(b.cognome + ' ' + (b.nome || '')); }, tessera: function (a, b) { return (parseInt(a.numero, 10) || 1e9) - (parseInt(b.numero, 10) || 1e9); }, iscrizione: function (a, b) { return String(a.data_iscrizione || '9').localeCompare(String(b.data_iscrizione || '9')); }, comune: function (a, b) { return String(a.comune || '~').localeCompare(String(b.comune || '~')); } };
+    list.sort(cmp[ord] || cmp.cognome);
+    var quote = function (s) { return [y - 2, y - 1, y].map(function (a) { var ok = (s.quote || []).indexOf(a) >= 0; return '<span class="q-anno sm' + (ok ? ' ok' : '') + '" title="Quota ' + a + (ok ? ' pagata' : ' non segnata') + '">' + (ok ? '✓' : '') + '’' + String(a).slice(2) + '</span>'; }).join(''); };
+    var righe = list.map(function (s) { var mm = socioManca(s), anni = socioAnni(s);
+      return '<tr class="so-r"><td data-l="Socio"><a class="so-n" href="#soci/s' + s.id + '"><span class="so-av" aria-hidden="true">' + esc((s.nome || ' ').charAt(0) + s.cognome.charAt(0)) + '</span><span><b>' + socioNome(s) + '</b><small>' + (s.numero ? 'Tessera ' + esc(s.numero) : 'Tessera da assegnare') + '</small></span></a>' + (socioEtichette(s) ? '<div class="so-et">' + socioEtichette(s) + '</div>' : '') + '</td>' +
+        '<td data-l="Socio dal" class="tn">' + (s.data_iscrizione ? fD.format(dt(s.data_iscrizione)) + '<br><small class="sub">' + (anni === 0 ? 'quest’anno' : anni + (anni === 1 ? ' anno' : ' anni')) + '</small>' : '<span class="sub">—</span>') + '</td>' +
+        '<td data-l="Contatti">' + (s.telefono ? '<a href="tel:' + esc(s.telefono.replace(/\s+/g, '')) + '">' + esc(s.telefono) + '</a>' : '<span class="sub">telefono —</span>') + '<br>' + (s.email ? '<a href="mailto:' + esc(s.email) + '">' + esc(s.email) + '</a>' : '<span class="sub">email —</span>') + '</td>' +
+        '<td data-l="Abita a">' + esc(s.comune || '') + (s.cap ? ' <small class="sub">' + esc(s.cap) + '</small>' : '') + (s.indirizzo ? '<br><small class="sub">' + esc(s.indirizzo) + '</small>' : '') + '</td>' +
+        '<td data-l="Nato">' + (s.data_nascita ? fD.format(dt(s.data_nascita)) : '<span class="sub">—</span>') + (s.luogo_nascita ? '<br><small class="sub">' + esc(s.luogo_nascita) + '</small>' : '') + '</td>' +
+        '<td data-l="Quote">' + quote(s) + '</td>' +
+        '<td data-l="Controlli" class="so-ctl">' + (s.consenso_privacy === true ? '<span class="pill" title="Consenso privacy firmato">Privacy ✓</span>' : '<span class="pill warn" title="Consenso privacy ' + (s.consenso_privacy === false ? 'non firmato' : 'da verificare') + '">Privacy ' + (s.consenso_privacy === false ? '✗' : '?') + '</span>') + (s.note ? '<span class="pill warn" title="' + esc(s.note) + '">Controllare</span>' : '') + (mm.length ? '<span class="pill plain" title="Manca: ' + mm.map(function (k) { return SOCIO_OBBL[k]; }).join(', ') + '">' + (mm.length === 1 ? 'Manca 1 dato' : 'Mancano ' + mm.length + ' dati') + '</span>' : '') + '</td></tr>'; });
+    return '<div class="chips rullo" role="group" aria-label="Filtra i soci">' + F.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#soci/libro' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + ' (' + D.soci.filter(function (s) { return sociFiltro(s, x[0], y); }).length + ')</a>'; }).join('') + '</div>' +
       '<section class="box k-soci"><header><h2>' + list.length + ' soci</h2><div class="chips"><a class="btn alt sm" href="#soci/nuovo">＋ Nuovo socio</a><button class="btn alt sm" type="button" data-act="sociCsv">Scarica per Excel</button></div></header>' +
-      '<form class="up" data-act="sociCerca" role="search"><label>Cerca per nome, comune o tessera<input name="q" value="' + esc(P.soci.q || '') + '" placeholder="Es. Rossi"></label><button class="btn alt" type="submit">Cerca</button></form>' +
-      (list.length ? '<div class="tablew"><table><thead><tr><th>Socio</th><th>Comune</th><th>Telefono</th><th>Email</th><th>Quote pagate</th><th></th></tr></thead><tbody>' + list.map(function (s) { var mm = socioManca(s);
-        return '<tr><td><b><a href="#soci/s' + s.id + '">' + socioNome(s) + '</a></b>' + (s.numero ? '<br><span class="sub">Tessera ' + esc(s.numero) + '</span>' : '') + '</td><td>' + esc(s.comune || '') + '</td><td>' + esc(s.telefono || '') + '</td><td>' + esc(s.email || '') + '</td><td>' + ((s.quote || []).slice().sort().reverse().slice(0, 3).join(', ') || '<span class="sub">nessuna segnata</span>') + '</td><td>' + (s.stato !== 'attivo' ? '<span class="pill plain">' + SOCIO_ST[s.stato] + '</span> ' : '') + (s.note ? '<span class="pill warn">Da controllare</span> ' : '') + (mm.length ? '<span class="pill plain">' + (mm.length === 1 ? 'Manca: ' + SOCIO_OBBL[mm[0]] : mm.length === 2 ? 'Mancano: ' + SOCIO_OBBL[mm[0]] + ' e ' + SOCIO_OBBL[mm[1]] : 'Mancano ' + mm.length + ' dati') + '</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
+      '<form class="up so-cerca" data-act="sociCerca" role="search"><label>Cerca per nome, comune, tessera o carica<input name="q" value="' + esc(P.soci.q || '') + '" placeholder="Es. Rossi"></label><label>Ordina per<select name="ord" data-act="sociOrd">' + [['cognome', 'Cognome'], ['tessera', 'Numero di tessera'], ['iscrizione', 'Data di iscrizione'], ['comune', 'Comune']].map(function (o) { return '<option value="' + o[0] + '"' + (ord === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label><button class="btn alt" type="submit">Cerca</button></form>' +
+      (list.length ? '<div class="tablew pila so-tab"><table><thead><tr><th>Socio</th><th>Socio dal</th><th>Contatti</th><th>Abita a</th><th>Nato</th><th>Quote ' + (y - 2) + '–' + y + '</th><th>Controlli</th></tr></thead><tbody>' + righe.join('') + '</tbody></table></div>' : '<p class="sub">Nessun socio in questo elenco.</p>') + '</section>';
   }
   function socioForm(s) {
     var y = base.getFullYear(), anni = [y - 2, y - 1, y, y + 1];
     (s && s.quote || []).forEach(function (a) { if (anni.indexOf(a) < 0) anni.unshift(a); });
-    return '<form class="sform" data-act="socioSave" data-id="' + (s ? s.id : 'new') + '">' +
-      SOCI_CAMPI.map(function (c) { var v = s ? s[c[0]] : ''; return '<label>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '"' + (c[3] ? ' maxlength="' + c[3] + '"' : '') + (c[4] ? ' required' : '') + ' value="' + esc(v == null ? '' : v) + '"' + (c[0] === 'codice_fiscale' ? ' pattern="[A-Za-z0-9]{16}" style="text-transform:uppercase"' : '') + '></label>'; }).join('') +
-      '<label>Stato<select name="stato">' + Object.keys(SOCIO_ST).map(function (k) { return '<option value="' + k + '"' + ((s ? s.stato : 'attivo') === k ? ' selected' : '') + '>' + SOCIO_ST[k] + '</option>'; }).join('') + '</select></label>' +
-      '<label>Consenso privacy<select name="consenso_privacy"><option value=""' + (!s || s.consenso_privacy == null ? ' selected' : '') + '>Non si sa</option><option value="true"' + (s && s.consenso_privacy === true ? ' selected' : '') + '>Firmato</option><option value="false"' + (s && s.consenso_privacy === false ? ' selected' : '') + '>Non firmato</option></select></label>' +
-      '<fieldset class="wide quote"><legend>Quote associative pagate</legend>' + anni.sort().map(function (a) { return '<label><input type="checkbox" name="q' + a + '"' + (s && (s.quote || []).indexOf(a) >= 0 ? ' checked' : '') + '> ' + a + '</label>'; }).join('') + '</fieldset>' +
+    var campo = function (k) { var c = SOCI_CAMPI.filter(function (x) { return x[0] === k; })[0], v = s ? s[c[0]] : ''; return '<label>' + c[1] + '<input name="' + c[0] + '" type="' + c[2] + '"' + (c[3] ? ' maxlength="' + c[3] + '"' : '') + (c[4] ? ' required' : '') + ' value="' + esc(v == null ? '' : v) + '"' + (c[0] === 'codice_fiscale' ? ' pattern="[A-Za-z0-9]{16}" style="text-transform:uppercase"' : '') + '></label>'; };
+    var gruppo = function (t, k) { return '<fieldset class="wide so-grp"><legend>' + t + '</legend>' + k.map(campo).join('') + '</fieldset>'; };
+    var altri = (D.soci || []).filter(function (x) { return !s || x.id !== s.id; }).sort(function (a, b) { return (a.cognome + (a.nome || '')).localeCompare(b.cognome + (b.nome || '')); });
+    return '<form class="sform so-form" data-act="socioSave" data-id="' + (s ? s.id : 'new') + '">' +
+      '<fieldset class="wide so-grp"><legend>Chi è</legend>' + campo('cognome') + campo('nome') + campo('numero') + campo('data_iscrizione') +
+        '<label>Tipo di socio' + selSoc('tipo', Object.keys(SOCIO_TIPO).map(function (k) { return [k, SOCIO_TIPO[k]]; }), s ? socioTipo(s) : 'ordinario') + '</label>' +
+        '<label>Carica' + selSoc('carica', [['', 'Nessuna']].concat(SOCIO_CARICHE.map(function (c) { return [c, c]; })), s ? s.carica || '' : '') + '</label>' +
+        '<label>Stato' + selSoc('stato', Object.keys(SOCIO_ST).map(function (k) { return [k, SOCIO_ST[k]]; }), s ? s.stato : 'attivo') + '</label></fieldset>' +
+      '<fieldset class="wide so-grp"><legend>Famiglia</legend><label>Familiare di' + selSoc('parente_di', [['', 'Nessuno']].concat(altri.map(function (x) { return [String(x.id), x.cognome + ' ' + (x.nome || '')]; })), s && s.parente_di ? String(s.parente_di) : '') + '</label>' +
+        '<label>Che parentela' + selSoc('parentela', [['', '—']].concat(PARENTELE.map(function (p) { return [p, p]; })), s ? s.parentela || '' : '') + '</label></fieldset>' +
+      gruppo('Contatti', ['telefono', 'email']) + gruppo('Indirizzo', ['indirizzo', 'cap', 'comune']) + gruppo('Nascita e codice fiscale', ['data_nascita', 'luogo_nascita', 'codice_fiscale']) +
+      '<fieldset class="wide so-grp"><legend>Privacy e quote</legend><label>Consenso privacy<select name="consenso_privacy"><option value=""' + (!s || s.consenso_privacy == null ? ' selected' : '') + '>Non si sa</option><option value="true"' + (s && s.consenso_privacy === true ? ' selected' : '') + '>Firmato</option><option value="false"' + (s && s.consenso_privacy === false ? ' selected' : '') + '>Non firmato</option></select></label>' +
+        '<div class="wide quote"><span class="lbl">Quote associative pagate</span>' + anni.sort().map(function (a) { return '<label><input type="checkbox" name="q' + a + '"' + (s && (s.quote || []).indexOf(a) >= 0 ? ' checked' : '') + '> ' + a + '</label>'; }).join('') + '</div></fieldset>' +
       '<label class="wide">Note e cose da controllare<textarea name="note" maxlength="2000">' + esc(s ? s.note || '' : '') + '</textarea></label>' +
-      '<div class="wide"><button class="btn" type="submit">' + (s ? 'Salva le modifiche' : 'Aggiungi al libro soci') + '</button></div></form>';
+      '<div class="wide chips"><button class="btn" type="submit">' + (s ? 'Salva le modifiche' : 'Aggiungi al libro soci') + '</button>' + (s ? '<a class="btn alt" href="#soci/s' + s.id + '">Annulla</a>' : '') + '</div></form>';
   }
-  function socioPage(id) {
+  function selSoc(n, opts, val) { return '<select name="' + n + '">' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(val) === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
+  function socioPage(id, modifica) {
     var s = D.soci.filter(function (x) { return x.id === id; })[0];
     if (!s) return '<a class="back" href="#soci/libro">← Libro soci</a>' + head('Socio non trovato', '');
     if (!P.soci.viste[id]) { P.soci.viste[id] = 1; sociLog('scheda', 'Aperta la scheda del socio n. ' + id, id); }
     var lg = (D.soci_log || []).filter(function (l) { return l.socio_id === id; }).slice(0, 10);
     var puoCanc = me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente';
-    return '<a class="back" href="#soci/libro">← Libro soci</a>' + head(socioNome(s), (s.stato !== 'attivo' ? SOCIO_ST[s.stato] + ' · ' : '') + 'ultimo aggiornamento ' + fT.format(new Date(s.aggiornato_il)) + (s.aggiornato_da ? ' · ' + esc(s.aggiornato_da) : '')) +
-      (s.note ? '<section class="box k-scad"><h2>Da controllare</h2><p>' + esc(s.note) + '</p><p class="sub">Quando hai controllato, cancella la nota qui sotto e salva.</p></section>' : '') +
-      '<section class="box k-soci"><h2>Scheda del socio</h2>' + socioForm(s) + (puoCanc ? '<div class="azioni"><button class="btn alt sm danger" type="button" data-act="socioDel" data-id="' + s.id + '">Togli dal libro soci</button></div><p class="sub">Per un socio che lascia l’associazione è meglio cambiare lo stato in «Dimesso»: la storia resta.</p>' : '') + '</section>' +
-      (function () { var pg = D.prima_nota.filter(function (m) { return m.socio_id === s.id && !m.annullato; }); return '<section class="box k-soldi"><h2>Quote registrate in prima nota</h2>' + (pg.length ? '<ul class="list">' + pg.map(function (m) { return '<li><div><b>' + esc(m.descrizione) + '</b><span class="sub">' + fD.format(dt(m.data)) + ' · ' + esc(m.conto) + (m.riferimento ? ' · ' + esc(m.riferimento) : '') + '</span></div><span class="pill">' + eur2(m.importo) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun movimento collegato a questo socio. Le quote pagate si registrano in Contabilità, Prima nota, con categoria «Quote associative»: il gestionale le segna anche qui.</p>') + '</section>'; })() +
-      '<section class="box"><h2>Registro di questa scheda</h2>' + (lg.length ? '<ul class="reg">' + lg.map(function (l) { return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b><span class="det">' + esc(l.dettaglio || l.azione) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna operazione registrata.</p>') + '</section>';
+    var back = '<a class="back" href="#soci/libro">← Libro soci</a>';
+    if (modifica) return back + head('Modifica: ' + socioNome(s), 'Cambia quello che serve e salva. Ogni modifica resta nel registro dei dati personali.') + '<section class="box k-soci">' + socioForm(s) + '</section>';
+    var y = base.getFullYear(), anni = socioAnni(s), stelle = socioStelle(s), mm = socioManca(s);
+    var dd = function (l, v, cls) { return '<div class="so-d' + (cls ? ' ' + cls : '') + '"><dt>' + l + '</dt><dd>' + (v || '<span class="sub">non indicato</span>') + '</dd></div>'; };
+    var fam = socioFamiliari(s);
+    var pg = D.prima_nota.filter(function (m) { return m.socio_id === s.id && !m.annullato; });
+    var annoMin = Math.min.apply(null, [y - 4].concat((s.quote || []).filter(function (x) { return x > 1990; })));
+    var anniQ = []; for (var a0 = Math.max(annoMin, y - 9); a0 <= y; a0++) anniQ.push(a0);
+    var testa = '<section class="box so-testa k-soci"><div class="so-id"><span class="so-av lg" aria-hidden="true">' + esc((s.nome || ' ').charAt(0) + s.cognome.charAt(0)) + '</span><div><h1>' + socioNome(s) + '</h1>' +
+        '<p class="sub">' + (s.numero ? 'Tessera n. ' + esc(s.numero) : 'Tessera da assegnare') + (s.data_iscrizione ? ' · socio dal ' + fD.format(dt(s.data_iscrizione)) + (anni != null ? ' (' + (anni === 0 ? 'quest’anno' : anni + (anni === 1 ? ' anno' : ' anni')) + ')' : '') : '') + '</p>' +
+        '<div class="so-et">' + socioEtichette(s) + ((s.quote || []).indexOf(y) >= 0 ? '<span class="pill">In regola ' + y + '</span>' : '<span class="pill warn">Quota ' + y + ' non segnata</span>') + '</div></div></div>' +
+      '<form class="so-veloce" data-act="socioVeloce" data-id="' + s.id + '"><label>Tipo' + selSoc('tipo', Object.keys(SOCIO_TIPO).map(function (k) { return [k, SOCIO_TIPO[k]]; }), socioTipo(s)) + '</label><label>Carica' + selSoc('carica', [['', 'Nessuna']].concat(SOCIO_CARICHE.map(function (c) { return [c, c]; })), s.carica || '') + '</label><label>Stato' + selSoc('stato', Object.keys(SOCIO_ST).map(function (k) { return [k, SOCIO_ST[k]]; }), s.stato) + '</label></form>' +
+      '<div class="chips"><a class="btn" href="#soci/s' + s.id + '/modifica">✏️ Modifica la scheda</a>' + (s.telefono ? '<a class="btn alt" href="tel:' + esc(s.telefono.replace(/\s+/g, '')) + '">📞 Chiama</a>' : '') + (s.email ? '<a class="btn alt" href="mailto:' + esc(s.email) + '">✉️ Scrivi</a>' : '') + '</div></section>';
+    var avvisi = (s.note ? '<section class="box k-scad"><h2>Da controllare</h2><p>' + esc(s.note) + '</p><p class="sub">Quando hai controllato, cancella la nota in «Modifica la scheda».</p></section>' : '') +
+      (mm.length ? '<section class="box k-scad"><h2>Dati che mancano</h2><p>' + mm.map(function (k) { return SOCIO_OBBL[k]; }).join(', ') + '.</p></section>' : '');
+    var schede = '<div class="cols so-cols">' +
+      '<section class="box"><h2>Contatti e indirizzo</h2><dl class="so-dl">' + dd('Telefono', s.telefono ? '<a href="tel:' + esc(s.telefono.replace(/\s+/g, '')) + '">' + esc(s.telefono) + '</a>' : '') + dd('Email', s.email ? '<a href="mailto:' + esc(s.email) + '">' + esc(s.email) + '</a>' : '') + dd('Indirizzo', esc(s.indirizzo || '')) + dd('Comune', s.comune ? esc(s.comune) + (s.cap ? ' (' + esc(s.cap) + ')' : '') : '') + '</dl></section>' +
+      '<section class="box"><h2>Dati anagrafici</h2><dl class="so-dl">' + dd('Nato il', s.data_nascita ? fD.format(dt(s.data_nascita)) : '') + dd('Nato a', esc(s.luogo_nascita || '')) + dd('Codice fiscale', s.codice_fiscale ? '<code>' + esc(s.codice_fiscale) + '</code>' : '') + dd('Consenso privacy', s.consenso_privacy === true ? 'Firmato' : s.consenso_privacy === false ? '<span class="pill warn">Non firmato</span>' : '<span class="pill warn">Da verificare</span>') + '</dl></section>' +
+      '<section class="box"><h2>Quote associative</h2><div class="so-quote">' + anniQ.map(function (a) { var ok = (s.quote || []).indexOf(a) >= 0; return '<span class="q-anno' + (ok ? ' ok' : '') + '">' + (ok ? '✓ ' : '') + a + '</span>'; }).join('') + '</div>' +
+        (pg.length ? '<h3>In prima nota</h3><ul class="p2list">' + pg.map(function (m) { return '<li><b>' + eur2(m.importo) + '</b><span class="p2"> · ' + fD.format(dt(m.data)) + ' · ' + esc(m.descrizione) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Le quote registrate in Contabilità con categoria «Quote associative» compaiono anche qui.</p>') + '</section>' +
+      '<section class="box"><h2>Famiglia</h2>' + (fam.length ? '<ul class="p2list">' + fam.map(function (x) { return '<li><a href="#soci/s' + x.id + '">' + socioNome(x) + '</a><span class="p2">' + esc(x.parente_di === s.id ? (x.parentela || 'familiare') : (s.parentela || 'familiare')) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun familiare collegato. Si collega in «Modifica la scheda», alla voce «Familiare di».</p>') + '</section>' +
+      '<section class="box so-meriti"><h2>Meriti e riconoscimenti</h2><div class="so-stelle" aria-label="Stelle di anzianità">' + (stelle == null ? '<p class="sub">Serve la data di iscrizione per calcolare le stelle di anzianità.</p>' : '<span class="st">' + (stelle ? '★'.repeat(stelle) : '☆') + '</span><span class="sub">' + (stelle ? stelle + (stelle === 1 ? ' stella' : ' stelle') + ' di anzianità' : 'Nessuna stella ancora') + ' · una ogni traguardo: 5, 10, 20 e 30 anni</span>') + '</div>' +
+        '<p class="sub">Qui arriveranno i punti dell’anno (presenze, determinazioni, contributi, stage), le spille e gli encomi, come previsto dall’«Ordine al Merito Inzenga».</p></section>' +
+      '<section class="box"><h2>Registro di questa scheda</h2>' + (lg.length ? '<ul class="reg">' + lg.map(function (l) { return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b><span class="det">' + esc(l.dettaglio || l.azione) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna operazione registrata.</p>') + '</section>' +
+      '</div>';
+    return back + testa + avvisi + schede + (puoCanc ? '<div class="azioni"><button class="btn alt sm danger" type="button" data-act="socioDel" data-id="' + s.id + '">Togli dal libro soci</button><span class="sub">Per chi lascia l’associazione è meglio cambiare lo stato in «Dimesso»: la storia resta.</span></div>' : '');
   }
   function sociRegistro() {
     var AZ = { accettazione: 'Ha accettato la dichiarazione di responsabilità', apertura: 'Ha aperto il libro soci', scheda: 'Ha aperto una scheda', inserimento: 'Ha aggiunto un socio', modifica: 'Ha modificato una scheda', eliminazione: 'Ha tolto un socio', scaricamento: 'Ha scaricato i dati', importazione: 'Importazione dei dati' };
@@ -2406,7 +2557,7 @@ details.espandi > ul { width: 100%; }
     if (!D.soci) return head(titolo, 'Carico i dati…') + t;
     if (s0 === 'registro') return head(titolo, 'Chi ha aperto, modificato o scaricato i dati dei soci, e quando. Lo vedono solo gli accessi con password personale.') + t + sociRegistro();
     if (s0 === 'nuovo') return '<a class="back" href="#soci/libro">← Libro soci</a>' + head('Nuovo socio', 'Basta il cognome per cominciare; il resto si completa dopo.') + '<section class="box k-soci">' + socioForm(null) + '</section>';
-    if (/^s\d+$/.test(s0)) return socioPage(+s0.slice(1));
+    if (/^s\d+$/.test(s0)) return socioPage(+s0.slice(1), parts[1] === 'modifica');
     return head(titolo, 'L’elenco dei soci con i loro dati. Tocca un nome per aprire e aggiornare la scheda: quote pagate, contatti, consenso privacy.') + t + sociLibro(parts[1] || '');
   };
   P.soci.viste = {};
@@ -2414,13 +2565,14 @@ details.espandi > ul { width: 100%; }
     var id = f.getAttribute('data-id'), row = {}, y = base.getFullYear();
     SOCI_CAMPI.forEach(function (c) { var v = f[c[0]].value.trim(); row[c[0]] = v || null; });
     if (row.codice_fiscale) row.codice_fiscale = row.codice_fiscale.toUpperCase();
+    row.tipo = f.tipo.value || 'ordinario'; row.carica = f.carica.value || null; row.parente_di = f.parente_di.value ? +f.parente_di.value : null; row.parentela = row.parente_di ? (f.parentela.value || null) : null;
     row.stato = f.stato.value; row.consenso_privacy = f.consenso_privacy.value === '' ? null : f.consenso_privacy.value === 'true';
     row.quote = Array.prototype.filter.call(f.querySelectorAll('input[type=checkbox][name^="q"]'), function (x) { return x.checked; }).map(function (x) { return +x.name.slice(1); }).sort();
     row.note = f.note.value.trim() || null; row.aggiornato_il = new Date().toISOString(); row.aggiornato_da = me.nome;
     if (id === 'new') {
       var r = await sb.from('soci').insert(row).select().single(); if (r.error) throw r.error;
       D.soci.push(r.data); P.soci.viste[r.data.id] = 1; toast('Socio aggiunto al libro.'); await caricaSoci(); location.hash = '#soci/s' + r.data.id;
-    } else { var u = await upd('soci', +id, row); if (u) { toast('Scheda salvata.'); await caricaSoci(); render(); } }
+    } else { var u = await upd('soci', +id, row); if (u) { toast('Scheda salvata.'); await caricaSoci(); location.hash = '#soci/s' + id; render(); } }
   }
   async function socioDel(id) {
     var s = D.soci.filter(function (x) { return x.id === id; })[0]; if (!s) return;
@@ -2433,8 +2585,8 @@ details.espandi > ul { width: 100%; }
     var y = base.getFullYear();
     if (!confirm('Il file contiene i dati personali di ' + D.soci.length + ' soci. Lo scaricamento resta nel registro. Non inoltrarlo e cancellalo quando non ti serve più. Continuare?')) return;
     function q(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
-    var H = SOCI_CAMPI.map(function (c) { return c[1]; }).concat(['Stato', 'Consenso privacy', 'Quote pagate', 'Note']);
-    var out = [H.join(';')].concat(D.soci.map(function (s) { return SOCI_CAMPI.map(function (c) { return q(c[2] === 'date' && s[c[0]] ? s[c[0]].split('-').reverse().join('/') : s[c[0]]); }).concat([SOCIO_ST[s.stato], s.consenso_privacy == null ? 'non si sa' : s.consenso_privacy ? 'firmato' : 'non firmato', (s.quote || []).join(' '), q(s.note)]).join(';'); }));
+    var H = SOCI_CAMPI.map(function (c) { return c[1]; }).concat(['Tipo', 'Carica', 'Familiare di', 'Parentela', 'Stato', 'Consenso privacy', 'Quote pagate', 'Note']);
+    var out = [H.join(';')].concat(D.soci.map(function (s) { return SOCI_CAMPI.map(function (c) { return q(c[2] === 'date' && s[c[0]] ? s[c[0]].split('-').reverse().join('/') : s[c[0]]); }).concat([SOCIO_TIPO[socioTipo(s)], q(s.carica), q(s.parente_di && socioDi(s.parente_di) ? socioDi(s.parente_di).cognome + ' ' + (socioDi(s.parente_di).nome || '') : ''), q(s.parentela), SOCIO_ST[s.stato], s.consenso_privacy == null ? 'non si sa' : s.consenso_privacy ? 'firmato' : 'non firmato', (s.quote || []).join(' '), q(s.note)]).join(';'); }));
     var blob = new Blob(['﻿' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'libro-soci-' + iso(base) + '.csv'; document.body.appendChild(a); a.click(); a.remove();
     sociLog('scaricamento', 'Scaricato il libro soci completo (' + D.soci.length + ' soci) in formato Excel');
@@ -2542,7 +2694,7 @@ details.espandi > ul { width: 100%; }
 
   /* ---------- colori per categoria ---------- */
   var CATS = { conv: 'Conversazioni', lez: 'Lezioni', corsi: 'Corsi', pratica: 'Pratica di determinazione', gite: 'Gite', mostre: 'Mostre', stage: 'Stage', eventi: 'Eventi conviviali', ist: 'Incontri istituzionali' };
-  var TIPO_CAT = { Conversazioni: 'conv', Lezioni: 'lez', Corsi: 'corsi', Pratica: 'pratica', Gite: 'gite', Mostre: 'mostre', Stage: 'stage', Eventi: 'eventi', 'Corsi per il tesserino': 'corsi', 'Corsi extra': 'lez', 'Pranzi e cene': 'eventi' };
+  var TIPO_CAT = { 'Consiglio Direttivo': 'ist', 'Assemblea dei soci': 'ist', Conversazioni: 'conv', Lezioni: 'lez', Corsi: 'corsi', Pratica: 'pratica', Gite: 'gite', Mostre: 'mostre', Stage: 'stage', Eventi: 'eventi', 'Corsi per il tesserino': 'corsi', 'Corsi extra': 'lez', 'Pranzi e cene': 'eventi' };
   function tintCat(c) { return ' style="--tint:var(--t-' + (CATS[c] ? c : 'ist') + ')"'; }
   function tintTipo(t) { return tintCat(TIPO_CAT[t] || 'ist'); }
   var CAR_T = { presidente: 'pres', vicepresidente: 'vice', tesoriere: 'tes', segretario: 'seg' };
@@ -2772,6 +2924,7 @@ details.espandi > ul { width: 100%; }
   /* ---------- aggiungere: un solo punto d'ingresso ---------- */
   var RESP_SEL = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consiglio Direttivo', 'Comitato scientifico', 'Da assegnare'];
   var NUOVI = [
+    ['riunione', 'Una riunione o un’assemblea', 'Consiglio Direttivo o Assemblea dei soci, con ordine del giorno, convocati, convocazione e verbale.', 'k-dec'],
     ['scadenza', 'Una scadenza', 'Qualcosa da fare entro una data: una pratica, un rinnovo, un pagamento.', 'k-scad'],
     ['attivita', 'Un’attività o un evento', 'Una gita, una mostra, un corso, una serata. Con la checklist dal disciplinare.', 'k-att'],
     ['pratica', 'Una pratica con i suoi passi', 'Un lavoro in più passi, come il trasferimento della sede o il deposito al RUNTS.', 'k-dec'],
@@ -2787,7 +2940,14 @@ details.espandi > ul { width: 100%; }
     var parts = String(sub0 || '').split('/'), sub = parts[0], dataPre = /^\d{4}-\d{2}-\d{2}$/.test(parts[1] || '') ? parts[1] : '';
     var back = '<a class="back" href="#nuovo">← Cosa vuoi aggiungere</a>';
     if (sub === 'giorno') return '<a class="back" href="#calendario/' + dataPre.slice(0, 7) + '">← Calendario</a>' + head('Cosa aggiungi per ' + (dataPre ? fL.format(dt(dataPre)) : 'il giorno scelto') + '?', 'Scegli: la data è già inserita.') +
-      '<div class="who-grid">' + [['scadenza', 'Una scadenza', 'Qualcosa da fare entro quel giorno.', 'k-scad'], ['attivita', 'Un’attività o un evento', 'Una gita, una cena, un corso, una mostra: con la sua scheda.', 'k-att'], ['appuntamento', 'Un appuntamento sul sito', 'Compare nel calendario pubblico del sito.', 'k-sito']].map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '/' + dataPre + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
+      '<div class="who-grid">' + [['riunione', 'Una riunione o un’assemblea', 'Consiglio Direttivo o Assemblea dei soci: ordine del giorno, convocati, convocazione e verbale.', 'k-dec'], ['scadenza', 'Una scadenza', 'Qualcosa da fare entro quel giorno.', 'k-scad'], ['attivita', 'Un’attività o un evento', 'Una gita, una cena, un corso, una mostra: con la sua scheda.', 'k-att'], ['appuntamento', 'Un appuntamento sul sito', 'Compare nel calendario pubblico del sito.', 'k-sito']].map(function (x) { return '<a class="card ' + x[3] + '" href="#nuovo/' + x[0] + '/' + dataPre + '"><h3>＋ ' + x[1] + '</h3><span class="sub">' + x[2] + '</span></a>'; }).join('') + '</div>';
+    if (sub === 'riunione') return '<a class="back" href="' + (dataPre ? '#calendario/' + dataPre.slice(0, 7) : '#nuovo') + '">← Indietro</a>' + head('Nuova riunione', 'Si crea la scheda della riunione con i suoi lavori: preparare l’ordine del giorno, mandare la convocazione, segnare le presenze, scrivere e firmare il verbale.') +
+      '<section class="box k-dec"><form class="sform" data-act="nRiun"><label>Che riunione<select name="tipoR"><option value="cd">Consiglio Direttivo</option><option value="ord">Assemblea ordinaria dei soci</option><option value="str">Assemblea straordinaria dei soci</option></select></label>' +
+      '<label>Giorno<input name="data" type="date" required value="' + dataPre + '"></label><label>Ora<input name="ora" type="time"></label><label class="wide">Luogo<input name="luogo" maxlength="200" placeholder="Es. in sede, via S. Domenico Savio 4, oppure online"></label>' +
+      '<fieldset class="wide so-grp" id="ri-ass" hidden><legend>Seconda convocazione dell’assemblea</legend><label>Giorno<input name="d2" type="date"></label><label>Ora<input name="o2" type="time"></label></fieldset>' +
+      genCampo(['odg', 'Ordine del giorno', 'odg'], {}) +
+      '<p class="wide note">Dallo statuto (come riportato nei disciplinari): il Consiglio è valido con la metà più uno dei consiglieri e, per urgenza, si convoca anche con 24 ore di anticipo; l’assemblea si convoca almeno 15 giorni prima (art. 16.8) ed è valida in prima convocazione con la metà più uno dei soci (art. 16.2); una sola delega per socio (art. 16.7).</p>' +
+      '<div class="wide"><button class="btn" type="submit">Crea la riunione</button></div></form></section>';
     if (sub === 'appuntamento') return '<a class="back" href="#calendario">← Calendario</a>' + head('Nuovo appuntamento sul sito', 'Compare nel calendario pubblico del sito appena salvi.') + '<section class="box k-sito">' + calForm({ id: 'new', anno: +(dataPre || iso(base)).slice(0, 4), mese: +(dataPre || iso(base)).slice(5, 7) - 1, data: dataPre || null, pubblicato: true, categoria: 'conv', titolo: '' }, null).replace('data-id="new"', 'data-id="new"') + '</section>';
     var myR = me.carica ? myName() : 'Da assegnare';
     if (sub === 'scadenza') return back + head('Nuova scadenza', 'Compare in Scadenze, nel Calendario e in «Oggi» di chi ne è responsabile.') +
@@ -2833,6 +2993,21 @@ details.espandi > ul { width: 100%; }
     if (a === 'nScad') {
       r = await sb.from('scadenze').insert({ titolo: v('titolo'), data: nz('data'), responsabile: v('responsabile'), categoria: nz('categoria'), note: nz('note'), urgente: f.urgente.checked, annuale: f.annuale.checked, etichetta: v('data') ? null : 'Da fissare' }).select().single();
       if (r.error) throw r.error; D.scadenze.push(r.data); toast('Scadenza aggiunta.'); location.hash = '#pratiche/scadenze'; return;
+    }
+    if (a === 'nRiun') {
+      var tR = v('tipoR'), dR = v('data'), isCd = tR === 'cd', dd0 = dt(dR);
+      var giorno = function (n) { return iso(new Date(dd0.getTime() + n * DAY)); };
+      var odgSel = Array.prototype.filter.call(f.querySelectorAll('input[name=odgSel]'), function (x) { return x.checked; }).map(function (x) { return +x.value; });
+      var datiR = { ora: v('ora') || null, odgSel: odgSel, odgAltri: v('odgAltri'), odgVarie: !!(f.odgVarie && f.odgVarie.checked), inizio_lavori: giorno(isCd ? -14 : -30), presenze: {} };
+      if (!isCd) { datiR.assemblea = tR === 'str' ? 'straordinaria' : 'ordinaria'; datiR.d2 = v('d2') || null; datiR.o2 = v('o2') || null; }
+      var titR = isCd ? 'Consiglio Direttivo del ' + fD.format(dd0) : 'Assemblea ' + datiR.assemblea + ' dei soci del ' + fD.format(dd0);
+      r = await sb.from('attivita').insert({ titolo: titR, tipo: isCd ? 'Consiglio Direttivo' : 'Assemblea dei soci', stato: 'Confermata', data: dR, responsabile: 'Presidente', vice: 'Segretario', luogo: nz('luogo'), dati: datiR }).select().single();
+      if (r.error) throw r.error; D.attivita.push(r.data);
+      var passiR = isCd ? [['Preparare l’ordine del giorno', 'Presidente', -10], ['Mandare la convocazione scritta ai consiglieri', 'Segretario', -7], ['Il giorno della riunione: segnare le presenze e verificare il numero legale', 'Segretario', 0], ['Scrivere il verbale', 'Segretario', 5], ['Firmare il verbale', 'Presidente, Segretario', 15]]
+        : [['Preparare l’ordine del giorno e i documenti da mettere a disposizione dei soci', 'Presidente', -25], ['Mandare la convocazione ai soci, anche per email, e affiggerla in sede (almeno 15 giorni prima, art. 16.8)', 'Segretario', -16], ['Raccogliere le deleghe scritte (una per socio, art. 16.7)', 'Segretario', -1], ['Il giorno dell’assemblea: foglio presenze, deleghe e numero legale', 'Segretario', 0], ['Scrivere il verbale', 'Segretario', 5], ['Firmare il verbale', 'Presidente, Segretario', 15]];
+      var rR = await sb.from('checklist').insert(passiR.map(function (x, i) { return { attivita_id: r.data.id, ordine: i + 1, testo: x[0], responsabile: x[1], scadenza: giorno(x[2]), aggiornato_da: me.nome }; })).select();
+      if (rR.error) toast('Riunione creata, ma i lavori no: ' + rR.error.message); else D.checklist = D.checklist.concat(rR.data);
+      toast('Riunione creata.'); location.hash = '#attivita/' + r.data.id; return;
     }
     if (a === 'nAtt') {
       var tipoN = v('tipo'), datiN = datiAttivita(f, tipoN); if (f.inizio_lavori && f.inizio_lavori.value) datiN.inizio_lavori = f.inizio_lavori.value;
@@ -3079,6 +3254,16 @@ details.espandi > ul { width: 100%; }
   mainEl.addEventListener('change', async function (e) {
     var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
     if (a === 'attStato') { var xs = await upd('attivita', id, { stato: t.value }); if (xs) { toast('Stato: ' + t.value + '.'); render(); } return; }
+    if (a === 'sociOrd') { P.soci.ord = t.value; render(); return; }
+    if (t.name === 'tipoR') { var fa = document.getElementById('ri-ass'); if (fa) fa.hidden = t.value === 'cd'; return; }
+    if (a === 'presenza') { var ap = att(id); if (!ap) return; var dp = Object.assign({}, ap.dati || {}); dp.presenze = Object.assign({}, dp.presenze || {});
+      if (t.value) dp.presenze[t.getAttribute('data-k')] = t.value; else delete dp.presenze[t.getAttribute('data-k')];
+      var up = await upd('attivita', id, { dati: dp }); if (up) render(); return; }
+    /* scheda del socio: tipo, carica e stato si cambiano dal menù a tendina, senza aprire la modifica */
+    var fv = t.closest && t.closest('form[data-act="socioVeloce"]');
+    if (fv && t.name) { var sid = +fv.getAttribute('data-id'), pv = {}; pv[t.name] = t.value || null; if (t.name === 'tipo') pv.tipo = t.value || 'ordinario';
+      pv.aggiornato_il = new Date().toISOString(); pv.aggiornato_da = me.nome;
+      var uv = await upd('soci', sid, pv); if (uv) { sociLog('modifica', 'Cambiato ' + t.name + ': ' + (t.options[t.selectedIndex] || {}).text, sid); toast('Salvato: ' + (t.options[t.selectedIndex] || {}).text + '.'); await caricaSoci(); render(); } else render(); return; }
     if (a === 'genAtt') {
       var ga = att(+t.value), gf = t.form; if (!ga) return; var gd = ga.dati || {}, gdt = attDate(ga);
       var setv = function (n, val) { if (gf.elements[n] && val) gf.elements[n].value = val; };
@@ -3134,6 +3319,7 @@ details.espandi > ul { width: 100%; }
     if (a === 'dl') { e.preventDefault(); download(b.getAttribute('data-path')); }
     else if (a === 'docSez') { e.preventDefault(); var sz = document.getElementById('sez' + b.getAttribute('data-i')); if (sz) sz.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'cat') { P.archivio.cur = b.getAttribute('data-v'); render(); }
+    else if (a === 'riunConv' || a === 'riunVerb') { e.preventDefault(); var ar = att(+b.getAttribute('data-id')); if (ar) riunGenera(ar, a === 'riunVerb'); }
     else if (a === 'vaiSez') { e.preventDefault(); var ts = document.getElementById(b.getAttribute('data-id')); if (ts) ts.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'vaiRuolo') { e.preventDefault(); var tr = document.getElementById('r-' + b.getAttribute('data-id')); if (tr) tr.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     else if (a === 'editRuolo') { P.ruoli.edit = b.getAttribute('data-id'); render(); var ta = document.getElementById('m-' + P.ruoli.edit); if (ta) ta.focus(); }
@@ -3363,7 +3549,7 @@ details.espandi > ul { width: 100%; }
         var row = { chi: me.nome + (me.prova ? ' (accesso rapido)' : ''), testo: f.testo.value.trim() }; row[f.getAttribute('data-col')] = +f.getAttribute('data-id');
         var r5b = await sb.from('commenti').insert(row).select().single();
         if (r5b.error) throw r5b.error; D.commenti.push(r5b.data); toast('Commento pubblicato.'); render();
-      } else if (/^n(Scad|Att|Pratica|Dec|Testo|Passo)$/.test(a)) {
+      } else if (/^n(Scad|Att|Pratica|Dec|Testo|Passo|Riun)$/.test(a)) {
         await nuovoSave(a, f);
       } else if (a === 'testiSave') {
         var changed = D.sito_testi.filter(function (x) { return f[x.chiave] && f[x.chiave].value.trim() !== x.valore; });
