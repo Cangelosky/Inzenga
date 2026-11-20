@@ -3263,7 +3263,7 @@ details.espandi > ul { width: 100%; }
     var fv = t.closest && t.closest('form[data-act="socioVeloce"]');
     if (fv && t.name) { var sid = +fv.getAttribute('data-id'), pv = {}; pv[t.name] = t.value || null; if (t.name === 'tipo') pv.tipo = t.value || 'ordinario';
       pv.aggiornato_il = new Date().toISOString(); pv.aggiornato_da = me.nome;
-      var uv = await upd('soci', sid, pv); if (uv) { sociLog('modifica', 'Cambiato ' + t.name + ': ' + (t.options[t.selectedIndex] || {}).text, sid); toast('Salvato: ' + (t.options[t.selectedIndex] || {}).text + '.'); await caricaSoci(); render(); } else render(); return; }
+      var uv = await upd('soci', sid, pv); if (uv) { toast('Salvato: ' + (t.options[t.selectedIndex] || {}).text + '.'); await caricaSoci(); render(); } else render(); return; }
     if (a === 'genAtt') {
       var ga = att(+t.value), gf = t.form; if (!ga) return; var gd = ga.dati || {}, gdt = attDate(ga);
       var setv = function (n, val) { if (gf.elements[n] && val) gf.elements[n].value = val; };
