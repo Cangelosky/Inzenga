@@ -613,6 +613,11 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 .cint-t b i { font-style: italic; }
 .cint-s { font: 400 11.5px/1.3 Calibri, Carlito, 'Segoe UI', Arial, sans-serif; color: #5F6B64; }
 .cint-riga { height: 2px; background: linear-gradient(90deg, #B8912F 0 24%, #1F4D36 24% 100%); margin: 12px 0 18px; }
+.cint-prot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: calc(15px * var(--z)); margin-top: -8px; }
+.cint-piede { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; border-top: 1px solid #C9D6CE; padding-top: 10px; margin-top: 10px; font: 400 11.5px/1.5 Calibri, Carlito, 'Segoe UI', Arial, sans-serif; color: #5F6B64; }
+.cint-piede b { display: block; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 10.5px; }
+.cint-piede span { display: block; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .cint-piede { grid-template-columns: minmax(0, 1fr); } }
 :root[data-theme="dark"] .gen-out .cint-t b { color: #CFE3D6; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gen-out .cint-t b { color: #CFE3D6; } }
 @media (max-width: 520px) { .cint { gap: 8px; } .cint-l { width: 44px; } .cint-r { width: 54px; } .cint-t b { font-size: 16px; } .cint-k, .cint-s { font-size: 9.5px; } }
@@ -927,6 +932,19 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function cartaTesta() {
     return '<header class="cint"><img src="carta/inzenga.png" alt="" class="cint-l"><div class="cint-t"><span class="cint-k">Associazione Micologica Bresadola APS</span><b>Gruppo di Palermo <i>«Giuseppe Inzenga»</i></b><span class="cint-s">Ente del Terzo settore · Associazione di promozione sociale</span></div><img src="carta/amb.png" alt="" class="cint-r"></header><div class="cint-riga" aria-hidden="true"></div>';
   }
+  /* riga di protocollo sotto la testata: «Prot. n. …» a sinistra, «Palermo, data» a destra (solo se ci sono) */
+  var fDL = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+  function cartaProt(prot, data) {
+    prot = String(prot || '').trim();
+    var dd = data && /^\d{4}-\d{2}-\d{2}/.test(data) ? fDL.format(dt(String(data).slice(0, 10))) : '';
+    if (!prot && !dd) return '';
+    return '<div class="cint-prot"><span>' + (prot ? 'Prot. n. ' + esc(prot) : '') + '</span><span>' + (dd ? 'Palermo, ' + esc(dd) : '') + '</span></div>';
+  }
+  /* recapiti in fondo al foglio, per l'anteprima a schermo e per la stampa senza Paged.js (es. iPhone) */
+  function cartaPiede(senzaSede) {
+    var c = [['Sede operativa', ['Oratorio Salesiano Villaurea', 'Via S. Domenico Savio 4', '90145 Palermo']], ['Contatti', ['Tel. 335 782 5415', 'gruppomic.inzenga@libero.it', 'PEC gruppomic.inzenga@pec.libero.it']], ['Dati dell’associazione', ['Codice fiscale 97171140821', 'RUNTS n. 75000'].concat(senzaSede ? [] : ['Sede legale: Via F. La Colla 15, 90124 Palermo'])]];
+    return '<div class="cint-piede">' + c.map(function (x) { return '<div><b>' + esc(x[0]) + '</b>' + x[1].map(function (r) { return '<span>' + esc(r) + '</span>'; }).join('') + '</div>'; }).join('') + '</div>';
+  }
   function cartaSez(s) {
     if (/^note di lavoro|da togliere prima della stampa/i.test(s.h || '')) return '';
     var intest = /^intestazione$/i.test(s.h || '');
@@ -973,6 +991,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       '.cint-t { display: flex; flex-direction: column; gap: 0.6mm; } .cint-k { font-weight: 700; font-size: 7.5pt; letter-spacing: .14em; text-transform: uppercase; color: #3E7A55; }' +
       '.cint-t b { font: 400 15pt/1.2 Cambria, Caladea, Georgia, serif; color: #1F4D36; } .cint-t b i { font-style: italic; } .cint-s { font-size: 7.5pt; color: #5F6B64; }' +
       '.cint-riga { height: 1.2pt; background: linear-gradient(90deg, #B8912F 0 24%, #1F4D36 24% 100%); margin: 4mm 0 8mm; }' +
+      '.cint-prot { display: flex; justify-content: space-between; gap: 8mm; font-size: 10pt; color: #1E2420; margin: -4mm 0 7mm; } .cint-piede { display: none; }' +
       '.st-tit { font: 400 15pt/1.3 Cambria, Caladea, Georgia, serif !important; color: #1F4D36; text-align: center; margin: 0 0 1.5mm !important; }' +
       'h1.st-tit, h2.st-tit { margin-bottom: 6mm !important; }' +
       '.st-sub { font: 400 10.5pt/1.4 Calibri, Carlito, Arial, sans-serif !important; color: #5F6B64 !important; text-align: center; margin: 0 0 6mm !important; }' +
@@ -995,14 +1014,19 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
   function stampaCarta(html, o) {
     o = o || {};
     var vecchio = document.getElementById('stampaFrame'); if (vecchio) vecchio.remove();
-    var fr = document.createElement('iframe'); fr.id = 'stampaFrame'; fr.title = 'Stampa';
-    fr.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none';
-    document.body.appendChild(fr);
+    // Su iPhone e iPad la stampa di un riquadro nascosto stampa la pagina del gestionale (senza recapiti né protocollo): lì si apre una scheda a parte
+    var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var nw = ios ? window.open('', '_blank') : null, fr = null;
+    if (!nw) {
+      fr = document.createElement('iframe'); fr.id = 'stampaFrame'; fr.title = 'Stampa';
+      fr.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none';
+      document.body.appendChild(fr);
+    }
     var abs = function (u) { return new URL(u, location.href).href; };
-    var corpo = cartaTesta().replace('src="carta/inzenga.png"', 'src="' + abs('carta/inzenga.png') + '"').replace('src="carta/amb.png"', 'src="' + abs('carta/amb.png') + '"') + '<div class="st-corpo">' + html + '</div>';
+    var corpo = cartaTesta().replace('src="carta/inzenga.png"', 'src="' + abs('carta/inzenga.png') + '"').replace('src="carta/amb.png"', 'src="' + abs('carta/amb.png') + '"') + cartaProt(o.prot, o.data) + '<div class="st-corpo">' + html + '</div>';
     var titolo = (o.titolo || 'Documento').replace(/[<>&"]/g, '');
     toast('Preparo la pagina di stampa…');
-    var w = fr.contentWindow, fatto = false;
+    var w = nw || fr.contentWindow, fatto = false;
     var stampa = function () {
       if (fatto) return; fatto = true;
       var t0 = document.title; document.title = titolo;   // il nome proposto per il PDF
@@ -1023,9 +1047,9 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       var d = D.documenti.filter(function (x) { return x.slug === r.s || String(x.id) === r.s; })[0]; if (!d) return;
       var c = d.riservato ? D.docRis[d.id] : d.contenuto;
       if (!c || !c.secs) return toast('Il testo non è ancora caricato.');
-      return stampaCarta(cartaDoc(d.titolo, c), { titolo: d.titolo, senzaSede: SENZA_SEDE_LEGALE.indexOf(d.slug) >= 0 });
+      return stampaCarta(cartaDoc(d.titolo, c), { titolo: d.titolo, senzaSede: SENZA_SEDE_LEGALE.indexOf(d.slug) >= 0, prot: d.protocollo, data: d.data_doc });
     }
-    if (r.a === 'genera' && P.genera.doc) return stampaCarta(cartaDoc('', P.genera.doc), { titolo: P.genera.doc.titolo });
+    if (r.a === 'genera' && P.genera.doc) { var gv0 = P.genera.v || {}; return stampaCarta(cartaDoc('', P.genera.doc), { titolo: P.genera.doc.titolo, prot: gv0.protocollo, data: gv0.data || gv0.d2 }); }
     window.print();
   }
   D.docRis = {};
@@ -1613,8 +1637,9 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
   }
   function genFoglio(doc) {
-    return '<article class="foglio gen-out">' + cartaTesta() +
-      doc.secs.map(function (s) { return '<section class="fs">' + (s.h === 'Intestazione' ? '' : '<h2>' + esc(s.h) + '</h2>') + (s.b || []).map(blocco).join('') + '</section>'; }).join('') + '</article>';
+    var gv = P.genera.v || {};
+    return '<article class="foglio gen-out">' + cartaTesta() + cartaProt(gv.protocollo, gv.data || gv.d2) +
+      doc.secs.map(function (s) { return '<section class="fs">' + (s.h === 'Intestazione' ? '' : '<h2>' + esc(s.h) + '</h2>') + (s.b || []).map(blocco).join('') + '</section>'; }).join('') + cartaPiede() + '</article>';
   }
   P.genera = function (sub) {
     var m = GEN.filter(function (x) { return x.k === sub; })[0];
@@ -1624,7 +1649,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
     var v = P.genera.v, doc = P.genera.doc && P.genera.docK === m.k ? P.genera.doc : null, avv = m.avviso && P.genera.v ? m.avviso(P.genera.v) : '';
     return '<a class="back" href="#genera">← Tutti i modelli</a>' + head(m.t, m.d) +
       (m.riservato ? '<p class="note">Questo documento contiene dati personali: salvandolo, il testo lo vedono solo gli accessi con password.</p>' : '') +
-      '<section class="box"><form class="sform" data-act="genFai" data-k="' + m.k + '">' + m.campi.map(function (c) { return genCampo(c, v); }).join('') + '<div class="wide"><button class="btn" type="submit">Prepara il documento</button></div></form></section>' +
+      '<section class="box"><form class="sform" data-act="genFai" data-k="' + m.k + '">' + m.campi.map(function (c) { return genCampo(c, v); }).join('') + '<label>Numero di protocollo (facoltativo)<input name="protocollo" maxlength="60" placeholder="Es. 12/2026" value="' + esc(v.protocollo || '') + '"></label><div class="wide"><button class="btn" type="submit">Prepara il documento</button></div></form></section>' +
       (doc ? (avv ? '<p class="note" style="border-color:var(--crit-ink)">' + esc(avv) + '</p>' : '') +
         (P.genera.edit ? '<section class="box doc-editor"><h2>Modifica il testo del documento</h2><p class="sub">Cambia quello che vuoi: <code>## Titolo</code> per una sezione, <code>- punto</code> o <code>1. punto</code> per gli elenchi, <code>**grassetto**</code>, una riga vuota tra i paragrafi. Se poi prepari di nuovo il documento dal modulo, le modifiche fatte qui si perdono.</p><form class="sform" data-act="genApplica"><label class="wide">Testo<textarea name="testo" class="doc-txt">' + esc(doc2txt(doc)) + '</textarea></label><div class="wide doc-azioni"><button class="btn" type="submit">Applica le modifiche</button><button class="btn alt" type="button" data-act="genModifica">Annulla</button></div></form></section>' : genFoglio(doc)) +
         '<div class="doc-azioni"><button class="btn" type="button" data-act="genModifica">' + (P.genera.edit ? 'Chiudi la modifica' : '✏️ Modifica il testo') + '</button><button class="btn alt" type="button" data-act="genCopia">Copia il testo</button><button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button><button class="btn alt" type="button" data-act="genSalva">Salva in Documenti come bozza</button>' +
@@ -2960,7 +2985,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       var gm2 = GEN.filter(function (x) { return x.k === P.genera.docK; })[0], dg = P.genera.doc, gv = P.genera.v || {};
       var slugG = 'gen-' + Date.now();
       if (gm2.riservato && nascosti()) { toast('Questo documento ha dati personali: per salvarlo entra con la password personale.'); return; }
-      var rg = await sb.from('documenti').insert({ slug: slugG, area: gm2.cat[0], categoria: gm2.cat[1], titolo: dg.titolo, sottotitolo: (gm2.riservato ? 'Contiene dati personali dei soci · ' : '') + 'Preparato con il modello «' + gm2.t + '» il ' + fD.format(base), stato: 'bozza', riservato: !!gm2.riservato, contenuto: gm2.riservato ? null : { intro: INTEST.join(' · '), secs: dg.secs }, caricato_da: me.nome, data_doc: gv.data || gv.d2 || null }).select().single();
+      var rg = await sb.from('documenti').insert({ slug: slugG, area: gm2.cat[0], categoria: gm2.cat[1], titolo: dg.titolo, sottotitolo: (gm2.riservato ? 'Contiene dati personali dei soci · ' : '') + 'Preparato con il modello «' + gm2.t + '» il ' + fD.format(base), stato: 'bozza', riservato: !!gm2.riservato, contenuto: gm2.riservato ? null : { intro: INTEST.join(' · '), secs: dg.secs }, caricato_da: me.nome, data_doc: gv.data || gv.d2 || null, protocollo: gv.protocollo || null }).select().single();
       if (rg.error) { toast('Non salvato: ' + rg.error.message); return; }
       if (gm2.riservato) {
         var rt = await sb.from('documenti_testo_riservato').insert({ documento_id: rg.data.id, contenuto: { secs: dg.secs }, aggiornato_da: me.nome });
@@ -3042,7 +3067,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
       } else if (a === 'rqVista') {
       } else if (a === 'genFai') {
         var gm = GEN.filter(function (x) { return x.k === f.getAttribute('data-k'); })[0];
-        P.genera.v = genVal(f, gm); P.genera.doc = gm.fai(P.genera.v); P.genera.docK = gm.k; P.genera.edit = false; render();
+        P.genera.v = genVal(f, gm); P.genera.v.protocollo = f.elements.protocollo ? f.elements.protocollo.value.trim() : ''; P.genera.doc = gm.fai(P.genera.v); P.genera.docK = gm.k; P.genera.edit = false; render();
         var go = document.querySelector('.gen-out'); if (go) go.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (a === 'comEdit') {
         var ce = await upd('commenti', +f.getAttribute('data-id'), { testo: f.testo.value.trim() }); if (ce) { toast('Commento corretto.'); render(); }
