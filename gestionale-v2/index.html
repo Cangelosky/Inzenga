@@ -815,6 +815,7 @@ details.espandi > ul { width: 100%; }
 .so-form .so-grp legend { font-weight: 700; padding: 0 6px; }
 .so-form .quote { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; } .so-form .quote .lbl { width: 100%; font-weight: 600; }
 /* scheda riunione */
+.ri-ed { margin-top: 14px; } .com-ed { padding: 10px 0; border-top: 1px dashed var(--line); }
 .ri-cols { display: grid; gap: 20px; grid-template-columns: 1fr; } @media (min-width: 900px) { .ri-cols { grid-template-columns: 1fr 1fr; } }
 .ri-cols h3 { margin: 16px 0 6px; font-size: calc(17px * var(--z)); } .ri-cols h3 small { font-weight: 500; color: var(--ink-2); }
 .ri-odg { margin: 0 0 12px; padding-left: 1.4em; display: grid; gap: 6px; }
@@ -1415,11 +1416,13 @@ details.espandi > ul { width: 100%; }
         (ed ? '<form class="sform rl-ed" data-act="saveRuolo" data-id="' + c.id + '"><label class="wide" for="m-' + c.id + '">Mansioni, una per riga<textarea id="m-' + c.id + '" name="m">' + esc(c.mansioni.join('\n')) + '</textarea></label>' +
             '<label class="wide">Se manca, lo sostituisce<input name="sost" maxlength="300" value="' + esc(c.sostituto_nota || '') + '" placeholder="Es. il Vicepresidente"></label>' +
             '<label class="wide">Da decidere in CD, una cosa per riga<textarea name="dd">' + esc((c.da_decidere || []).join('\n')) + '</textarea></label>' +
+            '<label class="wide">Ruoli dallo statuto, uno per riga<textarea name="cs" rows="6">' + esc((c.compiti_statuto || []).join('\n')) + '</textarea><span class="sub">Da cambiare solo se cambia lo statuto.</span></label>' +
+            '<label class="wide">Articoli dello statuto<input name="rif" maxlength="120" value="' + esc(c.rif_statuto || '') + '" placeholder="Es. artt. 17 e 18"></label>' +
             '<div class="wide chips"><button class="btn" type="submit">Salva</button><button class="btn alt" type="button" data-act="cancelRuolo">Annulla</button></div></form>'
           : '<div class="rl-man"><h3>Mansioni</h3><ul class="rl-chips">' + c.mansioni.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
             (c.da_decidere && c.da_decidere.length ? '<p class="rl-dd"><b>Da decidere in CD:</b> ' + c.da_decidere.map(esc).join(' · ') + '</p>' : '') +
             (copro.length ? '<p class="sub">Sostituisce: ' + esc(copro.join(', ')) + '</p>' : '') +
-            '<button class="btn alt sm" type="button" data-act="editRuolo" data-id="' + c.id + '">✏️ Modifica mansioni, sostituto e cose da decidere</button></div>') +
+            '<button class="btn alt sm" type="button" data-act="editRuolo" data-id="' + c.id + '">✏️ Modifica la carica: mansioni, sostituto, cose da decidere, ruoli</button></div>') +
         '<div class="rl-stat"><h3>Ruoli dallo statuto</h3><ul class="plain sm">' + c.compiti_statuto.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' +
         ((o.dopo.length || o.sc2.length) ? '<details class="rl-dopo"><summary>📅 Prossimi lavori (' + (o.dopo.length + o.sc2.length) + ') ▾</summary><ul class="p2list">' + o.dopo.map(function (a) { var r = respMatch(a.responsabile, c.nome) ? 'responsabile' : respMatch(a.vice, c.nome) ? 'vice' : 'collabora'; return progLi(a).replace('</a>', '</a> <span class="pill plain">' + r + '</span>'); }).join('') + o.sc2.map(scadLi2).join('') + '</ul></details>' : '') +
         '</article>';
@@ -1581,7 +1584,9 @@ details.espandi > ul { width: 100%; }
     return head('Contabilità', 'Saldi, prima nota, rendiconto e budget delle attività. ' + chiScrive) + tS +
       '<section class="box k-soldi"><header><h2>Saldi</h2><a href="#soldi/primanota">Apri la prima nota</a></header>' + (D.prima_nota.length ? '<div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(Ty.en) + '</b><span>entrate del ' + base.getFullYear() + '</span></div><div><b>' + eur2(Ty.us) + '</b><span>uscite del ' + base.getFullYear() + '</span></div></div>' : '<p class="sub">Nessun movimento registrato. Il primo movimento da inserire è il «Saldo di apertura» di cassa e di banca.</p>') + '</section>' +
       budgetPanoramica() +
-      '<div class="cols"><section class="box"><h2>Prontuario economico</h2><p class="sub">Le poche regole già decise. Le altre si decidono in Consiglio e si aggiungono qui.</p><ul class="list">' + D.regole_economiche.map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b><span class="sub">' + esc(r.valore) + '</span></div></li>'; }).join('') + '</ul></section>' +
+      '<div class="cols"><section class="box"><h2>Prontuario economico</h2><p class="sub">Le poche regole già decise. Le altre si decidono in Consiglio e si aggiungono qui.</p><ul class="list">' + D.regole_economiche.slice().sort(function (x, y) { return x.ordine - y.ordine; }).map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b><span class="sub">' + esc(r.valore) + '</span>' +
+        '<details class="ed"><summary>Modifica</summary><form class="sform" data-act="regolaSave" data-id="' + r.id + '"><label class="wide">Voce<input name="voce" required maxlength="200" value="' + esc(r.voce) + '"></label><label class="wide">Regola<textarea name="valore" maxlength="1000">' + esc(r.valore || '') + '</textarea></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button>' + (me.admin ? '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="regole_economiche" data-id="' + r.id + '" data-l="' + esc(r.voce) + '">Elimina</button>' : '') + '</div></form></details></div></li>'; }).join('') + '</ul>' +
+        '<details class="ed"><summary>＋ Aggiungi una regola</summary><form class="sform" data-act="regolaNew"><label class="wide">Voce<input name="voce" required maxlength="200" placeholder="Es. Rimborso spese per le squadre di raccolta"></label><label class="wide">Regola<textarea name="valore" maxlength="1000"></textarea></label><div class="wide"><button class="btn sm" type="submit">Aggiungi</button></div></form></details></section>' +
       '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
       ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section></div>' +
       '<section class="box k-doc"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Qui vanno i rendiconti approvati, gli estratti conto e le ricevute.</p>') +
@@ -1593,7 +1598,10 @@ details.espandi > ul { width: 100%; }
     var t = '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#comesifa' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'comunicazioni') {
       return head('Comunicazioni', 'Per ogni attività, cosa va comunicato, da chi, a chi e quando. Viene dai disciplinari.') + t +
-        ['Stage', 'Mostra', 'Corsi', 'Gite'].map(function (k) { var d = docBySlug('doc-' + k.toLowerCase()); return '<section class="box"><header><h2>' + k + '</h2>' + (d ? '<a href="' + docHref(d) + '">Disciplinare</a>' : '') + '</header>' + tableH(HEAD4, comsRows(k)) + '</section>'; }).join('') +
+        ['Stage', 'Mostra', 'Corsi', 'Gite'].map(function (k) { var d = docBySlug('doc-' + k.toLowerCase()), cs = D.comunicazioni.filter(function (c) { return c.attivita === k; }).sort(function (x, y) { return x.ordine - y.ordine; });
+          return '<section class="box"><header><h2>' + k + '</h2>' + (d ? '<a href="' + docHref(d) + '">Disciplinare</a>' : '') + '</header>' + tableH(HEAD4, comsRows(k)) +
+            (cs.length ? '<details class="ed"><summary>✏️ Modifica le righe</summary>' + cs.map(function (c) { return '<form class="sform com-ed" data-act="comuSave" data-id="' + c.id + '"><label>Quando<input name="quando" maxlength="200" value="' + esc(c.quando || '') + '"></label><label>Chi<input name="chi" maxlength="120" value="' + esc(c.chi || '') + '"></label><label>A chi<input name="a_chi" maxlength="200" value="' + esc(c.a_chi || '') + '"></label><label class="wide">Cosa<textarea name="contenuto" maxlength="2000">' + esc(c.contenuto || '') + '</textarea></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button><button class="btn alt sm danger" type="button" data-act="elimina" data-t="comunicazioni" data-id="' + c.id + '" data-l="' + esc(short(c.contenuto, 40)) + '">Elimina</button></div></form>'; }).join('') + '</details>' : '') +
+            '<details class="ed"><summary>＋ Aggiungi una comunicazione</summary><form class="sform" data-act="comuNew" data-k="' + k + '"><label>Quando<input name="quando" required maxlength="200" placeholder="Es. un mese prima"></label><label>Chi<input name="chi" maxlength="120" placeholder="Es. Segretario"></label><label>A chi<input name="a_chi" maxlength="200" placeholder="Es. tutti i soci"></label><label class="wide">Cosa<textarea name="contenuto" required maxlength="2000"></textarea></label><div class="wide"><button class="btn sm" type="submit">Aggiungi</button></div></form></details></section>'; }).join('') +
         addLink('#nuovo/testo', 'Nuovo testo pronto') + '<section class="box"><h2>Testi pronti</h2>' + D.testi.map(function (x, i) { return '<div class="copy"><div><b>' + esc(x.titolo) + '</b><q id="tx' + i + '">' + esc(x.testo) + '</q></div><button class="btn alt" type="button" data-act="copy" data-i="' + i + '">Copia</button></div>'; }).join('') + '</section>' +
         '<section class="box"><header><h2>Le chat dei soci</h2>' + (docBySlug('doc-community') ? '<a href="#doc/doc-community">Proposta completa</a>' : '') + '</header><ul class="list">' +
         [['Comunicazioni del CD', 'scrive solo il Consiglio Direttivo'], ['Attività ed eventi', 'scrivono tutti i soci in regola'], ['Comitato scientifico', 'foto da determinare e approfondimenti'], ['Chat amicologica', 'chiacchiere fuori tema'], ['Consiglio Direttivo', 'riservata al CD, visibile ma non accessibile ai soci']].map(function (c) { return '<li><div><b>' + c[0] + '</b><span class="sub">' + c[1] + '</span></div></li>'; }).join('') + '</ul></section>';
@@ -1754,7 +1762,7 @@ details.espandi > ul { width: 100%; }
     if (c[2] === 'select') return '<label>' + c[1] + '<select name="' + c[0] + '">' + c[4].map(function (o) { return '<option' + (o === val ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>';
     if (c[2] === 'attivita') return '<label class="wide">' + c[1] + '<select name="att" data-act="genAtt"><option value="">Scegli un’attività per riempire i campi</option>' + attSorted().filter(function (a) { return !a.archiviato; }).map(function (a) { return '<option value="' + a.id + '"' + (String(a.id) === String(val) ? ' selected' : '') + '>' + esc(a.titolo) + '</option>'; }).join('') + '</select></label>';
     if (c[2] === 'odg') { var od0 = openDec(), sel0 = (v.odgSel || []).map(String);
-      return '<fieldset class="wide gen-odg"><legend>' + c[1] + '</legend><p class="sub">Nessun punto è scelto in partenza: spunta quelli da mettere all’ordine del giorno e scrivi gli altri.</p>' +
+      return '<fieldset class="wide gen-odg"><legend>' + c[1] + '</legend><p class="sub">' + (sel0.length ? 'Spunta o togli i punti, e scrivi gli altri.' : 'Nessun punto è scelto in partenza: spunta quelli da mettere all’ordine del giorno e scrivi gli altri.') + '</p>' +
         (od0.length ? '<div class="gen-scelte"><span class="lbl">Decisioni ancora da votare (' + od0.length + ')</span>' + od0.map(function (x) { return '<label class="chk"><input type="checkbox" name="odgSel" value="' + x.id + '"' + (sel0.indexOf(String(x.id)) >= 0 ? ' checked' : '') + '> ' + esc(x.testo) + '</label>'; }).join('') + '</div>' : '') +
         '<label>Altri punti, uno per riga<textarea name="odgAltri" rows="3">' + esc(v.odgAltri || '') + '</textarea></label>' +
         '<label class="chk"><input type="checkbox" name="odgVarie"' + (v.odgVarie === false ? '' : ' checked') + '> Aggiungi «Varie ed eventuali» in fondo</label></fieldset>'; }
@@ -2195,7 +2203,12 @@ details.espandi > ul { width: 100%; }
       '<div><dl class="so-dl">' + '<div class="so-d"><dt>Quando</dt><dd>' + (dd ? fL.format(dd) : 'da fissare') + (d.ora ? ', ore ' + esc(d.ora) : '') + '</dd></div>' + '<div class="so-d"><dt>Dove</dt><dd>' + (esc(a.luogo || '') || '<span class="sub">da indicare</span>') + '</dd></div>' +
         (!cd ? '<div class="so-d"><dt>Seconda convocazione</dt><dd>' + (d.d2 ? fL.format(dt(d.d2)) + (d.o2 ? ', ore ' + esc(d.o2) : '') : '<span class="sub">non indicata</span>') + '</dd></div><div class="so-d"><dt>Tipo</dt><dd>Assemblea ' + esc(d.assemblea || 'ordinaria') + '</dd></div>' : '') + '</dl>' +
         '<h3>Ordine del giorno</h3><ol class="ri-odg">' + odg.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>' +
-        '<div class="chips"><button class="btn" type="button" data-act="riunConv" data-id="' + a.id + '">📨 Prepara la convocazione</button><button class="btn alt" type="button" data-act="riunVerb" data-id="' + a.id + '">📝 Prepara il verbale</button></div></div>' +
+        '<div class="chips"><button class="btn" type="button" data-act="riunConv" data-id="' + a.id + '">📨 Prepara la convocazione</button><button class="btn alt" type="button" data-act="riunVerb" data-id="' + a.id + '">📝 Prepara il verbale</button></div>' +
+        '<details class="ed ri-ed"><summary>✏️ Modifica la riunione: giorno, ora, luogo, ordine del giorno</summary><form class="sform" data-act="riunSave" data-id="' + a.id + '">' +
+          '<label>Giorno<input name="data" type="date" required value="' + esc(a.data || '') + '"></label><label>Ora<input name="ora" type="time" value="' + esc(d.ora || '') + '"></label><label class="wide">Luogo<input name="luogo" maxlength="200" value="' + esc(a.luogo || '') + '"></label>' +
+          (cd ? '' : '<label>Assemblea<select name="assemblea"><option' + (d.assemblea !== 'straordinaria' ? ' selected' : '') + '>ordinaria</option><option' + (d.assemblea === 'straordinaria' ? ' selected' : '') + '>straordinaria</option></select></label><label>Seconda convocazione: giorno<input name="d2" type="date" value="' + esc(d.d2 || '') + '"></label><label>Seconda convocazione: ora<input name="o2" type="time" value="' + esc(d.o2 || '') + '"></label>') +
+          genCampo(['odg', 'Ordine del giorno', 'odg'], { odgSel: (d.odgSel || []).map(String), odgAltri: d.odgAltri || '', odgVarie: d.odgVarie !== false }) +
+          '<div class="wide"><button class="btn" type="submit">Salva la riunione</button></div></form></details></div>' +
       '<div><h3>' + (cd ? 'Convocati e presenze' : 'Soci convocati e presenze') + ' <small>' + C.lista.length + '</small></h3>' + legale + convocati + '</div></div></section>';
   }
   function riunGenera(a, verb) {
@@ -3424,6 +3437,8 @@ details.espandi > ul { width: 100%; }
         var id = f.getAttribute('data-id'), m = f.m.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean), patchR = { mansioni: m };
         if (f.sost) patchR.sostituto_nota = f.sost.value.trim() || null;
         if (f.dd) patchR.da_decidere = f.dd.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        if (f.cs) patchR.compiti_statuto = f.cs.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        if (f.rif) patchR.rif_statuto = f.rif.value.trim() || null;
         var c = await upd('cariche', id, patchR);
         if (c) { P.ruoli.edit = null; toast('Mansioni salvate.'); render(); }
       } else if (a === 'newScad') {
@@ -3542,6 +3557,29 @@ details.espandi > ul { width: 100%; }
       } else if (a === 'passoEdit') {
         var r3b = await upd('pratica_passi', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null, responsabile: f.responsabile.value, scadenza: f.scadenza.value || null, ordine: +f.ordine.value || 1, documenti_slug: Array.prototype.filter.call(f.docs.options, function (o) { return o.selected; }).map(function (o) { return o.value; }), aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome });
         if (r3b) { D.pratica_passi.sort(function (a1, b1) { return a1.ordine - b1.ordine; }); toast('Passo salvato.'); render(); }
+      } else if (a === 'riunSave') {
+        var ra = att(+f.getAttribute('data-id')); if (!ra) return;
+        var dr = Object.assign({}, ra.dati || {}), selR = Array.prototype.filter.call(f.querySelectorAll('input[name=odgSel]'), function (x) { return x.checked; }).map(function (x) { return +x.value; });
+        dr.ora = f.ora.value || null; dr.odgSel = selR; dr.odgAltri = f.odgAltri.value.trim(); dr.odgVarie = !!(f.odgVarie && f.odgVarie.checked);
+        if (f.assemblea) { dr.assemblea = f.assemblea.value; dr.d2 = f.d2.value || null; dr.o2 = f.o2.value || null; }
+        var tr = ra.tipo === 'Consiglio Direttivo' ? 'Consiglio Direttivo del ' + fD.format(dt(f.data.value)) : 'Assemblea ' + (dr.assemblea || 'ordinaria') + ' dei soci del ' + fD.format(dt(f.data.value));
+        var autoTit = /^(Consiglio Direttivo|Assemblea (ordinaria|straordinaria) dei soci) del /.test(ra.titolo);
+        var rs = await upd('attivita', ra.id, Object.assign({ data: f.data.value, luogo: f.luogo.value.trim() || null, dati: dr }, autoTit ? { titolo: tr } : {}));
+        if (rs) { toast('Riunione salvata.'); render(); }
+      } else if (a === 'comuSave') {
+        var rc = await upd('comunicazioni', +f.getAttribute('data-id'), { quando: f.quando.value.trim(), chi: f.chi.value.trim() || null, a_chi: f.a_chi.value.trim() || null, contenuto: f.contenuto.value.trim() });
+        if (rc) { toast('Comunicazione salvata.'); render(); }
+      } else if (a === 'comuNew') {
+        var kc = f.getAttribute('data-k'), oc = D.comunicazioni.filter(function (c) { return c.attivita === kc; }).reduce(function (m, c) { return Math.max(m, c.ordine || 0); }, 0);
+        var rn = await sb.from('comunicazioni').insert({ attivita: kc, ordine: oc + 1, quando: f.quando.value.trim(), chi: f.chi.value.trim() || null, a_chi: f.a_chi.value.trim() || null, contenuto: f.contenuto.value.trim() }).select().single();
+        if (rn.error) throw rn.error; D.comunicazioni.push(rn.data); toast('Comunicazione aggiunta.'); render();
+      } else if (a === 'regolaSave') {
+        var rg2 = await upd('regole_economiche', +f.getAttribute('data-id'), { voce: f.voce.value.trim(), valore: f.valore.value.trim() || null });
+        if (rg2) { toast('Regola salvata.'); render(); }
+      } else if (a === 'regolaNew') {
+        var og = D.regole_economiche.reduce(function (m, r) { return Math.max(m, r.ordine || 0); }, 0);
+        var rr2 = await sb.from('regole_economiche').insert({ voce: f.voce.value.trim(), valore: f.valore.value.trim() || null, ordine: og + 1 }).select().single();
+        if (rr2.error) throw rr2.error; D.regole_economiche.push(rr2.data); toast('Regola aggiunta.'); render();
       } else if (a === 'prEdit') {
         var r4b = await upd('pratiche', +f.getAttribute('data-id'), { titolo: f.titolo.value.trim(), descrizione: f.descrizione.value.trim() || null });
         if (r4b) { toast('Pratica salvata.'); render(); }
