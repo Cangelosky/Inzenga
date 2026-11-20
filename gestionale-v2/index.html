@@ -2077,13 +2077,37 @@ details.espandi > ul { width: 100%; }
     Conversazioni: ['relatore', 'tema', 'orario'], Lezioni: ['relatore', 'tema', 'orario'], Pratica: ['orario'], Eventi: ['orario', 'quota']
   };
   var LISTE = {
-    partecipanti: { nome: 'Partecipanti', campi: [['nome', 'Nome e cognome'], ['telefono', 'Telefono'], ['quota', 'Quota versata'], ['note', 'Note (intolleranze, esigenze)']], pers: true },
+    partecipanti: { nome: 'Soci partecipanti', campi: [['nome', 'Nome e cognome'], ['telefono', 'Telefono'], ['quota', 'Quota versata'], ['note', 'Note (intolleranze, esigenze)']], pers: true },
+    ospiti: { nome: 'Ospiti (non soci)', campi: [['nome', 'Nome e cognome'], ['di', 'Ospite di (socio)'], ['telefono', 'Telefono'], ['quota', 'Quota versata'], ['note', 'Note (intolleranze, esigenze)']], pers: true },
     camere: { nome: 'Camere (rooming list)', campi: [['camera', 'Camera'], ['tipo', 'Tipo'], ['occupanti', 'Occupanti'], ['note', 'Note']], pers: true },
     materiale: { nome: 'Materiale', campi: [['oggetto', 'Cosa serve'], ['quantita', 'Quanti'], ['chi', 'Chi lo porta'], ['stato', 'Stato']] },
     preventivi: { nome: 'Preventivi e fornitori', campi: [['fornitore', 'Fornitore'], ['oggetto', 'Per cosa'], ['importo', 'Importo'], ['stato', 'Stato (chiesto, ricevuto, accettato)']] },
     info: { nome: 'Informazioni utili', campi: [['titolo', 'Titolo'], ['testo', 'Testo']] }
   };
-  var LISTE_TIPO = { Stage: ['partecipanti', 'camere', 'materiale', 'preventivi', 'info'], Gite: ['partecipanti', 'preventivi', 'info'], Mostre: ['materiale', 'preventivi', 'info'], 'Corsi per il tesserino': ['partecipanti', 'materiale', 'info'], Corsi: ['partecipanti', 'materiale', 'info'], 'Corsi extra': ['partecipanti', 'materiale', 'info'], 'Pranzi e cene': ['partecipanti', 'preventivi', 'info'] };
+  var LISTE_TIPO = { Stage: ['partecipanti', 'ospiti', 'camere', 'materiale', 'preventivi', 'info'], Gite: ['partecipanti', 'ospiti', 'preventivi', 'info'], Mostre: ['materiale', 'preventivi', 'info'], 'Corsi per il tesserino': ['partecipanti', 'materiale', 'info'], Corsi: ['partecipanti', 'materiale', 'info'], 'Corsi extra': ['partecipanti', 'ospiti', 'materiale', 'info'], 'Pranzi e cene': ['partecipanti', 'preventivi', 'info'] };
+  /* ospiti (20/11): nei corsi la lista è dei corsisti (non sono ancora soci); altrove «Soci partecipanti» accetta solo soci del libro.
+     Pranzi e cene: accanto a ogni socio il numero di ospiti, senza nomi. Stage, gite, corsi extra: ospiti nominativi in una lista a parte. */
+  var CORSI_LISTA = ['Corsi per il tesserino', 'Corsi'];
+  function soloSoci(a, tipo) { return tipo === 'partecipanti' && CORSI_LISTA.indexOf(a.tipo) < 0; }
+  function campiLista(tipo, a) {
+    if (tipo === 'partecipanti' && a && a.tipo === 'Pranzi e cene') return [['nome', 'Socio'], ['ospiti', 'Ospiti con sé (quanti)', 'num'], ['allergie', 'Allergie e intolleranze (anche degli ospiti)'], ['paga', 'Paga a', 'sel', ['', 'Ristorante', 'Associazione']]];
+    if (tipo === 'partecipanti' && a && soloSoci(a, tipo)) return [['nome', 'Socio']].concat(LISTE.partecipanti.campi.slice(1));
+    if (tipo === 'partecipanti' && a && CORSI_LISTA.indexOf(a.tipo) >= 0) return [['nome', 'Nome e cognome del corsista']].concat(LISTE.partecipanti.campi.slice(1));
+    return LISTE[tipo].campi;
+  }
+  function nomeLista(tipo, a) { return tipo === 'partecipanti' && a && CORSI_LISTA.indexOf(a.tipo) >= 0 ? 'Corsisti' : LISTE[tipo].nome; }
+  /* pranzi e cene: quota a persona dai dati dell'attività; totale = (socio + ospiti) × quota */
+  function quotaPersona(a) { var q = parseFloat(String((a.dati || {}).quota || '').replace(',', '.')); return q > 0 ? q : null; }
+  function totaleRiga(a, r) { var q = quotaPersona(a); return q == null ? null : q * (1 + numOspiti(r)); }
+  function numOspiti(r) { var n = parseInt(String(r.dati.ospiti || '').replace(/\D/g, ''), 10); return n > 0 ? n : 0; }
+  function contaPartecipanti(a) {
+    var L = D.attivita_liste.filter(function (x) { return x.attivita_id === a.id; });
+    var soci = L.filter(function (x) { return x.tipo === 'partecipanti'; }), osp = L.filter(function (x) { return x.tipo === 'ospiti'; });
+    var nOsp = osp.length + soci.reduce(function (s, r) { return s + numOspiti(r); }, 0);
+    return { soci: soci.length, ospiti: nOsp, tot: soci.length + nOsp };
+  }
+  function trovaSocio(nome) { var q = low(String(nome || '').trim()).replace(/\s+/g, ' '); if (!q || !D.soci) return null;
+    return sociAttivi().filter(function (x) { return low(socioNomeN(x)).replace(/\s+/g, ' ') === q || low(x.cognome + ' ' + (x.nome || '')).replace(/\s+/g, ' ').trim() === q; })[0] || null; }
   function campiPer(tipo) { return ['luogo'].concat(DATI_TIPO[tipo] || ['orario']); }
   function campoInput(k, v) { var c = CAMPO[k]; if (c[1] === 'select') return '<label>' + c[0] + '<select name="d_' + k + '">' + c[2].map(function (o) { return '<option' + (o === v ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>'; return '<label>' + c[0] + '<input name="d_' + k + '" type="' + (c[1] === 'number' ? 'number' : c[1] === 'date' ? 'date' : 'text') + '" maxlength="300" value="' + esc(v == null ? '' : v) + '"' + (c[2] ? ' placeholder="' + esc(c[2]) + '"' : '') + '></label>'; }
   function campoVal(k, v) { if (v == null || v === '') return ''; return CAMPO[k][1] === 'date' ? fD.format(dt(v)) : esc(v); }
@@ -2113,7 +2137,7 @@ details.espandi > ul { width: 100%; }
       '<details><summary style="cursor:pointer;color:var(--link);font-weight:600">＋ Chiedi qualcosa a un altro membro</summary><form class="sform" data-act="rqNew" data-col="' + col + '" data-id="' + id + '"><label>A chi<select name="a_chi">' + ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consiglio Direttivo'].map(function (r) { return '<option>' + r + '</option>'; }).join('') + '</select></label><label>Entro il<input name="scadenza" type="date"></label><label class="wide">Cosa ti serve<textarea name="testo" required maxlength="2000" placeholder="Es. Puoi chiedere tre preventivi per il pullman entro venerdì?"></textarea></label><div class="wide"><button class="btn" type="submit">Invia la richiesta</button></div></form></details></section>';
   }
   function listaBox(a, tipo) {
-    var L = LISTE[tipo], rows = D.attivita_liste.filter(function (x) { return x.attivita_id === a.id && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine || x.id - y.id; });
+    var L = { nome: nomeLista(tipo, a), campi: campiLista(tipo, a), pers: LISTE[tipo].pers }, rows = D.attivita_liste.filter(function (x) { return x.attivita_id === a.id && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine || x.id - y.id; });
     if (L.pers && nascosti()) return '<section class="box"><h2>' + L.nome + '</h2><p class="sub">Contiene dati delle persone: con l’accesso rapido non si vede. Entra con la tua password personale.</p></section>';
     var nid = 'ln' + a.id + tipo, preBlk = '';
     if (tipo === 'partecipanti') {
@@ -2125,13 +2149,19 @@ details.espandi > ul { width: 100%; }
         preBlk = '<div class="note">Preiscrizioni dal sito al corso collegato: <b>' + pre.length + '</b>' + (nuove.length ? ', di cui <b>' + nuove.length + '</b> non ancora in lista. <button class="btn sm" type="button" data-act="preInLista" data-id="' + a.id + '">Aggiungile alla lista</button>' : ', tutte già in lista.') + '</div>';
       }
     }
-    var dlL = '', sociHint = tipo === 'partecipanti' && !D.soci && !nascosti() ? sociOkBox('Per avere la tendina con i nomi dei soci mentre scrivi, accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
-    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + (rows.length === 1 ? '1 riga' : rows.length + ' righe') + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + dlL + sociHint +
+    var pranzo = tipo === 'partecipanti' && a.tipo === 'Pranzi e cene', pagaDef = /tesor|associaz/i.test((a.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((a.dati || {}).chi_incassa || '') ? 'Ristorante' : '';
+    var totPaga = function (dove) { return rows.filter(function (r) { return (r.dati.paga || '') === dove; }).reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0); };
+    var cp = contaPartecipanti(a), conta = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<b>' + cp.soci + (cp.soci === 1 ? ' socio' : ' soci') + (cp.ospiti ? ' + ' + cp.ospiti + (cp.ospiti === 1 ? ' ospite' : ' ospiti') + ' = ' + cp.tot + (a.tipo === 'Pranzi e cene' ? ' coperti' : ' partecipanti') : '') + '</b>' : tipo === 'ospiti' ? '<b>' + rows.length + (rows.length === 1 ? ' ospite' : ' ospiti') + '</b> · in tutto ' + cp.tot + ' partecipanti' : (rows.length === 1 ? '1 riga' : rows.length + ' righe');
+    var spiega = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<p class="sub">Solo soci del libro soci: scrivi due lettere e scegli dalla tendina. ' + (a.tipo === 'Pranzi e cene' ? 'Chi porta ospiti, scrive quanti nella colonna «Ospiti con sé».' : (LISTE_TIPO[a.tipo] || []).indexOf('ospiti') >= 0 ? 'Chi non è socio va nella lista «Ospiti», qui sotto.' : '') + '</p>' : tipo === 'ospiti' ? '<p class="sub">Chi partecipa senza essere socio, con nome e cognome. Restano separati dal libro soci e dalla lista dei soci partecipanti.</p>' : '';
+    var dlL = '', sociHint = (tipo === 'partecipanti' || tipo === 'ospiti') && !D.soci && !nascosti() && !(tipo === 'partecipanti' && !soloSoci(a, tipo)) ? sociOkBox('Per scegliere i soci dalla tendina accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
+    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + conta + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + spiega + dlL + sociHint +
       preBlk + rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
-      '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + '<th></th></tr></thead><tbody>' +
-      rows.map(function (r) { return '<tr>' + L.campi.map(function (c) { return '<td><input form="lr' + r.id + '" name="' + c[0] + '" value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
-      '<tr class="nuova">' + L.campi.map(function (c, i) { return '<td><input form="' + nid + '" name="' + c[0] + '" maxlength="' + (c[0] === 'testo' ? 2000 : 300) + '" placeholder="' + c[1] + (i === 0 && tipo === 'partecipanti' && D.soci ? ' (scrivi: compaiono i soci)' : '') + '"' + (i === 0 ? ' required' : '') + (i === 0 && tipo === 'partecipanti' && !nascosti() ? ' data-socio="1" autocomplete="off"' : '') + ' aria-label="' + c[1] + '"></td>'; }).join('') + '<td class="na"><button class="btn sm" form="' + nid + '" type="submit">＋ Aggiungi</button></td></tr>' +
-      '</tbody></table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
+      '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + (pranzo ? '<th>Totale da pagare' + (quotaPersona(a) != null ? '<br><small class="sub">' + eur2(quotaPersona(a)) + ' a persona</small>' : '') + '</th>' : '') + '<th></th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr>' + L.campi.map(function (c, i) { return '<td>' + (c[2] === 'sel' ? '<select form="lr' + r.id + '" name="' + c[0] + '" aria-label="' + c[1] + '">' + c[3].map(function (o) { return '<option value="' + esc(o) + '"' + ((r.dati[c[0]] || '') === o ? ' selected' : '') + '>' + (o || '—') + '</option>'; }).join('') + '</select>' : '<input form="lr' + r.id + '" name="' + c[0] + '"' + (c[2] === 'num' ? ' type="number" min="0" max="20"' : '') + ' value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"' + (i === 0 && soloSoci(a, tipo) && !nascosti() ? ' data-socio="1" autocomplete="off"' : '') + '>') + '</td>'; }).join('') + (pranzo ? '<td class="tn"><b>' + (totaleRiga(a, r) == null ? '—' : eur2(totaleRiga(a, r))) + '</b></td>' : '') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
+      '<tr class="nuova">' + L.campi.map(function (c, i) { var ss = i === 0 && soloSoci(a, tipo), ac = (ss || (tipo === 'ospiti' && c[0] === 'di')) && !nascosti();
+        if (c[2] === 'sel') return '<td><select form="' + nid + '" name="' + c[0] + '" aria-label="' + c[1] + '">' + c[3].map(function (o) { return '<option value="' + esc(o) + '"' + (o && o === pagaDef ? ' selected' : '') + '>' + (o || '—') + '</option>'; }).join('') + '</select></td>';
+        return '<td><input form="' + nid + '" name="' + c[0] + '"' + (c[2] === 'num' ? ' type="number" min="0" max="20" inputmode="numeric"' : '') + ' maxlength="' + (c[0] === 'testo' ? 2000 : 300) + '" placeholder="' + c[1] + (ss && D.soci ? ' (scrivi: compaiono i soci)' : '') + '"' + (i === 0 ? ' required' : '') + (ac ? ' data-socio="' + (ss ? '1' : '2') + '" autocomplete="off"' : '') + ' aria-label="' + c[1] + '"></td>'; }).join('') + (pranzo ? '<td class="sub">si calcola</td>' : '') + '<td class="na"><button class="btn sm" form="' + nid + '" type="submit">＋ Aggiungi</button></td></tr>' +
+      '</tbody>' + (pranzo && rows.length ? '<tfoot><tr><td colspan="' + L.campi.length + '"><b>Totale: ' + cp.tot + ' coperti</b>' + (quotaPersona(a) != null ? ' · al ristorante <b>' + eur2(totPaga('Ristorante')) + '</b> · all’associazione <b>' + eur2(totPaga('Associazione')) + '</b>' + (totPaga('') ? ' · da indicare a chi <b>' + eur2(totPaga('')) + '</b>' : '') : ' · <span class="sub">scrivi la quota a persona nei dati dell’attività per avere i totali</span>') + '</td><td class="tn"><b>' + (quotaPersona(a) != null ? eur2(rows.reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0)) : '—') + '</b></td><td></td></tr></tfoot>' : '') + '</table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
   }
   function soldiAttivita(a) {
     var bud = D.attivita_budget.filter(function (x) { return x.attivita_id === a.id; });
@@ -2917,9 +2947,10 @@ details.espandi > ul { width: 100%; }
     log('Ha scaricato l’elenco dei preiscritti di', c ? (c.titolo_breve || c.titolo) : '');
   }
   function csvLista(aid, tipo) {
-    var a = att(aid), L = LISTE[tipo], rows = D.attivita_liste.filter(function (x) { return x.attivita_id === aid && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine; });
+    var a = att(aid), L = { campi: campiLista(tipo, att(aid)) }, rows = D.attivita_liste.filter(function (x) { return x.attivita_id === aid && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine; });
     function q(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
-    var out = [L.campi.map(function (c) { return c[1]; }).join(';')].concat(rows.map(function (r) { return L.campi.map(function (c) { return q(r.dati[c[0]]); }).join(';'); }));
+    var pz = tipo === 'partecipanti' && a && a.tipo === 'Pranzi e cene';
+    var out = [L.campi.map(function (c) { return c[1]; }).concat(pz ? ['Totale da pagare'] : []).join(';')].concat(rows.map(function (r) { return L.campi.map(function (c) { return q(r.dati[c[0]]); }).concat(pz ? [q(totaleRiga(a, r) == null ? '' : String(totaleRiga(a, r)).replace('.', ','))] : []).join(';'); }));
     var blob = new Blob(['\ufeff' + out.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     var el = document.createElement('a'); el.href = URL.createObjectURL(blob); el.download = slugify(tipo + '-' + (a ? a.titolo : 'attivita')) + '.csv'; document.body.appendChild(el); el.click(); el.remove();
     log('Ha scaricato la lista «' + L.nome + '» di', a ? a.titolo : '');
@@ -3499,7 +3530,16 @@ details.espandi > ul { width: 100%; }
       } else if (a === 'lrNew' || a === 'lrSave') {
         var dl = {}, isNewL = a === 'lrNew', lrow = isNewL ? null : D.attivita_liste.filter(function (x) { return x.id === +f.getAttribute('data-id'); })[0];
         var ltipo = isNewL ? f.getAttribute('data-tipo') : lrow.tipo;
-        LISTE[ltipo].campi.forEach(function (c) { var el = f.elements[c[0]]; if (el && el.value.trim()) dl[c[0]] = el.value.trim(); });
+        var aL = att(isNewL ? +f.getAttribute('data-id') : lrow.attivita_id);
+        if (!isNewL) f = document.getElementById('lr' + lrow.id) || f;
+        campiLista(ltipo, aL).forEach(function (c) { var el = f.elements[c[0]] || document.querySelector('input[form="' + f.id + '"][name="' + c[0] + '"]'); if (el && el.value.trim()) dl[c[0]] = el.value.trim(); });
+        if (aL && soloSoci(aL, ltipo)) {
+          if (!D.soci) { toast('Per aggiungere soci alla lista accetta prima la dichiarazione sui dati personali (qui sopra).'); return; }
+          var soL = trovaSocio(dl.nome);
+          if (!soL) { toast('«' + dl.nome + '» non è nel libro soci. Sceglilo dalla tendina' + ((LISTE_TIPO[aL.tipo] || []).indexOf('ospiti') >= 0 ? ', oppure mettilo nella lista «Ospiti».' : aL.tipo === 'Pranzi e cene' ? ', oppure conta questa persona tra gli ospiti del socio che la porta.' : '.')); return; }
+          if (D.attivita_liste.some(function (x) { return x.attivita_id === aL.id && x.tipo === 'partecipanti' && x.dati.socio_id === soL.id && (isNewL || x.id !== lrow.id); })) { toast(socioNomeN(soL) + ' è già nella lista.'); return; }
+          dl.socio_id = soL.id; dl.nome = socioNomeN(soL);
+        }
         if (isNewL) {
           var aidL = +f.getAttribute('data-id'), ordL = D.attivita_liste.filter(function (x) { return x.attivita_id === aidL && x.tipo === ltipo; }).reduce(function (m, x) { return Math.max(m, x.ordine); }, 0) + 1;
           var rl = await sb.from('attivita_liste').insert({ attivita_id: aidL, tipo: ltipo, ordine: ordL, dati: dl, aggiornato_da: me.nome }).select().single();
@@ -3727,7 +3767,7 @@ details.espandi > ul { width: 100%; }
       await load();
       var data = { creata_il: new Date().toISOString(), creata_da: me.nome, progetto: 'inzenga-gestionale' };
       var PERS = ['sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
-      TABLES.forEach(function (t) { if (PERS.indexOf(t) >= 0) return; data[t] = t === 'attivita_liste' ? D[t].filter(function (x) { return x.tipo !== 'partecipanti' && x.tipo !== 'camere'; }) : D[t]; });
+      TABLES.forEach(function (t) { if (PERS.indexOf(t) >= 0) return; data[t] = t === 'attivita_liste' ? D[t].filter(function (x) { return x.tipo !== 'partecipanti' && x.tipo !== 'camere' && x.tipo !== 'ospiti'; }) : D[t]; });
       data.nota = 'Copia senza dati personali: richieste dal sito, liste dei partecipanti e libro soci sono solo nella copia cifrata.';
       var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gestionale-inzenga-copia-' + new Date().toISOString().slice(0, 10) + '.json';
