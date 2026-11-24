@@ -169,8 +169,10 @@ nav a.socio:hover { background: #EDBB55; }
 .chip { display: inline-flex; align-self: flex-start; font-size: 13.5px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); }
 .pp-row { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; padding: 2px 2px 14px; scrollbar-width: none; }
 .pp-row::-webkit-scrollbar { display: none; }
-.pp-card { flex: 0 0 clamp(250px, 30%, 340px); scroll-snap-align: start; background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.pp-ph { position: relative; aspect-ratio: 4 / 5.2; background: #10201A; overflow: hidden; cursor: zoom-in; display: block; width: 100%; padding: 0; border: 0; font: inherit; text-align: left; }
+.pp-wrap { position: relative; }
+.pp-row.drag { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.pp-card { flex: 0 0 calc((100% - 16px) / 2); scroll-snap-align: start; background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.pp-ph { position: relative; aspect-ratio: 1 / 1; background: #10201A; overflow: hidden; cursor: zoom-in; display: block; width: 100%; padding: 0; border: 0; font: inherit; text-align: left; }
 .pp-ph:focus-visible { outline: 3px solid var(--ochre); outline-offset: -3px; }
 .pp-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 .pp-ph.logo { background: radial-gradient(circle at 50% 45%, #2B6B4C, #15362A 75%); }
@@ -183,10 +185,17 @@ nav a.socio:hover { background: #EDBB55; }
 .pp-tx p { margin: 0; font-size: 15.5px; color: var(--ink-2); }
 .pp-tx .pp-d { font-weight: 600; font-size: 14.5px; color: var(--ink); }
 .pp-tx .btn { margin-top: auto; align-self: flex-start; padding: 9px 20px; font-size: 15px; }
-.pp-dots { display: flex; gap: 7px; justify-content: center; margin: 2px 0 26px; }
-.pp-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: width .25s, background .25s; }
+.pp-nav { position: absolute; z-index: 3; top: calc(50% - 40px); width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); display: grid; place-items: center; box-shadow: 0 4px 16px rgba(20,30,24,.18); cursor: pointer; }
+.pp-nav svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pp-nav.prev { left: -10px; } .pp-nav.next { right: -10px; }
+.pp-nav:disabled { opacity: 0; pointer-events: none; }
+.pp-nav:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+.pp-dots { display: flex; gap: 4px; justify-content: center; align-items: center; margin: 2px 0 26px; }
+.pp-dots button { padding: 8px 3px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.pp-dots i { display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--line); transition: width .25s, background .25s; }
 .pp-dots i.on { width: 26px; border-radius: 5px; background: var(--forest); }
-@media (max-width: 640px) { .pp-card { flex-basis: 82%; } }
+@media (min-width: 1180px) { .pp-ph { aspect-ratio: 5 / 4.4; } }
+@media (max-width: 760px) { .pp-card { flex-basis: 88%; } .pp-ph { aspect-ratio: 4 / 4.6; } .pp-nav { width: 44px; height: 44px; top: calc(40% - 22px); } .pp-nav.prev { left: 4px; } .pp-nav.next { right: 4px; } }
 /* Home: ritocchi del 1 novembre */
 #p-home .stack { gap: 44px; }
 #p-home .sec-head { margin-bottom: 20px; }
@@ -335,6 +344,15 @@ a.chip:focus-visible, .tile .ttl a:focus-visible, .act .more:focus-visible, .cru
 .seg button[aria-selected="true"] { background: var(--forest); color: var(--forest-ink); }
 .seg button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .cal-note { color: var(--ink-2); max-width: 62ch; margin: 0 0 18px; }
+.cal-sheet { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px; margin: 0 0 22px; }
+.cal-sheet .pic { display: block; padding: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: zoom-in; background: #F3EFE6; }
+.cal-sheet .pic img { display: block; width: 100%; height: auto; }
+.cal-sheet h3 { margin: 0 0 6px; font-size: clamp(20px, 2.4vw, 24px); }
+.cal-sheet p { margin: 0 0 14px; color: var(--ink-2); }
+.cal-sheet .acts { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 640px) { .cal-sheet { grid-template-columns: minmax(0, 1fr); } }
+.lightbox.tall { align-items: flex-start; overflow: auto; }
+.lightbox.tall img { max-height: none; width: min(100%, 1400px); margin: 52px auto 0; }
 .cal-filter { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 24px; }
 .cal-filter .lbl { font-weight: 600; font-size: 14px; margin-right: 4px; }
 .cal-filter button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; background: var(--tint, var(--card)); border: 1.5px solid var(--line); font-size: 14.5px; font-weight: 600; }
@@ -670,8 +688,8 @@ footer a { color: var(--ink); }
     </div>
 
     <div>
-      <div class="sec-head"><h2>In primo piano</h2><p>Le novità, una alla volta: scorri di lato; tocca la foto per ingrandirla.</p></div>
-      <div class="pp-row" id="ppRow"></div><div class="pp-dots" id="ppDots" aria-hidden="true"></div>
+      <div class="sec-head"><h2>In primo piano</h2><p>Le novità, una alla volta: usa le frecce o scorri di lato; tocca la foto per ingrandirla.</p></div>
+      <div class="pp-wrap"><button type="button" class="pp-nav prev" id="ppPrev" aria-label="Novità precedente"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="pp-row" id="ppRow"></div><button type="button" class="pp-nav next" id="ppNext" aria-label="Novità successiva"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div><div class="pp-dots" id="ppDots" role="group" aria-label="Scegli la novità"></div>
     </div>
 
     <div>
@@ -1137,12 +1155,33 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     return '<article class="pp-card"><button type="button" class="pp-ph' + (s.logo ? ' logo' : '') + '" data-i="' + i + '" aria-label="Ingrandisci la foto: ' + esc(s.t) + '"><img src="' + s.img + '" alt="" loading="lazy" draggable="false"><span class="pp-zm" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M11 8.5v5M8.5 11h5"/></svg></span><h3>' + esc(s.t) + '</h3></button>' +
       '<div class="pp-tx"><p>' + esc(s.b) + '</p><div class="pp-d">' + esc(s.d) + '</div><a class="btn solid" href="#' + s.go + '" data-go="' + s.go + '">' + esc(s.cta) + '</a></div></article>';
   }).join('');
-  ppDots.innerHTML = SPOT.map(function () { return '<i></i>'; }).join('');
+  ppDots.innerHTML = SPOT.map(function (s, i) { return '<button type="button" data-k="' + i + '" aria-label="Novità ' + (i + 1) + ' di ' + SPOT.length + ': ' + esc(s.t) + '"><i></i></button>'; }).join('');
+  if (window.ppDot) ppDot();
   }
   renderSpot();
-  function ppDot() { var w = ppRow.children[0].offsetWidth + 16, i = Math.min(SPOT.length - 1, Math.round(ppRow.scrollLeft / w)); [].forEach.call(ppDots.children, function (d, k) { d.classList.toggle('on', k === i); }); }
+  /* scorrimento: frecce, pallini, trascinamento col mouse e avanzamento automatico lento */
+  var ppPrev = document.getElementById('ppPrev'), ppNext = document.getElementById('ppNext'), ppDragged = false;
+  function ppStep() { var c = ppRow.children[0]; return c ? c.offsetWidth + 16 : 1; }
+  function ppIdx() { return Math.min(SPOT.length - 1, Math.round(ppRow.scrollLeft / ppStep())); }
+  function ppGo(i) { var n = ppRow.children.length; if (!n) return; i = (i + n) % n; ppRow.scrollTo({ left: i * ppStep(), behavior: 'smooth' }); }
+  window.ppDot = function () { var i = ppIdx(), end = ppRow.scrollLeft + ppRow.clientWidth >= ppRow.scrollWidth - 4; [].forEach.call(ppDots.querySelectorAll('i'), function (d, k) { d.classList.toggle('on', k === i); }); ppDots.querySelectorAll('button').forEach(function (b, k) { b.setAttribute('aria-current', k === i ? 'true' : 'false'); }); ppPrev.disabled = ppRow.scrollLeft < 4; ppNext.disabled = end; };
+  var ppDot = window.ppDot;
   ppRow.addEventListener('scroll', ppDot, { passive: true }); window.addEventListener('resize', ppDot); ppDot();
-  ppRow.addEventListener('click', function (e) { var b = e.target.closest('.pp-ph'); if (!b) return; var s = SPOT[+b.getAttribute('data-i')]; openLb(s.img, s.alt, b); });
+  ppPrev.addEventListener('click', function () { ppStop(); ppGo(ppIdx() - 1); });
+  ppNext.addEventListener('click', function () { ppStop(); ppGo(ppIdx() + 1); });
+  ppDots.addEventListener('click', function (e) { var b = e.target.closest('[data-k]'); if (!b) return; ppStop(); ppGo(+b.getAttribute('data-k')); });
+  (function () { var x0 = 0, s0 = 0, down = false;
+    ppRow.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse' || e.button !== 0) return; down = true; ppDragged = false; x0 = e.clientX; s0 = ppRow.scrollLeft; });
+    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - x0; if (Math.abs(dx) > 6) { ppDragged = true; ppRow.classList.add('drag'); ppStop(); } if (ppDragged) ppRow.scrollLeft = s0 - dx; });
+    window.addEventListener('pointerup', function () { if (!down) return; down = false; if (ppDragged) { ppRow.classList.remove('drag'); ppGo(ppIdx()); } });
+  })();
+  var ppTimer = null, ppQuiet = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ppStop() { if (ppTimer) { clearInterval(ppTimer); ppTimer = null; } }
+  function ppAuto() { ppStop(); if (ppQuiet) return; ppTimer = setInterval(function () { if (document.hidden || !ppRow.offsetParent) return; ppGo(ppNext.disabled ? 0 : ppIdx() + 1); }, 7000); }
+  ['touchstart', 'focusin'].forEach(function (ev) { ppRow.addEventListener(ev, ppStop, { passive: true }); });
+  ppRow.parentNode.addEventListener('mouseenter', ppStop); ppRow.parentNode.addEventListener('mouseleave', function () { if (!ppDragged) ppAuto(); });
+  ppAuto();
+  ppRow.addEventListener('click', function (e) { if (ppDragged) { e.preventDefault(); e.stopPropagation(); ppDragged = false; return; } var b = e.target.closest('.pp-ph'); if (!b) return; var s = SPOT[+b.getAttribute('data-i')]; openLb(s.img, s.alt, b); });
 
 
   /* ---------- foto (segnaposto geometrici) ---------- */
@@ -1207,9 +1246,10 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       if (!m.ev.length) return '';
       return '<section class="month"><h3>' + m.n + '<small>' + (m.ev.length === 1 ? '1 appuntamento' : m.ev.length + ' appuntamenti') + '</small></h3><ul class="evs">' + m.ev.map(function (e) { return evRow(e, true); }).join('') + '</ul></section>';
     }).join('');
-    panCal.innerHTML = '<p class="cal-note">Serate ogni lunedì e giovedì in sede. Le righe con «Proposta» sono bozze da votare in Consiglio Direttivo.</p><div class="cal-filter" role="group" aria-label="Filtra il calendario per tipo di attività">' + f + '</div><div class="months">' + cards + '</div>';
+    panCal.innerHTML = (CAL_YEAR === 2027 ? '<div class="cal-sheet"><button type="button" class="pic" data-sheet aria-label="Apri l\'anteprima del calendario completo ' + CAL_YEAR + '"><img src="img/calendario-2027-anteprima.jpg" alt="" width="800" height="400" loading="lazy"></button><div><h3>Il calendario completo ' + CAL_YEAR + ' in un foglio</h3><p>Tutti gli appuntamenti dell\'anno, mese per mese, nella grafica da stampare o da tenere sul telefono.</p><div class="acts"><button type="button" class="btn solid" data-sheet>Apri l\'anteprima</button><a class="btn" href="img/calendario-2027.jpg" download="Calendario-2027-Inzenga.jpg">Scarica</a></div></div></div>' : '') + '<p class="cal-note">Serate ogni lunedì e giovedì in sede. Le righe con «Proposta» sono bozze da votare in Consiglio Direttivo.</p><div class="cal-filter" role="group" aria-label="Filtra il calendario per tipo di attività">' + f + '</div><div class="months">' + cards + '</div>';
   }
   panCal.addEventListener('click', function (e) {
+    var sh = e.target.closest('[data-sheet]'); if (sh) { lb.classList.add('tall'); openLb('img/calendario-2027.jpg', 'Calendario ' + CAL_YEAR + ' dell\'Associazione Micologica Inzenga: tutti gli appuntamenti mese per mese', sh); return; }
     var b = e.target.closest('[data-f]'); if (!b) return;
     calFilter = b.getAttribute('data-f'); calRender();
     var nb = panCal.querySelector('[data-f="' + calFilter + '"]'); if (nb) nb.focus();
@@ -1914,7 +1954,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     var p = POSTERS[+b.getAttribute('data-i')];
     openLb(p.src || IMG[p.img], p.alt, b);
   });
-  function closeLb() { lb.hidden = true; lbImg.removeAttribute('src'); if (lastBtn) lastBtn.focus(); }
+  function closeLb() { lb.hidden = true; lb.classList.remove('tall'); lbImg.removeAttribute('src'); if (lastBtn) lastBtn.focus(); }
   document.getElementById('lbClose').addEventListener('click', closeLb);
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
