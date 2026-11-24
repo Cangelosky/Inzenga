@@ -822,6 +822,9 @@ details.espandi > ul { width: 100%; }
 .so-form .so-grp { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 14px; }
 .so-form .so-grp legend { font-weight: 700; padding: 0 6px; }
 .so-form .quote { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; } .so-form .quote .lbl { width: 100%; font-weight: 600; }
+/* pranzi: a chi vanno le quote */
+.pg-a { display: flex; flex-wrap: wrap; align-items: end; gap: 8px 18px; margin: 4px 0 12px; padding: 10px 14px; border-radius: 12px; background: color-mix(in srgb, var(--line) 25%, var(--card)); }
+.pg-a label { display: grid; gap: 4px; font-weight: 600; } .pg-a select { min-height: 44px; padding: 6px 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: calc(16px * var(--z)); }
 /* preventivi e spese */
 .pv-note { display: block; margin-top: 4px; line-height: 1.5; } table.lista input.eur { text-align: right; font-variant-numeric: tabular-nums; }
 /* scheda riunione */
@@ -1922,7 +1925,7 @@ details.espandi > ul { width: 100%; }
   /* ---------- attività: checklist, stato dei lavori, chi fa cosa ---------- */
   var RESP = ['Presidente', 'Vicepresidente', 'Tesoriere', 'Segretario', 'Consiglio Direttivo', 'Comitato scientifico', 'Consigliere referente', 'Da assegnare'];
   var CLST = { da_fare: ['Da fare', 'warn'], in_corso: ['In corso', 'warn'], fatto: ['Fatto', ''], non_serve: ['Non serve', 'plain'] };
-  var ATT_STATI = ['Da confermare', 'Confermata', 'In uso', 'Anno da chiarire', 'Conclusa', 'Annullata'];
+  var ATT_STATI = ['Da confermare', 'Confermata', 'In uso', 'Conclusa', 'Annullata'];
   var DISC = { Stage: 'doc-stage', Mostre: 'doc-mostra', Corsi: 'doc-corsi', Gite: 'doc-gite' };
   function short(t, n) { t = String(t || '').replace(/\{\{DC\}\}/g, '…'); if (t.length <= n) return t; t = t.slice(0, n); var k = t.lastIndexOf(' '); return (k > n * 0.6 ? t.slice(0, k) : t).replace(/[\s,;:.(]+$/, '') + '…'; }
   function att(id) { return D.attivita.filter(function (a) { return a.id === id; })[0]; }
@@ -2105,6 +2108,7 @@ details.espandi > ul { width: 100%; }
     ente: ['Ente o comune ospitante', 'text', 'Es. Parco Uditore'], allestimento: ['Referente allestimento', 'text'], riunione: ['Riunione organizzativa', 'date'],
     squadre: ['Squadre di raccolta', 'text', 'Zone e capisquadra'], docenti: ['Docenti', 'text'], sede: ['Sede delle lezioni', 'text'],
     serate: ['Date delle serate', 'text', 'Es. 4 serate: 3, 10, 17, 24 marzo'], tipo_corso: ['Tipo di corso', 'select', ['Funghi epigei', 'Tartufi', 'Aggiornamento quinquennale']], comune_ente: ['Comune o ente che lo chiede', 'text', 'Es. Comune di Cefalù'], micologo: ['Micologo direttore del corso', 'text'], autorizzazione_corso: ['Autorizzazione (protocollo e data)', 'text', 'Es. Forestale prot. 3219 del 14/01/2026'], destinatari: ['Per chi', 'text', 'Es. solo soci, aperto a tutti'],
+    contributo: ['Contributo ai soci: quanto paga l’associazione per ogni socio', 'text', 'Es. 10 €: lo versa l’associazione al fornitore'],
     locale: ['Locale', 'text'], menu: ['Menu', 'text'], prenotazioni_entro: ['Prenotazioni entro il', 'date'], relatore: ['Relatore', 'text'], tema: ['Tema', 'text']
   };
   var DATI_TIPO = {
@@ -2114,7 +2118,7 @@ details.espandi > ul { width: 100%; }
     'Corsi per il tesserino': ['tipo_corso', 'comune_ente', 'sede', 'serate', 'micologo', 'docenti', 'posti', 'quota', 'chi_incassa', 'iscrizioni_entro', 'autorizzazione_corso'],
     Corsi: ['sede', 'serate', 'docenti', 'posti', 'quota', 'iscrizioni_entro'],
     'Corsi extra': ['destinatari', 'sede', 'serate', 'docenti', 'posti', 'quota'],
-    'Pranzi e cene': ['locale', 'orario', 'menu', 'quota', 'chi_incassa', 'prenotazioni_entro', 'posti'],
+    'Pranzi e cene': ['locale', 'orario', 'menu', 'quota', 'contributo', 'prenotazioni_entro', 'posti'],
     Conversazioni: ['relatore', 'tema', 'orario'], Lezioni: ['relatore', 'tema', 'orario'], Pratica: ['orario'], Eventi: ['orario', 'quota']
   };
   var LISTE = {
@@ -2131,7 +2135,7 @@ details.espandi > ul { width: 100%; }
   var CORSI_LISTA = ['Corsi per il tesserino', 'Corsi'];
   function soloSoci(a, tipo) { return tipo === 'partecipanti' && CORSI_LISTA.indexOf(a.tipo) < 0; }
   function campiLista(tipo, a) {
-    if (tipo === 'partecipanti' && a && a.tipo === 'Pranzi e cene') return [['nome', 'Socio'], ['ospiti', 'Ospiti con sé (quanti)', 'num'], ['allergie', 'Allergie e intolleranze (anche degli ospiti)'], ['paga', 'Paga a', 'sel', ['', 'Ristorante', 'Associazione']]];
+    if (tipo === 'partecipanti' && a && a.tipo === 'Pranzi e cene') return [['nome', 'Socio'], ['ospiti', 'Ospiti con sé (quanti)', 'num'], ['allergie', 'Allergie e intolleranze (anche degli ospiti)']];
     if (tipo === 'partecipanti' && a && soloSoci(a, tipo)) return [['nome', 'Socio']].concat(LISTE.partecipanti.campi.slice(1));
     if (tipo === 'partecipanti' && a && CORSI_LISTA.indexOf(a.tipo) >= 0) return [['nome', 'Nome e cognome del corsista']].concat(LISTE.partecipanti.campi.slice(1));
     return LISTE[tipo].campi;
@@ -2140,7 +2144,9 @@ details.espandi > ul { width: 100%; }
   /* pranzi e cene: quota a persona dai dati dell'attività; totale = (socio + ospiti) × quota */
   function numEur(v) { v = String(v == null ? '' : v).trim().replace(/[€\s]/g, ''); if (!v) return null; if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(v)) v = v.replace(/\./g, ''); v = v.replace(',', '.'); var n = parseFloat(v); return isFinite(n) ? n : null; }
   function quotaPersona(a) { var q = parseFloat(String((a.dati || {}).quota || '').replace(',', '.')); return q > 0 ? q : null; }
-  function totaleRiga(a, r) { var q = quotaPersona(a); return q == null ? null : q * (1 + numOspiti(r)); }
+  function contributoSocio(a) { var c = parseFloat(String((a.dati || {}).contributo || '').replace(',', '.').replace(/[^\d.]/g, '')); return c > 0 ? c : 0; }
+  function quotaSocio(a) { var q = quotaPersona(a); return q == null ? null : Math.max(0, q - contributoSocio(a)); }
+  function totaleRiga(a, r) { var q = quotaPersona(a); return q == null ? null : quotaSocio(a) + q * numOspiti(r); }
   function numOspiti(r) { var n = parseInt(String(r.dati.ospiti || '').replace(/\D/g, ''), 10); return n > 0 ? n : 0; }
   function contaPartecipanti(a) {
     var L = D.attivita_liste.filter(function (x) { return x.attivita_id === a.id; });
@@ -2191,8 +2197,9 @@ details.espandi > ul { width: 100%; }
         preBlk = '<div class="note">Preiscrizioni dal sito al corso collegato: <b>' + pre.length + '</b>' + (nuove.length ? ', di cui <b>' + nuove.length + '</b> non ancora in lista. <button class="btn sm" type="button" data-act="preInLista" data-id="' + a.id + '">Aggiungile alla lista</button>' : ', tutte già in lista.') + '</div>';
       }
     }
-    var pranzo = tipo === 'partecipanti' && a.tipo === 'Pranzi e cene', pagaDef = /tesor|associaz/i.test((a.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((a.dati || {}).chi_incassa || '') ? 'Ristorante' : '';
-    var totPaga = function (dove) { return rows.filter(function (r) { return (r.dati.paga || '') === dove; }).reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0); };
+    /* pranzi e cene: a chi vanno le quote si decide una volta per tutta la lista (dati.paga_a) */
+    var pranzo = tipo === 'partecipanti' && a.tipo === 'Pranzi e cene', pagaDef = '', pagaA = (a.dati || {}).paga_a || (/tesor|associaz/i.test((a.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((a.dati || {}).chi_incassa || '') ? 'Ristorante' : '');
+    var pagaBox = pranzo ? '<div class="pg-a"><label>Le quote si pagano a<select data-act="pagaA" data-id="' + a.id + '">' + [['', 'da decidere'], ['Ristorante', 'Ristorante'], ['Associazione', 'Associazione (le incassa il Tesoriere)']].map(function (o) { return '<option value="' + o[0] + '"' + (pagaA === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label>' + (quotaPersona(a) != null ? '<span class="sub">Quota a persona: <b>' + eur2(quotaPersona(a)) + '</b>' + (contributoSocio(a) ? ' · contributo dell’associazione: <b>' + eur2(contributoSocio(a)) + '</b> per socio · <b>il socio paga ' + eur2(quotaSocio(a)) + '</b>, ogni ospite ' + eur2(quotaPersona(a)) : '') + ' (si cambiano nei dati dell’attività)</span>' : '<span class="sub">Scrivi la quota a persona nei dati dell’attività per avere i totali.</span>') + '</div>' : '';
     var cp = contaPartecipanti(a), conta = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<b>' + cp.soci + (cp.soci === 1 ? ' socio' : ' soci') + (cp.ospiti ? ' + ' + cp.ospiti + (cp.ospiti === 1 ? ' ospite' : ' ospiti') + ' = ' + cp.tot + (a.tipo === 'Pranzi e cene' ? ' coperti' : ' partecipanti') : '') + '</b>' : tipo === 'ospiti' ? '<b>' + rows.length + (rows.length === 1 ? ' ospite' : ' ospiti') + '</b> · in tutto ' + cp.tot + ' partecipanti' : (rows.length === 1 ? '1 riga' : rows.length + ' righe');
     var spiega = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<p class="sub">Solo soci del libro soci: scrivi due lettere e scegli dalla tendina. ' + (a.tipo === 'Pranzi e cene' ? 'Chi porta ospiti, scrive quanti nella colonna «Ospiti con sé».' : (LISTE_TIPO[a.tipo] || []).indexOf('ospiti') >= 0 ? 'Chi non è socio va nella lista «Ospiti», qui sotto.' : '') + '</p>' : tipo === 'ospiti' ? '<p class="sub">Chi partecipa senza essere socio, con nome e cognome. Restano separati dal libro soci e dalla lista dei soci partecipanti.</p>' : '';
     var dlL = '', sociHint = (tipo === 'partecipanti' || tipo === 'ospiti') && !D.soci && !nascosti() && !(tipo === 'partecipanti' && !soloSoci(a, tipo)) ? sociOkBox('Per scegliere i soci dalla tendina accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
@@ -2204,7 +2211,7 @@ details.espandi > ul { width: 100%; }
           lib.map(function (x) { return '<div class="gs-r" data-q="' + esc(low(x.cognome + ' ' + (x.nome || '') + ' ' + (x.nome || '') + ' ' + x.cognome)) + '"><label class="chk"><input type="checkbox" name="ms" value="' + x.id + '"> <span><b>' + esc(x.cognome) + '</b> ' + esc(x.nome || '') + '</span></label></div>'; }).join('') +
           '</div><div class="chips"><button class="btn" type="submit">＋ Aggiungi i soci spuntati</button></div>' : '<p class="sub">Tutti i soci attivi sono già nella lista.</p>') + '</form></details>';
     }
-    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + conta + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + spiega + dlL + sociHint + multi +
+    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + conta + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + spiega + pagaBox + dlL + sociHint + multi +
       preBlk + rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
       '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + (pranzo ? '<th>Totale da pagare' + (quotaPersona(a) != null ? '<br><small class="sub">' + eur2(quotaPersona(a)) + ' a persona</small>' : '') + '</th>' : '') + '<th></th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr>' + L.campi.map(function (c, i) { return '<td>' + (c[2] === 'sel' ? '<select form="lr' + r.id + '" name="' + c[0] + '" aria-label="' + c[1] + '">' + c[3].map(function (o) { return '<option value="' + esc(o) + '"' + ((r.dati[c[0]] || '') === o ? ' selected' : '') + '>' + (o || '—') + '</option>'; }).join('') + '</select>' : '<input form="lr' + r.id + '" name="' + c[0] + '"' + (c[2] === 'num' ? ' type="number" min="0" max="20"' : c[2] === 'eur' ? ' inputmode="decimal" class="eur"' : '') + ' value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"' + (i === 0 && soloSoci(a, tipo) && !nascosti() ? ' data-socio="1" autocomplete="off"' : '') + '>') + '</td>'; }).join('') + (pranzo ? '<td class="tn"><b>' + (totaleRiga(a, r) == null ? '—' : eur2(totaleRiga(a, r))) + '</b></td>' : '') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
@@ -2217,7 +2224,11 @@ details.espandi > ul { width: 100%; }
         var both = vivi.filter(function (r) { return numEur(r.dati.preventivo) != null && numEur(r.dati.consuntivo) != null; }), dp = both.reduce(function (s, r) { return s + numEur(r.dati.consuntivo) - numEur(r.dati.preventivo); }, 0), aperti = vivi.filter(function (r) { return numEur(r.dati.preventivo) != null && numEur(r.dati.consuntivo) == null; }).reduce(function (s, r) { return s + numEur(r.dati.preventivo); }, 0);
         var note = [(both.length ? '<span class="' + (dp > 0 ? 'p2w' : 'sub') + '">Sulle voci già spese: ' + (dp > 0 ? eur2(dp) + ' in più del preventivo' : dp < 0 ? eur2(-dp) + ' in meno del preventivo' : 'come da preventivo') + '</span>' : ''), (aperti ? '<span class="sub">Ancora da spendere, secondo i preventivi: ' + eur2(aperti) + '</span>' : ''), '<span class="sub">In prima nota per questa attività, uscite: ' + eur2(pn) + '</span>'].filter(Boolean);
         return '<tfoot><tr><td colspan="3"><b>Totale</b>' + (vivi.length < rows.length ? ' <span class="sub">(senza gli scartati)</span>' : '') + '<small class="pv-note">' + note.join('<br>') + '</small></td><td class="tn"><b>' + eur2(sp) + '</b></td><td class="tn"><b>' + eur2(sc) + '</b></td><td colspan="2"></td></tr></tfoot>';
-      })() : '') + (pranzo && rows.length ? '<tfoot><tr><td colspan="' + L.campi.length + '"><b>Totale: ' + cp.tot + ' coperti</b>' + (quotaPersona(a) != null ? ' · al ristorante <b>' + eur2(totPaga('Ristorante')) + '</b> · all’associazione <b>' + eur2(totPaga('Associazione')) + '</b>' + (totPaga('') ? ' · da indicare a chi <b>' + eur2(totPaga('')) + '</b>' : '') : ' · <span class="sub">scrivi la quota a persona nei dati dell’attività per avere i totali</span>') + '</td><td class="tn"><b>' + (quotaPersona(a) != null ? eur2(rows.reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0)) : '—') + '</b></td><td></td></tr></tfoot>' : '') + '</table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
+      })() : '') + (pranzo && rows.length ? (function () {
+        var q = quotaPersona(a), c = contributoSocio(a), dai = rows.reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0), contr = c && q != null ? Math.min(c, q) * rows.length : 0, aChi = pagaA === 'Ristorante' ? 'al ristorante' : pagaA === 'Associazione' ? 'all’associazione' : '<span class="p2w">(a chi: da decidere)</span>';
+        return '<tfoot><tr><td colspan="' + L.campi.length + '"><b>Totale: ' + cp.tot + ' coperti</b>' + (q != null ? ' · i partecipanti pagano ' + aChi : '') +
+          (contr ? '<small class="pv-note">Contributo ai soci: l’associazione versa al fornitore <b>' + eur2(contr) + '</b> (' + eur2(Math.min(c, q)) + ' × ' + rows.length + ' soci), da registrare in prima nota tra le uscite. Totale al fornitore: <b>' + eur2(q * cp.tot) + '</b>.</small>' : '') +
+          '</td><td class="tn"><b>' + (q != null ? eur2(dai) : '—') + '</b></td><td></td></tr></tfoot>'; })() : '') + '</table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
   }
   function soldiAttivita(a) {
     var bud = D.attivita_budget.filter(function (x) { return x.attivita_id === a.id; });
@@ -2408,6 +2419,7 @@ details.espandi > ul { width: 100%; }
     ['Materiale per le attività', 'uscita', 'A.U1'],
     ['Servizi per le attività (albergo, pullman, ristorante, docenti)', 'uscita', 'A.U2'],
     ['Affitto di sale e strutture per le attività', 'uscita', 'A.U3'],
+    ['Contributo ai soci (versato direttamente al fornitore: ristorante, location…)', 'uscita', 'A.U2'],
     ['Rimborsi spese ai volontari', 'uscita', 'A.U5'],
     ['Altre uscite delle attività', 'uscita', 'A.U5'],
     ['Spese per la raccolta fondi', 'uscita', 'C.U2'],
@@ -3377,6 +3389,7 @@ details.espandi > ul { width: 100%; }
     var t = e.target, a = t.getAttribute('data-act'), id = +t.getAttribute('data-id');
     if (a === 'attStato') { var xs = await upd('attivita', id, { stato: t.value }); if (xs) { toast('Stato: ' + t.value + '.'); render(); } return; }
     if (a === 'sociOrd') { P.soci.ord = t.value; render(); return; }
+    if (a === 'pagaA') { var apg = att(id); if (!apg) return; var dpg = Object.assign({}, apg.dati || {}); if (t.value) dpg.paga_a = t.value; else delete dpg.paga_a; var upg = await upd('attivita', id, { dati: dpg }); if (upg) { toast(t.value ? 'Le quote si pagano a: ' + t.value + '.' : 'Da decidere a chi si pagano le quote.'); render(); } return; }
     if (t.name === 'tipoR') { var fa = document.getElementById('ri-ass'); if (fa) fa.hidden = t.value === 'cd'; return; }
     if (a === 'delegaA') { var ag = att(id); if (!ag) return; var dg2 = Object.assign({}, ag.dati || {}); dg2.deleghe = Object.assign({}, dg2.deleghe || {});
       if (t.value) dg2.deleghe[t.getAttribute('data-k')] = t.value; else delete dg2.deleghe[t.getAttribute('data-k')];
@@ -3618,8 +3631,7 @@ details.espandi > ul { width: 100%; }
         if (!aM || !D.soci) return; if (!idsM.length) { toast('Spunta almeno un socio.'); return; }
         var giaM = D.attivita_liste.filter(function (x) { return x.attivita_id === aM.id && x.tipo === 'partecipanti'; }).map(function (x) { return x.dati.socio_id; });
         var ordM = D.attivita_liste.filter(function (x) { return x.attivita_id === aM.id && x.tipo === tM; }).reduce(function (m, x) { return Math.max(m, x.ordine); }, 0);
-        var pagaM = aM.tipo === 'Pranzi e cene' ? (/tesor|associaz/i.test((aM.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((aM.dati || {}).chi_incassa || '') ? 'Ristorante' : '') : '';
-        var insM = idsM.filter(function (id) { return giaM.indexOf(id) < 0; }).map(function (id) { var so = socioById(id), dd = { nome: socioNomeN(so), socio_id: so.id }; if (pagaM) dd.paga = pagaM; ordM++; return { attivita_id: aM.id, tipo: tM, ordine: ordM, dati: dd, aggiornato_da: me.nome }; });
+        var insM = idsM.filter(function (id) { return giaM.indexOf(id) < 0; }).map(function (id) { var so = socioById(id), dd = { nome: socioNomeN(so), socio_id: so.id }; ordM++; return { attivita_id: aM.id, tipo: tM, ordine: ordM, dati: dd, aggiornato_da: me.nome }; });
         if (!insM.length) { toast('Sono già tutti nella lista.'); return; }
         var rM = await sb.from('attivita_liste').insert(insM).select();
         if (rM.error) throw rM.error; D.attivita_liste = D.attivita_liste.concat(rM.data);
