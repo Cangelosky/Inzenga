@@ -632,6 +632,7 @@ nav.tabs .n, .bnav .n { animation: inz-pop .5s .35s var(--ease) both; }
 .gs-lista { max-height: 320px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; display: grid; gap: 2px; }
 .gs-r { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 50%, transparent); }
 .gs-r[hidden] { display: none; }
+.lm { margin: 4px 0 12px; } .lm form { display: grid; gap: 10px; margin-top: 10px; }
 .gs-r .sub { display: block; font-size: calc(13.5px * var(--z)); }
 .gs-del { display: none; max-width: 220px; } .gs-r:has(input:checked) .gs-del { display: block; }
 @media (max-width: 600px) { .gs-r { grid-template-columns: minmax(0, 1fr); } .gs-del { max-width: none; } }
@@ -824,6 +825,7 @@ details.espandi > ul { width: 100%; }
 .ri-lista { list-style: none; margin: 0; padding: 0; }
 .ri-p { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
 .ri-lista .ri-p:first-child { border-top: 0; }
+.ri-sel { display: flex; flex-wrap: wrap; gap: 6px; }
 .ri-p select { min-height: 42px; padding: 4px 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: calc(15.5px * var(--z)); }
 .ri-legale { margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; background: color-mix(in srgb, var(--line) 30%, var(--card)); font-weight: 600; }
 .ri-legale.ok { background: var(--ok-bg); color: var(--ok-ink); } .ri-legale.ko { background: var(--warn-bg); color: var(--warn-ink); }
@@ -1266,6 +1268,7 @@ details.espandi > ul { width: 100%; }
     var kick = d.stato === 'bozza' ? 'Bozza · da votare in CD' : d.stato === 'da_confermare' ? 'Da confermare' : (STATO_DOC[d.stato] || [d.stato])[0];
     var ufficiale = d.stato === 'ufficiale' || d.stato === 'approvato';
     return '<a class="back" href="#archivio" data-act="indietro">← Indietro</a><article class="foglio"><div class="fh"><div class="doc-meta"><span class="stato-doc' + (ufficiale ? ' ok' : '') + '">' + esc(kick) + '</span><span class="sub">' + (d.protocollo ? 'Prot. n. ' + esc(d.protocollo) + ' · ' : '') + (d.data_doc ? 'documento del ' + fD.format(dt(d.data_doc)) + ' · ' : '') + 'Versione ' + (d.versione || 1) + ' · ultimo aggiornamento ' + fT.format(new Date(d.aggiornato_il)) + (d.caricato_da ? ' · ' + esc(d.caricato_da) : '') + '</span></div><h1>' + esc(d.titolo) + '</h1><p class="sub">' + esc(d.sottotitolo || '') + (d.contenuto && !d.sottotitolo ? 'Fonte: piano di lavoro su Notion.' : '') + '</p>' + (c.intro ? '<p class="doc-intro">' + fmx(c.intro) + '</p>' : '') + (c.secs && c.secs.length > 4 ? '<nav class="doc-indice" aria-label="Indice"><b>Indice</b> ' + c.secs.map(function (s, i) { return '<a href="#" data-act="docSez" data-i="' + i + '">' + esc(s.h) + '</a>'; }).join(' · ') + '</nav>' : '') + '</div>' +
+      (d.archiviato ? '<p class="note">Documento archiviato: non compare negli elenchi. Lo ritrovi in Documenti › Archiviati e lo puoi ripristinare in fondo alla pagina.</p>' : '') +
       avviso + (vuoto ? '<section class="box"><h2>Testo non ancora nel gestionale</h2><p>Di questo documento c’è solo la scheda. Carica il file (per esempio la scansione firmata) con lo stesso titolo: diventa la nuova versione.</p>' + upForm(d.area, [d.categoria], true).replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</section>' : '') +
       (P.docEdit === d.id ? docEditor(d, c) : '') +
       (P.docEdit === d.id ? [] : (c.secs || [])).map(function (s) {
@@ -1277,8 +1280,11 @@ details.espandi > ul { width: 100%; }
       (!vuoto && !(d.riservato && nascosti()) ? '<details class="ed doc-agg"><summary>Aggiorna il documento: stato, tipo, protocollo, data, nota o file firmato</summary><form class="sform" data-act="docStato" data-id="' + d.id + '"><label>Stato<select name="stato">' + Object.keys(STATO_DOC).map(function (k) { return '<option value="' + k + '"' + (k === d.stato ? ' selected' : '') + '>' + esc(STATO_DOC[k][0]) + '</option>'; }).join('') + '</select></label><label class="wide">Nota sotto il titolo<input name="sottotitolo" maxlength="300" value="' + esc(d.sottotitolo || '') + '"></label><label>Tipo di documento<input name="categoria" maxlength="80" list="dlCat" value="' + esc(d.categoria || '') + '"></label><label>Numero di protocollo<input name="protocollo" maxlength="60" placeholder="Es. 12/2026" value="' + esc(d.protocollo || '') + '"></label><label>Data del documento<input name="data_doc" type="date" value="' + esc(d.data_doc || '') + '"></label><datalist id="dlCat">' + D.documenti.map(function (x) { return x.categoria; }).filter(function (x, i, a) { return x && a.indexOf(x) === i; }).map(function (x) { return '<option value="' + esc(x) + '">'; }).join('') + '</datalist><div class="wide"><button class="btn" type="submit">Salva</button></div></form>' +
         '<h3 style="margin-top:14px">Carica il file, per esempio la scansione firmata</h3>' + upForm(d.area, [d.categoria], true).replace('<form class="up" data-area="' + d.area + '">', '<form class="up" data-area="' + d.area + '"><input type="hidden" name="docid" value="' + d.id + '">').replace('name="t" required', 'name="t" required value="' + esc(d.titolo) + '"') + '</details>' : '') +
       (d.file_path && /\.pdf$/i.test(d.file_path) && !(d.riservato && nascosti()) ? '<iframe class="pdfprev" data-path="' + esc(d.file_path) + '" title="Anteprima del file"></iframe>' : '') +
-      '<div class="doc-azioni">' + (puoModificare(d) && P.docEdit !== d.id ? '<button class="btn" type="button" data-act="docEdita" data-id="' + d.id + '">✏️ Modifica il testo</button>' : '') + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button>' : '') + '</div></article>';
+      '<div class="doc-azioni">' + (puoModificare(d) && P.docEdit !== d.id ? '<button class="btn" type="button" data-act="docEdita" data-id="' + d.id + '">✏️ Modifica il testo</button>' : '') + (d.file_path ? '<button class="btn" type="button" data-act="dl" data-path="' + esc(d.file_path) + '">Scarica il file</button>' : '') + ((c.secs || []).length ? '<button class="btn alt" type="button" data-act="stampa">Stampa o PDF su carta intestata</button>' : '') + '</div>' +
+      '<div class="doc-azioni doc-fine">' + (d.archiviato ? '<button class="btn" type="button" data-act="docArch" data-id="' + d.id + '" data-v="0">↩︎ Ripristina tra i documenti</button>' : '<button class="btn alt" type="button" data-act="docArch" data-id="' + d.id + '" data-v="1">🗄️ Archivia: lo togli dagli elenchi, si può ripristinare</button>') +
+        (puoCancDoc() ? '<button class="btn alt danger" type="button" data-act="docDel" data-id="' + d.id + '">Elimina definitivamente</button>' : '') + '</div></article>';
   }
+  function puoCancDoc() { return !me.prova && (me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente'); }
 
   /* ---------- pagine ---------- */
   var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Documenti'], ['soldi', 'Contabilità'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
@@ -1548,23 +1554,29 @@ details.espandi > ul { width: 100%; }
       '<section class="box"><h2>I tipi di attività</h2><div class="chips">' + TIPI.map(function (k) { return '<span class="pill plain" style="font-size: calc(16px * var(--z));padding:6px 16px">' + k + '</span>'; }).join('') + '</div><p class="sub">Ogni tipo chiede i suoi dati preliminari, presi dal disciplinare, e apre gli strumenti che servono: liste, preventivi, budget.</p></section></div>';
   };
   P.archivio = function (sub) {
-    var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']];
+    var nArch = D.documenti.filter(function (d) { return d.archiviato; }).length;
+    var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']].concat(nArch ? [['archiviati', 'Archiviati (' + nArch + ')']] : []);
     var t = '<div class="chips"><a class="chip gen-chip" href="#genera">✍️ Genera un documento</a>' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'registro') {
       return head('Registro delle modifiche', 'Chi ha fatto cosa e quando, con il prima e il dopo di ogni modifica. Lo vedono tutti i membri del Consiglio Direttivo.') + t + registroPage();
     }
+    if (sub === 'archiviati') {
+      var ar = D.documenti.filter(function (d) { return d.archiviato; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
+      return head('Documenti archiviati', 'Tolti dagli elenchi ma non cancellati: aprili e usa «Ripristina» in fondo alla pagina per rimetterli al loro posto.') + t +
+        '<section class="box">' + (ar.length ? ar.map(fileRow).join('') : '<p class="sub">Nessun documento archiviato.</p>') + '</section>';
+    }
     if (sub === 'dafirmare') {
-      var df = D.documenti.filter(function (d) { return d.stato === 'bozza' || d.stato === 'da_firmare'; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
+      var df = D.documenti.filter(function (d) { return !d.archiviato && (d.stato === 'bozza' || d.stato === 'da_firmare'); }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
       return head('In bozza o da firmare', 'I documenti non ancora definitivi, di tutte le sezioni. Quando un documento è firmato, caricalo con lo stesso titolo e stato «Ufficiale».') + t +
         '<section class="box">' + (df.length ? df.map(fileRow).join('') : '<p class="sub">Nessun documento in bozza o da firmare.</p>') + '</section>';
     }
     if (sub === 'verbali') {
-      var vb = D.documenti.filter(function (d) { return d.area === 'verbali'; }).sort(function (a, b) { return (b.data_doc || '').localeCompare(a.data_doc || ''); });
+      var vb = D.documenti.filter(function (d) { return d.area === 'verbali' && !d.archiviato; }).sort(function (a, b) { return (b.data_doc || '').localeCompare(a.data_doc || ''); });
       return head('Verbali', 'Verbali del Consiglio Direttivo e delle Assemblee. Secondo lo statuto (art. 16.3) i verbali delle Assemblee sono in libera visione a tutti i soci.') + t +
         '<section class="box">' + vb.map(fileRow).join('') + '</section>' +
         '<section class="box"><h2>Carica un verbale</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>';
     }
-    var all = D.documenti.filter(function (d) { return d.area === 'archivio'; });
+    var all = D.documenti.filter(function (d) { return d.area === 'archivio' && !d.archiviato; });
     var cats = ['Tutti'].concat(Array.from(new Set(all.map(function (d) { return d.categoria; }))).sort());
     var cur = P.archivio.cur || 'Tutti';
     var list = all.filter(function (d) { return cur === 'Tutti' || d.categoria === cur; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
@@ -1675,16 +1687,18 @@ details.espandi > ul { width: 100%; }
       fai: function (v) { return { titolo: 'Convocazione del Consiglio Direttivo del ' + gD(v.data), secs: [
         { h: 'Convocazione del Consiglio Direttivo', b: [{ t: 'p', v: 'Ai componenti del Consiglio Direttivo' }, { t: 'p', v: 'Il Consiglio Direttivo è convocato per ' + gIt(v.data) + ', alle ore ' + (v.ora || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', per discutere e deliberare sul seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }, { t: 'p', v: 'In caso di impedimento si prega di avvisare per tempo il Presidente o il Segretario.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**' + (v.firma || 'Il Presidente') + '**' }] }] }; } },
     { k: 'verbale-cd', ico: '📝', t: 'Verbale del Consiglio Direttivo', d: 'Presenze, punti all’ordine del giorno ed esito delle decisioni da votare. Salvandolo, le decisioni approvate si chiudono con la data della seduta.', cat: ['verbali', 'Consiglio Direttivo'],
-      campi: [['data', 'Giorno della seduta', 'date'], ['ora', 'Ora di inizio', 'time', '18:00'], ['fine', 'Ora di chiusura', 'time'], ['luogo', 'Luogo', 'text', SEDE_OP], ['pres', 'Presiede', 'text', 'il Presidente', 'soci'], ['segr', 'Segretario verbalizzante', 'text', 'il Segretario', 'soci'], ['presenti', 'Presenti', 'soci', {}], ['assenti', 'Assenti giustificati', 'soci', {}], ['num', 'Componenti in carica', 'number'], ['dec', 'Decisioni da votare', 'decisioni'], ['altro', 'Altri punti discussi (uno per riga)', 'area'], ['varie', 'Varie ed eventuali', 'area']],
+      campi: [['data', 'Giorno della seduta', 'date'], ['ora', 'Ora di inizio', 'time', '18:00'], ['fine', 'Ora di chiusura', 'time'], ['luogo', 'Luogo', 'text', SEDE_OP], ['pres', 'Presiede', 'text', 'il Presidente', 'soci'], ['segr', 'Segretario verbalizzante', 'text', 'il Segretario', 'soci'], ['presenti', 'Presenti', 'soci', {}], ['deleghe', 'Rappresentati per delega: spunta chi ha dato la delega e scegli a chi', 'soci', { delega: true }], ['num', 'Componenti in carica', 'number'], ['dec', 'Decisioni da votare', 'decisioni'], ['altro', 'Altri punti discussi (uno per riga)', 'area'], ['varie', 'Varie ed eventuali', 'area']],
       fai: function (v) { var pr = righe(v.presenti), ESI = { approvata: 'approvata', respinta: 'respinta', rinviata: 'rinviata a una prossima seduta', non: 'non discussa' };
         var dec = (v.decEsiti || []).filter(function (x) { return x.esito !== 'non'; });
         var odg = dec.map(function (x) { return x.testo; }).concat(righe(v.altro)).concat(['Varie ed eventuali']);
+        var dl = v.delegheRighe || righe(v.deleghe), vecchi = righe(v.assenti);
         return { titolo: 'Verbale del Consiglio Direttivo del ' + gD(v.data), secs: [
           { h: 'Verbale', b: [{ t: 'p', v: 'Il giorno ' + gIt(v.data) + ', alle ore ' + (v.ora || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', si è riunito il Consiglio Direttivo dell’Associazione, regolarmente convocato, per discutere e deliberare sul seguente ordine del giorno:' }, { t: 'ol', v: odg }] },
-          { h: 'Presenze', b: [{ t: 'p', v: 'Presiede ' + (v.pres || '[nome]') + '; svolge le funzioni di segretario verbalizzante ' + (v.segr || '[nome]') + '.' }, { t: 'p', v: 'Sono presenti' + (pr.length ? ':' : ' [elenco dei presenti].') }].concat(pr.length ? [{ t: 'ul', v: pr }] : []).concat(righe(v.assenti).length ? [{ t: 'p', v: 'Assenti giustificati: ' + righe(v.assenti).join(', ') + '.' }] : []).concat([{ t: 'p', v: 'Presenti ' + (pr.length || '[numero]') + ' componenti su ' + (v.num || '[numero]') + ' in carica: il Presidente constata che la seduta è valida (statuto, art. 18) e apre i lavori.' }]) }]
+          { h: 'Presenze', b: [{ t: 'p', v: 'Presiede ' + (v.pres || '[nome]') + '; svolge le funzioni di segretario verbalizzante ' + (v.segr || '[nome]') + '.' }, { t: 'p', v: 'Sono presenti' + (pr.length ? ':' : ' [elenco dei presenti].') }].concat(pr.length ? [{ t: 'ul', v: pr }] : []).concat(dl.length ? [{ t: 'p', v: 'Sono rappresentati per delega scritta:' }, { t: 'ul', v: dl.map(function (x, i) { return x + (i === dl.length - 1 ? '.' : ';'); }) }, { t: 'p', v: 'Le deleghe sono conservate agli atti.' }] : []).concat(vecchi.length ? [{ t: 'p', v: 'Assenti giustificati: ' + vecchi.join(', ') + '.' }] : []).concat([{ t: 'p', v: 'Presenti ' + (pr.length || '[numero]') + ' componenti' + (dl.length ? ' e ' + dl.length + ' rappresentati per delega' : '') + ' su ' + (v.num || '[numero]') + ' in carica: il Presidente constata che la seduta è valida (statuto, art. 18) e apre i lavori.' }]) }]
           .concat(dec.map(function (x, i) { return { h: 'Punto ' + (i + 1) + ' – ' + x.testo, b: [{ t: 'p', v: (x.nota ? x.nota + ' ' : '') + 'Il Consiglio Direttivo, dopo la discussione, ' + (x.esito === 'approvata' ? 'approva' : x.esito === 'respinta' ? 'non approva' : x.esito === 'rinviata' ? 'rinvia la decisione a una prossima seduta' : '[esito]') + (x.voti ? ' (' + x.voti + ')' : '') + '.' }] }; }))
           .concat(righe(v.altro).map(function (t, i) { return { h: 'Punto ' + (dec.length + i + 1) + ' – ' + t, b: [{ t: 'p', v: '[Sintesi della discussione e decisione]' }] }; }))
-          .concat([{ h: 'Varie ed eventuali e chiusura', b: [{ t: 'p', v: righe(v.varie).length ? righe(v.varie).join(' ') : 'Nessun altro argomento.' }, { t: 'p', v: 'Esauriti gli argomenti, la seduta è chiusa alle ore ' + (v.fine || '[ora]') + '. Il presente verbale, letto e approvato, è sottoscritto dal Presidente e dal Segretario verbalizzante.' }, { t: 'p', v: '**Il Presidente** ________________________    **Il Segretario verbalizzante** ________________________' }] }]) }; } },
+          .concat([{ h: 'Varie ed eventuali e chiusura', b: [{ t: 'p', v: righe(v.varie).length ? righe(v.varie).join(' ') : 'Nessun altro argomento.' }, { t: 'p', v: 'Esauriti gli argomenti, la seduta è chiusa alle ore ' + (v.fine || '[ora]') + '. Il presente verbale, letto e approvato, è sottoscritto dal Presidente e dal Segretario verbalizzante.' }, { t: 'p', v: '**Il Presidente** ________________________    **Il Segretario verbalizzante** ________________________' }] }]) }; },
+      avviso: function (v) { return delegheAvvisi(v.delegheCoppie, v.presentiSel, [], 'Ogni componente riceve al massimo una delega.'); } },
     { k: 'conv-ass', ico: '📣', t: 'Convocazione dell’Assemblea dei soci', d: 'Prima e seconda convocazione, ordine del giorno, controllo dei 15 giorni di preavviso.', cat: ['verbali', 'Assemblea'],
       campi: [['tipo', 'Assemblea', 'select', 'ordinaria', ['ordinaria', 'straordinaria']], ['d1', '1ª convocazione: giorno', 'date'], ['o1', '1ª convocazione: ora', 'time', '17:00'], ['d2', '2ª convocazione: giorno', 'date'], ['o2', '2ª convocazione: ora', 'time', '17:30'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno', 'odg'], ['bil', 'Si approva il bilancio (rendiconto)?', 'select', 'no', ['no', 'sì']]],
       fai: function (v) { return { titolo: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci del ' + gD(v.d2 || v.d1), secs: [
@@ -1716,11 +1730,7 @@ details.espandi > ul { width: 100%; }
         secs.push({ h: 'Allegati', b: [{ t: 'ol', v: ['Elenco dei soci presenti, con firma.'].concat(del.length ? ['Deleghe scritte dei soci rappresentati.'] : []) }] });
         return { titolo: 'Verbale dell’Assemblea ' + T + ' del ' + gD(v.data), secs: secs };
       },
-      avviso: function (v) { var w = [], dl = v.delegheCoppie || [], pres = (v.presentiSel || []).map(String), ono = (v.onorariSel || []).map(String), visti = {};
-        dl.forEach(function (c) { var a = socioById(c.id), b = socioById(c.a); if (!c.a) { w.push('Delega di ' + (a ? socioNomeN(a) : '?') + ': manca chi la rappresenta.'); return; }
-          if (visti[c.a]) w.push((b ? socioNomeN(b) : '?') + ' ha più di una delega: lo Statuto ne ammette una sola (art. 16.7).'); visti[c.a] = 1;
-          if (pres.indexOf(String(c.a)) < 0 && ono.indexOf(String(c.a)) < 0) w.push((b ? socioNomeN(b) : '?') + ' rappresenta ' + (a ? socioNomeN(a) : '?') + ' ma non è tra i presenti.');
-          if (pres.indexOf(String(c.id)) >= 0) w.push((a ? socioNomeN(a) : '?') + ' è sia presente sia rappresentato per delega.'); });
+      avviso: function (v) { var w = [delegheAvvisi(v.delegheCoppie, v.presentiSel, v.onorariSel, 'Lo Statuto ne ammette una sola (art. 16.7).')].filter(Boolean);
         if (v.avviso && v.data) { var g = Math.round((dt(v.data) - dt(v.avviso)) / 864e5); if (g < 15) w.push('Tra l’avviso e l’Assemblea ci sono ' + g + ' giorni: lo Statuto ne chiede almeno 15 (art. 16.8).'); }
         return w.join(' '); } },
     { k: 'comunicato', ico: '💬', t: 'Comunicato ai soci', d: 'Per una gita, un corso, una cena, una serata: prende i dati dall’attività. Da incollare in email o su WhatsApp.', cat: ['archivio', 'Sito e comunicazione'],
@@ -1738,6 +1748,12 @@ details.espandi > ul { width: 100%; }
           .concat(righe(v.note).map(function (x) { return { t: 'p', v: x }; }))
           .concat([{ t: 'p', v: 'Restando a disposizione per ogni chiarimento, si porgono distinti saluti.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**Il Presidente e legale rappresentante**' }]) }] }; } }
   ];
+  function delegheAvvisi(dl, presS, onoS, regola) { var w = [], pres = (presS || []).map(String), ono = (onoS || []).map(String), visti = {};
+    (dl || []).forEach(function (c) { var a = socioById(c.id), b = socioById(c.a); if (!c.a) { w.push('Delega di ' + (a ? socioNomeN(a) : '?') + ': manca a chi è stata data.'); return; }
+      if (visti[c.a]) w.push((b ? socioNomeN(b) : '?') + ' ha più di una delega. ' + regola); visti[c.a] = 1;
+      if (pres.indexOf(String(c.a)) < 0 && ono.indexOf(String(c.a)) < 0) w.push((b ? socioNomeN(b) : '?') + ' rappresenta ' + (a ? socioNomeN(a) : '?') + ' ma non è tra i presenti.');
+      if (pres.indexOf(String(c.id)) >= 0) w.push((a ? socioNomeN(a) : '?') + ' è sia presente sia rappresentato per delega.'); });
+    return w.join(' '); }
   function genVal(f, m) {
     var v = {}, spunte = function (n) { return [].map.call(f.querySelectorAll('input[name="' + n + '"]:checked'), function (x) { return x.value; }); };
     m.campi.forEach(function (c) {
@@ -1779,7 +1795,7 @@ details.espandi > ul { width: 100%; }
     var testa = '<fieldset class="wide gen-soci"><legend>' + c[1] + '</legend>', altri = '<label>' + (D.soci ? 'Altri nomi, non presenti nell’elenco' : 'Nomi') + ', uno per riga<textarea name="' + n + 'Altri" rows="' + (D.soci ? 2 : 4) + '">' + esc(v[n + 'Altri'] || '') + '</textarea></label></fieldset>';
     if (nascosti()) return testa + '<p class="sub">L’elenco dei soci si usa con la password personale. Con l’accesso rapido scrivi i nomi a mano.</p>' + altri;
     if (!P.soci.ok || !D.soci) return testa + sociOkBox('Per scegliere dall’elenco dei soci accetta prima la dichiarazione: l’uso resta nel registro dei dati personali.') + altri;
-    var att = sociAttivi(), opzDel = function (id) { var cp = coppie.filter(function (k) { return String(k.id) === String(id); })[0] || {}; return '<option value="">rappresentato da…</option>' + att.filter(function (x) { return String(x.id) !== String(id); }).map(function (x) { return '<option value="' + x.id + '"' + (String(cp.a) === String(x.id) ? ' selected' : '') + '>' + esc(x.cognome + ' ' + (x.nome || '')) + '</option>'; }).join(''); };
+    var att = sociAttivi(), opzDel = function (id) { var cp = coppie.filter(function (k) { return String(k.id) === String(id); })[0] || {}; return '<option value="">ha dato la delega a…</option>' + att.filter(function (x) { return String(x.id) !== String(id); }).map(function (x) { return '<option value="' + x.id + '"' + (String(cp.a) === String(x.id) ? ' selected' : '') + '>' + esc(x.cognome + ' ' + (x.nome || '')) + '</option>'; }).join(''); };
     return testa + '<div class="gs-cerca"><input type="search" class="gen-filtro" placeholder="Cerca un socio" aria-label="Cerca un socio"><span class="sub">' + sel.length + ' scelti</span></div><div class="gs-lista">' +
       att.map(function (x) { var on = sel.indexOf(String(x.id)) >= 0; return '<div class="gs-r" data-q="' + esc(low(x.cognome + ' ' + (x.nome || '') + ' ' + (x.nome || '') + ' ' + x.cognome)) + '"><label class="chk"><input type="checkbox" name="' + n + 'Sel" value="' + x.id + '"' + (on ? ' checked' : '') + '> <span><b>' + esc(x.cognome) + '</b> ' + esc(x.nome || '') + (o.dati ? ' <span class="sub">' + esc(socioNascita(x)) + '</span>' : '') + '</span></label>' +
         (o.delega ? '<select name="del' + x.id + '" class="gs-del" aria-label="Chi rappresenta ' + esc(socioNomeN(x)) + '">' + opzDel(x.id) + '</select>' : '') + '</div>'; }).join('') + '</div>' + altri;
@@ -2157,7 +2173,15 @@ details.espandi > ul { width: 100%; }
     var cp = contaPartecipanti(a), conta = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<b>' + cp.soci + (cp.soci === 1 ? ' socio' : ' soci') + (cp.ospiti ? ' + ' + cp.ospiti + (cp.ospiti === 1 ? ' ospite' : ' ospiti') + ' = ' + cp.tot + (a.tipo === 'Pranzi e cene' ? ' coperti' : ' partecipanti') : '') + '</b>' : tipo === 'ospiti' ? '<b>' + rows.length + (rows.length === 1 ? ' ospite' : ' ospiti') + '</b> · in tutto ' + cp.tot + ' partecipanti' : (rows.length === 1 ? '1 riga' : rows.length + ' righe');
     var spiega = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<p class="sub">Solo soci del libro soci: scrivi due lettere e scegli dalla tendina. ' + (a.tipo === 'Pranzi e cene' ? 'Chi porta ospiti, scrive quanti nella colonna «Ospiti con sé».' : (LISTE_TIPO[a.tipo] || []).indexOf('ospiti') >= 0 ? 'Chi non è socio va nella lista «Ospiti», qui sotto.' : '') + '</p>' : tipo === 'ospiti' ? '<p class="sub">Chi partecipa senza essere socio, con nome e cognome. Restano separati dal libro soci e dalla lista dei soci partecipanti.</p>' : '';
     var dlL = '', sociHint = (tipo === 'partecipanti' || tipo === 'ospiti') && !D.soci && !nascosti() && !(tipo === 'partecipanti' && !soloSoci(a, tipo)) ? sociOkBox('Per scegliere i soci dalla tendina accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
-    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + conta + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + spiega + dlL + sociHint +
+    var multi = '';
+    if (soloSoci(a, tipo) && D.soci && !nascosti()) {
+      var gia = rows.map(function (r) { return r.dati.socio_id; }), lib = sociAttivi().filter(function (x) { return gia.indexOf(x.id) < 0; }).sort(function (x, y) { return (x.cognome + ' ' + (x.nome || '')).localeCompare(y.cognome + ' ' + (y.nome || '')); });
+      multi = '<details class="ed lm"' + (rows.length ? '' : ' open') + '><summary>👥 Aggiungi più soci insieme: spunta i nomi dall’elenco</summary><form class="gen-soci" data-act="lrMulti" data-id="' + a.id + '" data-tipo="' + tipo + '">' +
+        (lib.length ? '<div class="gs-cerca"><input type="search" class="gen-filtro" placeholder="Cerca un socio" aria-label="Cerca un socio"><span class="sub">0 scelti</span></div><div class="gs-lista">' +
+          lib.map(function (x) { return '<div class="gs-r" data-q="' + esc(low(x.cognome + ' ' + (x.nome || '') + ' ' + (x.nome || '') + ' ' + x.cognome)) + '"><label class="chk"><input type="checkbox" name="ms" value="' + x.id + '"> <span><b>' + esc(x.cognome) + '</b> ' + esc(x.nome || '') + '</span></label></div>'; }).join('') +
+          '</div><div class="chips"><button class="btn" type="submit">＋ Aggiungi i soci spuntati</button></div>' : '<p class="sub">Tutti i soci attivi sono già nella lista.</p>') + '</form></details>';
+    }
+    return '<section class="box"><header><h2>' + L.nome + '</h2><span class="sub">' + conta + (L.pers ? ' · dati personali: li vedono solo gli accessi con password' : '') + '</span></header>' + spiega + dlL + sociHint + multi +
       preBlk + rows.map(function (r) { return '<form id="lr' + r.id + '" data-act="lrSave" data-id="' + r.id + '" hidden></form>'; }).join('') + '<form id="' + nid + '" data-act="lrNew" data-id="' + a.id + '" data-tipo="' + tipo + '" hidden></form>' +
       '<div class="tablew"><table class="lista"><thead><tr>' + L.campi.map(function (c) { return '<th>' + c[1] + '</th>'; }).join('') + (pranzo ? '<th>Totale da pagare' + (quotaPersona(a) != null ? '<br><small class="sub">' + eur2(quotaPersona(a)) + ' a persona</small>' : '') + '</th>' : '') + '<th></th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr>' + L.campi.map(function (c, i) { return '<td>' + (c[2] === 'sel' ? '<select form="lr' + r.id + '" name="' + c[0] + '" aria-label="' + c[1] + '">' + c[3].map(function (o) { return '<option value="' + esc(o) + '"' + ((r.dati[c[0]] || '') === o ? ' selected' : '') + '>' + (o || '—') + '</option>'; }).join('') + '</select>' : '<input form="lr' + r.id + '" name="' + c[0] + '"' + (c[2] === 'num' ? ' type="number" min="0" max="20"' : c[2] === 'eur' ? ' inputmode="decimal" class="eur"' : '') + ' value="' + esc(r.dati[c[0]] || '') + '" aria-label="' + c[1] + '"' + (i === 0 && soloSoci(a, tipo) && !nascosti() ? ' data-socio="1" autocomplete="off"' : '') + '>') + '</td>'; }).join('') + (pranzo ? '<td class="tn"><b>' + (totaleRiga(a, r) == null ? '—' : eur2(totaleRiga(a, r))) + '</b></td>' : '') + '<td class="na"><button class="btn alt sm" form="lr' + r.id + '" type="submit">Salva</button> <button class="btn alt sm danger" type="button" data-act="elimina" data-t="attivita_liste" data-id="' + r.id + '" data-l="questa riga">✕</button></td></tr>'; }).join('') +
@@ -2226,15 +2250,24 @@ details.espandi > ul { width: 100%; }
     if (!D.soci) return { daSoci: false, lista: [] };
     return { daSoci: true, lista: sociAttivi().slice().sort(function (x, y) { return nm(x).localeCompare(nm(y)); }).map(function (s) { var on = socioTipo(s) === 'onorario'; return { k: 's' + s.id, id: s.id, nome: nm(s), ruolo: on ? 'Onorario, senza voto' : (s.carica || ''), voto: !on }; }) };
   }
-  var PRES = [['', 'da segnare'], ['presente', 'Presente'], ['giustificato', 'Assente giustificato'], ['assente', 'Assente'], ['delega', 'Rappresentato con delega']];
+  var PRES = [['', 'da segnare'], ['presente', 'Presente'], ['delega', 'Assente con delega'], ['assente', 'Assente'], ['giustificato', 'Assente giustificato (vecchia voce)']];
   function riunioneBox(a) {
     var d = a.dati || {}, cd = a.tipo === 'Consiglio Direttivo', pr = d.presenze || {}, dd = attDate(a);
     var odg = (d.odgSel || []).map(function (id) { var x = D.decisioni.filter(function (y) { return y.id === +id; })[0]; return x ? esc(x.testo) + (x.approvata ? ' <span class="pill">approvata</span>' : '') : null; }).filter(Boolean)
       .concat(righe(d.odgAltri).map(esc)).concat(d.odgVarie === false ? [] : ['Varie ed eventuali']);
     var C = riunConvocati(a), vot = C.lista.filter(function (x) { return x.voto; });
-    var nPres = vot.filter(function (x) { return pr[x.k] === 'presente' || pr[x.k] === 'delega'; }).length, serve = Math.floor(vot.length / 2) + 1, segnati = C.lista.filter(function (x) { return pr[x.k]; }).length;
-    var legale = !vot.length ? '' : '<p class="ri-legale ' + (nPres >= serve ? 'ok' : segnati ? 'ko' : '') + '">' + (nPres >= serve ? '✓ C’è il numero legale: ' + nPres + ' presenti su ' + vot.length + ' (ne servono ' + serve + ').' : segnati ? '⚠︎ Per ora ' + nPres + ' presenti su ' + vot.length + ': per il numero legale ne servono ' + serve + '.' : 'Per il numero legale servono almeno ' + serve + ' presenti su ' + vot.length + (cd ? ' consiglieri.' : ' soci con diritto di voto, in prima convocazione.')) + '</p>';
-    var rows = C.lista.map(function (x) { return '<li class="ri-p"><span><b>' + esc(x.nome) + '</b>' + (x.ruolo ? ' <span class="pill ' + (x.voto ? 'so-car' : 'so-on') + '">' + esc(x.ruolo) + '</span>' : '') + '</span><select data-act="presenza" data-id="' + a.id + '" data-k="' + x.k + '" aria-label="Presenza di ' + esc(x.nome) + '">' + PRES.filter(function (p) { return cd ? p[0] !== 'delega' : true; }).map(function (p) { return '<option value="' + p[0] + '"' + ((pr[x.k] || '') === p[0] ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('') + '</select></li>'; });
+    var nPres = vot.filter(function (x) { return pr[x.k] === 'presente' || pr[x.k] === 'delega'; }).length, nDel = vot.filter(function (x) { return pr[x.k] === 'delega'; }).length, serve = Math.floor(vot.length / 2) + 1, segnati = C.lista.filter(function (x) { return pr[x.k]; }).length;
+    var legale = !vot.length ? '' : '<p class="ri-legale ' + (nPres >= serve ? 'ok' : segnati ? 'ko' : '') + '">' + (nPres >= serve ? '✓ C’è il numero legale: ' + nPres + (nDel ? ' (' + (nPres - nDel) + ' presenti e ' + nDel + ' con delega)' : ' presenti') + ' su ' + vot.length + ' (ne servono ' + serve + ').' : segnati ? '⚠︎ Per ora ' + nPres + ' presenti su ' + vot.length + ': per il numero legale ne servono ' + serve + '.' : 'Per il numero legale servono almeno ' + serve + ' presenti su ' + vot.length + (cd ? ' consiglieri.' : ' soci con diritto di voto, in prima convocazione.')) + '</p>';
+    var dg = d.deleghe || {}, nomeK = {}, ricevute = {}, avvD = [];
+    C.lista.forEach(function (x) { nomeK[x.k] = x.nome; });
+    C.lista.forEach(function (x) { if (pr[x.k] !== 'delega') return; var to = dg[x.k];
+      if (!to) { avvD.push(x.nome + ': manca a chi ha dato la delega.'); return; }
+      if (ricevute[to]) avvD.push((nomeK[to] || '?') + ' ha più di una delega' + (cd ? '.' : ': lo Statuto ne ammette una sola (art. 16.7).')); ricevute[to] = (ricevute[to] || 0) + 1;
+      if (pr[to] !== 'presente') avvD.push((nomeK[to] || '?') + ' ha la delega di ' + x.nome + ' ma non è segnato presente.'); });
+    var rows = C.lista.map(function (x) { var v0 = pr[x.k] || '';
+      return '<li class="ri-p"><span><b>' + esc(x.nome) + '</b>' + (x.ruolo ? ' <span class="pill ' + (x.voto ? 'so-car' : 'so-on') + '">' + esc(x.ruolo) + '</span>' : '') + (ricevute[x.k] ? ' <span class="pill so-on">ha ' + (ricevute[x.k] === 1 ? 'una delega' : ricevute[x.k] + ' deleghe') + '</span>' : '') + '</span><span class="ri-sel"><select data-act="presenza" data-id="' + a.id + '" data-k="' + x.k + '" aria-label="Presenza di ' + esc(x.nome) + '">' + PRES.filter(function (p) { return p[0] !== 'giustificato' || v0 === 'giustificato'; }).map(function (p) { return '<option value="' + p[0] + '"' + (v0 === p[0] ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('') + '</select>' +
+        (v0 === 'delega' ? '<select data-act="delegaA" data-id="' + a.id + '" data-k="' + x.k + '" aria-label="A chi ' + esc(x.nome) + ' ha dato la delega"><option value="">ha dato la delega a…</option>' + C.lista.filter(function (y) { return y.k !== x.k && pr[y.k] !== 'delega'; }).map(function (y) { return '<option value="' + y.k + '"' + (dg[x.k] === y.k ? ' selected' : '') + '>' + esc(y.nome) + '</option>'; }).join('') + '</select>' : '') + '</span></li>'; });
+    if (avvD.length) legale += '<p class="ri-legale ko">⚠︎ ' + avvD.map(esc).join(' ') + '</p>';
     var convocati = nascosti() ? '<p class="sub">Con l’accesso rapido i nomi dei soci non si vedono: entra con la password personale.</p>'
       : !C.daSoci ? (cd ? '<p class="sub">Per ora i convocati sono le quattro cariche. Con la password personale e la dichiarazione accettata, il gestionale prende dal libro soci tutti i componenti del Consiglio (chi ha una carica del Consiglio nella sua scheda).</p>' : '') + (cd ? '<ul class="ri-lista">' + rows.join('') + '</ul>' : sociOkBox('Per avere l’elenco dei soci convocati accetta la dichiarazione: l’uso resta nel registro dei dati personali.'))
       : (C.lista.length ? espandi(rows, 'ri-lista') : '<p class="sub">Nessun componente del Consiglio nel libro soci: segna la carica nella scheda di ogni consigliere.</p>');
@@ -2255,8 +2288,11 @@ details.espandi > ul { width: 100%; }
     var v = { odgSel: (d.odgSel || []).map(String), odgAltri: d.odgAltri || '', odgVarie: d.odgVarie !== false, luogo: a.luogo || '', data: a.data || '', ora: d.ora || '' };
     if (!cd) { v.tipo = d.assemblea || 'ordinaria'; v.d1 = a.data || ''; v.o1 = d.ora || ''; v.d2 = d.d2 || ''; v.o2 = d.o2 || ''; }
     if (verb) { var C = riunConvocati(a).lista, pr = d.presenze || {}, ids = function (f) { return C.filter(function (x) { return x.id && f(x); }).map(function (x) { return String(x.id); }); };
-      v.presentiSel = ids(function (x) { return x.voto && pr[x.k] === 'presente'; }); v.assentiSel = ids(function (x) { return pr[x.k] === 'giustificato'; });
-      if (cd) v.num = C.length; else { v.onorariSel = ids(function (x) { return !x.voto && pr[x.k] === 'presente'; }); v.delegheSel = ids(function (x) { return pr[x.k] === 'delega'; }); v.iscritti = C.filter(function (x) { return x.voto; }).length; } }
+      var dg = d.deleghe || {}, idK = {}; C.forEach(function (x) { idK[x.k] = x.id ? String(x.id) : ''; });
+      v.presentiSel = ids(function (x) { return x.voto && pr[x.k] === 'presente'; });
+      v.delegheSel = ids(function (x) { return pr[x.k] === 'delega'; });
+      v.delegheCoppie = C.filter(function (x) { return x.id && pr[x.k] === 'delega'; }).map(function (x) { return { id: String(x.id), a: idK[dg[x.k]] || '' }; });
+      if (cd) v.num = C.length; else { v.onorariSel = ids(function (x) { return !x.voto && pr[x.k] === 'presente'; }); v.iscritti = C.filter(function (x) { return x.voto; }).length; } }
     P.genera.k = k; P.genera.v = v; P.genera.doc = null; location.hash = '#genera/' + k;
   }
   function checklistSec(a, cl) {
@@ -3309,8 +3345,12 @@ details.espandi > ul { width: 100%; }
     if (a === 'attStato') { var xs = await upd('attivita', id, { stato: t.value }); if (xs) { toast('Stato: ' + t.value + '.'); render(); } return; }
     if (a === 'sociOrd') { P.soci.ord = t.value; render(); return; }
     if (t.name === 'tipoR') { var fa = document.getElementById('ri-ass'); if (fa) fa.hidden = t.value === 'cd'; return; }
+    if (a === 'delegaA') { var ag = att(id); if (!ag) return; var dg2 = Object.assign({}, ag.dati || {}); dg2.deleghe = Object.assign({}, dg2.deleghe || {});
+      if (t.value) dg2.deleghe[t.getAttribute('data-k')] = t.value; else delete dg2.deleghe[t.getAttribute('data-k')];
+      var ug = await upd('attivita', id, { dati: dg2 }); if (ug) render(); return; }
     if (a === 'presenza') { var ap = att(id); if (!ap) return; var dp = Object.assign({}, ap.dati || {}); dp.presenze = Object.assign({}, dp.presenze || {});
       if (t.value) dp.presenze[t.getAttribute('data-k')] = t.value; else delete dp.presenze[t.getAttribute('data-k')];
+      if (t.value !== 'delega' && dp.deleghe) { dp.deleghe = Object.assign({}, dp.deleghe); delete dp.deleghe[t.getAttribute('data-k')]; }
       var up = await upd('attivita', id, { dati: dp }); if (up) render(); return; }
     /* scheda del socio: tipo, carica e stato si cambiano dal menù a tendina, senza aprire la modifica */
     var fv = t.closest && t.closest('form[data-act="socioVeloce"]');
@@ -3388,6 +3428,10 @@ details.espandi > ul { width: 100%; }
     else if (a === 'archivia') { var tb2 = b.getAttribute('data-t'), on = b.getAttribute('data-v') === '1'; var ar = await upd(tb2, +b.getAttribute('data-id'), { archiviato: on }); if (ar) { toast(on ? 'Archiviato: lo ritrovi in «Archiviate».' : 'Ripristinato.'); render(); } }
     else if (a === 'elimina') { await elimina(b.getAttribute('data-t'), +b.getAttribute('data-id'), b.getAttribute('data-l')); }
     else if (a === 'genModifica') { P.genera.edit = !P.genera.edit; render(); }
+    else if (a === 'docArch') { var va = b.getAttribute('data-v') === '1', da = D.documenti.filter(function (x) { return x.id === +b.getAttribute('data-id'); })[0];
+      if (va && !confirm('Archiviare «' + (da ? da.titolo : '') + '»?\n\nNon comparirà più negli elenchi. Lo ritrovi in Documenti › Archiviati e lo puoi ripristinare quando vuoi.')) return;
+      var ua = await upd('documenti', +b.getAttribute('data-id'), { archiviato: va }); if (ua) { toast(va ? 'Archiviato. Lo ritrovi in Documenti › Archiviati.' : 'Ripristinato.'); if (va) location.hash = '#archivio'; else render(); } }
+    else if (a === 'docDel') { await eliminaDoc(+b.getAttribute('data-id')); }
     else if (a === 'docEdita') { P.docEdit = +b.getAttribute('data-id'); render(); var ta = mainEl.querySelector('.doc-txt'); if (ta) { ta.scrollIntoView({ block: 'start' }); ta.focus(); } }
     else if (a === 'docAnnulla') { P.docEdit = null; render(); }
     else if (a === 'docAnteprima') { var fp = b.closest('form'), dp = fp.querySelector('.doc-prev'), cp = txt2doc(fp.testo.value);
@@ -3536,6 +3580,17 @@ details.espandi > ul { width: 100%; }
         var rq = { user_id: me.id, da_chi: myName() + (me.prova ? ' (accesso rapido)' : ''), a_chi: f.a_chi.value, testo: f.testo.value.trim(), scadenza: f.scadenza.value || null }; rq[f.getAttribute('data-col')] = +f.getAttribute('data-id');
         var rqr = await sb.from('richieste').insert(rq).select().single();
         if (rqr.error) throw rqr.error; D.richieste.push(rqr.data); toast('Richiesta inviata: la trova in «Cose da fare».'); render();
+      } else if (a === 'lrMulti') {
+        var aM = att(+f.getAttribute('data-id')), tM = f.getAttribute('data-tipo'), idsM = [].map.call(f.querySelectorAll('input[name="ms"]:checked'), function (x) { return +x.value; });
+        if (!aM || !D.soci) return; if (!idsM.length) { toast('Spunta almeno un socio.'); return; }
+        var giaM = D.attivita_liste.filter(function (x) { return x.attivita_id === aM.id && x.tipo === 'partecipanti'; }).map(function (x) { return x.dati.socio_id; });
+        var ordM = D.attivita_liste.filter(function (x) { return x.attivita_id === aM.id && x.tipo === tM; }).reduce(function (m, x) { return Math.max(m, x.ordine); }, 0);
+        var pagaM = aM.tipo === 'Pranzi e cene' ? (/tesor|associaz/i.test((aM.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((aM.dati || {}).chi_incassa || '') ? 'Ristorante' : '') : '';
+        var insM = idsM.filter(function (id) { return giaM.indexOf(id) < 0; }).map(function (id) { var so = socioById(id), dd = { nome: socioNomeN(so), socio_id: so.id }; if (pagaM) dd.paga = pagaM; ordM++; return { attivita_id: aM.id, tipo: tM, ordine: ordM, dati: dd, aggiornato_da: me.nome }; });
+        if (!insM.length) { toast('Sono già tutti nella lista.'); return; }
+        var rM = await sb.from('attivita_liste').insert(insM).select();
+        if (rM.error) throw rM.error; D.attivita_liste = D.attivita_liste.concat(rM.data);
+        toast(rM.data.length === 1 ? '1 socio aggiunto alla lista.' : rM.data.length + ' soci aggiunti alla lista.' + (idsM.length > insM.length ? ' Gli altri erano già in lista.' : '')); render();
       } else if (a === 'lrNew' || a === 'lrSave') {
         var dl = {}, isNewL = a === 'lrNew', lrow = isNewL ? null : D.attivita_liste.filter(function (x) { return x.id === +f.getAttribute('data-id'); })[0];
         var ltipo = isNewL ? f.getAttribute('data-tipo') : lrow.tipo;
@@ -3704,6 +3759,19 @@ details.espandi > ul { width: 100%; }
       if (!r.data.length) { toast('Non eliminato: permesso negato.'); return; }
       D[tb] = D[tb].filter(function (x) { return x.id !== id; }); toast('Eliminato.');
       if (tb === 'pratiche') location.hash = '#pratiche'; else if (tb === 'attivita') location.hash = '#attivita'; else render();
+    } catch (ex) { toast('Non eliminato: ' + (ex.message || ex)); }
+  }
+  async function eliminaDoc(id) {
+    var d = D.documenti.filter(function (x) { return x.id === id; })[0]; if (!d || !puoCancDoc()) return;
+    var files = [d.file_path].concat(D.documenti_versioni.filter(function (v) { return v.documento_id === id; }).map(function (v) { return v.file_path; })).filter(Boolean);
+    if (!confirm('Eliminare DEFINITIVAMENTE «' + d.titolo + '»?\n\nSi cancellano il testo, tutte le versioni' + (files.length ? ' e ' + (files.length === 1 ? 'il file caricato' : 'i ' + files.length + ' file caricati') : '') + '. Non si può tornare indietro.\nSe vuoi solo toglierlo dagli elenchi, usa «Archivia».')) return;
+    try {
+      var r = await sb.from('documenti').delete().eq('id', id).select();
+      if (r.error) throw r.error;
+      if (!r.data.length) { toast('Non eliminato: permesso negato.'); return; }
+      if (files.length) { var rf = await sb.storage.from('archivio').remove(files); if (rf.error) toast('Documento eliminato, ma il file è rimasto nell’archivio: ' + rf.error.message); }
+      D.documenti = D.documenti.filter(function (x) { return x.id !== id; }); D.documenti_versioni = D.documenti_versioni.filter(function (x) { return x.documento_id !== id; });
+      toast('Documento eliminato.'); location.hash = '#archivio';
     } catch (ex) { toast('Non eliminato: ' + (ex.message || ex)); }
   }
   async function sitoDel(tb, id) {
