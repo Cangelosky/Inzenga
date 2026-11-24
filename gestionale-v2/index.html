@@ -132,6 +132,13 @@ form.up label, .field { display: grid; gap: 4px; font-size: calc(16px * var(--z)
 form.up input, form.up select, .field input, .field select, .field textarea { min-height: 46px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); width: 100%; min-width: 0; }
 .field textarea { min-height: 140px; line-height: 1.5; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.df-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.df-chip small { font-weight: 700; opacity: .7; margin-left: 2px; }
+.df-chip.vuoto:not([aria-pressed="true"]) { opacity: .6; }
+.df-cerca input { width: 100%; min-height: 48px; padding: 8px 14px; border: 2px solid var(--line); border-radius: 12px; background: var(--bg); font-size: calc(16px * var(--z)); }
+.df-gen { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0 4px; color: var(--ink-2); }
+.df-lista { margin-top: 8px; } .dq[hidden] { display: none; }
+@media (max-width: 600px) { .df-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; } .df-chip { justify-content: flex-start; padding: 8px 10px; font-size: calc(15px * var(--z)); text-align: left; } }
 .chip { min-height: 40px; padding: 4px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); cursor: pointer; }
 .chip[aria-pressed="true"] { background: var(--forest); color: var(--forest-ink) !important; border-color: var(--forest); }
 .barsx { display: grid; gap: 12px; }
@@ -826,6 +833,7 @@ details.espandi > ul { width: 100%; }
 .ri-p { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
 .ri-lista .ri-p:first-child { border-top: 0; }
 .ri-sel { display: flex; flex-wrap: wrap; gap: 6px; }
+.ri-docs { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
 .ri-p select { min-height: 42px; padding: 4px 10px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: calc(15.5px * var(--z)); }
 .ri-legale { margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; background: color-mix(in srgb, var(--line) 30%, var(--card)); font-weight: 600; }
 .ri-legale.ok { background: var(--ok-bg); color: var(--ok-ink); } .ri-legale.ko { background: var(--warn-bg); color: var(--warn-ink); }
@@ -1553,10 +1561,23 @@ details.espandi > ul { width: 100%; }
       '<div class="cols"><section class="box"><h2>Da votare per il 2027</h2><ul class="list"><li><div><b style="font-weight:500">Almeno tre mostre micologiche, tra Palermo e il resto della Sicilia</b></div></li><li><div><b style="font-weight:500">Programma a orari e determinazione dal vivo alla mostra</b></div></li><li><div><b style="font-weight:500">Weekend amicologico, festa di primavera a fine marzo</b></div></li></ul></section>' +
       '<section class="box"><h2>I tipi di attività</h2><div class="chips">' + TIPI.map(function (k) { return '<span class="pill plain" style="font-size: calc(16px * var(--z));padding:6px 16px">' + k + '</span>'; }).join('') + '</div><p class="sub">Ogni tipo chiede i suoi dati preliminari, presi dal disciplinare, e apre gli strumenti che servono: liste, preventivi, budget.</p></section></div>';
   };
+  /* Documenti: un solo elenco, un filtro per tipo (con i numeri) e la ricerca mentre si scrive */
+  var UP_VERB = { 'Verbale del Consiglio Direttivo': 'Consiglio Direttivo', 'Verbale dell’Assemblea': 'Assemblea' };
+  var DOC_GRUPPI = [
+    { k: 'conv', n: 'Convocazioni', ico: '📨', fisso: true, t: function (d) { return /^convocazion/i.test(d.categoria || '') || /^convocazione/i.test(d.titolo || ''); }, gen: [['conv-cd', 'Convocazione del CD'], ['conv-ass', 'Convocazione dell’Assemblea']] },
+    { k: 'verb', n: 'Verbali', ico: '📝', fisso: true, t: function (d) { return d.area === 'verbali'; }, gen: [['verbale-cd', 'Verbale del CD'], ['verbale-ass', 'Verbale dell’Assemblea']] },
+    { k: 'com', n: 'Comunicazioni ai soci', ico: '💬', fisso: true, t: function (d) { return d.categoria === 'Comunicazioni ai soci'; }, gen: [['comunicato', 'Comunicato ai soci']] },
+    { k: 'ric', n: 'Richieste a enti', ico: '🏛️', fisso: true, t: function (d) { return d.categoria === 'Richieste a enti' || d.categoria === 'Modulistica'; }, gen: [['comune', 'Richiesta a un Comune']] },
+    { k: 'reg', n: 'Statuto e regole', ico: '📜', t: function (d) { return d.categoria === 'Statuto e regolamenti' || d.categoria === 'Normativa e guide'; } },
+    { k: 'lav', n: 'Piano e disciplinari', ico: '🗂️', t: function (d) { return ['Piano', 'Disciplinari', 'Questionari', 'Calendario'].indexOf(d.categoria) >= 0; } },
+    { k: 'alt', n: 'Altri', ico: '📄', t: function () { return true; } }
+  ];
+  function docGruppo(d) { for (var i = 0; i < DOC_GRUPPI.length; i++) if (DOC_GRUPPI[i].t(d)) return DOC_GRUPPI[i].k; return 'alt'; }
+  function docQ(d) { return low([d.titolo, d.sottotitolo, d.categoria, d.protocollo, d.data_doc ? fD.format(dt(d.data_doc)) : ''].join(' ')); }
   P.archivio = function (sub) {
     var nArch = D.documenti.filter(function (d) { return d.archiviato; }).length;
-    var tabs = [['', 'Documenti'], ['verbali', 'Verbali'], ['registro', 'Registro delle modifiche']].concat(nArch ? [['archiviati', 'Archiviati (' + nArch + ')']] : []);
-    var t = '<div class="chips"><a class="chip gen-chip" href="#genera">✍️ Genera un documento</a>' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
+    var tabs = [['', 'Documenti'], ['registro', 'Registro delle modifiche']].concat(nArch ? [['archiviati', 'Archiviati (' + nArch + ')']] : []), tabOn = sub === 'registro' || sub === 'archiviati' ? sub : '';
+    var t = '<div class="chips"><a class="chip gen-chip" href="#genera">✍️ Genera un documento</a>' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#archivio' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + (tabOn === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
     if (sub === 'registro') {
       return head('Registro delle modifiche', 'Chi ha fatto cosa e quando, con il prima e il dopo di ogni modifica. Lo vedono tutti i membri del Consiglio Direttivo.') + t + registroPage();
     }
@@ -1570,21 +1591,22 @@ details.espandi > ul { width: 100%; }
       return head('In bozza o da firmare', 'I documenti non ancora definitivi, di tutte le sezioni. Quando un documento è firmato, caricalo con lo stesso titolo e stato «Ufficiale».') + t +
         '<section class="box">' + (df.length ? df.map(fileRow).join('') : '<p class="sub">Nessun documento in bozza o da firmare.</p>') + '</section>';
     }
-    if (sub === 'verbali') {
-      var vb = D.documenti.filter(function (d) { return d.area === 'verbali' && !d.archiviato; }).sort(function (a, b) { return (b.data_doc || '').localeCompare(a.data_doc || ''); });
-      return head('Verbali', 'Verbali del Consiglio Direttivo e delle Assemblee. Secondo lo statuto (art. 16.3) i verbali delle Assemblee sono in libera visione a tutti i soci.') + t +
-        '<section class="box">' + vb.map(fileRow).join('') + '</section>' +
-        '<section class="box"><h2>Carica un verbale</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>';
-    }
-    var all = D.documenti.filter(function (d) { return d.area === 'archivio' && !d.archiviato; });
-    var cats = ['Tutti'].concat(Array.from(new Set(all.map(function (d) { return d.categoria; }))).sort());
-    var cur = P.archivio.cur || 'Tutti';
-    var list = all.filter(function (d) { return cur === 'Tutti' || d.categoria === cur; }).sort(function (a, b) { return new Date(b.aggiornato_il) - new Date(a.aggiornato_il); });
-    return head('Documenti', 'Statuto, piano, disciplinari, questionari e documenti di lavoro. Ogni documento mostra in alto il suo stato (in rosso se è una bozza o da firmare), la versione e l’ultimo aggiornamento.') + t + addLink('#nuovo/documento', 'Carica un documento') +
-      '<section class="box"><div class="chips" role="group" aria-label="Filtra per tipo">' + cats.map(function (c) { return '<button class="chip" type="button" data-act="cat" data-v="' + esc(c) + '" aria-pressed="' + (c === cur) + '">' + esc(c) + '</button>'; }).join('') + '</div>' +
-      '<div>' + list.map(fileRow).join('') + '</div></section>' +
-      '<section class="box"><h2>Carica un documento</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>';
+    if (sub === 'verbali') { P.archivio.cur = 'verb'; try { history.replaceState(null, '', '#archivio'); } catch (e) {} }
+    var all = D.documenti.filter(function (d) { return (d.area === 'archivio' || d.area === 'verbali') && !d.archiviato; }), cnt = { tutti: all.length };
+    all.forEach(function (d) { var g = docGruppo(d); cnt[g] = (cnt[g] || 0) + 1; });
+    var cur = P.archivio.cur && (P.archivio.cur === 'tutti' || DOC_GRUPPI.some(function (g) { return g.k === P.archivio.cur; })) ? P.archivio.cur : 'tutti', G = DOC_GRUPPI.filter(function (g) { return g.k === cur; })[0];
+    var data = function (d) { return d.data_doc || String(d.aggiornato_il || '').slice(0, 10); };
+    var list = all.filter(function (d) { return cur === 'tutti' || docGruppo(d) === cur; }).sort(function (a, b) { return data(b).localeCompare(data(a)); });
+    var chips = [{ k: 'tutti', n: 'Tutti', ico: '' }].concat(DOC_GRUPPI.filter(function (g) { return g.fisso || cnt[g.k]; })).map(function (g) {
+      return '<button class="chip df-chip' + (cnt[g.k] ? '' : ' vuoto') + '" type="button" data-act="cat" data-v="' + g.k + '" aria-pressed="' + (g.k === cur) + '">' + (g.ico ? '<span aria-hidden="true">' + g.ico + '</span> ' : '') + esc(g.n) + ' <small>' + (cnt[g.k] || 0) + '</small></button>'; }).join('');
+    var gen = G && G.gen ? '<p class="df-gen">' + (list.length ? 'Per prepararne uno nuovo:' : 'Ancora nessuno. Si preparano qui:') + ' ' + G.gen.map(function (x) { return '<a class="btn alt sm" href="#genera/' + x[0] + '">✍️ ' + esc(x[1]) + '</a>'; }).join(' ') + '</p>' : '';
+    return head('Documenti', 'Tutti i documenti in un solo elenco, dal più recente. Tocca un tipo per vedere solo quello, oppure scrivi nella ricerca una parola del titolo, una data o il protocollo.') + t +
+      '<section class="box df"><div class="df-chips" role="group" aria-label="Filtra per tipo">' + chips + '</div>' +
+      '<div class="df-cerca"><input type="search" class="doc-cerca" placeholder="🔍 Cerca: titolo, data, protocollo…" aria-label="Cerca tra i documenti"></div>' + gen +
+      '<div class="df-lista">' + list.map(function (d) { return '<div class="dq" data-q="' + esc(docQ(d)) + '">' + fileRow(d) + '</div>'; }).join('') + '</div><p class="sub df-nulla" hidden>Nessun documento con queste parole' + (cur === 'tutti' ? '.' : ' in «' + esc(G.n) + '»: prova con «Tutti».') + '</p></section>' +
+      '<details class="box ed"><summary><b>Carica un documento</b> (un file già pronto, per esempio una scansione firmata)</summary>' + upForm('archivio', ['Convocazioni del CD', 'Convocazioni dell’Assemblea', 'Verbale del Consiglio Direttivo', 'Verbale dell’Assemblea', 'Comunicazioni ai soci', 'Richieste a enti', 'Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Calendario', 'Sito e comunicazione'], true) + '</details>';
   };
+
 
   P.soldi = function (sub) {
     var tabsS = [['', 'Riepilogo'], ['primanota', 'Prima nota'], ['rendiconto', 'Rendiconto per cassa']];
@@ -1682,7 +1704,7 @@ details.espandi > ul { width: 100%; }
     return out.concat(varie || righe(altri).some(function (x) { return /^varie ed eventuali\.?$/i.test(x); }) ? ['Varie ed eventuali'] : []);
   }
   var GEN = [
-    { k: 'conv-cd', ico: '📨', t: 'Convocazione del Consiglio Direttivo', d: 'Data, luogo e ordine del giorno, pronta da mandare per email.', cat: ['verbali', 'Consiglio Direttivo'],
+    { k: 'conv-cd', ico: '📨', t: 'Convocazione del Consiglio Direttivo', d: 'Data, luogo e ordine del giorno, pronta da mandare per email.', cat: ['archivio', 'Convocazioni del CD'],
       campi: [['data', 'Giorno della riunione', 'date'], ['ora', 'Ora', 'time', '18:00'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno', 'odg'], ['firma', 'Firma', 'text', 'Il Presidente']],
       fai: function (v) { return { titolo: 'Convocazione del Consiglio Direttivo del ' + gD(v.data), secs: [
         { h: 'Convocazione del Consiglio Direttivo', b: [{ t: 'p', v: 'Ai componenti del Consiglio Direttivo' }, { t: 'p', v: 'Il Consiglio Direttivo è convocato per ' + gIt(v.data) + ', alle ore ' + (v.ora || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', per discutere e deliberare sul seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }, { t: 'p', v: 'In caso di impedimento si prega di avvisare per tempo il Presidente o il Segretario.' }, { t: 'p', v: 'Palermo, ' + fD.format(base) }, { t: 'p', v: '**' + (v.firma || 'Il Presidente') + '**' }] }] }; } },
@@ -1699,7 +1721,7 @@ details.espandi > ul { width: 100%; }
           .concat(righe(v.altro).map(function (t, i) { return { h: 'Punto ' + (dec.length + i + 1) + ' – ' + t, b: [{ t: 'p', v: '[Sintesi della discussione e decisione]' }] }; }))
           .concat([{ h: 'Varie ed eventuali e chiusura', b: [{ t: 'p', v: righe(v.varie).length ? righe(v.varie).join(' ') : 'Nessun altro argomento.' }, { t: 'p', v: 'Esauriti gli argomenti, la seduta è chiusa alle ore ' + (v.fine || '[ora]') + '. Il presente verbale, letto e approvato, è sottoscritto dal Presidente e dal Segretario verbalizzante.' }, { t: 'p', v: '**Il Presidente** ________________________    **Il Segretario verbalizzante** ________________________' }] }]) }; },
       avviso: function (v) { return delegheAvvisi(v.delegheCoppie, v.presentiSel, [], 'Ogni componente riceve al massimo una delega.'); } },
-    { k: 'conv-ass', ico: '📣', t: 'Convocazione dell’Assemblea dei soci', d: 'Prima e seconda convocazione, ordine del giorno, controllo dei 15 giorni di preavviso.', cat: ['verbali', 'Assemblea'],
+    { k: 'conv-ass', ico: '📣', t: 'Convocazione dell’Assemblea dei soci', d: 'Prima e seconda convocazione, ordine del giorno, controllo dei 15 giorni di preavviso.', cat: ['archivio', 'Convocazioni dell’Assemblea'],
       campi: [['tipo', 'Assemblea', 'select', 'ordinaria', ['ordinaria', 'straordinaria']], ['d1', '1ª convocazione: giorno', 'date'], ['o1', '1ª convocazione: ora', 'time', '17:00'], ['d2', '2ª convocazione: giorno', 'date'], ['o2', '2ª convocazione: ora', 'time', '17:30'], ['luogo', 'Luogo', 'text', SEDE_OP], ['odg', 'Ordine del giorno', 'odg'], ['bil', 'Si approva il bilancio (rendiconto)?', 'select', 'no', ['no', 'sì']]],
       fai: function (v) { return { titolo: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci del ' + gD(v.d2 || v.d1), secs: [
         { h: 'Convocazione dell’Assemblea ' + v.tipo + ' dei soci', b: [{ t: 'p', v: 'Ai soci dell’Associazione' }, { t: 'p', v: 'Ai sensi dell’art. 16.8 dello Statuto, l’Assemblea ' + v.tipo + ' dei soci è convocata in prima convocazione per ' + gIt(v.d1) + ' alle ore ' + (v.o1 || '[ora]') + ' e, occorrendo, in seconda convocazione per ' + gIt(v.d2) + ' alle ore ' + (v.o2 || '[ora]') + ', presso ' + (v.luogo || '[luogo]') + ', con il seguente' }, { t: 'h3', v: 'Ordine del giorno' }, { t: 'ol', v: righe(v.odg) }]
@@ -1733,7 +1755,7 @@ details.espandi > ul { width: 100%; }
       avviso: function (v) { var w = [delegheAvvisi(v.delegheCoppie, v.presentiSel, v.onorariSel, 'Lo Statuto ne ammette una sola (art. 16.7).')].filter(Boolean);
         if (v.avviso && v.data) { var g = Math.round((dt(v.data) - dt(v.avviso)) / 864e5); if (g < 15) w.push('Tra l’avviso e l’Assemblea ci sono ' + g + ' giorni: lo Statuto ne chiede almeno 15 (art. 16.8).'); }
         return w.join(' '); } },
-    { k: 'comunicato', ico: '💬', t: 'Comunicato ai soci', d: 'Per una gita, un corso, una cena, una serata: prende i dati dall’attività. Da incollare in email o su WhatsApp.', cat: ['archivio', 'Sito e comunicazione'],
+    { k: 'comunicato', ico: '💬', t: 'Comunicato ai soci', d: 'Per una gita, un corso, una cena, una serata: prende i dati dall’attività. Da incollare in email o su WhatsApp.', cat: ['archivio', 'Comunicazioni ai soci'],
       campi: [['att', 'Attività', 'attivita'], ['titolo', 'Titolo', 'text'], ['quando', 'Quando', 'text'], ['dove', 'Dove e ritrovo', 'text'], ['quota', 'Quota', 'text'], ['entro', 'Iscrizioni entro il', 'date'], ['come', 'Come iscriversi', 'text', 'rispondendo a questo messaggio o al Segretario'], ['testo', 'Altre informazioni', 'area'], ['firma', 'Firma', 'text', 'Il Consiglio Direttivo']],
       fai: function (v) { var b = [{ t: 'p', v: 'Care socie e cari soci,' }, { t: 'p', v: 'vi aspettiamo a **' + (v.titolo || '[attività]') + '**.' }];
         var dati = [['Quando', v.quando], ['Dove', v.dove], ['Quota', v.quota], ['Iscrizioni entro', v.entro ? gIt(v.entro) : ''], ['Come iscriversi', v.come]].filter(function (x) { return x[1]; }).map(function (x) { return x[0] + ': ' + x[1]; });
@@ -1741,7 +1763,7 @@ details.espandi > ul { width: 100%; }
         righe(v.testo).forEach(function (x) { b.push({ t: 'p', v: x }); });
         b.push({ t: 'p', v: 'A presto,' }); b.push({ t: 'p', v: v.firma || 'Il Consiglio Direttivo' });
         return { titolo: 'Comunicato ai soci: ' + (v.titolo || 'attività'), secs: [{ h: v.titolo || 'Comunicato ai soci', b: b }] }; } },
-    { k: 'comune', ico: '🏛️', t: 'Richiesta di sala o patrocinio a un Comune', d: 'Lettera formale per l’uso di una sala, il patrocinio gratuito o entrambi.', cat: ['archivio', 'Modulistica'],
+    { k: 'comune', ico: '🏛️', t: 'Richiesta di sala o patrocinio a un Comune', d: 'Lettera formale per l’uso di una sala, il patrocinio gratuito o entrambi.', cat: ['archivio', 'Richieste a enti'],
       campi: [['comune', 'Comune', 'text', 'Comune di '], ['ufficio', 'Alla cortese attenzione di', 'text', 'Sig. Sindaco e Presidente del Consiglio Comunale'], ['cosa', 'Si chiede', 'select', 'la disponibilità di una sala', ['la disponibilità di una sala', 'il patrocinio gratuito', 'la disponibilità di una sala e il patrocinio gratuito']], ['evento', 'Iniziativa', 'text', 'corso di formazione per il rilascio del tesserino per la raccolta dei funghi epigei'], ['date', 'Giorni', 'text'], ['orari', 'Orari', 'text', 'dalle 16:30 alle 20:30'], ['persone', 'Partecipanti previsti', 'number'], ['note', 'Altre informazioni', 'area']],
       fai: function (v) { return { titolo: 'Richiesta al ' + (v.comune || 'Comune') + ': ' + v.cosa, secs: [
         { h: 'Lettera', b: [{ t: 'p', v: 'Spett.le ' + (v.comune || '[Comune]') + (v.ufficio ? ', alla cortese attenzione del ' + v.ufficio : '') }, { t: 'p', v: '**Oggetto: richiesta di ' + v.cosa.replace(/^la |^il /, '') + ' per ' + (v.evento || '[iniziativa]') + '**' }, { t: 'p', v: 'L’Associazione Micologica Bresadola – Gruppo di Palermo «Giuseppe Inzenga» APS, ente del Terzo settore che da anni promuove la conoscenza dei funghi e la tutela dell’ambiente, intende organizzare ' + (v.evento || '[iniziativa]') + (v.date ? ' nei giorni ' + v.date : '') + (v.orari ? ', ' + v.orari : '') + '.' }, { t: 'p', v: 'Con la presente si chiede ' + v.cosa + (v.persone ? ', per circa ' + v.persone + ' partecipanti' : '') + '. L’iniziativa è senza scopo di lucro e aperta alla cittadinanza.' }]
@@ -1817,6 +1839,7 @@ details.espandi > ul { width: 100%; }
     var m = GEN.filter(function (x) { return x.k === sub; })[0];
     if (!m) return head('Genera documenti', 'Scegli il modello: compili pochi campi e il documento esce con l’intestazione dell’associazione, pronto da copiare in una mail, stampare o salvare in PDF. Salvandolo, finisce nell’archivio come bozza.') +
       '<div class="scelte">' + GEN.map(function (x) { return '<a class="scelta" href="#genera/' + x.k + '"><span class="ico" aria-hidden="true">' + x.ico + '</span><b>' + x.t + '</b><span>' + x.d + '</span></a>'; }).join('') + '</div>';
+    if (P.genera.k !== m.k) P.genera.attId = null;
     P.genera.v = P.genera.k === m.k ? (P.genera.v || {}) : {}; P.genera.k = m.k;
     var v = P.genera.v, doc = P.genera.doc && P.genera.docK === m.k ? P.genera.doc : null, avv = m.avviso && P.genera.v ? m.avviso(P.genera.v) : '';
     return '<a class="back" href="#genera">← Tutti i modelli</a>' + head(m.t, m.d) +
@@ -2275,13 +2298,20 @@ details.espandi > ul { width: 100%; }
       '<div><dl class="so-dl">' + '<div class="so-d"><dt>Quando</dt><dd>' + (dd ? fL.format(dd) : 'da fissare') + (d.ora ? ', ore ' + esc(d.ora) : '') + '</dd></div>' + '<div class="so-d"><dt>Dove</dt><dd>' + (esc(a.luogo || '') || '<span class="sub">da indicare</span>') + '</dd></div>' +
         (!cd ? '<div class="so-d"><dt>Seconda convocazione</dt><dd>' + (d.d2 ? fL.format(dt(d.d2)) + (d.o2 ? ', ore ' + esc(d.o2) : '') : '<span class="sub">non indicata</span>') + '</dd></div><div class="so-d"><dt>Tipo</dt><dd>Assemblea ' + esc(d.assemblea || 'ordinaria') + '</dd></div>' : '') + '</dl>' +
         '<h3>Ordine del giorno</h3><ol class="ri-odg">' + odg.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>' +
-        '<div class="chips"><button class="btn" type="button" data-act="riunConv" data-id="' + a.id + '">📨 Prepara la convocazione</button><button class="btn alt" type="button" data-act="riunVerb" data-id="' + a.id + '">📝 Prepara il verbale</button></div>' +
+        '<div class="chips"><button class="btn" type="button" data-act="riunConv" data-id="' + a.id + '">📨 Prepara la convocazione</button><button class="btn alt" type="button" data-act="riunVerb" data-id="' + a.id + '">📝 Prepara il verbale</button></div>' + riunDocs(a) +
         '<details class="ed ri-ed"><summary>✏️ Modifica la riunione: giorno, ora, luogo, ordine del giorno</summary><form class="sform" data-act="riunSave" data-id="' + a.id + '">' +
           '<label>Giorno<input name="data" type="date" required value="' + esc(a.data || '') + '"></label><label>Ora<input name="ora" type="time" value="' + esc(d.ora || '') + '"></label><label class="wide">Luogo<input name="luogo" maxlength="200" value="' + esc(a.luogo || '') + '"></label>' +
           (cd ? '' : '<label>Assemblea<select name="assemblea"><option' + (d.assemblea !== 'straordinaria' ? ' selected' : '') + '>ordinaria</option><option' + (d.assemblea === 'straordinaria' ? ' selected' : '') + '>straordinaria</option></select></label><label>Seconda convocazione: giorno<input name="d2" type="date" value="' + esc(d.d2 || '') + '"></label><label>Seconda convocazione: ora<input name="o2" type="time" value="' + esc(d.o2 || '') + '"></label>') +
           genCampo(['odg', 'Ordine del giorno', 'odg'], { odgSel: (d.odgSel || []).map(String), odgAltri: d.odgAltri || '', odgVarie: d.odgVarie !== false }) +
           '<div class="wide"><button class="btn" type="submit">Salva la riunione</button></div></form></details></div>' +
       '<div><h3>' + (cd ? 'Convocati e presenze' : 'Soci convocati e presenze') + ' <small>' + C.lista.length + '</small></h3>' + legale + convocati + '</div></div></section>';
+  }
+  function riunDocs(a) {
+    var lt = low(a.titolo || ''), docs = D.documenti.filter(function (d) { return !d.archiviato && (d.attivita_id === a.id || (!d.attivita_id && lt && low(d.titolo).indexOf(lt) >= 0 && (!a.data || !d.data_doc || d.data_doc === a.data))); });
+    var riga = function (nome, re, serve) { var d = docs.filter(function (x) { return re.test(x.titolo); }).sort(function (x, y) { return new Date(y.aggiornato_il) - new Date(x.aggiornato_il); })[0];
+      return '<li>' + (d ? '✓ <b>' + nome + '</b>: <a href="' + docHref(d) + '">salvata in Documenti</a> <span class="sub">(' + esc((STATO_DOC[d.stato] || [d.stato])[0]) + ', ' + fD.format(new Date(d.aggiornato_il)) + ')</span>' : serve ? '⚠︎ <b>' + nome + '</b>: non ancora salvata in Documenti' : '<span class="sub">' + nome + ': si prepara dopo la riunione</span>') + '</li>'; };
+    var passata = a.data && dt(a.data) <= base;
+    return '<ul class="ri-docs">' + riga('Convocazione', /^convocazion/i, true) + riga('Verbale', /^verbale/i, passata).replace('salvata', 'salvato').replace('non ancora salvata', 'non ancora salvato') + '</ul>';
   }
   function riunGenera(a, verb) {
     var d = a.dati || {}, cd = a.tipo === 'Consiglio Direttivo', k = cd ? (verb ? 'verbale-cd' : 'conv-cd') : (verb ? 'verbale-ass' : 'conv-ass');
@@ -2293,7 +2323,7 @@ details.espandi > ul { width: 100%; }
       v.delegheSel = ids(function (x) { return pr[x.k] === 'delega'; });
       v.delegheCoppie = C.filter(function (x) { return x.id && pr[x.k] === 'delega'; }).map(function (x) { return { id: String(x.id), a: idK[dg[x.k]] || '' }; });
       if (cd) v.num = C.length; else { v.onorariSel = ids(function (x) { return !x.voto && pr[x.k] === 'presente'; }); v.iscritti = C.filter(function (x) { return x.voto; }).length; } }
-    P.genera.k = k; P.genera.v = v; P.genera.doc = null; location.hash = '#genera/' + k;
+    P.genera.k = k; P.genera.v = v; P.genera.doc = null; P.genera.attId = a.id; location.hash = '#genera/' + k;
   }
   function checklistSec(a, cl) {
     var disc = D.documenti.filter(function (x) { return x.categoria === 'Disciplinari' && x.contenuto; });
@@ -3332,6 +3362,9 @@ details.espandi > ul { width: 100%; }
   window.addEventListener('hashchange', acChiudi);
   mainEl.addEventListener('input', function (e) {
     if (e.target.matches && e.target.matches('input[data-socio]')) { acMostra(e.target); return; }
+    if (e.target.matches && e.target.matches('.doc-cerca')) { var dq = low(e.target.value.trim()).split(/\s+/).filter(Boolean), bx = e.target.closest('.df'), vis = 0;
+      bx.querySelectorAll('.dq').forEach(function (r) { var q = r.getAttribute('data-q'), ok = dq.every(function (w) { return q.indexOf(w) >= 0; }); r.hidden = !ok; if (ok) vis++; });
+      bx.querySelector('.df-nulla').hidden = vis > 0; return; }
     if (!e.target.matches || !e.target.matches('.gen-filtro')) return;
     var q = low(e.target.value.trim()), box = e.target.closest('.gen-soci');
     box.querySelectorAll('.gs-r').forEach(function (r) { r.hidden = q && r.getAttribute('data-q').indexOf(q) < 0; });
@@ -3454,7 +3487,7 @@ details.espandi > ul { width: 100%; }
       var gm2 = GEN.filter(function (x) { return x.k === P.genera.docK; })[0], dg = P.genera.doc, gv = P.genera.v || {};
       var slugG = 'gen-' + Date.now();
       if (gm2.riservato && nascosti()) { toast('Questo documento ha dati personali: per salvarlo entra con la password personale.'); return; }
-      var rg = await sb.from('documenti').insert({ slug: slugG, area: gm2.cat[0], categoria: gm2.cat[1], titolo: dg.titolo, sottotitolo: (gm2.riservato ? 'Contiene dati personali dei soci · ' : '') + 'Preparato con il modello «' + gm2.t + '» il ' + fD.format(base), stato: 'bozza', riservato: !!gm2.riservato, contenuto: gm2.riservato ? null : { intro: INTEST.join(' · '), secs: dg.secs }, caricato_da: me.nome, data_doc: gv.data || gv.d2 || null, protocollo: gv.protocollo || null }).select().single();
+      var rg = await sb.from('documenti').insert({ slug: slugG, area: gm2.cat[0], categoria: gm2.cat[1], titolo: dg.titolo, sottotitolo: (gm2.riservato ? 'Contiene dati personali dei soci · ' : '') + 'Preparato con il modello «' + gm2.t + '» il ' + fD.format(base), stato: 'bozza', riservato: !!gm2.riservato, contenuto: gm2.riservato ? null : { intro: INTEST.join(' · '), secs: dg.secs }, caricato_da: me.nome, data_doc: gv.data || gv.d2 || gv.d1 || null, protocollo: gv.protocollo || null, attivita_id: P.genera.attId || null }).select().single();
       if (rg.error) { toast('Non salvato: ' + rg.error.message); return; }
       if (gm2.riservato) {
         var rt = await sb.from('documenti_testo_riservato').insert({ documento_id: rg.data.id, contenuto: { secs: dg.secs }, aggiornato_da: me.nome });
@@ -3783,7 +3816,8 @@ details.espandi > ul { width: 100%; }
     D[tb] = D[tb].filter(function (x) { return x.id !== id; }); toast('Eliminato.'); render();
   }
   async function uploadDoc(f) {
-    var area = f.getAttribute('data-area'), title = f.t.value.trim(), file = f.f.files[0];
+    var area = f.getAttribute('data-area'), title = f.t.value.trim(), file = f.f.files[0], catU = f.c.value;
+    if (area === 'archivio' && UP_VERB[catU]) { area = 'verbali'; catU = UP_VERB[catU]; }
     if (!title || !file) return;
     var target = f.docid ? D.documenti.filter(function (x) { return x.id === +f.docid.value; })[0] : null;
     var path = (target && target.riservato ? 'riservati/' : '') + area + '/' + Date.now() + '-' + slugify(file.name.replace(/\.[^.]+$/, '')) + (/\.[a-z0-9]+$/i.test(file.name) ? file.name.match(/\.[a-z0-9]+$/i)[0].toLowerCase() : '');
@@ -3792,17 +3826,17 @@ details.espandi > ul { width: 100%; }
     var attId = f.att ? +f.att.value : null, praId = f.pra ? +f.pra.value : null;
     var ex = target || D.documenti.filter(function (x) { return x.area === area && low(x.titolo) === low(title) && (x.attivita_id || null) === attId && (x.pratica_id || null) === praId; })[0];
     if (ex && !ex.file_path) {
-      var u0 = await upd('documenti', ex.id, { file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc, protocollo: (f.p && f.p.value.trim()) || ex.protocollo || null });
+      var u0 = await upd('documenti', ex.id, { file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: catU, stato: f.s.value, data_doc: f.d.value || ex.data_doc, protocollo: (f.p && f.p.value.trim()) || ex.protocollo || null });
       if (!u0) return;
       toast('Caricato. Il documento ora ha il suo file.');
     } else if (ex) {
       var v = await sb.from('documenti_versioni').insert({ documento_id: ex.id, versione: ex.versione, file_path: ex.file_path, file_nome: ex.file_nome, caricato_da: ex.caricato_da, data: ex.aggiornato_il }).select().single();
       if (v.error) throw v.error; D.documenti_versioni.push(v.data);
-      var u = await upd('documenti', ex.id, { versione: ex.versione + 1, file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: f.c.value, stato: f.s.value, data_doc: f.d.value || ex.data_doc, protocollo: (f.p && f.p.value.trim()) || ex.protocollo || null });
+      var u = await upd('documenti', ex.id, { versione: ex.versione + 1, file_path: path, file_nome: file.name, caricato_da: me.nome, aggiornato_il: new Date().toISOString(), categoria: catU, stato: f.s.value, data_doc: f.d.value || ex.data_doc, protocollo: (f.p && f.p.value.trim()) || ex.protocollo || null });
       if (!u) return;
       toast('Caricato. La versione ' + (u.versione - 1) + ' resta tra le versioni precedenti.');
     } else {
-      var r = await sb.from('documenti').insert({ area: area, categoria: f.c.value, titolo: title, stato: f.s.value, file_path: path, file_nome: file.name, data_doc: f.d.value || null, protocollo: (f.p && f.p.value.trim()) || null, caricato_da: me.nome, attivita_id: attId, pratica_id: praId }).select().single();
+      var r = await sb.from('documenti').insert({ area: area, categoria: catU, titolo: title, stato: f.s.value, file_path: path, file_nome: file.name, data_doc: f.d.value || null, protocollo: (f.p && f.p.value.trim()) || null, caricato_da: me.nome, attivita_id: attId, pratica_id: praId }).select().single();
       if (r.error) throw r.error; D.documenti.push(r.data);
       toast('Caricato. Lo trovi nella lista.');
     }
