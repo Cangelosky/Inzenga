@@ -972,6 +972,7 @@ details.espandi > ul { width: 100%; }
       var p = D.profili.filter(function (x) { return x.user_id === session.user.id; })[0];
       if (!p) { await sb.auth.signOut(); document.getElementById('lgErr').textContent = 'Questo account non fa parte del Consiglio Direttivo.'; showLogin(); return; }
       me = { id: session.user.id, nome: p.nome_visualizzato, carica: p.carica_id, admin: p.is_admin, prova: !!p.prova };
+      me.gestore = !!p.is_admin || (!p.prova && (p.carica_id === 'presidente' || p.carica_id === 'vicepresidente'));
       document.getElementById('whoName').textContent = me.nome + (me.prova ? ' · accesso rapido' : '');
       document.getElementById('pwLink').hidden = me.prova;
       loginEl.hidden = true; appEl.hidden = false;
@@ -1295,7 +1296,7 @@ details.espandi > ul { width: 100%; }
       '<div class="doc-azioni doc-fine">' + (d.archiviato ? '<button class="btn" type="button" data-act="docArch" data-id="' + d.id + '" data-v="0">↩︎ Ripristina tra i documenti</button>' : '<button class="btn alt" type="button" data-act="docArch" data-id="' + d.id + '" data-v="1">🗄️ Archivia: lo togli dagli elenchi, si può ripristinare</button>') +
         (puoCancDoc() ? '<button class="btn alt danger" type="button" data-act="docDel" data-id="' + d.id + '">Elimina definitivamente</button>' : '') + '</div></article>';
   }
-  function puoCancDoc() { return !me.prova && (me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente'); }
+  function puoCancDoc() { return !!me.gestore; }
 
   /* ---------- pagine ---------- */
   var AREE = [['oggi', 'Oggi'], ['calendario', 'Calendario'], ['ruoli', 'Ruoli e mansioni'], ['pratiche', 'Pratiche'], ['attivita', 'Attività'], ['archivio', 'Documenti'], ['soldi', 'Contabilità'], ['soci', 'Soci'], ['sito', 'Sito'], ['comesifa', 'Come si fa']];
@@ -1461,7 +1462,7 @@ details.espandi > ul { width: 100%; }
     var arch = row.archiviato;
     return '<div class="azioni">' + (extra || '') +
       ('archiviato' in row ? '<button class="btn alt sm" type="button" data-act="archivia" data-t="' + tb + '" data-id="' + row.id + '" data-v="' + (arch ? '0' : '1') + '">' + (arch ? 'Ripristina' : 'Archivia') + '</button>' : '') +
-      (tb === 'documenti' && !me.admin ? '' : '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="' + tb + '" data-id="' + row.id + '" data-l="' + esc(label) + '">Elimina</button>') + '</div>';
+      (tb === 'documenti' && !me.gestore ? '' : '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="' + tb + '" data-id="' + row.id + '" data-l="' + esc(label) + '">Elimina</button>') + '</div>';
   }
   function scadForm(x) {
     return '<form class="sform" data-act="scadEdit" data-id="' + x.id + '"><label class="wide">Cosa va fatto<input name="titolo" required maxlength="200" value="' + esc(x.titolo) + '"></label>' +
@@ -1624,12 +1625,12 @@ details.espandi > ul { width: 100%; }
       '<section class="box k-soldi"><header><h2>Saldi</h2><a href="#soldi/primanota">Apri la prima nota</a></header>' + (D.prima_nota.length ? '<div class="saldi"><div><b>' + eur2(saldo('cassa')) + '</b><span>in cassa</span></div><div><b>' + eur2(saldo('banca')) + '</b><span>in banca</span></div><div><b>' + eur2(Ty.en) + '</b><span>entrate del ' + base.getFullYear() + '</span></div><div><b>' + eur2(Ty.us) + '</b><span>uscite del ' + base.getFullYear() + '</span></div></div>' : '<p class="sub">Nessun movimento registrato. Il primo movimento da inserire è il «Saldo di apertura» di cassa e di banca.</p>') + '</section>' +
       budgetPanoramica() +
       '<div class="cols"><section class="box"><h2>Prontuario economico</h2><p class="sub">Le poche regole già decise. Le altre si decidono in Consiglio e si aggiungono qui.</p><ul class="list">' + D.regole_economiche.slice().sort(function (x, y) { return x.ordine - y.ordine; }).map(function (r) { return '<li><div><b style="font-weight:500">' + esc(r.voce) + '</b><span class="sub">' + esc(r.valore) + '</span>' +
-        '<details class="ed"><summary>Modifica</summary><form class="sform" data-act="regolaSave" data-id="' + r.id + '"><label class="wide">Voce<input name="voce" required maxlength="200" value="' + esc(r.voce) + '"></label><label class="wide">Regola<textarea name="valore" maxlength="1000">' + esc(r.valore || '') + '</textarea></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button>' + (me.admin ? '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="regole_economiche" data-id="' + r.id + '" data-l="' + esc(r.voce) + '">Elimina</button>' : '') + '</div></form></details></div></li>'; }).join('') + '</ul>' +
+        '<details class="ed"><summary>Modifica</summary><form class="sform" data-act="regolaSave" data-id="' + r.id + '"><label class="wide">Voce<input name="voce" required maxlength="200" value="' + esc(r.voce) + '"></label><label class="wide">Regola<textarea name="valore" maxlength="1000">' + esc(r.valore || '') + '</textarea></label><div class="wide chips"><button class="btn sm" type="submit">Salva</button>' + (me.gestore ? '<button class="btn alt sm danger" type="button" data-act="elimina" data-t="regole_economiche" data-id="' + r.id + '" data-l="' + esc(r.voce) + '">Elimina</button>' : '') + '</div></form></details></div></li>'; }).join('') + '</ul>' +
         '<details class="ed"><summary>＋ Aggiungi una regola</summary><form class="sform" data-act="regolaNew"><label class="wide">Voce<input name="voce" required maxlength="200" placeholder="Es. Rimborso spese per le squadre di raccolta"></label><label class="wide">Regola<textarea name="valore" maxlength="1000"></textarea></label><div class="wide"><button class="btn sm" type="submit">Aggiungi</button></div></form></details></section>' +
       '<section class="box"><h2>Dati da raccogliere dal Tesoriere</h2><ul class="list">' +
       ['Corsisti per anno e per tipo negli ultimi tre anni', 'Incasso netto dei corsi e quota di iscrizione', 'Entrate e uscite per attività', 'Ripartizione percentuale delle entrate, con il 5 per mille come voce distinta'].map(function (x) { return '<li><div><b style="font-weight:500">' + x + '</b></div><span class="dc">Da raccogliere</span></li>'; }).join('') + '</ul></section></div>' +
       '<section class="box k-doc"><header><h2>Documenti contabili</h2></header>' + (docs.length ? docs.map(fileRow).join('') : '<p class="sub">Nessun documento caricato. Qui vanno i rendiconti approvati, gli estratti conto e le ricevute.</p>') +
-      upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
+      upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.gestore, 'Qui carica il Tesoriere. Con il tuo accesso puoi consultare i documenti, ma non aggiungerne.') + '</section>';
   };
 
   P.comesifa = function (sub) {
@@ -1661,10 +1662,10 @@ details.espandi > ul { width: 100%; }
   };
 
   P.admin = function () {
-    if (!me.admin) return head('Amministrazione', 'Questa area è riservata all’amministratore.');
-    return head('Amministrazione', 'Solo per l’amministratore. Gli account non si creano dal sito: non c’è iscrizione libera.') +
+    if (!me.gestore) return head('Amministrazione', 'Questa area è riservata a Presidente, Vicepresidente e amministratore.');
+    return head('Amministrazione', 'Per Presidente, Vicepresidente e amministratore: amministrano il sito e il gestionale. Gli account non si creano dal sito: non c’è iscrizione libera.') +
       '<section class="box"><header><h2>Account</h2><span class="sub">' + D.profili.length + ' account</span></header><div class="tablew"><table><thead><tr><th>Account</th><th>Carica</th><th>Permessi</th></tr></thead><tbody>' +
-      D.profili.map(function (p) { var c = p.carica_id && carica(p.carica_id); return '<tr><td><b>' + esc(p.nome_visualizzato) + '</b></td><td>' + esc(c ? c.nome : '—') + '</td><td>' + (p.is_admin ? 'Tutto, compresi account e cancellazioni' : 'Legge e modifica; non cancella') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
+      D.profili.map(function (p) { var c = p.carica_id && carica(p.carica_id); return '<tr><td><b>' + esc(p.nome_visualizzato) + '</b></td><td>' + esc(c ? c.nome : '—') + '</td><td>' + (p.is_admin ? 'Tutto, compresi account e cancellazioni' : !p.prova && (p.carica_id === 'presidente' || p.carica_id === 'vicepresidente') ? 'Amministra sito e gestionale, comprese le cancellazioni' : 'Legge e modifica; non cancella e non cambia il sito') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       '<p class="sub">Per creare, disattivare o reimpostare un account serve il pannello di Supabase (progetto «inzenga-gestionale»).</p></section>' +
       '<section class="box"><h2>Copia di sicurezza</h2><p>Scarica in un solo file i dati del gestionale (tabelle, senza i PDF) <b>senza dati personali</b>. Conservala fuori dal sito, in un posto sicuro.</p><div><button class="btn" type="button" data-act="backup">Scarica la copia senza dati personali</button></div></section>' + copiaCifrataBox() +
       '<div class="cols"><section class="box"><h2>Quattro livelli di accesso</h2><ol class="steps">' +
@@ -2108,18 +2109,18 @@ details.espandi > ul { width: 100%; }
     ente: ['Ente o comune ospitante', 'text', 'Es. Parco Uditore'], allestimento: ['Referente allestimento', 'text'], riunione: ['Riunione organizzativa', 'date'],
     squadre: ['Squadre di raccolta', 'text', 'Zone e capisquadra'], docenti: ['Docenti', 'text'], sede: ['Sede delle lezioni', 'text'],
     serate: ['Date delle serate', 'text', 'Es. 4 serate: 3, 10, 17, 24 marzo'], tipo_corso: ['Tipo di corso', 'select', ['Funghi epigei', 'Tartufi', 'Aggiornamento quinquennale']], comune_ente: ['Comune o ente che lo chiede', 'text', 'Es. Comune di Cefalù'], micologo: ['Micologo direttore del corso', 'text'], autorizzazione_corso: ['Autorizzazione (protocollo e data)', 'text', 'Es. Forestale prot. 3219 del 14/01/2026'], destinatari: ['Per chi', 'text', 'Es. solo soci, aperto a tutti'],
-    contributo: ['Contributo ai soci: quanto paga l’associazione per ogni socio', 'text', 'Es. 10 €: lo versa l’associazione al fornitore'],
+    contributo: ['Contributo ai soci: quanto paga l’associazione per ogni socio', 'text', 'Es. 10 €: lo versa l’associazione al fornitore (ristorante, albergo, location…)'],
     locale: ['Locale', 'text'], menu: ['Menu', 'text'], prenotazioni_entro: ['Prenotazioni entro il', 'date'], relatore: ['Relatore', 'text'], tema: ['Tema', 'text']
   };
   var DATI_TIPO = {
-    Stage: ['albergo', 'posti', 'quota', 'chi_incassa', 'caparra', 'collaborazione', 'sopralluogo', 'autorizzazione', 'iscrizioni_entro'],
+    Stage: ['albergo', 'posti', 'quota', 'contributo', 'caparra', 'collaborazione', 'sopralluogo', 'autorizzazione', 'iscrizioni_entro'],
     Mostre: ['ente', 'orario', 'allestimento', 'riunione', 'squadre'],
-    Gite: ['ritrovo', 'mezzo', 'pranzo', 'autorizzazione', 'iscrizioni_entro', 'quota'],
+    Gite: ['ritrovo', 'mezzo', 'pranzo', 'autorizzazione', 'iscrizioni_entro', 'quota', 'contributo'],
     'Corsi per il tesserino': ['tipo_corso', 'comune_ente', 'sede', 'serate', 'micologo', 'docenti', 'posti', 'quota', 'chi_incassa', 'iscrizioni_entro', 'autorizzazione_corso'],
     Corsi: ['sede', 'serate', 'docenti', 'posti', 'quota', 'iscrizioni_entro'],
     'Corsi extra': ['destinatari', 'sede', 'serate', 'docenti', 'posti', 'quota'],
     'Pranzi e cene': ['locale', 'orario', 'menu', 'quota', 'contributo', 'prenotazioni_entro', 'posti'],
-    Conversazioni: ['relatore', 'tema', 'orario'], Lezioni: ['relatore', 'tema', 'orario'], Pratica: ['orario'], Eventi: ['orario', 'quota']
+    Conversazioni: ['relatore', 'tema', 'orario'], Lezioni: ['relatore', 'tema', 'orario'], Pratica: ['orario'], Eventi: ['orario', 'quota', 'contributo']
   };
   var LISTE = {
     partecipanti: { nome: 'Soci partecipanti', campi: [['nome', 'Nome e cognome'], ['telefono', 'Telefono'], ['quota', 'Quota versata'], ['note', 'Note (intolleranze, esigenze)']], pers: true },
@@ -2144,6 +2145,7 @@ details.espandi > ul { width: 100%; }
   /* pranzi e cene: quota a persona dai dati dell'attività; totale = (socio + ospiti) × quota */
   function numEur(v) { v = String(v == null ? '' : v).trim().replace(/[€\s]/g, ''); if (!v) return null; if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(v)) v = v.replace(/\./g, ''); v = v.replace(',', '.'); var n = parseFloat(v); return isFinite(n) ? n : null; }
   function quotaPersona(a) { var q = parseFloat(String((a.dati || {}).quota || '').replace(',', '.')); return q > 0 ? q : null; }
+  var QUOTE_TIPI = ['Pranzi e cene', 'Gite', 'Stage', 'Eventi'];
   function contributoSocio(a) { var c = parseFloat(String((a.dati || {}).contributo || '').replace(',', '.').replace(/[^\d.]/g, '')); return c > 0 ? c : 0; }
   function quotaSocio(a) { var q = quotaPersona(a); return q == null ? null : Math.max(0, q - contributoSocio(a)); }
   function totaleRiga(a, r) { var q = quotaPersona(a); return q == null ? null : quotaSocio(a) + q * numOspiti(r); }
@@ -2198,8 +2200,8 @@ details.espandi > ul { width: 100%; }
       }
     }
     /* pranzi e cene: a chi vanno le quote si decide una volta per tutta la lista (dati.paga_a) */
-    var pranzo = tipo === 'partecipanti' && a.tipo === 'Pranzi e cene', pagaDef = '', pagaA = (a.dati || {}).paga_a || (/tesor|associaz/i.test((a.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((a.dati || {}).chi_incassa || '') ? 'Ristorante' : '');
-    var pagaBox = pranzo ? '<div class="pg-a"><label>Le quote si pagano a<select data-act="pagaA" data-id="' + a.id + '">' + [['', 'da decidere'], ['Ristorante', 'Ristorante'], ['Associazione', 'Associazione (le incassa il Tesoriere)']].map(function (o) { return '<option value="' + o[0] + '"' + (pagaA === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label>' + (quotaPersona(a) != null ? '<span class="sub">Quota a persona: <b>' + eur2(quotaPersona(a)) + '</b>' + (contributoSocio(a) ? ' · contributo dell’associazione: <b>' + eur2(contributoSocio(a)) + '</b> per socio · <b>il socio paga ' + eur2(quotaSocio(a)) + '</b>, ogni ospite ' + eur2(quotaPersona(a)) : '') + ' (si cambiano nei dati dell’attività)</span>' : '<span class="sub">Scrivi la quota a persona nei dati dell’attività per avere i totali.</span>') + '</div>' : '';
+    var pranzo = tipo === 'partecipanti' && a.tipo === 'Pranzi e cene', conQuote = tipo === 'partecipanti' && QUOTE_TIPI.indexOf(a.tipo) >= 0, forn = pranzo ? 'Ristorante' : 'Fornitore', pagaDef = '', pagaA = (a.dati || {}).paga_a || (/tesor|associaz/i.test((a.dati || {}).chi_incassa || '') ? 'Associazione' : /ristor|locale/i.test((a.dati || {}).chi_incassa || '') ? 'Ristorante' : '');
+    var pagaBox = conQuote ? '<div class="pg-a"><label>Le quote si pagano a<select data-act="pagaA" data-id="' + a.id + '">' + [['', 'da decidere'], [forn, pranzo ? 'Ristorante' : 'Direttamente al fornitore (albergo, location, pullman…)'], ['Associazione', 'Associazione (le incassa il Tesoriere)']].map(function (o) { return '<option value="' + o[0] + '"' + (pagaA === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></label>' + (quotaPersona(a) != null ? '<span class="sub">Quota a persona: <b>' + eur2(quotaPersona(a)) + '</b>' + (contributoSocio(a) ? ' · contributo dell’associazione: <b>' + eur2(contributoSocio(a)) + '</b> per socio · <b>il socio paga ' + eur2(quotaSocio(a)) + '</b>, ogni ospite (non socio) ' + eur2(quotaPersona(a)) : '') + ' (si cambiano nei dati dell’attività)</span>' : '<span class="sub">Scrivi la quota a persona nei dati dell’attività per avere i totali.</span>') + '</div>' : '';
     var cp = contaPartecipanti(a), conta = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<b>' + cp.soci + (cp.soci === 1 ? ' socio' : ' soci') + (cp.ospiti ? ' + ' + cp.ospiti + (cp.ospiti === 1 ? ' ospite' : ' ospiti') + ' = ' + cp.tot + (a.tipo === 'Pranzi e cene' ? ' coperti' : ' partecipanti') : '') + '</b>' : tipo === 'ospiti' ? '<b>' + rows.length + (rows.length === 1 ? ' ospite' : ' ospiti') + '</b> · in tutto ' + cp.tot + ' partecipanti' : (rows.length === 1 ? '1 riga' : rows.length + ' righe');
     var spiega = tipo === 'partecipanti' && soloSoci(a, tipo) ? '<p class="sub">Solo soci del libro soci: scrivi due lettere e scegli dalla tendina. ' + (a.tipo === 'Pranzi e cene' ? 'Chi porta ospiti, scrive quanti nella colonna «Ospiti con sé».' : (LISTE_TIPO[a.tipo] || []).indexOf('ospiti') >= 0 ? 'Chi non è socio va nella lista «Ospiti», qui sotto.' : '') + '</p>' : tipo === 'ospiti' ? '<p class="sub">Chi partecipa senza essere socio, con nome e cognome. Restano separati dal libro soci e dalla lista dei soci partecipanti.</p>' : '';
     var dlL = '', sociHint = (tipo === 'partecipanti' || tipo === 'ospiti') && !D.soci && !nascosti() && !(tipo === 'partecipanti' && !soloSoci(a, tipo)) ? sociOkBox('Per scegliere i soci dalla tendina accetta la dichiarazione: l’uso resta nel registro dei dati personali.') : '';
@@ -2224,11 +2226,11 @@ details.espandi > ul { width: 100%; }
         var both = vivi.filter(function (r) { return numEur(r.dati.preventivo) != null && numEur(r.dati.consuntivo) != null; }), dp = both.reduce(function (s, r) { return s + numEur(r.dati.consuntivo) - numEur(r.dati.preventivo); }, 0), aperti = vivi.filter(function (r) { return numEur(r.dati.preventivo) != null && numEur(r.dati.consuntivo) == null; }).reduce(function (s, r) { return s + numEur(r.dati.preventivo); }, 0);
         var note = [(both.length ? '<span class="' + (dp > 0 ? 'p2w' : 'sub') + '">Sulle voci già spese: ' + (dp > 0 ? eur2(dp) + ' in più del preventivo' : dp < 0 ? eur2(-dp) + ' in meno del preventivo' : 'come da preventivo') + '</span>' : ''), (aperti ? '<span class="sub">Ancora da spendere, secondo i preventivi: ' + eur2(aperti) + '</span>' : ''), '<span class="sub">In prima nota per questa attività, uscite: ' + eur2(pn) + '</span>'].filter(Boolean);
         return '<tfoot><tr><td colspan="3"><b>Totale</b>' + (vivi.length < rows.length ? ' <span class="sub">(senza gli scartati)</span>' : '') + '<small class="pv-note">' + note.join('<br>') + '</small></td><td class="tn"><b>' + eur2(sp) + '</b></td><td class="tn"><b>' + eur2(sc) + '</b></td><td colspan="2"></td></tr></tfoot>';
-      })() : '') + (pranzo && rows.length ? (function () {
-        var q = quotaPersona(a), c = contributoSocio(a), dai = rows.reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0), contr = c && q != null ? Math.min(c, q) * rows.length : 0, aChi = pagaA === 'Ristorante' ? 'al ristorante' : pagaA === 'Associazione' ? 'all’associazione' : '<span class="p2w">(a chi: da decidere)</span>';
-        return '<tfoot><tr><td colspan="' + L.campi.length + '"><b>Totale: ' + cp.tot + ' coperti</b>' + (q != null ? ' · i partecipanti pagano ' + aChi : '') +
-          (contr ? '<small class="pv-note">Contributo ai soci: l’associazione versa al fornitore <b>' + eur2(contr) + '</b> (' + eur2(Math.min(c, q)) + ' × ' + rows.length + ' soci), da registrare in prima nota tra le uscite. Totale al fornitore: <b>' + eur2(q * cp.tot) + '</b>.</small>' : '') +
-          '</td><td class="tn"><b>' + (q != null ? eur2(dai) : '—') + '</b></td><td></td></tr></tfoot>'; })() : '') + '</table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
+      })() : '') + (conQuote && rows.length ? (function () {
+        var q = quotaPersona(a), c = contributoSocio(a), nSoci = rows.length, dai = pranzo ? rows.reduce(function (s, r) { return s + (totaleRiga(a, r) || 0); }, 0) : (q != null ? quotaSocio(a) * nSoci + q * cp.ospiti : 0), contr = c && q != null ? Math.min(c, q) * nSoci : 0, aChi = pagaA === 'Associazione' ? 'all’associazione' : pagaA ? (pranzo ? 'al ristorante' : 'direttamente al fornitore') : '<span class="p2w">(a chi: da decidere)</span>';
+        var testo = '<b>Totale: ' + cp.tot + (pranzo ? ' coperti' : ' partecipanti') + '</b>' + (q != null ? ' · i partecipanti pagano ' + aChi + (pranzo ? '' : ': <b>' + eur2(dai) + '</b> (' + nSoci + (nSoci === 1 ? ' socio' : ' soci') + ' × ' + eur2(quotaSocio(a)) + (cp.ospiti ? ' + ' + cp.ospiti + (cp.ospiti === 1 ? ' ospite' : ' ospiti') + ' × ' + eur2(q) : '') + ')') : ' · <span class="sub">scrivi la quota a persona nei dati dell’attività per avere i totali</span>') +
+          (contr ? '<small class="pv-note">Contributo ai soci: l’associazione versa al fornitore <b>' + eur2(contr) + '</b> (' + eur2(Math.min(c, q)) + ' × ' + nSoci + (nSoci === 1 ? ' socio' : ' soci') + '), da registrare in prima nota tra le uscite. Totale al fornitore: <b>' + eur2(q * cp.tot) + '</b>.</small>' : '');
+        return '<tfoot><tr>' + (pranzo ? '<td colspan="' + L.campi.length + '">' + testo + '</td><td class="tn"><b>' + (q != null ? eur2(dai) : '—') + '</b></td><td></td>' : '<td colspan="' + (L.campi.length + 1) + '">' + testo + '</td>') + '</tr></tfoot>'; })() : '') + '</table></div>' + (rows.length ? '<div class="chips"><button class="btn alt sm" type="button" data-act="lCsv" data-id="' + a.id + '" data-tipo="' + tipo + '">Scarica per Excel</button></div>' : '') + '</section>';
   }
   function soldiAttivita(a) {
     var bud = D.attivita_budget.filter(function (x) { return x.attivita_id === a.id; });
@@ -2641,7 +2643,7 @@ details.espandi > ul { width: 100%; }
     if (!s) return '<a class="back" href="#soci/libro">← Libro soci</a>' + head('Socio non trovato', '');
     if (!P.soci.viste[id]) { P.soci.viste[id] = 1; sociLog('scheda', 'Aperta la scheda del socio n. ' + id, id); }
     var lg = (D.soci_log || []).filter(function (l) { return l.socio_id === id; }).slice(0, 10);
-    var puoCanc = me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente';
+    var puoCanc = !!me.gestore;
     var back = '<a class="back" href="#soci/libro">← Libro soci</a>';
     if (modifica) return back + head('Modifica: ' + socioNome(s), 'Cambia quello che serve e salva. Ogni modifica resta nel registro dei dati personali.') + '<section class="box k-soci">' + socioForm(s) + '</section>';
     var y = base.getFullYear(), anni = socioAnni(s), stelle = socioStelle(s), mm = socioManca(s);
@@ -2869,13 +2871,14 @@ details.espandi > ul { width: 100%; }
     if (up.error) throw up.error;
     return path;
   }
+  function sitoEd(h) { return me.gestore ? h : ''; }
   function sitoTabs(sub) {
     var n = nuoviDalSito();
     var tabs = [['', 'Panoramica'], ['messaggi', 'Messaggi' + (n.msg ? ' (' + n.msg + ')' : '')], ['slide', 'In primo piano'], ['corsi', 'Corsi'], ['calendario', 'Calendario del sito'], ['testi', 'Contatti e avvisi']];
     return '<div class="chips">' + tabs.map(function (x) { return '<a class="chip" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit" href="#sito' + (x[0] ? '/' + x[0] : '') + '" aria-pressed="' + ((sub || '') === x[0]) + '">' + x[1] + '</a>'; }).join('') + '</div>';
   }
   var SOLO_ADMIN_DEL = ['sito_preiscrizioni', 'sito_richieste_socio', 'sito_messaggi'];
-  function delBtn(table, id) { return (me.admin || SOLO_ADMIN_DEL.indexOf(table) < 0) ? '<button class="btn alt" type="button" data-act="sitoDel" data-t="' + table + '" data-id="' + id + '">Elimina</button>' : ''; }
+  function delBtn(table, id) { return (me.gestore || SOLO_ADMIN_DEL.indexOf(table) < 0) ? '<button class="btn alt" type="button" data-act="sitoDel" data-t="' + table + '" data-id="' + id + '">Elimina</button>' : ''; }
   function slideForm(s) {
     var id = s ? s.id : 'new';
     return '<form class="sform" data-act="slideSave" data-id="' + id + '">' +
@@ -2926,7 +2929,7 @@ details.espandi > ul { width: 100%; }
   }
   P.sito = function (sub) {
     var t = sitoTabs(sub), n = nuoviDalSito();
-    var intro = '<p class="note">Quello che salvi qui compare sul sito pubblico entro un minuto: basta ricaricare la pagina del sito. Osservatorio, Didattica e Biblioteca non si gestiscono da qui finché il Comitato scientifico non li approva.</p>';
+    var intro = (me.gestore ? '' : '<p class="note">Il sito lo aggiornano Presidente e Vicepresidente: qui vedi com’è adesso e gestisci messaggi e preiscrizioni. Per una modifica, manda una richiesta a uno dei due.</p>') + '<p class="note">Quello che salvi qui compare sul sito pubblico entro un minuto: basta ricaricare la pagina del sito. Osservatorio, Didattica e Biblioteca non si gestiscono da qui finché il Comitato scientifico non li approva.</p>';
     if (sub === 'messaggi' && nascosti()) { var mc = (D.cnt || {}).messaggi || {}; return head('Messaggi dal sito', 'Quello che arriva dal modulo «Scrivici» della pagina Contatti.') + t + boxNascosti('i messaggi (' + (mc.da_leggere || 0) + ' da leggere)'); }
     if (sub === 'messaggi') {
       var ms = D.sito_messaggi.slice().sort(function (a, b) { return new Date(b.creato_il) - new Date(a.creato_il); });
@@ -2942,8 +2945,8 @@ details.espandi > ul { width: 100%; }
         sl.map(function (s) {
           return '<section class="box sitem' + (s.pubblicato ? '' : ' off') + '"><div class="sthumb' + (s.logo ? ' logo' : '') + '">' + (s.immagine ? '<img src="' + esc(pubUrl(s.immagine)) + '" alt="" loading="lazy">' : '') + '</div><div class="sbody"><header><h2>' + esc(s.titolo) + '</h2><span class="pill ' + (s.pubblicato ? '' : 'plain') + '">' + (s.pubblicato ? 'Pubblicata' : 'Nascosta') + '</span></header>' +
             '<p>' + esc(s.testo) + '</p><p class="sub"><b>' + esc(s.dettaglio) + '</b> · pulsante «' + esc(s.bottone) + '» → ' + esc(s.link) + ' · ordine ' + s.ordine + '</p>' +
-            '<details><summary>Modifica</summary>' + slideForm(s) + '</details></div></section>'; }).join('') +
-        '<section class="box"><h2>Aggiungi una slide</h2>' + slideForm(null) + '</section>' + intro;
+            sitoEd('<details><summary>Modifica</summary>' + slideForm(s) + '</details>') + '</div></section>'; }).join('') +
+        sitoEd('<section class="box"><h2>Aggiungi una slide</h2>' + slideForm(null) + '</section>') + intro;
     }
     if (sub === 'corsi') {
       var groups = ['aperto', 'in_attesa', 'concluso'];
@@ -2955,8 +2958,8 @@ details.espandi > ul { width: 100%; }
             return '<section class="box sitem k-corsi' + (c.pubblicato ? '' : ' off') + '"><div class="sthumb">' + (c.locandina ? '<img src="' + esc(pubUrl(c.locandina)) + '" alt="" loading="lazy">' : '') + '</div><div class="sbody"><header><h2>' + esc(c.titolo) + '</h2><span class="pill ' + (c.pubblicato ? '' : 'plain') + '">' + (c.pubblicato ? 'Pubblicato' : 'Nascosto') + '</span></header>' +
               '<p class="sub">' + [c.tipo, c.luogo, c.quando, c.dove].filter(Boolean).map(esc).join(' · ') + '</p>' + (c.descrizione ? '<p>' + esc(c.descrizione) + '</p>' : '') +
               (g !== 'concluso' ? '<p><a href="#attivita/corsi">' + np + ' preiscritti</a> · soglia ' + c.soglia + ' · posti ' + c.posti + '</p>' : '') +
-              '<details><summary>Modifica</summary>' + corsoForm(c) + '</details></div></section>'; }).join('');
-        }).join('') + '<section class="box"><h2>Aggiungi un corso</h2>' + corsoForm(null) + '</section>' + intro;
+              sitoEd('<details><summary>Modifica</summary>' + corsoForm(c) + '</details>') + '</div></section>'; }).join('');
+        }).join('') + sitoEd('<section class="box"><h2>Aggiungi un corso</h2>' + corsoForm(null) + '</section>') + intro;
     }
     if (sub === 'calendario') {
       var anni = Array.from(new Set(D.sito_calendario.map(function (e) { return e.anno; }).concat([base.getFullYear() + 1]))).sort();
@@ -2969,16 +2972,16 @@ details.espandi > ul { width: 100%; }
         Object.keys(byM).map(function (mk) {
           return '<section class="box"><h2 style="text-transform:capitalize">' + MESI[mk] + ' ' + y + ' <small class="sub">' + byM[mk].length + '</small></h2><ul class="calist">' + byM[mk].map(function (e) { var dd = calDayText(e);
             return '<li class="ce' + (e.pubblicato ? '' : ' off') + '"' + tintCat(e.categoria) + '><div class="cd"><b>' + esc(dd.d) + '</b><span>' + esc(dd.w) + '</span></div><div><span class="sub">' + CATS[e.categoria] + (e.proposta ? ' · <b>proposta</b>' : '') + (e.pubblicato ? '' : ' · <b>nascosto</b>') + '</span><b class="ct">' + esc(e.titolo) + '</b>' + (e.sottotitolo ? '<span class="sub">' + esc(e.sottotitolo) + '</span>' : '') +
-              '<details><summary>Modifica</summary>' + calForm(e, y) + '</details></div></li>'; }).join('') + '</ul></section>';
-        }).join('') + '<section class="box"><h2>Aggiungi un appuntamento</h2>' + calForm(null, y) + '</section>' + intro;
+              sitoEd('<details><summary>Modifica</summary>' + calForm(e, y) + '</details>') + '</div></li>'; }).join('') + '</ul></section>';
+        }).join('') + sitoEd('<section class="box"><h2>Aggiungi un appuntamento</h2>' + calForm(null, y) + '</section>') + intro;
     }
     if (sub === 'testi') {
       var tx = D.sito_testi.slice().sort(function (a, b) { return a.ordine - b.ordine; });
       return head('Contatti e avvisi', 'I testi del sito che cambiano più spesso. L’avviso compare in cima alla Home finché non lo svuoti.') + t +
-        '<section class="box k-sito"><form class="sform" data-act="testiSave">' + tx.map(function (x) {
+        '<section class="box k-sito"><form class="sform" data-act="testiSave">' + (me.gestore ? '' : '<fieldset disabled style="border:0;padding:0;margin:0;display:contents">') + tx.map(function (x) {
           var big = x.valore.length > 80 || x.chiave === 'avviso_home';
           return '<label class="wide">' + esc(x.etichetta) + (big ? '<textarea name="' + esc(x.chiave) + '" maxlength="1000">' + esc(x.valore) + '</textarea>' : '<input name="' + esc(x.chiave) + '" maxlength="1000" value="' + esc(x.valore) + '">') + '<span class="sub">Ultima modifica: ' + esc(x.aggiornato_da || '') + ', ' + fT.format(new Date(x.aggiornato_il)) + '</span></label>'; }).join('') +
-        '<div class="wide"><button class="btn" type="submit">Salva i testi</button></div></form></section>' + intro;
+        (me.gestore ? '<div class="wide"><button class="btn" type="submit">Salva i testi</button></div>' : '</fieldset>') + '</form></section>' + intro;
     }
     var pub = function (arr) { return arr.filter(function (x) { return x.pubblicato; }).length; };
     return head('Sito', 'Da qui si aggiorna il sito pubblico: le schede in primo piano, i corsi, il calendario, i contatti e gli avvisi. Qui arrivano anche le richieste dei visitatori.') + t +
@@ -3009,7 +3012,7 @@ details.espandi > ul { width: 100%; }
         return '<tr><td><b>' + esc(p.nome) + ' ' + esc(p.cognome) + '</b><br><span class="sub">' + esc(p.comune) + '</span>' + (p.note ? '<br><span class="sub">«' + esc(p.note) + '»</span>' : '') + '</td>' +
           '<td><a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' + (p.telefono ? '<br><a href="tel:' + esc(p.telefono.replace(/[^\d+]/g, '')) + '">' + esc(p.telefono) + '</a>' : '') + '</td>' +
           '<td class="tn">' + fD.format(new Date(p.creato_il)) + '</td>' +
-          '<td><select data-act="preStato" data-id="' + p.id + '" aria-label="Stato di ' + esc(p.nome) + '">' + Object.keys(PRE_ST).map(function (k) { return '<option value="' + k + '"' + (k === p.stato ? ' selected' : '') + '>' + PRE_ST[k][0] + '</option>'; }).join('') + '</select>' + (p.aggiornato_da ? '<br><span class="sub">da ' + esc(p.aggiornato_da) + '</span>' : '') + (me.admin ? '<br>' + delBtn('sito_preiscrizioni', p.id) : '') + '</td>' +
+          '<td><select data-act="preStato" data-id="' + p.id + '" aria-label="Stato di ' + esc(p.nome) + '">' + Object.keys(PRE_ST).map(function (k) { return '<option value="' + k + '"' + (k === p.stato ? ' selected' : '') + '>' + PRE_ST[k][0] + '</option>'; }).join('') + '</select>' + (p.aggiornato_da ? '<br><span class="sub">da ' + esc(p.aggiornato_da) + '</span>' : '') + (me.gestore ? '<br>' + delBtn('sito_preiscrizioni', p.id) : '') + '</td>' +
           '<td><form data-act="preNote" data-id="' + p.id + '" class="mini-f"><input name="quota" maxlength="120" placeholder="Quota: es. 50 € il 3/12, contanti" value="' + esc(p.quota || '') + '"><input name="note_cd" maxlength="2000" placeholder="Nota" value="' + esc(p.note_cd || '') + '"><button class="btn alt" type="submit">Salva</button></form></td></tr>'; }).join('') + '</tbody></table></div>';
     }
     return head('Corsi e iscrizioni', 'Le preiscrizioni arrivate dal sito, corso per corso. Segna lo stato di ogni persona: così il Consiglio sa chi è stato contattato, chi ha pagato e quando un corso può partire.') +
@@ -3034,7 +3037,7 @@ details.espandi > ul { width: 100%; }
     log('Ha scaricato l’elenco dei preiscritti di', c ? (c.titolo_breve || c.titolo) : '');
   }
   function csvLista(aid, tipo) {
-    var a = att(aid), L = { campi: campiLista(tipo, att(aid)) }, rows = D.attivita_liste.filter(function (x) { return x.attivita_id === aid && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine; });
+    var a = att(aid), L = { nome: nomeLista(tipo, a), campi: campiLista(tipo, a) }, rows = D.attivita_liste.filter(function (x) { return x.attivita_id === aid && x.tipo === tipo; }).sort(function (x, y) { return x.ordine - y.ordine; });
     function q(v) { v = String(v == null ? '' : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
     var pz = tipo === 'partecipanti' && a && a.tipo === 'Pranzi e cene';
     var out = [L.campi.map(function (c) { return c[1]; }).concat(pz ? ['Totale da pagare'] : []).join(';')].concat(rows.map(function (r) { return L.campi.map(function (c) { return q(r.dati[c[0]]); }).concat(pz ? [q(totaleRiga(a, r) == null ? '' : String(totaleRiga(a, r)).replace('.', ','))] : []).join(';'); }));
@@ -3106,7 +3109,7 @@ details.espandi > ul { width: 100%; }
     if (sub === 'documento') return back + head('Nuovo documento', 'Scegli dove metterlo. Se c’è già un documento con lo stesso titolo, il nuovo file prende il suo posto e il vecchio resta tra le versioni.') +
       '<section class="box k-doc"><h2>In Documenti</h2>' + upForm('archivio', ['Statuto e regolamenti', 'Normativa e guide', 'Piano', 'Disciplinari', 'Questionari', 'Sito e comunicazione', 'Calendario', 'Modulistica'], true) + '</section>' +
       '<section class="box k-doc"><h2>Tra i Verbali</h2>' + upForm('verbali', ['Consiglio Direttivo', 'Assemblea'], true) + '</section>' +
-      '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.admin, 'Qui carica il Tesoriere.') + '</section>';
+      '<section class="box k-soldi"><h2>Tra i documenti contabili</h2>' + upForm('contabilita', ['Rendiconto', 'Estratti conto', 'Ricevute', 'Prima nota'], canPN() || me.gestore, 'Qui carica il Tesoriere.') + '</section>';
     if (sub === 'testo') return back + head('Nuovo testo pronto', 'Compare in Come si fa → Comunicazioni, con il pulsante «Copia».') +
       '<section class="box k-altri"><form class="sform" data-act="nTesto"><label class="wide">Titolo<input name="titolo" required maxlength="200" placeholder="Es. Promemoria della gita"></label>' +
       '<label class="wide">Testo<textarea name="testo" required maxlength="3000" style="min-height:160px"></textarea></label><div class="wide"><button class="btn" type="submit">Aggiungi il testo</button></div></form></section>';
@@ -3207,7 +3210,7 @@ details.espandi > ul { width: 100%; }
     mainEl.innerHTML = (lite ? '<div class="lite-bar">' + (r.a !== 'facile' ? '<a class="lite-home" href="#facile">← Cosa vuoi fare?</a>' : '') + '<button class="btn alt" type="button" data-act="liteOff">Versione completa</button>' + (r.a === 'facile' ? '<button class="btn alt" type="button" data-act="liteEsci">Esci</button>' : '') + '</div>' : '') + html;
     var cur = r.a === 'doc' ? 'archivio' : r.a === 'cerca' || r.a === 'account' || r.a === 'nuovo' ? '' : r.a;
     document.getElementById('addBtn').setAttribute('aria-current', r.a === 'nuovo' ? 'page' : 'false');
-    var aree = AREE.concat(me.admin ? [['admin', 'Amministrazione']] : []);
+    var aree = AREE.concat(me.gestore ? [['admin', 'Amministrazione']] : []);
     tabsEl.innerHTML = aree.map(function (x) { var n = badge(x[0]); return '<a href="#' + x[0] + '"' + (x[0] === cur ? ' aria-current="page"' : '') + '>' + x[1] + (n ? '<span class="n" aria-label="' + n + ' da fare">' + n + '</span>' : '') + '</a>'; }).join('');
     var curA = tabsEl.querySelector('[aria-current]'); if (curA && tabsEl.scrollWidth > tabsEl.clientWidth) tabsEl.scrollLeft = Math.max(0, curA.offsetLeft - tabsEl.offsetLeft - 16);
     renderBnav(aree, cur);
@@ -3820,7 +3823,7 @@ details.espandi > ul { width: 100%; }
     } catch (ex) { toast('Non eliminato: ' + (ex.message || ex)); }
   }
   async function sitoDel(tb, id) {
-    if (!me.admin && SOLO_ADMIN_DEL.indexOf(tb) >= 0) return;
+    if (!me.gestore && SOLO_ADMIN_DEL.indexOf(tb) >= 0) return;
     if (!confirm('Eliminare definitivamente? Se vuoi solo toglierlo dal sito, togli la spunta «Pubblicato».')) return;
     var r = await sb.from(tb).delete().eq('id', id).select();
     if (r.error) { toast('Non eliminato: ' + r.error.message); return; }
@@ -3854,7 +3857,7 @@ details.espandi > ul { width: 100%; }
     }
     render();
   }
-  function puoCopiaCifrata() { return me && !me.prova && (me.admin || me.carica === 'presidente' || me.carica === 'vicepresidente'); }
+  function puoCopiaCifrata() { return !!(me && me.gestore); }
   function copiaCifrataBox() {
     if (!puoCopiaCifrata()) return '';
     return '<section class="box k-soci"><h2>Copia completa cifrata</h2><p>Tutto il gestionale <b>con i dati personali</b> (libro soci, registro dei dati personali, richieste dal sito, liste dei partecipanti) in un file zip protetto da password (cifratura AES a 256 bit). La password la scegli tu adesso e non viene salvata da nessuna parte: deve conoscerla solo la Presidenza. Se si perde, la copia non si apre più.</p>' +
