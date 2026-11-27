@@ -112,6 +112,8 @@ h1 { margin: 0; font: 700 clamp(26px, 5vw, 34px)/1.1 var(--f-display); letter-sp
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 .btn.primary:hover { color: var(--accent-ink); filter: brightness(1.08); }
 .status { margin: 8px 0 0; min-height: 1.4em; font-size: 13px; color: var(--muted); }
+.ver-row { display: flex; justify-content: flex-end; padding: 18px max(16px, env(safe-area-inset-right, 0px)) 22px; }
+.ver { font: 500 11px/1.2 ui-monospace, Menlo, monospace; color: var(--ink-2, #555); opacity: .75; }
 .stamp { background: #12251D; color: #CFE3D6; font: 500 12px/1.2 ui-monospace, Menlo, monospace; letter-spacing: .02em; text-align: center; padding: 5px 12px; }
 .bc { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12.5px; margin: 0 0 6px; }
 .bc a { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
@@ -880,9 +882,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <pattern id="p-wave" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 3Q2 1 4 3T8 3" style="fill:none;stroke:var(--ink);stroke-width:.8;opacity:.7"/></pattern>
 <pattern id="p-band" width="6" height="9" patternUnits="userSpaceOnUse"><path d="M0 4.5H6" style="stroke:var(--ink);stroke-width:1;opacity:.55"/></pattern>
 </defs></svg>
-<div class="stamp" id="stamp">Ultima modifica: <span data-stamp>24 novembre 2026, ore 12:52</span></div>
 <script>(function(){try{var m=localStorage.getItem('inz-mode'),d=(m==='dark'||m==='light')?m==='dark':!!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-sbm',d?'dark':'light')}catch(e){}})();</script>
-<div class="sitedraft"><div><span><b>Bozza per il Consiglio Direttivo.</b> Testi, date e foto sono esempi da rivedere.</span><span>Le parti segnate «da inserire» aspettano i dati veri.</span></div></div>
 <div class="sitebar" role="banner">
   <div class="sitebar-in">
     <a class="sb-brand" href="../#home" aria-label="Associazione Micologica Giuseppe Inzenga APS, gruppo A.M.B. di Palermo: vai alla home">
@@ -4853,3 +4853,5 @@ window.addEventListener("hashchange", function () { setTab(location.hash.replace
 <script>if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){})});
 try { var __sh = document.querySelector('.sheet'); if (__sh && window.TX) __sh.insertAdjacentHTML('afterbegin', TX.general()); } catch (e) {}
 </script>
+
+<div class="ver-row"><span class="ver"><span data-stamp>0000000000v0.9.0</span></span></div>
