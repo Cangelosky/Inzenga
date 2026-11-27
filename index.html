@@ -201,6 +201,10 @@ nav a.socio:hover { background: #EDBB55; }
 #p-home .sec-head { margin-bottom: 20px; }
 #p-home .pp-dots { margin-bottom: 4px; }
 .cells.compact { gap: 12px; }
+.cells.one { grid-template-columns: minmax(0, 1fr); }
+.acc-form { display: grid; gap: 12px; margin: 14px 0; } .acc-form input { width: 100%; }
+.acc-pw { max-width: 620px; }
+#accAvviso { font-weight: 600; }
 .cells.compact .cell { padding: clamp(14px, 2.2vw, 20px); gap: 8px; border-radius: 18px; }
 .cells.compact .cell-logo { width: 44px; height: 44px; }
 .cells.compact .cell h3 { font-size: 19px; }
@@ -656,8 +660,7 @@ footer a { color: var(--ink); }
         <li><a href="#chi-siamo" data-go="chi-siamo">Chi siamo</a></li>
         <li><a href="#attivita" data-go="attivita">Attività</a></li>
         <li><a href="#corsi" data-go="corsi">Corsi</a></li>
-        <li><a href="#osservatorio" data-go="osservatorio">Osservatorio</a></li>
-        <li><a href="impara/#indice">Strumenti didattici</a></li>
+        <li><a href="impara/#indice-biblioteca">Biblioteca</a></li>
         <li><a href="#contatti" data-go="contatti">Contatti</a></li>
         <li><a class="lock" href="#accesso" data-go="accesso">Area riservata</a></li>
       </ul>
@@ -693,14 +696,8 @@ footer a { color: var(--ink); }
     </div>
 
     <div>
-      <div class="sec-head"><h2>Studia i funghi con noi, anche da casa</h2><p>Due sezioni nuove del sito, aperte a tutti e gratuite.</p></div>
-      <div class="cells compact">
-        <div class="cell" style="--tint:var(--c-pratica)">
-          <div class="cell-top"><img class="cell-logo" src="img/logo-didattica.svg" alt="" width="72" height="72"><span class="kicker">Didattica</span></div>
-          <h3>Impara a riconoscere i funghi, passo dopo passo.</h3>
-          <p>Un percorso per cominciare, la chiave per arrivare al genere, i caratteri da osservare, le specie del Sud Italia e gli strumenti per chi determina: misura delle spore, reagenti, sporata, scheda di raccolta.</p>
-          <div class="cta-row"><a class="btn solid" href="impara/#indice">Entra nella Didattica</a></div>
-        </div>
+      <div class="sec-head"><h2>La biblioteca dei funghi, aperta a tutti</h2><p>I grandi libri di micologia e le tavole storiche, liberi da sfogliare. Gli strumenti di studio sono nell’area soci.</p></div>
+      <div class="cells compact one">
         <div class="cell" style="--tint:var(--c-stage)">
           <div class="cell-top"><img class="cell-logo" src="img/logo-biblioteca.svg" alt="" width="72" height="72"><span class="kicker">Biblioteca</span></div>
           <h3>I grandi libri dei funghi, liberi da leggere.</h3>
@@ -715,11 +712,6 @@ footer a { color: var(--ink); }
       <div class="strip" id="strip"></div>
     </div>
 
-    <div>
-      <div class="sec-head"><h2>Dal nostro Osservatorio</h2><p>La scienza dei funghi a piccole dosi: domande, metodi e note di campo sui funghi di Sicilia, in schede brevi.</p></div>
-      <div class="grid" id="homeSchede"></div>
-      <div class="cta-row" style="margin-top:24px"><a class="btn solid" href="#osservatorio" data-go="osservatorio">Tutte le schede</a></div>
-    </div>
   </div>
 </section>
 
@@ -1031,46 +1023,40 @@ footer a { color: var(--ink); }
 <section class="page gut" id="p-accesso" aria-label="Area riservata">
   <div class="wrap stack">
     <div>
-      <div class="sec-head"><span class="kicker">Area riservata</span><h2 style="font-size:clamp(32px,5vw,52px)">Per i soci e per il Consiglio Direttivo.</h2><p>Queste parti restano dietro login e nascoste ai motori di ricerca.</p></div>
+      <div class="sec-head" id="accHead"><span class="kicker">Area riservata</span><h2 style="font-size:clamp(32px,5vw,52px)">Per i soci e per il Consiglio Direttivo.</h2><p>Queste parti restano dietro accesso e nascoste ai motori di ricerca.</p></div>
+      <p class="note acc-avviso" id="accAvviso" hidden></p>
       <div class="cols" id="loginCols">
         <div class="box">
-          <h3>Osservatorio, area soci</h3>
-          <p>Per i soci: ritrovamenti, piogge e segnalazioni. Si apre ai soci dopo un periodo di prova.</p>
-          <h3 style="margin-top:8px">Gestionale</h3>
-          <p>Per il Consiglio Direttivo: ruoli e vice, scadenze e pratiche, calendario, stato dei lavori, documenti, prima nota e aggiornamento del sito.</p>
-          <p><a class="btn solid" href="gestionale-v2/">Entra nel gestionale</a></p>
+          <h3>Area soci</h3>
+          <p>Gli strumenti didattici (chiave, specie, caratteri, strumenti di laboratorio) e l’Osservatorio. In questa prima fase è aperta al <b>Comitato scientifico</b>, che li sta rivedendo; poi si aprirà a tutti i soci.</p>
+          <p class="sub">Non ci si iscrive dal sito: l’accesso lo crea l’associazione e te lo consegna. Al primo ingresso scegli una password tua.</p>
+          <form id="sociForm" class="acc-form" novalidate>
+            <label for="le">Email<input type="email" id="le" autocomplete="username" required></label>
+            <label for="lp">Password<input type="password" id="lp" autocomplete="current-password" required></label>
+            <button class="btn solid" type="submit">Entra nell’area soci</button>
+            <div class="msg" id="lmsg" role="status" hidden></div>
+          </form>
+          <p class="sub">Password dimenticata? Chiedi al Presidente o al Vicepresidente: te ne danno una nuova.</p>
         </div>
         <div class="box">
-          <h3>Entra</h3>
-          <form id="loginForm" novalidate>
-            <fieldset class="radios">
-              <legend>Dove vuoi entrare</legend>
-              <label class="radio" for="r1"><input type="radio" name="area" id="r1" value="Osservatorio" checked><span>Osservatorio<small>Soci</small></span></label>
-              <label class="radio" for="r2"><input type="radio" name="area" id="r2" value="Gestionale"><span>Gestionale<small>Consiglio Direttivo</small></span></label>
-            </fieldset>
-            <label for="le">Email<input type="email" id="le" autocomplete="username"></label>
-            <label for="lp">Password<input type="password" id="lp" autocomplete="current-password"></label>
-            <button class="btn solid" type="submit">Entra</button>
-            <div class="msg" id="lmsg" hidden></div>
-          </form>
-          <div class="demo-acc"><b>Accesso demo</b><span>Utenti inventati, solo per la presentazione.</span>
-            <button type="button" class="chip" data-demo="0">Socia: Lucia Bellanti</button>
-            <small>lucia.bellanti@example.org · bosco2027</small>
-            <span>Il gestionale ha un accesso vero, con la carica e la password personale.</span></div>
+          <h3>Gestionale del Consiglio Direttivo</h3>
+          <p>Per il Consiglio Direttivo: ruoli e vice, scadenze e pratiche, calendario, stato dei lavori, documenti, prima nota e aggiornamento del sito. Si entra con la carica e la password personale.</p>
+          <p><a class="btn solid" href="gestionale-v2/">Entra nel gestionale</a></p>
         </div>
       </div>
-      <div id="areaDemo" hidden></div>
+      <div id="areaSoci" hidden></div>
     </div>
   </div>
 </section>
 </main>
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Locandina ingrandita"><button type="button" id="lbClose">Chiudi</button><img id="lbImg" alt=""></div>
 
+<script src="area-soci.js"></script>
 <footer class="gut">
   <div class="wrap">
     <div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><img id="logoAmb" class="amb-logo" alt="Logo dell'Associazione Micologica Bresadola (A.M.B.)" height="64"><img id="logoFoot" alt="" width="64" height="64" style="display:block"><div><strong style="color:var(--ink)">Associazione Micologica Giuseppe Inzenga APS</strong><br>Gruppo A.M.B. di Palermo · Oratorio dei Salesiani «Villaurea»<br>Ente del Terzo settore, iscritta al RUNTS n. 75000 · C.F. 97171140821<br>Non diamo indicazioni di commestibilità.</div></div></div>
     <div class="fright"><div class="links">
-      <a href="#home" data-go="home">Home</a><a href="#chi-siamo" data-go="chi-siamo">Chi siamo</a><a href="#attivita" data-go="attivita">Attività</a><a href="#corsi" data-go="corsi">Corsi</a><a href="#osservatorio" data-go="osservatorio">Osservatorio</a><a href="#contatti" data-go="contatti">Contatti</a><a href="#associati" data-go="associati">Diventa socio</a><a href="#accesso" data-go="accesso">Area riservata</a><a href="#privacy" data-go="privacy">Privacy</a>
+      <a href="#home" data-go="home">Home</a><a href="#chi-siamo" data-go="chi-siamo">Chi siamo</a><a href="#attivita" data-go="attivita">Attività</a><a href="#corsi" data-go="corsi">Corsi</a><a href="#contatti" data-go="contatti">Contatti</a><a href="#associati" data-go="associati">Diventa socio</a><a href="#accesso" data-go="accesso">Area riservata</a><a href="#privacy" data-go="privacy">Privacy</a>
     </div>
     <span class="soc"><a class="soc-b" href="https://www.facebook.com/profile.php?id=61568126933510" target="_blank" rel="noopener noreferrer" aria-label="Facebook (si apre in una nuova scheda)" title="Facebook"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><text x="12" y="20" text-anchor="middle" font-family="Bricolage Grotesque, Trebuchet MS, sans-serif" font-size="27" font-weight="800" fill="currentColor">f</text></svg></a><a class="soc-b" href="https://www.instagram.com/ass.micologica.inzenga/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (si apre in una nuova scheda)" title="Instagram"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.9" cy="7.1" r="1.25" fill="currentColor"/></svg></a></span></div>
     <div class="foot-theme"><div class="skin" id="skin"><button type="button" class="skin-btn" id="skinBtn" role="switch" aria-checked="false"><svg class="ico-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="ico-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg><span class="lbl">Scuro</span></button></div></div>
@@ -1109,6 +1095,8 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
     else if (pg === 'attivita' && sub && BY_SLUG[sub]) { renderAct(sub); pg = 'attivita-dett'; }
     else if (pg === 'attivita') tab = 'acts';
     else if (pg === 'osservatorio' && sub && OBY[sub]) { renderObs(sub); pg = 'osserv-dett'; }
+    if ((pg === 'osservatorio' || pg === 'osserv-dett') && !(window.AREA && window.AREA.okSubito())) {
+      var av = document.getElementById('accAvviso'); av.hidden = false; av.textContent = 'L’Osservatorio è nell’area soci: entra con il tuo accesso per leggerlo.'; av.setAttribute('data-torna', p); pg = 'accesso'; }
     if (PAGES.indexOf(pg) < 0) pg = 'home';
     navId = pg === 'attivita-dett' ? 'attivita' : (pg === 'osserv-dett' ? 'osservatorio' : pg);
     PAGES.forEach(function (id) { document.getElementById('p-' + id).classList.toggle('on', id === pg); });
@@ -1874,7 +1862,7 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
   });
   document.getElementById('q').addEventListener('input', function (e) { qv = e.target.value.trim().toLowerCase(); renderSchede(); });
   renderFilters(); renderSchede();
-  document.getElementById('homeSchede').innerHTML = ['siccita-ficuzza', 'un-temporale-non-basta', 'tre-famiglie'].map(function (k) { return schedaHtml(OBY[k]); }).join('');
+  if (document.getElementById('homeSchede')) document.getElementById('homeSchede').innerHTML = ['siccita-ficuzza', 'un-temporale-non-basta', 'tre-famiglie'].map(function (k) { return schedaHtml(OBY[k]); }).join('');
   var obsPage = document.getElementById('obsPage');
   obsPage.addEventListener('click', function (e) { var b = e.target.closest('button[data-lb]'); if (!b) return; openLb(IMG[b.getAttribute('data-lb')], b.querySelector('img').alt, b); });
   function renderObs(slug) {
@@ -2007,53 +1995,45 @@ var IMG = {"fistulina": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
       .then(ok, function () { m.textContent = 'Non siamo riusciti a inviare il messaggio. Riprova tra poco, oppure scrivici a ' + TXT.email + '.'; })
       .then(function () { btn.disabled = false; });
   });
-  /* ---------- accesso demo (utenti inventati) ---------- */
-  var DEMO = [
-    { area: 'Osservatorio', email: 'lucia.bellanti@example.org', pw: 'bosco2027', nome: 'Lucia Bellanti', ruolo: 'Socia (account demo)' },
-    { area: 'Gestionale', email: 'matteo.corsaro@example.org', pw: 'consiglio2027', nome: 'Matteo Corsaro', ruolo: 'Consigliere (account demo)' }
-  ];
-  var GEST_URL = 'gestionale-v2/';
-  var loginForm = document.getElementById('loginForm'), areaBox = document.getElementById('areaDemo'), loginCols = document.getElementById('loginCols');
-  function fillDemo(i) {
-    var a = DEMO[i];
-    document.getElementById(i === 0 ? 'r1' : 'r2').checked = true;
-    document.getElementById('le').value = a.email; document.getElementById('lp').value = a.pw;
-    document.getElementById('lmsg').hidden = true;
-  }
-  document.querySelectorAll('[data-demo]').forEach(function (b) { b.addEventListener('click', function () { fillDemo(+b.getAttribute('data-demo')); }); });
-  function renderArea(a) {
-    var h = '<div class="dm-head"><div><span class="kicker">' + esc(a.ruolo) + '</span><h2 style="font-size:clamp(28px,4.4vw,44px)">Ciao ' + esc(a.nome.split(' ')[0]) + '.</h2><p>Sei dentro l\'area ' + (a.area === 'Osservatorio' ? 'Osservatorio, riservata ai soci' : 'Gestionale, riservata al Consiglio Direttivo') + '. Tutti i dati qui sotto sono esempi.</p></div><button class="btn line" type="button" id="logoutBtn">Esci</button></div>';
-    if (a.area === 'Osservatorio') {
-      h += '<div class="dm-grid"><div class="box"><h3>Ultime segnalazioni (esempio)</h3><ul class="dm-list">'
-        + '<li><b>Fistulina hepatica</b><span>Bosco di Ficuzza, su quercia · certo</span></li>'
-        + '<li><b>Amanita muscaria</b><span>Madonie, sotto conifere · probabile</span></li>'
-        + '<li><b>Hydnum sp.</b><span>Nebrodi, faggeta · da verificare</span></li></ul>'
-        + '<p class="dm-n">Zona sempre ampia, mai un punto preciso. Nessuna indicazione di commestibilità.</p></div>'
-        + '<div class="box"><h3>Piogge e condizioni (esempio)</h3><dl class="kv"><dt>Ultimi 7 giorni</dt><dd>12 mm a Ficuzza</dd><dt>Ultimi 30 giorni</dt><dd>48 mm</dd><dt>Temperatura media</dt><dd>16 °C</dd></dl><p class="dm-n">Solo condizioni già avvenute, nessuna previsione.</p></div>'
-        + '<div class="box"><h3>Segnala un ritrovamento</h3><form id="segnForm" novalidate><label for="sg1">Specie o descrizione<input type="text" id="sg1" value="Cappello arancio con lamelle gialle"></label><label for="sg2">Zona (ampia)<input type="text" id="sg2" value="Bosco di Ficuzza"></label><button class="btn solid" type="submit">Invia al revisore</button><div class="msg" id="sgmsg" hidden></div></form></div></div>';
-    } else {
-      h += '<div class="dm-grid"><div class="box"><h3>Prossime scadenze</h3><ul class="dm-list"><li><b>Racconto dello stage ai soci</b><span>Da fare ora</span></li><li><b>Pranzo sociale</b><span>12 dicembre, anno da chiarire</span></li><li><b>Apertura stagione 2027</b><span>18 gennaio 2027</span></li></ul></div>'
-        + '<div class="box"><h3>Decisioni da votare</h3><p style="font-size:44px;font-family:var(--font-display);font-weight:700;line-height:1">15</p><p class="dm-n">Ruoli e vice, tutor, stage riservato, community, sito, Osservatorio.</p></div>'
-        + '<div class="box"><h3>Documenti in bozza</h3><p style="font-size:44px;font-family:var(--font-display);font-weight:700;line-height:1">11</p><p class="dm-n">Disciplinari, questionari, piano, sito. Nessun dato personale dei soci.</p></div></div>'
-        + '<div class="cta-row" style="margin-top:20px"><a class="btn solid" href="' + GEST_URL + '" >Apri il gestionale del Consiglio Direttivo</a></div>';
+  /* ---------- area soci: accesso vero (account creati dal gestionale) ---------- */
+  var sociForm = document.getElementById('sociForm'), areaBox = document.getElementById('areaSoci'), loginCols = document.getElementById('loginCols'), accHead = document.getElementById('accHead'), accAvv = document.getElementById('accAvviso');
+  function areaMsg(t) { var m = document.getElementById('lmsg'); m.hidden = !t; m.textContent = t || ''; }
+  function areaFuori() { areaBox.hidden = true; areaBox.innerHTML = ''; loginCols.hidden = false; accHead.hidden = false; }
+  function areaDentro(st) {
+    accHead.hidden = true; loginCols.hidden = true; accAvv.hidden = true; areaBox.hidden = false;
+    var nome = esc(String(st.nome || window.AREA.email() || '').split(' ')[0]);
+    if (st.cambio_password) {
+      areaBox.innerHTML = '<div class="box acc-pw"><span class="kicker">Area soci</span><h2>Ciao ' + nome + ', scegli la tua password.</h2><p>È il tuo primo ingresso, oppure hai ricevuto una password nuova: sostituiscila con una che conosci solo tu. Almeno 10 caratteri.</p>' +
+        '<form id="pwForm" class="acc-form" novalidate><label for="np1">Nuova password<input type="password" id="np1" minlength="10" autocomplete="new-password" required></label><label for="np2">Ripetila<input type="password" id="np2" minlength="10" autocomplete="new-password" required></label><button class="btn solid" type="submit">Salva e continua</button><div class="msg" id="pwmsg" role="status" hidden></div></form>' +
+        '<p><button class="btn" type="button" data-esci>Esci</button></p></div>';
+      document.getElementById('pwForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); var a = document.getElementById('np1').value, b = document.getElementById('np2').value, m = document.getElementById('pwmsg'); m.hidden = false;
+        if (a.length < 10) { m.textContent = 'Serve una password di almeno 10 caratteri.'; return; }
+        if (a !== b) { m.textContent = 'Le due password non sono uguali.'; return; }
+        m.textContent = 'Salvo…'; try { areaMostra(await window.AREA.cambiaPassword(a)); } catch (er) { m.textContent = 'Non salvata: ' + er.message; }
+      });
+      return;
     }
-    areaBox.innerHTML = h; areaBox.hidden = false; loginCols.hidden = true; document.querySelector('#p-accesso .sec-head').hidden = true;
-    document.getElementById('logoutBtn').addEventListener('click', function () { areaBox.hidden = true; areaBox.innerHTML = ''; loginCols.hidden = false; document.querySelector('#p-accesso .sec-head').hidden = false; loginForm.reset(); });
-    var sf = document.getElementById('segnForm');
-    if (sf) sf.addEventListener('submit', function (e) { e.preventDefault(); var m = document.getElementById('sgmsg'); m.hidden = false; m.textContent = 'In questa demo la segnalazione non parte. Nel sito vero la controlla un amministratore prima di pubblicarla.'; });
-    window.scrollTo(0, 0);
+    areaBox.innerHTML = '<div class="dm-head"><div><span class="kicker">Area soci</span><h2 style="font-size:clamp(28px,4.4vw,44px)">Ciao ' + nome + '.</h2><p>' + (st.comitato ? 'Sei nel Comitato scientifico: qui trovi gli strumenti da rivedere prima che si aprano ai soci.' : 'Benvenuto nell’area dei soci.') + '</p></div><button class="btn" type="button" data-esci>Esci</button></div>' +
+      '<div class="cells compact"><div class="cell" style="--tint:var(--c-pratica)"><div class="cell-top"><img class="cell-logo" src="img/logo-didattica.svg" alt="" width="72" height="72"><span class="kicker">Strumenti didattici</span></div><h3>Chiave, specie, caratteri e laboratorio.</h3><p>Bozza da rivedere con il Comitato scientifico: non serve a decidere se un fungo si mangia.</p><div class="cta-row"><a class="btn solid" href="impara/#indice">Apri gli strumenti didattici</a></div></div>' +
+      '<div class="cell" style="--tint:var(--c-eventi)"><div class="cell-top"><img class="cell-logo" src="img/osservatorio.svg" alt="" width="72" height="72" style="object-fit:cover;border-radius:12px"><span class="kicker">Osservatorio</span></div><h3>Le schede dell’Osservatorio micologico.</h3><p>Domande, metodi e note di campo sui funghi di Sicilia, in schede brevi. Anche queste sono in revisione.</p><div class="cta-row"><a class="btn solid" href="#osservatorio" data-go="osservatorio">Apri l’Osservatorio</a></div></div></div>';
   }
-  loginForm.addEventListener('submit', function (e) {
+  function areaMostra(st) {
+    if (st && st.ok) { areaDentro(st); return; }
+    if (st && st.fuori === undefined && st.attivo === false) { areaFuori(); areaMsg('Il tuo accesso è sospeso. Chiedi al Presidente o al Vicepresidente.'); return; }
+    if (st && st.attivo) { areaFuori(); areaMsg('Il tuo accesso è pronto, ma per ora l’area soci è aperta solo al Comitato scientifico. Ti avviseremo quando si apre a tutti.'); return; }
+    areaFuori();
+  }
+  sociForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    var area = document.querySelector('input[name="area"]:checked').value;
-    if (area === 'Gestionale') { location.href = GEST_URL; return; }
-    var em = document.getElementById('le').value.trim().toLowerCase(), pw = document.getElementById('lp').value;
-    var m = document.getElementById('lmsg'); m.hidden = false;
-    var acc = DEMO.filter(function (a) { return a.email === em && a.pw === pw; })[0];
-    if (!acc) { m.textContent = 'Email o password non corrette. Usa uno dei due account demo qui sotto.'; return; }
-    if (acc.area !== area) { m.textContent = 'Questo account entra in ' + acc.area + '. Cambia la scelta qui sopra.'; return; }
-    renderArea(acc);
+    var em = document.getElementById('le').value, pw = document.getElementById('lp').value;
+    if (!em || !pw) { areaMsg('Scrivi email e password.'); return; }
+    areaMsg('Controllo…');
+    try { var st = await window.AREA.entra(em, pw); areaMsg(''); sociForm.reset(); areaMostra(st); if (st.ok && accAvv.getAttribute('data-torna')) { var t = accAvv.getAttribute('data-torna'); accAvv.removeAttribute('data-torna'); if (!st.cambio_password) location.hash = '#' + t; } }
+    catch (er) { areaMsg(/invalid/i.test(er.message) ? 'Email o password non corrette.' : /banned|ban/i.test(er.message) ? 'Il tuo accesso è sospeso. Chiedi al Presidente o al Vicepresidente.' : 'Non riesco a entrare: ' + er.message); }
   });
+  document.addEventListener('click', async function (e) { if (!e.target.closest('[data-esci]')) return; await window.AREA.esci(); areaFuori(); areaMsg('Sei uscito dall’area soci.'); window.scrollTo(0, 0); });
+  window.AREA.stato().then(function (st) { areaMostra(st); if (!st.ok && /^#osserv/.test(location.hash)) show(location.hash.slice(1)); });
 
   /* ---------- contenuti aggiornati dal gestionale del Consiglio Direttivo ----------
      Slide, corsi, calendario e contatti arrivano dall'archivio del gestionale (Supabase).

@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}body.pubblico .solo-soci, body.pubblico .ix-t-lab, body.pubblico #ix-pl { display: none !important; }
+</style>
 <meta name="robots" content="noindex,nofollow">
 <title>Didattica e Biblioteca</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -861,6 +862,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
 <meta name="robots" content="noindex,nofollow">
 <style>#inzGate{position:fixed;inset:0;z-index:9999;background:#15362A;color:#E8EFE3;display:flex;align-items:center;justify-content:center;padding:24px;font-family:"Instrument Sans",system-ui,sans-serif}#inzGate form{width:min(380px,100%);display:grid;gap:14px}#inzGate h1{font:700 26px/1.15 "Bricolage Grotesque",system-ui,sans-serif;margin:0}#inzGate p{margin:0;color:#C9D8C6;font-size:16px;line-height:1.5}#inzGate input{font:inherit;font-size:17px;padding:12px 14px;border-radius:12px;border:1px solid #4B7A62;background:#1F4A38;color:#fff}#inzGate button{font:inherit;font-weight:600;font-size:16px;padding:12px 18px;border-radius:999px;border:0;background:#E2AB3C;color:#1A2A20;cursor:pointer}#inzGate .e{color:#F4C987;min-height:1.2em}</style>
 <div id="inzGate"><form autocomplete="off"><h1>Anteprima riservata</h1><p>Sito dell'Associazione Micologica Giuseppe Inzenga, in prova. Inserisci la password che ti è stata data.</p><label style="display:grid;gap:6px;font-weight:600">Password<input id="inzGateP" type="password" autocomplete="current-password"></label><button type="submit">Entra</button><p class="e" id="inzGateE" role="alert"></p></form></div>
+<script src="../area-soci.js"></script>
 <script src="tossici.js"></script>
 <script>(function(){var g=document.getElementById('inzGate'),ok=false;try{ok=localStorage.getItem('inz-gate')==='1'}catch(e){}if(ok){g.remove();return}g.querySelector('form').addEventListener('submit',function(e){e.preventDefault();if(document.getElementById('inzGateP').value.trim().toLowerCase()==='inzenga2027'){try{localStorage.setItem('inz-gate','1')}catch(e){}g.remove()}else{document.getElementById('inzGateE').textContent='Password non corretta.'}});document.getElementById('inzGateP').focus()})();</script>
 
@@ -896,8 +898,9 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
         <li><a href="../#chi-siamo">Chi siamo</a></li>
         <li><a href="../#attivita">Attività</a></li>
         <li><a href="../#corsi">Corsi</a></li>
-        <li><a href="../#osservatorio">Osservatorio</a></li>
-        <li><a href="#indice" aria-current="page">Strumenti didattici</a></li>
+        <li class="solo-soci"><a href="../#osservatorio">Osservatorio</a></li>
+        <li class="solo-soci"><a href="#indice">Strumenti didattici</a></li>
+        <li><a href="#indice-biblioteca" aria-current="page">Biblioteca</a></li>
         <li><a href="../#contatti">Contatti</a></li>
         <li><a class="lock" href="../#accesso">Area riservata</a></li>
       </ul>
@@ -950,6 +953,7 @@ html[data-sbm="dark"] .sitebar, html[data-sbm="dark"] .sitedraft { --sb-bg: #2A1
     </div>
   </section>
 
+  <section id="p-riservato" hidden><div class="box" style="max-width:680px;margin:24px auto;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--card)"><h2 style="margin-top:0">Questa parte è nell’area soci</h2><p>Gli strumenti didattici (chiave, specie, caratteri, strumenti di laboratorio) sono in revisione con il Comitato scientifico. Per ora si aprono solo con l’accesso all’area soci.</p><p><a class="btn primary" href="../#accesso">Entra nell’area soci</a> <a class="btn" href="#indice-biblioteca">Vai alla Biblioteca, aperta a tutti</a></p></div></section>
   <section id="p-percorso" role="tabpanel" aria-labelledby="tab-percorso">
     <div id="path" class="path" aria-live="polite"></div>
   </section>
@@ -4782,13 +4786,26 @@ var PGTXT = {
   bib: ["Biblioteca", "I libri storici da sfogliare e da leggere trascritti, le loro tavole (immagini di funghi) ripulite e le pubblicazioni scientifiche sui funghi del Sud Italia.", "Libri, tavole e pubblicazioni"]
 };
 function ixShow(w) {
+  if (w === "lab" && !areaAperta()) w = "bib";
   document.querySelector(".ix-file").setAttribute("data-front", w);
   $("#ix-pl").hidden = w !== "lab"; $("#ix-pb").hidden = w !== "bib";
   $("#ixt-lab").setAttribute("aria-selected", String(w === "lab")); $("#ixt-bib").setAttribute("aria-selected", String(w === "bib"));
 }
 [].forEach.call(document.querySelectorAll("[data-ix]"), function (b) { b.addEventListener("click", function () { var w = b.getAttribute("data-ix"); ixShow(w); try { history.replaceState(null, "", w === "bib" ? "#indice-biblioteca" : "#indice"); } catch (e) {} }); });
+function areaAperta() { return !!(window.AREA && window.AREA.okSubito()); }
 function setTab(name, updateHash) {
   if (name === "laboratorio") name = "percorso";
+  var aperta = areaAperta(); document.body.classList.toggle("pubblico", !aperta);
+  $("#p-riservato").hidden = true;
+  if (!aperta) {
+    if (!name || name === "indice") name = "indice-biblioteca";
+    if (PG.lab.indexOf(name) > -1) {
+      PG.lab.concat(PG.bib).forEach(function (t) { $("#p-" + t).hidden = true; }); $("#p-indice").hidden = true; document.body.classList.remove("ix");
+      $("#p-riservato").hidden = false; $("#count").hidden = true;
+      try { document.title = "Area soci · Inzenga"; } catch (e) {}
+      return;
+    }
+  }
   if (name === "libri") name = "biblioteca";
   var all = PG.lab.concat(PG.bib);
   var idx = !name || name === "indice" || name === "indice-biblioteca";
@@ -4835,6 +4852,7 @@ window.addEventListener("hashchange", function () { setTab(location.hash.replace
   renderPath();
   render(null);
   setTab(location.hash.replace("#", ""), false);
+  if (window.AREA) window.AREA.stato().then(function () { setTab(location.hash.replace("#", ""), false); });
 })();
 </script>
 <script>

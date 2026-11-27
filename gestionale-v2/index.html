@@ -838,6 +838,8 @@ details.espandi > ul { width: 100%; }
 .ri-sel { display: flex; flex-wrap: wrap; gap: 6px; }
 .odg-nuovo { display: flex; gap: 8px; align-items: stretch; margin-top: 10px; } .odg-nuovo .odg-in { flex: 1; min-width: 0; min-height: 46px; }
 .odg-nota { margin: 4px 0 8px; }
+.acc-chk { display: flex !important; flex-direction: row !important; align-items: center; gap: 10px; } .acc-chk input { width: 22px !important; height: 22px; min-height: 0 !important; padding: 0 !important; flex: none; }
+.acc-pw-box { border: 2px dashed var(--line); border-radius: 14px; padding: 12px 16px; margin: 10px 0; background: var(--bg); } .acc-pw-val code { font-size: 22px; letter-spacing: .06em; font-weight: 700; }
 .gd .gd-row { display: none; } .gd:has(input[name^="ds"]:checked) .gd-row { display: grid; } .gd-un { align-self: end; display: flex; align-items: center; gap: 10px; min-height: 46px; } .gd-un input { width: 22px !important; height: 22px; min-height: 0 !important; padding: 0 !important; border: 0; flex: none; }
 .gd-row .wide { grid-column: 1 / -1; }
 .gd-altri { margin-top: 10px; } .gd-altri > summary { cursor: pointer; font-weight: 700; padding: 8px 0; }
@@ -1672,6 +1674,7 @@ details.espandi > ul { width: 100%; }
       '<section class="box"><header><h2>Account</h2><span class="sub">' + D.profili.length + ' account</span></header><div class="tablew"><table><thead><tr><th>Account</th><th>Carica</th><th>Permessi</th></tr></thead><tbody>' +
       D.profili.map(function (p) { var c = p.carica_id && carica(p.carica_id); return '<tr><td><b>' + esc(p.nome_visualizzato) + '</b></td><td>' + esc(c ? c.nome : '—') + '</td><td>' + (p.is_admin ? 'Tutto, compresi account e cancellazioni' : !p.prova && (p.carica_id === 'presidente' || p.carica_id === 'vicepresidente') ? 'Amministra sito e gestionale, comprese le cancellazioni' : 'Legge e modifica; non cancella e non cambia il sito') + '</td></tr>'; }).join('') + '</tbody></table></div>' +
       '<p class="sub">Per creare, disattivare o reimpostare un account serve il pannello di Supabase (progetto «inzenga-gestionale»).</p></section>' +
+      areaSociAdmin() +
       '<section class="box"><h2>Copia di sicurezza</h2><p>Scarica in un solo file i dati del gestionale (tabelle, senza i PDF) <b>senza dati personali</b>. Conservala fuori dal sito, in un posto sicuro.</p><div><button class="btn" type="button" data-act="backup">Scarica la copia senza dati personali</button></div></section>' + copiaCifrataBox() +
       '<div class="cols"><section class="box"><h2>Quattro livelli di accesso</h2><ol class="steps">' +
       [['Pubblico', 'La vetrina, senza accesso.'], ['Socio', 'Archivio dei ritrovamenti e modulo di invio. Solo i soci in regola. (Da fare)'], ['Consiglio Direttivo', 'Questo gestionale.'], ['Amministratore', 'Account, cancellazioni e copie di sicurezza.']].map(function (x) { return '<li><div><b>' + x[0] + '</b><br><span class="sub">' + x[1] + '</span></div></li>'; }).join('') + '</ol></section>' +
@@ -2579,6 +2582,33 @@ details.espandi > ul { width: 100%; }
     var r = await Promise.all([sb.from('soci').select('*').order('cognome').order('nome'), sb.from('soci_log').select('*').order('id', { ascending: false }).limit(500), sb.rpc('conteggi_soci')]);
     if (r[0].error) throw r[0].error; if (r[1].error) throw r[1].error;
     D.soci = r[0].data; D.soci_log = r[1].data; if (!r[2].error) D.cntSoci = r[2].data;
+    if (me && me.gestore) { var ra = await sb.from('account_soci').select('*'); D.account_soci = ra.error ? [] : ra.data; }
+  }
+  /* ---------- accessi all'area soci del sito (li gestiscono Presidente, Vicepresidente e amministratore) ---------- */
+  async function accSoci(body) {
+    if (!sb.functions) throw new Error('Non disponibile in questa copia di prova');
+    var r = await sb.functions.invoke('account-soci', { body: body });
+    if (r.error) { var m = r.error.message; try { var j = await r.error.context.json(); if (j && j.error) m = j.error; } catch (e) {} throw new Error(m); }
+    if (r.data && r.data.error) throw new Error(r.data.error);
+    return r.data;
+  }
+  function areaSociAdmin() {
+    var L = D.account_soci || null;
+    return '<section class="box"><header><h2>Area soci del sito</h2><span class="sub">' + (L ? L.length + (L.length === 1 ? ' accesso' : ' accessi') : 'apri il libro soci per vedere gli accessi') + '</span></header>' +
+      '<p>' + (areaAperta() ? 'L’area soci è <b>aperta a tutti i soci</b> che hanno un accesso.' : 'L’area soci è aperta <b>solo al Comitato scientifico</b>. Gli altri soci con un accesso possono entrare, ma vedono un avviso.') + '</p>' +
+      '<div class="chips"><button class="btn alt sm" type="button" data-act="areaApri" data-v="' + (areaAperta() ? 'no' : 'si') + '">' + (areaAperta() ? 'Riporta l’area al solo Comitato scientifico' : 'Apri l’area soci a tutti i soci') + '</button></div>' +
+      (L && L.length ? '<div class="tablew"><table><thead><tr><th>Socio</th><th>Email</th><th>Comitato</th><th>Stato</th><th>Ultimo ingresso</th></tr></thead><tbody>' + L.map(function (a) { var so = a.socio_id && D.soci && D.soci.filter(function (x) { return x.id === a.socio_id; })[0]; return '<tr><td>' + (so ? '<a href="#soci/s' + so.id + '">' + socioNome(so) + '</a>' : '—') + '</td><td>' + esc(a.email) + '</td><td>' + (a.comitato ? 'Sì' : '') + '</td><td>' + (a.attivo ? (a.cambio_password ? 'Da attivare' : 'Attivo') : 'Sospeso') + '</td><td>' + (a.ultimo_accesso ? fT.format(new Date(a.ultimo_accesso)) : 'mai') + '</td></tr>'; }).join('') + '</tbody></table></div>' : '') +
+      '<p class="sub">Gli accessi si creano dalla scheda di ogni socio, in «Soci». Il socio riceve email e password da voi e al primo ingresso ne sceglie una sua.</p></section>';
+  }
+  function areaAperta() { var t = (D.sito_testi || []).filter(function (x) { return x.chiave === 'area_soci_aperta'; })[0]; return !!(t && t.valore === 'si'); }
+  function pwBox(email, pw) { return '<div class="acc-pw-box"><p><b>Password da consegnare a ' + esc(email) + '</b></p><p class="acc-pw-val"><code>' + esc(pw) + '</code> <button class="btn alt sm" type="button" data-act="accCopia" data-v="' + esc(pw) + '">Copia</button></p><p class="sub">Si vede solo adesso: copiala e consegnala al socio di persona o con un messaggio privato. Al primo ingresso il sito gli chiede di sceglierne una sua. Indirizzo: area riservata del sito, «Area soci».</p></div>'; }
+  function accessoBox(s) {
+    if (!me.gestore || !D.account_soci) return '';
+    var a = D.account_soci.filter(function (x) { return x.socio_id === s.id; })[0], nuovo = P.accPw && P.accPw.socio === s.id ? pwBox(P.accPw.email, P.accPw.pw) : '';
+    if (!a) return '<section class="box k-soci"><h2>Accesso all’area soci</h2><p class="sub">Non ha ancora un accesso. L’area soci ' + (areaAperta() ? 'è aperta a tutti i soci.' : 'per ora è aperta solo al Comitato scientifico.') + '</p>' + nuovo +
+      '<form class="sform" data-act="accCrea" data-id="' + s.id + '"><label class="wide">Email del socio (diventa il nome utente)<input name="email" type="email" required value="' + esc(s.email || '') + '"></label><label class="chk wide acc-chk"><input type="checkbox" name="comitato"> Fa parte del Comitato scientifico</label><div class="wide"><button class="btn" type="submit">Crea l’accesso e la password</button></div></form></section>';
+    return '<section class="box k-soci"><h2>Accesso all’area soci</h2><dl class="so-dl"><dt>Email</dt><dd>' + esc(a.email) + '</dd><dt>Stato</dt><dd>' + (a.attivo ? (a.cambio_password ? 'Attivo, deve ancora scegliere la sua password' : 'Attivo') : '<b>Sospeso</b>') + '</dd><dt>Comitato scientifico</dt><dd>' + (a.comitato ? 'Sì' : 'No') + '</dd><dt>Ultimo ingresso</dt><dd>' + (a.ultimo_accesso ? fT.format(new Date(a.ultimo_accesso)) : 'mai') + '</dd><dt>Creato</dt><dd>' + fD.format(new Date(a.creato_il)) + (a.creato_da ? ' da ' + esc(a.creato_da) : '') + '</dd></dl>' + nuovo +
+      '<div class="chips"><button class="btn alt sm" type="button" data-act="accPw" data-u="' + a.user_id + '">🔑 Nuova password</button><button class="btn alt sm" type="button" data-act="accCom" data-u="' + a.user_id + '" data-v="' + (a.comitato ? 0 : 1) + '">' + (a.comitato ? 'Togli dal Comitato scientifico' : 'Segna nel Comitato scientifico') + '</button><button class="btn alt sm" type="button" data-act="accAtt" data-u="' + a.user_id + '" data-v="' + (a.attivo ? 0 : 1) + '">' + (a.attivo ? 'Sospendi l’accesso' : 'Riattiva l’accesso') + '</button><button class="btn alt sm danger" type="button" data-act="accDel" data-u="' + a.user_id + '">Elimina l’accesso</button></div></section>';
   }
   function socioNome(s) { return esc(s.cognome) + (s.nome ? ' ' + esc(s.nome) : ''); }
   /* tipo, carica e parentela (proposta 20/11): colonne soci.tipo, soci.carica, soci.parente_di, soci.parentela */
@@ -2702,6 +2732,7 @@ details.espandi > ul { width: 100%; }
       '<section class="box"><h2>Famiglia</h2>' + (fam.length ? '<ul class="p2list">' + fam.map(function (x) { return '<li><a href="#soci/s' + x.id + '">' + socioNome(x) + '</a><span class="p2">' + esc(x.parente_di === s.id ? (x.parentela || 'familiare') : (s.parentela || 'familiare')) + '</span></li>'; }).join('') + '</ul>' : '<p class="sub">Nessun familiare collegato. Si collega in «Modifica la scheda», alla voce «Familiare di».</p>') + '</section>' +
       '<section class="box so-meriti"><h2>Meriti e riconoscimenti</h2><div class="so-stelle" aria-label="Stelle di anzianità">' + (stelle == null ? '<p class="sub">Serve la data di iscrizione per calcolare le stelle di anzianità.</p>' : '<span class="st">' + (stelle ? '★'.repeat(stelle) : '☆') + '</span><span class="sub">' + (stelle ? stelle + (stelle === 1 ? ' stella' : ' stelle') + ' di anzianità' : 'Nessuna stella ancora') + ' · una ogni traguardo: 5, 10, 20 e 30 anni</span>') + '</div>' +
         '<p class="sub">Qui arriveranno i punti dell’anno (presenze, determinazioni, contributi, stage), le spille e gli encomi, come previsto dall’«Ordine al Merito Inzenga».</p></section>' +
+      accessoBox(s) +
       '<section class="box"><h2>Registro di questa scheda</h2>' + (lg.length ? '<ul class="reg">' + lg.map(function (l) { return '<li><time>' + fT.format(new Date(l.quando)) + '</time><div><b>' + esc(l.chi) + '</b><span class="det">' + esc(l.dettaglio || l.azione) + '</span></div></li>'; }).join('') + '</ul>' : '<p class="sub">Nessuna operazione registrata.</p>') + '</section>' +
       '</div>';
     return back + testa + avvisi + schede + (puoCanc ? '<div class="azioni"><button class="btn alt sm danger" type="button" data-act="socioDel" data-id="' + s.id + '">Togli dal libro soci</button><span class="sub">Per chi lascia l’associazione è meglio cambiare lo stato in «Dimesso»: la storia resta.</span></div>' : '');
@@ -3011,7 +3042,7 @@ details.espandi > ul { width: 100%; }
         }).join('') + sitoEd('<section class="box"><h2>Aggiungi un appuntamento</h2>' + calForm(null, y) + '</section>') + intro;
     }
     if (sub === 'testi') {
-      var tx = D.sito_testi.slice().sort(function (a, b) { return a.ordine - b.ordine; });
+      var tx = D.sito_testi.filter(function (x) { return x.chiave !== 'area_soci_aperta'; }).sort(function (a, b) { return a.ordine - b.ordine; });
       return head('Contatti e avvisi', 'I testi del sito che cambiano più spesso. L’avviso compare in cima alla Home finché non lo svuoti.') + t +
         '<section class="box k-sito"><form class="sform" data-act="testiSave">' + (me.gestore ? '' : '<fieldset disabled style="border:0;padding:0;margin:0;display:contents">') + tx.map(function (x) {
           var big = x.valore.length > 80 || x.chiave === 'avviso_home';
@@ -3521,6 +3552,26 @@ details.espandi > ul { width: 100%; }
     else if (a === 'docAnnulla') { P.docEdit = null; render(); }
     else if (a === 'docAnteprima') { var fp = b.closest('form'), dp = fp.querySelector('.doc-prev'), cp = txt2doc(fp.testo.value);
       dp.innerHTML = '<h3>Anteprima</h3><div class="foglio">' + (cp.intro ? '<p class="doc-intro">' + fmx(cp.intro) + '</p>' : '') + cp.secs.map(function (x) { return '<section class="fs"><h2>' + esc(x.h) + '</h2>' + (x.nota ? '<p class="sub">' + esc(x.nota) + '</p>' : '') + x.b.map(blocco).join('') + (x.comunicazioni ? tableH(HEAD4, comsRows(x.comunicazioni)) : '') + '</section>'; }).join('') + '</div>'; }
+    else if (a === 'accCopia') { try { await navigator.clipboard.writeText(b.getAttribute('data-v')); toast('Password copiata.'); } catch (e) { toast('Selezionala e copiala a mano.'); } }
+    else if (a === 'accPw' || a === 'accCom' || a === 'accAtt' || a === 'accDel') {
+      var uid = b.getAttribute('data-u'), ac = (D.account_soci || []).filter(function (x) { return x.user_id === uid; })[0]; if (!ac) return;
+      var so1 = ac.socio_id && D.soci.filter(function (x) { return x.id === ac.socio_id; })[0], chiN = so1 ? so1.cognome + ' ' + (so1.nome || '') : ac.email;
+      try {
+        if (a === 'accPw') { if (!confirm('Creare una password nuova per ' + chiN + '?\n\nQuella vecchia smette di funzionare.')) return; var rp = await accSoci({ azione: 'password', user_id: uid }); P.accPw = { socio: ac.socio_id, email: rp.email, pw: rp.password }; await log('Ha creato una password nuova per l’area soci di', chiN); }
+        else if (a === 'accCom') { await accSoci({ azione: 'comitato', user_id: uid, comitato: b.getAttribute('data-v') === '1' }); }
+        else if (a === 'accAtt') { await accSoci({ azione: 'attiva', user_id: uid, attivo: b.getAttribute('data-v') === '1' }); await log(b.getAttribute('data-v') === '1' ? 'Ha riattivato l’accesso all’area soci di' : 'Ha sospeso l’accesso all’area soci di', chiN); }
+        else { if (!confirm('Eliminare l’accesso all’area soci di ' + chiN + '?\n\nLa scheda del socio resta; si cancella solo l’accesso al sito.')) return; await accSoci({ azione: 'elimina', user_id: uid }); await log('Ha eliminato l’accesso all’area soci di', chiN); }
+        await caricaSoci(); toast('Fatto.'); render();
+      } catch (er) { toast('Non riuscito: ' + er.message); }
+    }
+    else if (a === 'areaApri') {
+      var nv = b.getAttribute('data-v'), ex0 = (D.sito_testi || []).filter(function (x) { return x.chiave === 'area_soci_aperta'; })[0];
+      if (!confirm(nv === 'si' ? 'Aprire l’area soci a tutti i soci che hanno un accesso?' : 'Riportare l’area soci al solo Comitato scientifico?')) return;
+      var rr = ex0 ? await sb.from('sito_testi').update({ valore: nv, aggiornato_il: new Date().toISOString(), aggiornato_da: me.nome }).eq('chiave', 'area_soci_aperta').select().single()
+        : await sb.from('sito_testi').insert({ chiave: 'area_soci_aperta', etichetta: 'Area soci aperta a tutti i soci (si o no)', valore: nv, ordine: 999, aggiornato_da: me.nome }).select().single();
+      if (rr.error) { toast('Non salvato: ' + rr.error.message); return; }
+      D.sito_testi = D.sito_testi.filter(function (x) { return x.chiave !== 'area_soci_aperta'; }).concat([rr.data]); toast(nv === 'si' ? 'Area soci aperta a tutti i soci.' : 'Area soci riservata al Comitato scientifico.'); render();
+    }
     else if (a === 'odgNuovo') {
       var bx = b.closest('.odg-nuovo'), inp = bx.querySelector('.odg-in'), tx = inp.value.replace(/\s+/g, ' ').trim(), dove = bx.getAttribute('data-dove');
       if (!tx) { toast('Scrivi prima il punto.'); inp.focus(); return; }
@@ -3792,6 +3843,12 @@ details.espandi > ul { width: 100%; }
         if (r5b.error) throw r5b.error; D.commenti.push(r5b.data); toast('Commento pubblicato.'); render();
       } else if (/^n(Scad|Att|Pratica|Dec|Testo|Passo|Riun)$/.test(a)) {
         await nuovoSave(a, f);
+      } else if (a === 'accCrea') {
+        var sid = +f.getAttribute('data-id'), so0 = D.soci.filter(function (x) { return x.id === sid; })[0];
+        var rc = await accSoci({ azione: 'crea', email: f.email.value.trim(), socio_id: sid, comitato: f.comitato.checked });
+        P.accPw = { socio: sid, email: rc.email, pw: rc.password };
+        try { await log('Ha creato l’accesso all’area soci di', so0 ? so0.cognome + ' ' + (so0.nome || '') : rc.email); } catch (e) {}
+        await caricaSoci(); toast('Accesso creato. Consegna la password al socio.'); render();
       } else if (a === 'testiSave') {
         var changed = D.sito_testi.filter(function (x) { return f[x.chiave] && f[x.chiave].value.trim() !== x.valore; });
         if (!changed.length) { toast('Nessun testo cambiato.'); return; }
